@@ -33,7 +33,7 @@
 
     <include layout="@layout/layout_empty_tab_hint"/>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -67,7 +67,7 @@
                 app:tabHorizontalPadding="@dimen/element_spacing_normal"
                 tools:listitem="@layout/layout_tab_item"/>
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <View
         android:id="@+id/windowOverlay"
@@ -76,7 +76,7 @@
         android:layout_below="@+id/toolbar"
         android:background="?android:windowContentOverlay"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/actionsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

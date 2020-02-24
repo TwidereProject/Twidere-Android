@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader.userlists
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import android.util.Log
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog

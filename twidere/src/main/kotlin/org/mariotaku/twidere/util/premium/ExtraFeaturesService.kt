@@ -2,7 +2,7 @@ package org.mariotaku.twidere.util.premium
 
 import android.content.Context
 import android.content.Intent
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.view.ContainerView
 import java.util.*

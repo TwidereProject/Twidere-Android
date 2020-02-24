@@ -33,16 +33,16 @@ import android.graphics.Rect
 import android.location.*
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.view.SupportMenuInflater
-import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
-import android.support.v7.widget.FixedLinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.ViewHolder
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.app.ActivityCompat
+import androidx.core.widget.TextViewCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.SupportMenuInflater
+import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
+import androidx.recyclerview.widget.FixedLinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.text.Editable
 import android.text.Spannable
 import android.text.Spanned
@@ -609,9 +609,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 if (isAccountSelectorVisible && !TwidereViewUtils.hitView(ev, accountSelectorButton)) {
-                    val layoutManager = accountSelector.layoutManager
+                    val layoutManager = accountSelector.layoutManager ?: return super.dispatchTouchEvent(ev)
                     val clickedItem = (0 until layoutManager.childCount).any {
-                        TwidereViewUtils.hitView(ev, layoutManager.getChildAt(it))
+                        val child = layoutManager.getChildAt(it)
+                        child != null && TwidereViewUtils.hitView(ev, child)
                     }
                     if (!clickedItem) {
                         isAccountSelectorVisible = false
@@ -1836,8 +1837,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity
-            val builder = AlertDialog.Builder(context)
+            val context = activity!!
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(R.string.quote_protected_status_warning_message)
             builder.setPositiveButton(R.string.send_anyway, this)
             builder.setNegativeButton(android.R.string.cancel, null)
@@ -1849,7 +1850,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     class DirectMessageConfirmFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
-        private val screenName: String get() = arguments.getString(EXTRA_SCREEN_NAME).orEmpty()
+        private val screenName: String get() = arguments?.getString(EXTRA_SCREEN_NAME).orEmpty()
 
         override fun onClick(dialog: DialogInterface, which: Int) {
             val activity = activity
@@ -1870,8 +1871,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity
-            val builder = AlertDialog.Builder(context)
+            val context = activity!!
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(getString(R.string.message_format_compose_message_convert_to_status,
                     "@$screenName"))
             builder.setPositiveButton(R.string.action_send, this)
@@ -1911,11 +1912,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         }
 
-        override fun getSwipeThreshold(viewHolder: ViewHolder?): Float {
+        override fun getSwipeThreshold(viewHolder: ViewHolder): Float {
             return 0.75f
         }
 
-        override fun clearView(recyclerView: RecyclerView?, viewHolder: ViewHolder) {
+        override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             viewHolder.itemView.alpha = ALPHA_FULL
         }

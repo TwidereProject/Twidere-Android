@@ -25,8 +25,8 @@ import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.DrawableRes
-import android.support.v4.view.WindowInsetsCompat
+import androidx.annotation.DrawableRes
+import androidx.core.view.createWindowInsetsCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.WindowInsets
@@ -109,7 +109,7 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
-        onApplyWindowInsetsCompatListener?.onApplyWindowInsets(WindowInsetsCompat(insets))
+        onApplyWindowInsetsCompatListener?.onApplyWindowInsets(createWindowInsetsCompat(insets))
         return super.onApplyWindowInsets(insets)
     }
 

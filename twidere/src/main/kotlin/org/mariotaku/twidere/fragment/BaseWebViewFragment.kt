@@ -48,7 +48,7 @@ open class BaseWebViewFragment : BaseFragment() {
 
 
     protected fun createWebViewClient(): WebViewClient {
-        return DefaultWebViewClient(activity)
+        return DefaultWebViewClient(activity!!)
     }
 
     /**

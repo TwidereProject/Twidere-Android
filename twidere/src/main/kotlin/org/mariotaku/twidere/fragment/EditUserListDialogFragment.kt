@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_user_list_detail_editor.*
 import org.mariotaku.ktextension.string
 import org.mariotaku.microblog.library.twitter.model.UserList
@@ -36,11 +36,11 @@ import org.mariotaku.twidere.text.validator.UserListNameValidator
 
 class EditUserListDialogFragment : BaseDialogFragment() {
 
-    private val accountKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!! }
-    private val listId: String by lazy { arguments.getString(EXTRA_LIST_ID)!! }
+    private val accountKey by lazy { arguments?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!! }
+    private val listId: String by lazy { arguments?.getString(EXTRA_LIST_ID)!! }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setView(R.layout.dialog_user_list_detail_editor)
         builder.setTitle(R.string.title_user_list)
         builder.positive(android.R.string.ok, this::onPositiveClick)
@@ -50,9 +50,9 @@ class EditUserListDialogFragment : BaseDialogFragment() {
             dialog.applyTheme()
             dialog.editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
             if (savedInstanceState == null) {
-                dialog.editName.setText(arguments.getString(EXTRA_LIST_NAME))
-                dialog.editDescription.setText(arguments.getString(EXTRA_DESCRIPTION))
-                dialog.isPublic.isChecked = arguments.getBoolean(EXTRA_IS_PUBLIC, true)
+                dialog.editName.setText(arguments?.getString(EXTRA_LIST_NAME))
+                dialog.editDescription.setText(arguments?.getString(EXTRA_DESCRIPTION))
+                dialog.isPublic.isChecked = arguments?.getBoolean(EXTRA_IS_PUBLIC, true) ?: true
             }
         }
         return dialog

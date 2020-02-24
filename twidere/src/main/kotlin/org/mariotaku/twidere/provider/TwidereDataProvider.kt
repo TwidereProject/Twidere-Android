@@ -32,7 +32,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
-import android.support.v4.text.BidiFormatter
+import androidx.core.text.BidiFormatter
 import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.ktextension.isNullOrEmpty

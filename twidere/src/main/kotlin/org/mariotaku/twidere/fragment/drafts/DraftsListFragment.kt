@@ -29,12 +29,12 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import androidx.appcompat.app.AlertDialog
 import android.text.TextUtils
 import android.view.*
 import android.widget.AbsListView.MultiChoiceModeListener
@@ -111,7 +111,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): DraftsAdapter {
-        return DraftsAdapter(activity, requestManager).apply {
+        return DraftsAdapter(activity!!, requestManager).apply {
             textSize = preferences[textSizeKey].toFloat()
         }
     }
@@ -120,12 +120,12 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val uri = Drafts.CONTENT_URI_UNSENT
         val cols = Drafts.COLUMNS
-        val actions = arguments.getStringArray(EXTRA_ACTIONS)
+        val actions = arguments?.getStringArray(EXTRA_ACTIONS)
         val (selection, selectionArgs) = if (actions != null) {
             Pair(Expression.inArgs(Drafts.ACTION_TYPE, actions.size).sql, actions)
         } else Pair(null, null)
         val orderBy = OrderBy(Drafts.TIMESTAMP, false).sql
-        return CursorLoader(activity, uri, cols, selection, selectionArgs, orderBy)
+        return CursorLoader(activity!!, uri, cols, selection, selectionArgs, orderBy)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
@@ -229,9 +229,9 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
             }
         }
         if (deleteDraft) {
-            val cr = context.contentResolver
-            cr.delete(Drafts.CONTENT_URI, Expression.equals(Drafts._ID, draft._id).sql, null)
-            cr.delete(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draft._id.toString()),
+            val cr = context?.contentResolver
+            cr?.delete(Drafts.CONTENT_URI, Expression.equals(Drafts._ID, draft._id).sql, null)
+            cr?.delete(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draft._id.toString()),
                     null, null)
         }
     }
@@ -265,7 +265,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
             val sendIntent = Intent(context, LengthyOperationsService::class.java)
             sendIntent.action = IntentConstants.INTENT_ACTION_SEND_DRAFT
             sendIntent.data = uri
-            context.startService(sendIntent)
+            context?.startService(sendIntent)
         }
         return true
     }
@@ -282,14 +282,14 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val args = arguments ?: return
-                    DeleteDraftsTask(activity, args.getLongArray(EXTRA_IDS)!!).execute()
+                    activity?.let { DeleteDraftsTask(it, args.getLongArray(EXTRA_IDS)!!).execute() }
                 }
             }
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(R.string.delete_drafts_confirm)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)

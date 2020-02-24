@@ -21,7 +21,7 @@ package org.mariotaku.twidere.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
 

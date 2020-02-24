@@ -9,9 +9,9 @@ import android.graphics.Point
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
-import android.support.annotation.UiThread
-import android.support.annotation.WorkerThread
-import android.support.media.ExifInterface
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
+import androidx.exifinterface.media.ExifInterface
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import net.ypresto.androidtranscoder.MediaTranscoder
@@ -935,8 +935,9 @@ class UpdateStatusTask(
                     }
                 }
                 "image/jpeg" -> {
-                    val origExif = context.contentResolver.openInputStream(mediaUri)
-                            .use(::ExifInterface)
+                    val origExif = context.contentResolver.openInputStream(mediaUri)?.use {
+                        ExifInterface(it)
+                    } ?: return null
                     tempFile.outputStream().use { os ->
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
                         os.flush()

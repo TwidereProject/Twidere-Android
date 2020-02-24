@@ -1,8 +1,8 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
-import android.support.v7.preference.PreferenceCategory
-import android.support.v7.preference.PreferenceViewHolder
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.widget.TextView
 import org.mariotaku.chameleon.Chameleon

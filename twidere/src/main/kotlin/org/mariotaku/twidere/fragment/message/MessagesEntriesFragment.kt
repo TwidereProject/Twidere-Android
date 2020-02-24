@@ -23,8 +23,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.Loader
 import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -74,7 +74,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         IFloatingActionButtonFragment {
 
     private val accountKeys: Array<UserKey> by lazy {
-        Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
+        Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
     }
 
     private val errorInfoKey: String = ErrorInfoStore.KEY_DIRECT_MESSAGES
@@ -140,11 +140,11 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         return loader
     }
 
-    override fun onLoaderReset(loader: Loader<List<ParcelableMessageConversation>?>?) {
+    override fun onLoaderReset(loader: Loader<List<ParcelableMessageConversation>?>) {
         adapter.conversations = null
     }
 
-    override fun onLoadFinished(loader: Loader<List<ParcelableMessageConversation>?>?, data: List<ParcelableMessageConversation>?) {
+    override fun onLoadFinished(loader: Loader<List<ParcelableMessageConversation>?>, data: List<ParcelableMessageConversation>?) {
         adapter.conversations = data
         adapter.drawAccountColors = accountKeys.size > 1
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
@@ -157,7 +157,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewTaskParam(context) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewTaskParam(context!!) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
         return true
@@ -167,6 +167,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         if (position != ILoadMoreSupportAdapter.END) {
             return
         }
+        val context = context ?: return
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.END)
         twitterWrapper.getMessagesAsync(object : GetMessagesTask.LoadMoreEntriesTaskParam(context) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
@@ -174,17 +175,19 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     override fun onConversationClick(position: Int) {
+        val context = context ?: return
         val conversation = adapter.getConversation(position)
         IntentUtils.openMessageConversation(context, conversation.account_key, conversation.id)
     }
 
     override fun onConversationLongClick(position: Int): Boolean {
-        val view = recyclerView.layoutManager.findViewByPosition(position) ?: return false
+        val view = recyclerView.layoutManager?.findViewByPosition(position) ?: return false
         recyclerView.showContextMenuForChild(view)
         return true
     }
 
     override fun onProfileImageClick(position: Int) {
+        val context = context ?: return
         val conversation = adapter.getConversation(position)
         val user = conversation.user ?: return
         IntentUtils.openUserProfile(context, user, preferences[newDocumentApiKey])
@@ -209,6 +212,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
+        val context = context ?: return
         val info = menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return
         val conversation = adapter.getConversation(info.position)
         val inflater = MenuInflater(context)
@@ -219,6 +223,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
+        val context = context ?: return false
         val menuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return false
         when (item.itemId) {
             R.id.mark_read -> {
@@ -240,6 +245,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     private fun showContentOrError() {
         val accountKeys = this.accountKeys
+        val context = context ?: return
         if (adapter.itemCount > 0) {
             showContent()
         } else if (accountKeys.isNotEmpty()) {

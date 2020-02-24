@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.util.dagger
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import dagger.Component
 import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.adapter.*

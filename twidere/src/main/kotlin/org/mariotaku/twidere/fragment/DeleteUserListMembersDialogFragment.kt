@@ -22,8 +22,8 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.getNullableTypedArray
 import org.mariotaku.twidere.R
@@ -50,7 +50,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         val users = users
         val userList = userList
         if (users == null || userList == null) throw NullPointerException()
@@ -76,14 +76,14 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
 
     private val userList: ParcelableUserList?
         get() {
-            val args = arguments
+            val args = arguments ?: return null
             if (!args.containsKey(EXTRA_USER_LIST)) return null
             return args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
         }
 
     private val users: Array<ParcelableUser>?
         get() {
-            val args = arguments
+            val args = arguments ?: return null
             if (!args.containsKey(EXTRA_USERS)) return null
             return args.getNullableTypedArray(EXTRA_USERS)
         }
@@ -93,7 +93,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         val FRAGMENT_TAG = "destroy_user_list_member"
 
         fun show(fm: FragmentManager, userList: ParcelableUserList,
-                vararg users: ParcelableUser): DeleteUserListMembersDialogFragment {
+                 vararg users: ParcelableUser): DeleteUserListMembersDialogFragment {
             val args = Bundle()
             args.putParcelable(EXTRA_USER_LIST, userList)
             args.putParcelableArray(EXTRA_USERS, users)

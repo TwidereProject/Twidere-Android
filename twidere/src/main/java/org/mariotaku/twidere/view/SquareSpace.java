@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
-import android.support.v4.widget.Space;
+import androidx.legacy.widget.Space;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 

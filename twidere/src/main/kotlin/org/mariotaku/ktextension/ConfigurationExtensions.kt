@@ -23,8 +23,8 @@ import android.annotation.TargetApi
 import android.content.res.Configuration
 import android.os.Build
 import android.os.LocaleList
-import android.support.v4.os.ConfigurationCompat
-import android.support.v4.os.LocaleListCompat
+import androidx.core.os.ConfigurationCompat
+import androidx.core.os.LocaleListCompat
 import java.util.*
 
 var Configuration.localesCompat: LocaleListCompat

@@ -26,7 +26,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import android.text.TextUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.mapToArray
@@ -209,7 +209,7 @@ object DataStoreUtils {
             val (where, whereArgs) = getIdsWhere(isOfficial)
             DataStoreUtils.getNewestActivityMaxPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
-            Array(accountKeys.size) { arr1[it] ?: arr2[it] }
+            Array(accountKeys.size) { arr1.elementAtOrNull(it) ?: arr2.elementAtOrNull(it) }
         }, accountKeys)
     }
 
@@ -226,7 +226,7 @@ object DataStoreUtils {
             val (where, whereArgs) = getIdsWhere(isOfficial)
             DataStoreUtils.getOldestActivityMaxPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
-            Array(accountKeys.size) { arr1[it] ?: arr2[it] }
+            Array(accountKeys.size) { arr1.elementAtOrNull(it) ?: arr2.elementAtOrNull(it) }
         }, accountKeys)
     }
 
@@ -243,7 +243,7 @@ object DataStoreUtils {
             val (where, whereArgs) = getIdsWhere(isOfficial)
             DataStoreUtils.getNewestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
-            LongArray(accountKeys.size) { arr1[it].takeIf { it > 0 } ?: arr2[it] }
+            LongArray(accountKeys.size) { arr1.elementAtOrNull(it)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(it) ?: 0 }
         }, accountKeys)
     }
 
@@ -260,7 +260,7 @@ object DataStoreUtils {
             val (where, whereArgs) = getIdsWhere(isOfficial)
             DataStoreUtils.getOldestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
-            LongArray(accountKeys.size) { arr1[it].takeIf { it > 0 } ?: arr2[it] }
+            LongArray(accountKeys.size) { arr1.elementAtOrNull(it)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(it) ?: 0 }
         }, accountKeys)
     }
 

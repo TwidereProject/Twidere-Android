@@ -2,7 +2,7 @@ package org.mariotaku.twidere.fragment.sync
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -87,16 +87,16 @@ class SyncSettingsFragment : BasePreferenceFragment() {
             val f = weakThis.get() ?: return@alwaysUi
             f.dismissProgressDialog("cleanup_sync_cache")
             f.kPreferences[dataSyncProviderInfoKey] = null
-            DataSyncProvider.Factory.notifyUpdate(f.context)
+            f.context?.let { DataSyncProvider.Factory.notifyUpdate(it) }
             f.activity?.finish()
         }
     }
 
     class DisconnectSyncConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
-            val entry = DataSyncProvider.Factory.getProviderEntry(context, providerInfo.type)!!
+            val entry = DataSyncProvider.Factory.getProviderEntry(context!!, providerInfo.type)!!
             builder.setMessage(getString(R.string.message_sync_disconnect_from_name_confirm, entry.name))
             builder.setPositiveButton(R.string.action_sync_disconnect) { _, _ ->
                 (parentFragment as SyncSettingsFragment).cleanupAndDisconnect()

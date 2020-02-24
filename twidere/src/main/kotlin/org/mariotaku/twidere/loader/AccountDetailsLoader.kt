@@ -3,7 +3,7 @@ package org.mariotaku.twidere.loader
 import android.accounts.AccountManager
 import android.accounts.OnAccountsUpdateListener
 import android.content.Context
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.model.AccountDetails

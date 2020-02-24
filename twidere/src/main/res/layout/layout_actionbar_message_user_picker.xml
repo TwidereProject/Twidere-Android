@@ -27,7 +27,7 @@
     android:orientation="horizontal"
     tools:layout_height="?actionBarSize">
 
-    <android.support.v7.widget.AppCompatSpinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/accountSpinner"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -55,7 +55,7 @@
             <requestFocus/>
         </org.mariotaku.twidere.view.FixedEditText>
 
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/queryButton"
             style="?actionButtonStyle"
             android:layout_width="@dimen/element_size_normal"

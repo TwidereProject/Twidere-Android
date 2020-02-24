@@ -19,7 +19,7 @@ package org.mariotaku.twidere.preference;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.media.RingtoneManager;
-import android.support.v7.preference.Preference;
+import androidx.preference.Preference;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;

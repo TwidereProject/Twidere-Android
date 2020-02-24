@@ -6,8 +6,8 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.BaseColumns
-import android.support.annotation.WorkerThread
-import android.support.v4.util.LongSparseArray
+import androidx.annotation.WorkerThread
+import androidx.collection.LongSparseArray
 import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.library.objectcursor.ObjectCursor

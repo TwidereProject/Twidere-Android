@@ -23,7 +23,7 @@ import android.annotation.TargetApi;
 import android.graphics.Outline;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by mariotaku on 14/12/8.

@@ -4,7 +4,7 @@ import android.app.job.JobInfo
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.util.AttributeSet
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toLongOr

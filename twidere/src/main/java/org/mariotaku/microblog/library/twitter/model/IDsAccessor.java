@@ -20,7 +20,7 @@
 package org.mariotaku.microblog.library.twitter.model;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by mariotaku on 2017/4/1.

@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.AbsMediaStatusesFragment
 import org.mariotaku.twidere.loader.statuses.MediaTimelineLoader

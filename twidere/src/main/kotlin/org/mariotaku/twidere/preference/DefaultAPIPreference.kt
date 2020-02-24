@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
-import android.support.v7.preference.DialogPreference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.DialogPreference
+import androidx.preference.PreferenceFragmentCompat
 import android.util.AttributeSet
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.fragment.APIEditorDialogFragment
@@ -35,7 +35,7 @@ class DefaultAPIPreference(
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = APIEditorDialogFragment()
         df.setTargetFragment(fragment, 0)
-        df.show(fragment.fragmentManager, key)
+        fragment.fragmentManager?.let { df.show(it, key) }
     }
 
 }

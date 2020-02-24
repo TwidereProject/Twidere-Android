@@ -1,8 +1,8 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
-import android.support.v7.preference.ListPreference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.ListPreference
+import androidx.preference.PreferenceFragmentCompat
 import android.util.AttributeSet
 
 import org.mariotaku.twidere.fragment.ThemedListPreferenceDialogFragmentCompat
@@ -17,6 +17,6 @@ open class ThemedListPreference(context: Context, attrs: AttributeSet? = null) :
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = ThemedListPreferenceDialogFragmentCompat.newInstance(key)
         df.setTargetFragment(fragment, 0)
-        df.show(fragment.fragmentManager, key)
+        fragment.fragmentManager?.let { df.show(it, key) }
     }
 }

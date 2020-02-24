@@ -27,7 +27,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.net.Uri
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.forEachRow
 import org.mariotaku.ktextension.isEmpty

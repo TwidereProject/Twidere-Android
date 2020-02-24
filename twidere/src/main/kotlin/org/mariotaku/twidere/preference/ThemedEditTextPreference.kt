@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
-import android.support.v7.preference.EditTextPreference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceFragmentCompat
 import android.util.AttributeSet
 
 import org.mariotaku.twidere.fragment.ThemedEditTextPreferenceDialogFragmentCompat
@@ -36,6 +36,6 @@ class ThemedEditTextPreference(context: Context, attrs: AttributeSet? = null) :
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = ThemedEditTextPreferenceDialogFragmentCompat.newInstance(key)
         df.setTargetFragment(fragment, 0)
-        df.show(fragment.fragmentManager, key)
+        fragment.fragmentManager?.let { df.show(it, key) }
     }
 }

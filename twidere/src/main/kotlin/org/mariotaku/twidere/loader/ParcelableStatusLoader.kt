@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo

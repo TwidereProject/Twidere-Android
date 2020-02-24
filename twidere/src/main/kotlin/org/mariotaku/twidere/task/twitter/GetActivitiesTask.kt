@@ -4,7 +4,7 @@ import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import android.support.annotation.UiThread
+import androidx.annotation.UiThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException

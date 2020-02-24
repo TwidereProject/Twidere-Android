@@ -22,7 +22,7 @@ package org.mariotaku.ktextension
 import android.annotation.TargetApi
 import android.graphics.Rect
 import android.os.Build
-import android.support.v4.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat
 import android.view.WindowInsets
 
 inline val WindowInsetsCompat.systemWindowInsets: Rect

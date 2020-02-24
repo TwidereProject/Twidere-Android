@@ -18,7 +18,7 @@
 
 package org.mariotaku.twidere.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;

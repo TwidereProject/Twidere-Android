@@ -179,7 +179,7 @@
                 android:overScrollMode="never"
                 android:scrollbars="none">
 
-                <android.support.v7.widget.TwidereActionMenuView
+                <androidx.appcompat.widget.TwidereActionMenuView
                     android:id="@+id/menuBar"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

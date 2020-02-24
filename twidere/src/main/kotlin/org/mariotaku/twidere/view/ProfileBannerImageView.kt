@@ -23,7 +23,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import android.support.v4.view.WindowInsetsCompat
+import androidx.core.view.createWindowInsetsCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -81,7 +81,7 @@ class ProfileBannerImageView(context: Context, attrs: AttributeSet) :
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
-        onApplyWindowInsetsCompatListener?.onApplyWindowInsets(WindowInsetsCompat(insets))
+        onApplyWindowInsetsCompatListener?.onApplyWindowInsets(createWindowInsetsCompat(insets))
         return super.onApplyWindowInsets(insets)
     }
 }

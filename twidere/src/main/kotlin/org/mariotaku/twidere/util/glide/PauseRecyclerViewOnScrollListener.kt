@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.util.glide
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 
 class PauseRecyclerViewOnScrollListener(
@@ -28,7 +28,7 @@ class PauseRecyclerViewOnScrollListener(
         private val requestManager: RequestManager
 ) : RecyclerView.OnScrollListener() {
 
-    override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
         when (newState) {
             RecyclerView.SCROLL_STATE_IDLE -> {
                 if (!requestManager.isPaused) return

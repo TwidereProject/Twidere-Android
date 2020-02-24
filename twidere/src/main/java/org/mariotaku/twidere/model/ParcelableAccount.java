@@ -18,7 +18,7 @@
 
 package org.mariotaku.twidere.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;

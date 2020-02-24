@@ -56,7 +56,7 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableActivitiesAdapter {
         val adapter = ParcelableActivitiesAdapter(context, requestManager)
-        val extras: InteractionsTabExtras? = arguments.getParcelable(EXTRA_EXTRAS)
+        val extras: InteractionsTabExtras? = arguments?.getParcelable(EXTRA_EXTRAS)
         if (extras != null) {
             adapter.followingOnly = extras.isMyFollowingOnly
             adapter.mentionsOnly = extras.isMentionsOnly
@@ -74,7 +74,7 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
 
     override fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {
         val arguments = arguments
-        val extras: InteractionsTabExtras? = arguments.getParcelable(EXTRA_EXTRAS)
+        val extras: InteractionsTabExtras? = arguments?.getParcelable(EXTRA_EXTRAS)
         if (extras != null) {
             val expressions = mutableListOf(where)
             val combinedArgs = mutableListOf(*whereArgs)

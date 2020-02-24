@@ -21,9 +21,9 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.os.Build
-import android.support.v13.view.inputmethod.EditorInfoCompat
-import android.support.v13.view.inputmethod.InputConnectionCompat
-import android.support.v13.view.inputmethod.InputContentInfoCompat
+import androidx.core.view.inputmethod.EditorInfoCompat
+import androidx.core.view.inputmethod.InputConnectionCompat
+import androidx.core.view.inputmethod.InputContentInfoCompat
 import android.text.InputType
 import android.text.Selection
 import android.text.method.ArrowKeyMovementMethod

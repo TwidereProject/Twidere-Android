@@ -22,8 +22,8 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.extension.applyOnShow
@@ -46,7 +46,7 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         val userList = userList
         builder.setTitle(getString(R.string.delete_user_list, userList.name))
         builder.setMessage(getString(R.string.delete_user_list_confirm_message, userList.name))
@@ -58,7 +58,7 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
     }
 
     private val userList: ParcelableUserList
-        get() = arguments.getParcelable(EXTRA_USER_LIST)!!
+        get() = arguments?.getParcelable(EXTRA_USER_LIST)!!
 
     companion object {
 

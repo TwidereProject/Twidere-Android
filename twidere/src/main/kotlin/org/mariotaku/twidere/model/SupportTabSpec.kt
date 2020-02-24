@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.model
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.util.CompareUtils.bundleEquals

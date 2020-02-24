@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 import org.mariotaku.restfu.http.HttpResponse;
 

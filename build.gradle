@@ -21,7 +21,11 @@ allprojects {
         projectVersionName = '3.7.8'
 
         globalCompileSdkVersion = 29
-        globalBuildToolsVersion = '28.0.3'
+        globalBuildToolsVersion = '29.0.2'
+
+
+        globalMinSdkVersion = 19
+        globalTargetSdkVersion = 29
     }
 
     repositories {
@@ -29,6 +33,7 @@ allprojects {
         jcenter()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
+        google()
     }
 
 }
@@ -36,7 +41,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.3.50'
+            kotlinVersion = '1.3.61'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
                     PlayServices      : '3.1.1',
@@ -60,7 +65,7 @@ subprojects {
                     OkHttp               : '3.8.1',
                     Stetho               : '1.5.0',
                     OSMDroid             : '5.6.5',
-                    LeakCanary           : '1.5.1',
+                    LeakCanary           : '2.1',
                     TwitterText          : '1.14.7',
                     MediaViewerLibrary   : '0.9.23',
                     MultiValueSwitch     : '0.9.8',
@@ -69,7 +74,7 @@ subprojects {
                     KPreferences         : '0.9.7',
                     Kovenant             : '3.3.0',
                     ParcelablePlease     : '1.0.2',
-                    Chameleon            : '0.9.22',
+                    Chameleon            : '0.9.27',
                     UniqR                : '0.9.4',
                     SQLiteQB             : '0.9.15',
                     Glide                : '3.7.0',

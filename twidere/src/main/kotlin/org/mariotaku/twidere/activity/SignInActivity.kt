@@ -32,12 +32,12 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.Loader
-import android.support.v4.util.ArraySet
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AlertDialog
+import androidx.loader.app.LoaderManager
+import androidx.core.content.ContextCompat
+import androidx.loader.content.Loader
+import androidx.collection.ArraySet
+import androidx.core.view.ViewCompat
+import androidx.appcompat.app.AlertDialog
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -528,7 +528,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         } else when (apiConfig.credentialsType) {
             Credentials.Type.XAUTH, Credentials.Type.BASIC -> {
                 passwordSignIn.visibility = View.GONE
-                signIn.isEnabled = editPassword.text.isNotEmpty() && editUsername.text.isNotEmpty()
+                signIn.isEnabled = !(editPassword.text.isNullOrEmpty() || editUsername.text.isNullOrEmpty())
             }
             Credentials.Type.OAUTH -> {
                 passwordSignIn.visibility = View.VISIBLE
@@ -569,13 +569,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class SignInTypeChooserDialogFragment : BaseDialogFragment(),
             LoaderManager.LoaderCallbacks<List<CustomAPIConfig>> {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
             dialog.onShow {
                 it.applyTheme()
                 val listView = it.expandableList
-                val adapter = LoginTypeAdapter(context)
+                val adapter = LoginTypeAdapter(context!!)
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
                     val type = adapter.getGroup(groupPosition)
@@ -619,7 +619,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     AccountType.MASTODON, AccountType.STATUSNET)
             val result = supportedAccountTypes.mapNotNullTo(ArrayList()) { type ->
                 if (type == AccountType.MASTODON) return@mapNotNullTo LoginType(type,
-                        listOf(CustomAPIConfig.mastodon(context)))
+                        listOf(CustomAPIConfig.mastodon(context!!)))
                 return@mapNotNullTo configGroup[type]?.let { list ->
                     LoginType(type, list.sortedBy { !it.isDefault })
                 }
@@ -628,7 +628,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
 
         override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CustomAPIConfig>> {
-            return DefaultAPIConfigLoader(context)
+            return DefaultAPIConfigLoader(context!!)
         }
 
         override fun onLoaderReset(loader: Loader<List<CustomAPIConfig>>) {
@@ -690,7 +690,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         var challengeType: String? = null
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.login_verification)
             builder.setView(R.layout.dialog_login_verification_code)
             builder.positive(android.R.string.ok, this::performVerification)
@@ -700,7 +700,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return dialog
         }
 
-        override fun onCancel(dialog: DialogInterface?) {
+        override fun onCancel(dialog: DialogInterface) {
             deferred?.reject(CancelException())
         }
 
@@ -749,7 +749,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class PasswordSignInDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_password_sign_in)
             builder.positive(R.string.action_sign_in, this::onPositiveButton)
             builder.setNegativeButton(android.R.string.cancel, null)

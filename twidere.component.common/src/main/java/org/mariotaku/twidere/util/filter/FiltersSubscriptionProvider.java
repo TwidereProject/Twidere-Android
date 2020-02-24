@@ -18,7 +18,7 @@
 
 package org.mariotaku.twidere.util.filter;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.mariotaku.twidere.model.FiltersData;
 

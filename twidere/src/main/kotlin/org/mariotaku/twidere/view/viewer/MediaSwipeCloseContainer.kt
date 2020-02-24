@@ -2,10 +2,10 @@ package org.mariotaku.twidere.view.viewer
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.FloatRange
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.view.ViewCompat
-import android.support.v4.widget.ViewDragHelper
+import androidx.annotation.FloatRange
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.ViewCompat
+import androidx.customview.widget.ViewDragHelper
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -19,7 +19,7 @@ import org.mariotaku.ktextension.coerceInOr
 class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : ViewGroup(context, attrs) {
 
     private val dragHelper: ViewDragHelper = ViewDragHelper.create(this, 0.5f, object : ViewDragHelper.Callback() {
-        override fun onViewPositionChanged(changedView: View?, left: Int, top: Int, dx: Int, dy: Int) {
+        override fun onViewPositionChanged(changedView: View, left: Int, top: Int, dx: Int, dy: Int) {
             val container = this@MediaSwipeCloseContainer
             container.childTop = top
             container.listener?.onSwipeOffsetChanged(top)
@@ -40,7 +40,7 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
             return top.coerceInOr(-container.height..container.height, 0)
         }
 
-        override fun getViewVerticalDragRange(child: View?): Int {
+        override fun getViewVerticalDragRange(child: View): Int {
             val container = this@MediaSwipeCloseContainer
             return container.height
         }

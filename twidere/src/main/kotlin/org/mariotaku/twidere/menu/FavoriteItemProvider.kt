@@ -22,10 +22,10 @@ package org.mariotaku.twidere.menu
 import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ActionProvider
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.widget.ActionMenuView
+import androidx.core.content.ContextCompat
+import androidx.core.view.ActionProvider
+import androidx.core.view.MenuItemCompat
+import androidx.appcompat.widget.ActionMenuView
 import android.view.MenuItem
 import android.view.View
 import org.mariotaku.ktextension.weak

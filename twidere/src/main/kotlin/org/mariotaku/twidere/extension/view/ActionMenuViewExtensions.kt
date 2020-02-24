@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.extension.view
 
 import android.annotation.SuppressLint
-import android.support.v7.view.menu.MenuView
-import android.support.v7.widget.ActionMenuView
+import androidx.appcompat.view.menu.MenuView
+import androidx.appcompat.widget.ActionMenuView
 import android.view.MenuItem
 import android.view.View
 import org.mariotaku.twidere.extension.children

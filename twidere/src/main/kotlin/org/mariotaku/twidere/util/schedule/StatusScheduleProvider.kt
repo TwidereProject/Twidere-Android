@@ -21,7 +21,7 @@ package org.mariotaku.twidere.util.schedule
 
 import android.content.Context
 import android.content.Intent
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask

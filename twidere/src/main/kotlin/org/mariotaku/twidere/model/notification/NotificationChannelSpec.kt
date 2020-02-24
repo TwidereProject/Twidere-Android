@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.model.notification
 
 import android.app.NotificationManager
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.mariotaku.twidere.R
 
 /**

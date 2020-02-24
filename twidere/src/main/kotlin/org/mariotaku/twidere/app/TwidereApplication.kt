@@ -32,7 +32,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Looper
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import nl.komponents.kovenant.task
 import okhttp3.Dns

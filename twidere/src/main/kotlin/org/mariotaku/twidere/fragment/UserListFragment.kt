@@ -28,11 +28,11 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.FixedAsyncTaskLoader
-import android.support.v4.content.Loader
-import android.support.v4.content.pm.ShortcutManagerCompat
-import android.support.v7.app.AlertDialog
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.FixedAsyncTaskLoader
+import androidx.loader.content.Loader
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.appcompat.app.AlertDialog
 import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
@@ -120,8 +120,10 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                     if (data == null || !data.hasExtra(EXTRA_ID)) return
                     val userList = this.userList
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                    IntentUtils.openUserListDetails(activity, accountKey, userList!!.id,
-                            userList.user_key, userList.user_screen_name, userList.name)
+                    activity?.let {
+                        IntentUtils.openUserListDetails(it, accountKey, userList!!.id,
+                                userList.user_key, userList.user_screen_name, userList.name)
+                    }
                 }
             }
         }
@@ -133,16 +135,18 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         val activity = activity
         setHasOptionsMenu(true)
 
-        Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
-            val userList = userList ?: return@CreateNdefMessageCallback null
-            NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getTwitterUserListLink(userList.user_screen_name, userList.name))))
-        })
+        if (activity != null) {
+            Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
+                val userList = userList ?: return@CreateNdefMessageCallback null
+                NdefMessage(arrayOf(NdefRecord.createUri(LinkCreator.getTwitterUserListLink(userList.user_screen_name, userList.name))))
+            })
+        }
 
         getUserListInfo(false)
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {
-        val args = arguments
+        val args = arguments ?: return
         val tabArgs = Bundle()
         if (args.containsKey(EXTRA_USER_LIST)) {
             val userList = args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
@@ -205,8 +209,10 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             val extensionsIntent = Intent(INTENT_ACTION_EXTENSION_OPEN_USER_LIST)
             extensionsIntent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
             extensionsIntent.putExtra(EXTRA_USER_LIST, userList)
-            MenuUtils.addIntentToMenu(activity, menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION)
-            menu.setItemAvailability(R.id.add_to_home_screen_submenu, ShortcutManagerCompat.isRequestPinShortcutSupported(context))
+            activity?.let {
+                MenuUtils.addIntentToMenu(it, menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION)
+                menu.setItemAvailability(R.id.add_to_home_screen_submenu, ShortcutManagerCompat.isRequestPinShortcutSupported(it))
+            }
         } else {
             menu.setItemAvailability(R.id.edit, false)
             menu.setItemAvailability(R.id.follow, false)
@@ -219,6 +225,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val twitter = twitterWrapper
         val userList = userList ?: return false
+        val activity = activity ?: return false
+        val fragmentManager = fragmentManager ?: return false
         when (item.itemId) {
             R.id.add -> {
                 if (userList.user_key != userList.account_key) return false
@@ -259,13 +267,14 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             }
             R.id.info -> {
                 val df = UserListDetailsDialogFragment()
-                df.arguments = Bundle()
-                df.arguments.putParcelable(EXTRA_USER_LIST, userList)
+                df.arguments = Bundle().apply {
+                    putParcelable(EXTRA_USER_LIST, userList)
+                }
                 df.show(childFragmentManager, "user_list_details")
             }
             R.id.add_statuses_to_home_screen -> {
                 ShortcutCreator.performCreation(this) {
-                    ShortcutCreator.userListTimeline(context, userList.account_key, userList)
+                    ShortcutCreator.userListTimeline(activity, userList.account_key, userList)
                 }
             }
             else -> {
@@ -290,26 +299,28 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             }
             R.id.profileImage -> {
                 val userList = this.userList ?: return
-                IntentUtils.openUserProfile(activity, userList.account_key, userList.user_key,
-                        userList.user_screen_name, null, preferences[newDocumentApiKey], null)
+                activity?.let {
+                    IntentUtils.openUserProfile(it, userList.account_key, userList.user_key,
+                            userList.user_screen_name, null, preferences[newDocumentApiKey], null)
+                }
             }
         }
 
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUserList>> {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUserList>> {
+        val accountKey = args!!.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val listId = args.getString(EXTRA_LIST_ID)
         val listName = args.getString(EXTRA_LIST_NAME)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-        return ParcelableUserListLoader(activity, omitIntentExtra, arguments, accountKey, listId,
+        return ParcelableUserListLoader(activity!!, omitIntentExtra, arguments, accountKey, listId,
                 listName, userKey, screenName)
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUserList>>,
-            data: SingleResponse<ParcelableUserList>?) {
+                                data: SingleResponse<ParcelableUserList>?) {
         if (data == null) return
         if (activity == null) return
         if (data.hasData()) {
@@ -389,8 +400,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     class UserListDetailsDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val userList = arguments.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
-            val builder = AlertDialog.Builder(context)
+            val userList = arguments!!.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(userList.name)
             builder.setMessage(userList.description)
             builder.setPositiveButton(android.R.string.ok, null)

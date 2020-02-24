@@ -58,15 +58,15 @@ abstract class BaseAccountPreferenceFragment : BasePreferenceFragment() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val pm = preferenceManager
-        val account: AccountDetails = arguments.getParcelable(EXTRA_ACCOUNT) ?: return
+        val account: AccountDetails = arguments?.getParcelable(EXTRA_ACCOUNT) ?: return
         val preferenceName = "$ACCOUNT_PREFERENCES_NAME_PREFIX${account.key}"
         pm.sharedPreferencesName = preferenceName
         addPreferencesFromResource(preferencesResource)
         val prefs = pm.sharedPreferences
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         val activity = activity
-        val intent = activity.intent
-        if (intent.hasExtra(EXTRA_SHOW_FRAGMENT)) {
+        val intent = activity?.intent
+        if (intent != null && intent.hasExtra(EXTRA_SHOW_FRAGMENT)) {
             val nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true)
             val name = userColorNameManager.getDisplayName(account.key,
                     account.user.name, account.user.screen_name, nameFirst)

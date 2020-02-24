@@ -22,8 +22,8 @@ package org.mariotaku.twidere.fragment
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
-import android.support.v7.preference.PreferenceScreen
+import androidx.core.view.ViewCompat
+import androidx.preference.PreferenceScreen
 import android.view.View
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.activity.SettingsActivity
@@ -45,7 +45,7 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         setPreferenceScreen(preferenceScreen)
 
         val args = arguments
-        val rawResId = args.get(EXTRA_RESID)
+        val rawResId = args?.get(EXTRA_RESID)
         val resId: Int
         if (rawResId is Int) {
             resId = rawResId
@@ -77,17 +77,18 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
         val preference = findPreference(key) ?: return
+        val currentActivity = activity ?: return
         val extras = preference.extras
         if (extras != null) {
             if (extras.containsKey(EXTRA_SHOULD_RESTART)) {
-                SettingsActivity.setShouldRestart(activity)
+                SettingsActivity.setShouldRestart(currentActivity)
             } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
-                SettingsActivity.setShouldRecreate(activity)
+                SettingsActivity.setShouldRecreate(currentActivity)
             } else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
-                SettingsActivity.setShouldTerminate(activity)
+                SettingsActivity.setShouldTerminate(currentActivity)
             }
             if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
-                activity.recreate()
+                currentActivity.recreate()
             }
         }
     }

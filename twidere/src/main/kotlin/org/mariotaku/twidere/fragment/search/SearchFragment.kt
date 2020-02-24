@@ -24,8 +24,8 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v7.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuInflater
@@ -63,10 +63,10 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
         OnPageChangeListener, LinkHandlerActivity.HideUiOnScroll {
 
     val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
+        get() = arguments?.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     val query: String
-        get() = arguments.getString(EXTRA_QUERY)!!
+        get() = arguments?.getString(EXTRA_QUERY)!!
 
     val composePrefix: String
         get() = when {
@@ -83,6 +83,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface,
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val context = context ?: return
         setHasOptionsMenu(true)
 
         if (savedInstanceState == null && !TextUtils.isEmpty(query)) {

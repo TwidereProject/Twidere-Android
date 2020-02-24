@@ -21,10 +21,10 @@ package org.mariotaku.ktextension
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ActionProvider
-import android.support.v4.view.MenuItemCompat
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.view.ActionProvider
+import androidx.core.view.MenuItemCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu

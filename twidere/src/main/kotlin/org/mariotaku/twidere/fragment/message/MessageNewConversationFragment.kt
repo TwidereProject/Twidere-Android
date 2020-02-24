@@ -25,10 +25,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Bundle
-import android.support.annotation.WorkerThread
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
-import android.support.v7.widget.LinearLayoutManager
+import androidx.annotation.WorkerThread
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -66,7 +66,7 @@ import java.lang.ref.WeakReference
  */
 class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<ParcelableUser>?> {
 
-    private val accountKey: UserKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!! }
+    private val accountKey: UserKey by lazy { arguments?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!! }
     private val account: AccountDetails by lazy {
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)!!
     }
@@ -97,6 +97,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val context = context ?: return
         setHasOptionsMenu(true)
         usersAdapter = SelectableUsersAdapter(context, requestManager)
         recyclerView.adapter = usersAdapter
@@ -184,12 +185,14 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         }
 
         if (savedInstanceState == null) {
-            val users = arguments.getNullableTypedArray<ParcelableUser>(EXTRA_USERS)
-            if (users != null && users.isNotEmpty()) {
-                selectedRecipients = users.toList()
-                editParticipants.setSelection(editParticipants.length())
-                if (arguments.getBoolean(EXTRA_OPEN_CONVERSATION)) {
-                    createOrOpenConversation()
+            arguments?.let {
+                val users = it.getNullableTypedArray<ParcelableUser>(EXTRA_USERS)
+                if (users != null && users.isNotEmpty()) {
+                    selectedRecipients = users.toList()
+                    editParticipants.setSelection(editParticipants.length())
+                    if (it.getBoolean(EXTRA_OPEN_CONVERSATION)) {
+                        createOrOpenConversation()
+                    }
                 }
             }
         }
@@ -199,11 +202,11 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         return inflater.inflate(R.layout.fragment_messages_conversation_new, container, false)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val query = args.getString(EXTRA_QUERY)!!
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUser>?> {
+        val query = args!!.getString(EXTRA_QUERY)!!
         val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        return CacheUserSearchLoader(context, accountKey, query, !fromCache, true, fromUser)
+        return CacheUserSearchLoader(context!!, accountKey, query, !fromCache, true, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
@@ -235,6 +238,8 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
 
     private fun createOrOpenConversation() {
         val account = this.account ?: return
+        val context = context ?: return
+        val activity = activity ?: return
         val selected = this.selectedRecipients
         if (selected.isEmpty()) return
         val maxParticipants = 1

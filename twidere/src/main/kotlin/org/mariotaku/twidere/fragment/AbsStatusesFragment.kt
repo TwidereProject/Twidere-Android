@@ -26,13 +26,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v4.app.Fragment
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.OnScrollListener
+import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import android.view.*
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
@@ -84,7 +84,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         private set
 
     private val onScrollListener = object : OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 val layoutManager = layoutManager
                 saveReadPosition(layoutManager.findFirstVisibleItemPosition())
@@ -158,13 +158,13 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     override fun onStart() {
         super.onStart()
         recyclerView.addOnScrollListener(onScrollListener)
-        recyclerView.addOnScrollListener(pauseOnScrollListener)
+        pauseOnScrollListener?.let { recyclerView.addOnScrollListener(it) }
         bus.register(statusesBusCallback)
     }
 
     override fun onStop() {
         bus.unregister(statusesBusCallback)
-        recyclerView.removeOnScrollListener(pauseOnScrollListener)
+        pauseOnScrollListener?.let { recyclerView.removeOnScrollListener(it) }
         recyclerView.removeOnScrollListener(onScrollListener)
         if (userVisibleHint) {
             saveReadPosition()
@@ -202,7 +202,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         if (position != -1) {
             val status = adapter.getStatus(position)
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                IntentUtils.openStatus(activity, status, null)
+                activity?.let {
+                    IntentUtils.openStatus(it, status, null)
+                }
                 return true
             }
             if (action == null) {
@@ -234,10 +236,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>?> {
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        args.remove(EXTRA_FROM_USER)
-        return onCreateStatusesLoader(activity, args, fromUser)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableStatus>?> {
+        val fromUser = args?.getBoolean(EXTRA_FROM_USER)
+        args?.remove(EXTRA_FROM_USER)
+        return onCreateStatusesLoader(activity!!, args!!, fromUser!!)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -373,16 +375,20 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia,
             statusPosition: Int) {
         val status = adapter.getStatus(statusPosition)
-        IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey],
-                preferences[displaySensitiveContentsKey])
+        activity?.let {
+            IntentUtils.openMedia(it, status, current, preferences[newDocumentApiKey],
+                    preferences[displaySensitiveContentsKey])
+        }
     }
 
     override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia,
             statusPosition: Int) {
         val status = adapter.getStatus(statusPosition)
         val quotedMedia = status.quoted_media ?: return
-        IntentUtils.openMedia(activity, status.account_key, status.is_possibly_sensitive, status,
-                current, quotedMedia, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
+        activity?.let {
+            IntentUtils.openMedia(it, status.account_key, status.is_possibly_sensitive, status,
+                    current, quotedMedia, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
+        }
     }
 
     override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
@@ -427,13 +433,17 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = getFullStatus(position) ?: return
-        IntentUtils.openStatus(activity, status, null)
+        activity?.let {
+            IntentUtils.openStatus(it, status, null)
+        }
     }
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
         val quotedId = status.quoted_id ?: return
-        IntentUtils.openStatus(activity, status.account_key, quotedId)
+        activity?.let {
+            IntentUtils.openStatus(it, status.account_key, quotedId)
+        }
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
@@ -507,7 +517,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     }
 
     protected abstract fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
-            data: List<ParcelableStatus>?): Boolean
+                                       data: List<ParcelableStatus>?): Boolean
 
     protected abstract fun onCreateStatusesLoader(context: Context, args: Bundle,
             fromUser: Boolean): Loader<List<ParcelableStatus>?>
@@ -522,8 +532,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val status = adapter.getStatus(contextMenuInfo!!.position)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
+        context?.let {
+            MenuUtils.setupForStatus(it, menu, preferences, twitterWrapper, userColorNameManager,
                 status)
+        }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -532,7 +544,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val status = adapter.getStatus(contextMenuInfo.position)
         when (item.itemId) {
             R.id.share -> {
-                val shareIntent = Utils.createStatusShareIntent(activity, status)
+                val shareIntent = activity?.let { Utils.createStatusShareIntent(it, status) }
                 val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                 startActivity(chooser)
 
@@ -543,14 +555,14 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             }
             R.id.make_gap -> {
                 if (this !is CursorStatusesFragment) return true
-                val resolver = context.contentResolver
+                val resolver = context?.contentResolver
                 val values = ContentValues()
                 values.put(Statuses.IS_GAP, 1)
                 val where = Expression.equals(Statuses._ID, status._id).sql
-                resolver.update(contentUri, values, where, null)
+                resolver?.update(contentUri, values, where, null)
                 return true
             }
-            else -> return MenuUtils.handleStatusClick(activity, this, fragmentManager,
+            else -> return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
                     preferences, userColorNameManager, twitterWrapper, status, item)
         }
     }
@@ -591,7 +603,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             when (id) {
                 R.id.reply -> {
                     val intent = Intent(INTENT_ACTION_REPLY)
-                    intent.`package` = fragment.context.packageName
+                    intent.`package` = fragment.context?.packageName
                     intent.putExtra(EXTRA_STATUS, status)
                     fragment.startActivity(intent)
                 }
@@ -619,12 +631,12 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         fun handleActionLongClick(fragment: Fragment, status: ParcelableStatus, itemId: Long, id: Int): Boolean {
             when (id) {
                 R.id.favorite -> {
-                    val intent = selectAccountIntent(fragment.context, status, itemId)
+                    val intent = fragment.context?.let { selectAccountIntent(it, status, itemId) }
                     fragment.startActivityForResult(intent, REQUEST_FAVORITE_SELECT_ACCOUNT)
                     return true
                 }
                 R.id.retweet -> {
-                    val intent = selectAccountIntent(fragment.context, status, itemId, false)
+                    val intent = fragment.context?.let { selectAccountIntent(it, status, itemId, false) }
                     fragment.startActivityForResult(intent, REQUEST_RETWEET_SELECT_ACCOUNT)
                     return true
                 }

@@ -2,7 +2,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.group.UserGroupsLoader
 import org.mariotaku.twidere.model.ParcelableGroup

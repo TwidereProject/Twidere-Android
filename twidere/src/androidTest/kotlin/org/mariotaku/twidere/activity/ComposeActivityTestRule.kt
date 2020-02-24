@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.activity
 
-import android.support.test.rule.ActivityTestRule
+import androidx.test.rule.ActivityTestRule
 import org.mariotaku.twidere.util.TestAccountUtils
 
 /**

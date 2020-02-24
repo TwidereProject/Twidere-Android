@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import android.text.TextUtils
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableStatus

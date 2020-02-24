@@ -27,16 +27,16 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.Loader
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.FixedLinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager
+import androidx.core.content.ContextCompat
+import androidx.loader.content.Loader
+import androidx.core.widget.TextViewCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.FixedLinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.*
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
@@ -96,9 +96,9 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         EditAltTextDialogFragment.EditAltTextCallback {
     private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
 
-    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)!!
+    private val accountKey: UserKey get() = arguments?.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
-    private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)!!
+    private val conversationId: String get() = arguments?.getString(EXTRA_CONVERSATION_ID)!!
 
     private val account: AccountDetails? by lazy {
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
@@ -126,6 +126,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        val context = context ?: return
         val account = this.account ?: run {
             activity?.finish()
             return
@@ -246,10 +247,12 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             }
             REQUEST_ADD_GIF -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val intent = ThemedMediaPickerActivity.withThemed(context)
-                            .getMedia(data.data!!)
-                            .extras(Bundle { this[EXTRA_TYPES] = intArrayOf(ParcelableMedia.Type.ANIMATED_GIF) })
-                            .build()
+                    val intent = context?.let {
+                        ThemedMediaPickerActivity.withThemed(it)
+                                .getMedia(data.data!!)
+                                .extras(Bundle { this[EXTRA_TYPES] = intArrayOf(ParcelableMedia.Type.ANIMATED_GIF) })
+                                .build()
+                    }
                     startActivityForResult(intent, REQUEST_PICK_MEDIA)
                 }
             }
@@ -275,7 +278,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
-        return ConversationLoader(context, accountKey, conversationId)
+        return ConversationLoader(context!!, accountKey, conversationId)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableMessage>?>, data: List<ParcelableMessage>?) {
@@ -309,12 +312,13 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
-            layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+                                        layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         return null
     }
 
     override fun onLoadMoreContents(position: Long) {
         if (ILoadMoreSupportAdapter.START !in position) return
+        val context = context ?: return
         val message = adapter.getMessage(adapter.messageRange.endInclusive)
         setLoadMoreIndicatorPosition(position)
         val param = GetMessagesTask.LoadMoreMessageTaskParam(context, accountKey, conversationId,
@@ -323,8 +327,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         twitterWrapper.getMessagesAsync(param)
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (menuInfo !is ExtendedRecyclerView.ContextMenuInfo) return
+        val context = context ?: return
+        val activity = activity ?: return
         when (menuInfo.recyclerViewId) {
             R.id.recyclerView -> {
                 val message = adapter.getMessage(menuInfo.position)
@@ -344,6 +350,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         val menuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: run {
             return super.onContextItemSelected(item)
         }
+        val context = context ?: return super.onContextItemSelected(item)
         when (menuInfo.recyclerViewId) {
             R.id.recyclerView -> {
                 val message = adapter.getMessage(menuInfo.position)
@@ -396,6 +403,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (!event.success || event.accountKey != accountKey || event.conversationId != conversationId) {
             return
         }
+        val arguments = arguments ?: return
+        val activity = activity ?: return
         val newConversationId = event.newConversationId ?: return
         arguments[EXTRA_CONVERSATION_ID] = newConversationId
         if (activity is LinkHandlerActivity) {
@@ -405,6 +414,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     private fun performSendMessage() {
+        val context = context ?: return
         val conversation = adapter.conversation ?: return
         val conversationAccount = this.account ?: return
         if (conversation.readOnly) return
@@ -445,6 +455,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     private fun openMediaPicker() {
+        val context = context ?: return
         val builder = ThemedMediaPickerActivity.withThemed(context)
         builder.pickSources(arrayOf(MediaPickerActivity.SOURCE_CAMERA,
                 MediaPickerActivity.SOURCE_CAMCORDER,
@@ -483,11 +494,14 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     private fun markRead() {
+        val context = context ?: return
         TaskStarter.execute(MarkMessageReadTask(context, accountKey, conversationId))
     }
 
     private fun updateConversationStatus() {
-        if (context == null || isDetached || (activity?.isFinishing != false)) return
+        val context = context ?: return
+        val activity = activity ?: return
+        if (isDetached || activity.isFinishing) return
         val conversation = adapter.conversation ?: return
         val title = conversation.getTitle(context, userColorNameManager,
                 preferences[nameFirstKey]).first
@@ -508,7 +522,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
 
         val stateIcon = if (conversation.notificationDisabled) {
-            ContextCompat.getDrawable(context, R.drawable.ic_message_type_speaker_muted).apply {
+            ContextCompat.getDrawable(context, R.drawable.ic_message_type_speaker_muted)?.apply {
                 mutate()
                 setColorFilter(conversationTitle.currentTextColor, PorterDuff.Mode.SRC_ATOP)
             }
@@ -544,7 +558,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             types: IntArray?,
             copySrc: Boolean,
             deleteSrc: Boolean
-    ) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(fragment.context, sources, types, copySrc, deleteSrc) {
+    ) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(fragment.context!!, sources, types, copySrc, deleteSrc) {
 
         private val fragmentRef = WeakReference(fragment)
 
@@ -567,7 +581,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     internal class DeleteMediaTask(
             fragment: MessagesConversationFragment,
             val media: Array<ParcelableMediaUpdate>
-    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.context,
+    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.context!!,
             media.mapToArray { Uri.parse(it.uri) }) {
 
         init {
@@ -606,7 +620,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             isUseCache = false
         }
 
-        override fun onLoadInBackground(): MutableList<ParcelableMessage> {
+        override fun onLoadInBackground(): MutableList<ParcelableMessage>? {
             atomicConversation.set(DataStoreUtils.findMessageConversation(context, accountKey, conversationId))
             return super.onLoadInBackground()
         }

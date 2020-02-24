@@ -2,8 +2,8 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v4.text.BidiFormatter
-import android.support.v7.widget.RecyclerView
+import androidx.core.text.BidiFormatter
+import androidx.recyclerview.widget.RecyclerView
 import android.util.SparseBooleanArray
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get

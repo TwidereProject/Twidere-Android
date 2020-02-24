@@ -408,7 +408,7 @@
         <include layout="@layout/adapter_item_status_interact_user"/>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/countsUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -420,7 +420,7 @@
         android:splitMotionEvents="false"
         tools:visibility="invisible"/>
 
-    <android.support.v7.widget.TwidereActionMenuView
+    <androidx.appcompat.widget.TwidereActionMenuView
         android:id="@+id/menuBar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"

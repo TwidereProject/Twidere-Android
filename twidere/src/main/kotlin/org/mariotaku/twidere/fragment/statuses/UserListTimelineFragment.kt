@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
@@ -38,6 +38,8 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
+            val arguments = arguments ?: return null
+            val context = context ?: return null
             val accountKey = Utils.getAccountKey(context, arguments)
             val listId = arguments.getString(EXTRA_LIST_ID)
             val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
@@ -63,6 +65,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
 
     override val readPositionTagWithArguments: String?
         get() {
+            val arguments = arguments ?: return null
             val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             val sb = StringBuilder("user_list_")
             if (tabPosition < 0) return null
@@ -98,7 +101,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserListTimelineLoader(activity, accountKey, listId, userKey, screenName, listName,
+        return UserListTimelineLoader(activity!!, accountKey, listId, userKey, screenName, listName,
                 adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
     }
 

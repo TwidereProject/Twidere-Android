@@ -22,8 +22,8 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.content.ContentValues
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import com.twitter.Extractor
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
@@ -48,7 +48,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
     private var filterItems: Array<FilterItemInfo>? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
         val nameFirst = preferences[nameFirstKey]
@@ -107,16 +107,17 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                     sourceValues.add(values)
                 }
             }
-            val resolver = context.contentResolver
-            ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
-                    Filters.Users.USER_KEY, false, userKeys, null, null)
-            ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI,
-                    Filters.Keywords.VALUE, false, keywords, null, null)
-            ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI,
-                    Filters.Sources.VALUE, false, sources, null, null)
-            ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues)
-            ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues)
-            ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues)
+            context?.contentResolver?.let { resolver ->
+                ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
+                        Filters.Users.USER_KEY, false, userKeys, null, null)
+                ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI,
+                        Filters.Keywords.VALUE, false, keywords, null, null)
+                ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI,
+                        Filters.Sources.VALUE, false, sources, null, null)
+                ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues)
+                ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues)
+                ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues)
+            }
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()

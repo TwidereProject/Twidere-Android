@@ -92,6 +92,7 @@ class UserListMembersFragment : ParcelableUsersFragment() {
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
+        val arguments = arguments ?: return
         val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
         if (accountKey == null || accountKey != userKey) return
@@ -109,7 +110,7 @@ class UserListMembersFragment : ParcelableUsersFragment() {
         val user = adapter.getUser(contextMenuInfo.position) ?: return false
         when (item.itemId) {
             R.id.delete_from_list -> {
-                DeleteUserListMembersDialogFragment.show(fragmentManager, userList, user)
+                fragmentManager?.let { DeleteUserListMembersDialogFragment.show(it, userList, user) }
                 return true
             }
         }
@@ -119,6 +120,7 @@ class UserListMembersFragment : ParcelableUsersFragment() {
     @Subscribe
     fun onUserListMembersChanged(event: UserListMembersChangedEvent) {
         val userList = event.userList
+        val arguments = arguments ?: return
         val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return
         val listId = arguments.getString(EXTRA_LIST_ID)
         val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
