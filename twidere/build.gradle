@@ -272,7 +272,7 @@ dependencies {
     implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"
-    implementation "com.github.mariotaku:Chameleon:${libVersions['Chameleon']}"
+    implementation "com.github.Tlaster:Chameleon:${libVersions['Chameleon']}"
     implementation "com.github.mariotaku.UniqR:android:${libVersions['UniqR']}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${libVersions['Kotlin']}"

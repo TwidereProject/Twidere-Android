@@ -19,7 +19,7 @@
 
 <resources>
 
-    <style name="Theme.Twidere.Light" parent="Theme.AppCompat.Light">
+    <style name="Theme.Twidere.Light" parent="Theme.MaterialComponents.Light">
 
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
@@ -51,7 +51,7 @@
 
     <style name="Theme.Twidere.Light.Content" parent="Theme.Twidere.Light"/>
 
-    <style name="Theme.Twidere.Light.Dialog" parent="Theme.AppCompat.Light.Dialog">
+    <style name="Theme.Twidere.Light.Dialog" parent="Theme.MaterialComponents.Light.Dialog">
 
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
