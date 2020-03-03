@@ -20,9 +20,13 @@ package org.mariotaku.microblog.library.twitter.api;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessageEventObject;
+import org.mariotaku.microblog.library.twitter.model.PageableResponseList;
+import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.template.DirectMessageAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Params;
+import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.annotation.param.Raw;
 import org.mariotaku.restfu.http.BodyType;
 
@@ -36,5 +40,8 @@ public interface DirectMessagesEventResources {
     @BodyType(BodyType.RAW)
     DirectMessageEventObject newDirectMessageEvent(@Raw(contentType = "application/json", encoding = "UTF-8")
             DirectMessageEventObject event) throws MicroBlogException;
+
+    @GET("/direct_messages/events/list.json")
+    PageableResponseList<DirectMessageEventObject.Event> getDirectMessageList(@Query int count, @Query Paging paging) throws MicroBlogException;
 
 }

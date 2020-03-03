@@ -22,24 +22,28 @@ package org.mariotaku.twidere.task.twitter.message
 import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
+import android.os.Parcelable
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
-import org.mariotaku.ktextension.mapToArray
-import org.mariotaku.ktextension.toIntOr
-import org.mariotaku.ktextension.toLongOr
+import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.DMResponse
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.restfu.callback.RawCallback
+import org.mariotaku.restfu.http.HttpResponse
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.findFieldByTypes
 import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.model.api.target
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.extension.queryReference
+import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
@@ -57,6 +61,7 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import java.lang.Exception
 import java.util.*
 
 /**
@@ -119,7 +124,7 @@ class GetMessagesTask(
         val accountsCount = param.accountKeys.size
 
         val receivedPagination = param.pagination?.get(index) as? SinceMaxPagination
-        val sincePagination = param.pagination?.get(accountsCount + index) as? SinceMaxPagination
+        val sincePagination = param.pagination?.elementAtOrNull(accountsCount + index) as? SinceMaxPagination
 
         val firstFetch by lazy {
             val noConversationsBefore = context.contentResolver.queryCount(Conversations.CONTENT_URI,
@@ -128,53 +133,38 @@ class GetMessagesTask(
         }
 
         val updateLastRead = param.hasMaxIds || firstFetch
-
-        val received = microBlog.getDirectMessages(Paging().apply {
-            count(100)
-            val maxId = receivedPagination?.maxId
-            val sinceId = receivedPagination?.sinceId
-            if (maxId != null) {
-                maxId(maxId)
-            }
-            if (sinceId != null) {
-                sinceId(sinceId)
-            }
-        })
-        val sent = microBlog.getSentDirectMessages(Paging().apply {
-            count(100)
-            val maxId = sincePagination?.maxId
-            val sinceId = sincePagination?.sinceId
-            if (maxId != null) {
-                maxId(maxId)
-            }
-            if (sinceId != null) {
-                sinceId(sinceId)
-            }
+        // TODO: pagination support
+        val list = microBlog.getDirectMessageList(50, Paging().apply {
         })
 
+        val possibleUserId = (list.map { it.messageCreate.target.recipientId } + list.map { it.messageCreate.senderId }).distinct()
+        val users = microBlog.lookupUsers(possibleUserId.toTypedArray())
+
+        val result = list.apply {
+            sortByDescending { it.createdTimestamp.toLong() }
+        }.map {
+            DirectMessage().also { directMessage ->
+                directMessage[DirectMessage::class.java.getDeclaredField("text")] = it.messageCreate.messageData.text
+                directMessage[DirectMessage::class.java.getDeclaredField("id")] = it.id
+                directMessage[DirectMessage::class.java.getDeclaredField("sender")] = users.firstOrNull { user -> it.messageCreate.senderId == user.id }
+                directMessage[DirectMessage::class.java.getDeclaredField("recipient")] = users.firstOrNull { user -> it.messageCreate.senderId == user.id }
+                directMessage[DirectMessage::class.java.getDeclaredField("createdAt")] = Date(it.createdTimestamp.toLong())
+            }
+        }
 
         val insertMessages = arrayListOf<ParcelableMessage>()
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
         val conversationIds = hashSetOf<String>()
-        received.forEach {
+        result.forEach {
             conversationIds.add(ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
         }
-        sent.forEach {
-            conversationIds.add(ParcelableMessageUtils.outgoingConversationId(it.senderId, it.recipientId))
-        }
-
         conversations.addLocalConversations(context, accountKey, conversationIds)
 
-        received.forEachIndexed { i, dm ->
-            addConversationMessage(insertMessages, conversations, details, dm, i, received.size,
+        result.forEachIndexed { i, dm ->
+            addConversationMessage(insertMessages, conversations, details, dm, i, list.size,
                     false, profileImageSize, updateLastRead)
         }
-        sent.forEachIndexed { i, dm ->
-            addConversationMessage(insertMessages, conversations, details, dm, i, sent.size,
-                    true, profileImageSize, updateLastRead)
-        }
-
         return DatabaseUpdateData(conversations.values, insertMessages)
     }
 
