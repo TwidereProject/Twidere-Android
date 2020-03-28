@@ -1,11 +1,3 @@
-# We'll be back soon #
-
-Months ago, I started a long and slow migration to fit new Android frameworks. Unfortunately, Twidere has hundreds of thousands lines of code, and over 50% needs to be rewritten because there're breaking changes. It's even impossible to maintain as publishing to Google Play requires new API target, and that target requires new libraries, and those libraries will break current code.
-
-Don't worry, I don't like Twitter's new timeline & ads as much as you do. I can't give any promise, but my plan is to start a new one, focusing on cleaness & simplicity. And before this proposed product, I want to build a web service to help you manage your Twitter data, such as removing spam followers (like [TwitBlock](https://twitblock.org/)). 
-
-Twidere-Android will be maintained by community and supporter including [Dimension](https://dimension.im/). Stay tuned and we'll back soon!
-
 # Twidere for Android #
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Twidere-brightgreen.svg?style=flat)](http://android-arsenal.com/details/3/2453)
@@ -13,6 +5,8 @@ Twidere-Android will be maintained by community and supporter including [Dimensi
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
 
 Material Design ready and feature rich Twitter app for Android 4.0+
+
+Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
 
 ---
 
