@@ -181,8 +181,10 @@ abstract class GetActivitiesTask(
                 valuesList[valuesList.size - 1].put(Activities.IS_GAP, true)
             }
         }
-        // Insert previously fetched items.
-        ContentResolverUtils.bulkInsert(cr, writeUri, valuesList)
+        if (valuesList.isNotEmpty()) {
+            // Insert previously fetched items.
+            ContentResolverUtils.bulkInsert(cr, writeUri, valuesList)
+        }
 
         // Remove gap flag
         if (maxId != null && sinceId == null) {
