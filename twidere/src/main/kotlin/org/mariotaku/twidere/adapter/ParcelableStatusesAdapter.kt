@@ -453,7 +453,7 @@ abstract class ParcelableStatusesAdapter(
                 val timestamp = cursor.safeGetLong(indices[Statuses.TIMESTAMP])
                 val sortId = cursor.safeGetLong(indices[Statuses.SORT_ID])
                 val positionKey = cursor.safeGetLong(indices[Statuses.POSITION_KEY])
-                val gap = cursor.getInt(indices[Statuses.IS_GAP]) == 1
+                val gap = cursor.safeGetInt(indices[Statuses.IS_GAP]) == 1
                 val newInfo = StatusInfo(_id, accountKey, id, timestamp, sortId, positionKey, gap)
                 infoCache?.set(dataPosition, newInfo)
                 return@run newInfo
