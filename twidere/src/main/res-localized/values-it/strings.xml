@@ -321,7 +321,7 @@
   <string name="mention_user_name">Menziona <xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">Solo menzioni</string>
   <string name="message_api_data_corrupted">Dati delle API corrotti.</string>
-  <string name="message_api_url_format_help">[DOMAIN]: Dominio dell' API di Twitter.\nPer Esempio: https://[DOMAIN].twitter.com/ sarà sostituito da https://api.twitter.com/.</string>
+  <string name="message_api_url_format_help">[DOMAIN]: Dominio dell\' API di Twitter.\nPer Esempio: https://[DOMAIN].twitter.com/ sarà sostituito da https://api.twitter.com/.</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> bloccato.</string>
   <string name="message_direct_message_deleted">Messaggio diretto cancellato.</string>
   <string name="message_direct_message_sent">Messaggio diretto inviato.</string>
