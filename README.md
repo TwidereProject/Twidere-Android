@@ -6,6 +6,8 @@
 
 Material Design ready and feature rich Twitter app for Android 4.0+
 
+Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
+
 ---
 
 ## Features ##
