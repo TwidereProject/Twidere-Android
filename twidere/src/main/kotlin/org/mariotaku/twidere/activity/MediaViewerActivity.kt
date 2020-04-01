@@ -73,6 +73,7 @@ import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
+import kotlin.concurrent.thread
 import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener,
@@ -521,17 +522,19 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private fun openSaveToDocumentChooser() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         val fileInfo = getCurrentCacheFileInfo(viewPager.currentItem) ?: return
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-        intent.type = fileInfo.mimeType ?: "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        val extension = fileInfo.fileExtension
-        val saveFileName = if (extension != null) {
-            "${fileInfo.fileName?.removeSuffix("_$extension")}.$extension"
-        } else {
-            fileInfo.fileName
+        thread {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.type = fileInfo.mimeType ?: "*/*"
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            val extension = fileInfo.fileExtension
+            val saveFileName = if (extension != null) {
+                "${fileInfo.fileName?.removeSuffix("_$extension")}.$extension"
+            } else {
+                fileInfo.fileName
+            }
+            intent.putExtra(Intent.EXTRA_TITLE, saveFileName)
+            startActivityForResult(intent, REQUEST_SELECT_SAVE_MEDIA)
         }
-        intent.putExtra(Intent.EXTRA_TITLE, saveFileName)
-        startActivityForResult(intent, REQUEST_SELECT_SAVE_MEDIA)
     }
 
     private fun saveMediaToContentUri(data: Uri) {
