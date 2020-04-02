@@ -26,6 +26,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
+import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -505,13 +506,25 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
         val pubDir = when (type) {
             CacheFileType.VIDEO -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+                }
             }
             CacheFileType.IMAGE -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                }
             }
             else -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                }
             }
         }
         val saveDir = File(pubDir, "Twidere")

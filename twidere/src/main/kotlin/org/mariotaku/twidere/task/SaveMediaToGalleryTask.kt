@@ -20,9 +20,15 @@
 package org.mariotaku.twidere.task
 
 import android.app.Activity
+import android.content.ContentValues
 import android.media.MediaScannerConnection
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.widget.Toast
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.CacheFileType
+import org.mariotaku.twidere.provider.CacheProvider
 import java.io.File
 
 /**
@@ -30,14 +36,53 @@ import java.io.File
  */
 class SaveMediaToGalleryTask(
         activity: Activity,
-        fileInfo: FileInfo,
+        private val fileInfo: FileInfo,
         destination: File
 ) : ProgressSaveFileTask(activity, destination, fileInfo) {
 
     override fun onFileSaved(savedFile: File, mimeType: String?) {
         val context = context ?: return
+
         MediaScannerConnection.scanFile(context, arrayOf(savedFile.path),
                 arrayOf(mimeType), null)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
+            val path = when (type) {
+                CacheFileType.VIDEO -> {
+                    Environment.DIRECTORY_MOVIES
+                }
+                CacheFileType.IMAGE -> {
+                    Environment.DIRECTORY_PICTURES
+                }
+                else -> {
+                    Environment.DIRECTORY_DOWNLOADS
+                }
+            }
+            val url = when (type) {
+                CacheFileType.VIDEO -> {
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                }
+                CacheFileType.IMAGE -> {
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                }
+                else -> {
+                    MediaStore.Downloads.EXTERNAL_CONTENT_URI
+                }
+            }
+            val contentValues = ContentValues()
+            contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, fileInfo.fileName)
+            contentValues.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+            contentValues.put(MediaStore.Images.Media.MIME_TYPE, fileInfo.mimeType)
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "$path/Twidere")
+            context.contentResolver.insert(url, contentValues)?.let { uri ->
+                context.contentResolver.openOutputStream(uri)?.use {
+                    savedFile.inputStream().use { fileInputStream ->
+                        fileInputStream.copyTo(it)
+                    }
+                }
+            }
+        }
+        savedFile.delete()
         Toast.makeText(context, R.string.message_toast_saved_to_gallery, Toast.LENGTH_SHORT).show()
     }
 
