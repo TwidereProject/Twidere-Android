@@ -25,6 +25,9 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.model.util.AccountUtils;
+import org.mariotaku.twidere.util.api.TwitterAndroidExtraHeaders;
+import org.mariotaku.twidere.util.api.TwitterMacExtraHeaders;
+import org.mariotaku.twidere.util.api.UserAgentExtraHeaders;
 
 import java.util.List;
 import java.util.Locale;

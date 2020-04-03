@@ -684,7 +684,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     internal class LoadTranslationTask(fragment: StatusFragment, val status: ParcelableStatus) :
-            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.context, status.account_key) {
+            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.context!!, status.account_key) {
 
         private val weakFragment = WeakReference(fragment)
 

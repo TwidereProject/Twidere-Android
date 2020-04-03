@@ -330,7 +330,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performAddParticipant(user: ParcelableUser) {
         ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
         val weakThis = WeakReference(this)
-        val task = AddParticipantsTask(context, accountKey, conversationId, listOf(user))
+        val task = AddParticipantsTask(context!!, accountKey, conversationId, listOf(user))
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("add_participant_progress") {
@@ -400,7 +400,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val context = fragment.context
             when (account.type) {
                 AccountType.TWITTER -> {
-                    if (account.isOfficial(context)) {
+                    if (account.isOfficial(context) && context != null) {
                         val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                         if (uri == null) {
                             val result = microBlog.updateDmConversationAvatar(conversationId, null)

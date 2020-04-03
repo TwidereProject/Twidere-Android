@@ -290,7 +290,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 if (!accountRequired) {
                     accountsAdapter.add(AccountDetails.dummy())
                 }
-                val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
+                val officialKeyOnly = arguments?.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false) ?: false
                 accountsAdapter.addAll(AccountUtils.getAllAccountDetails(AccountManager.get(context), true).filter {
                     if (officialKeyOnly && !it.isOfficial(context)) {
                         return@filter false

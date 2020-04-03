@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.fragment.status
 
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
@@ -35,7 +35,7 @@ class UnpinStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
         get() = getString(R.string.message_unpin_status_confirm)
 
     override fun onPerformAction(status: ParcelableStatus) {
-        val task = UnpinStatusTask(context, status.account_key, status.id)
+        val task = UnpinStatusTask(context!!, status.account_key, status.id)
         TaskStarter.execute(task)
     }
 

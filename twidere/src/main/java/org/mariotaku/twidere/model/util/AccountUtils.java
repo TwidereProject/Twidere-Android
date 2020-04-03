@@ -129,7 +129,10 @@ public class AccountUtils {
         return null;
     }
 
-    public static boolean isOfficial(@NonNull final Context context, @NonNull final UserKey accountKey) {
+    public static boolean isOfficial(@Nullable final Context context, @NonNull final UserKey accountKey) {
+        if (context == null) {
+            return false;
+        }
         AccountManager am = AccountManager.get(context);
         Account account = AccountUtils.findByAccountKey(am, accountKey);
         if (account == null) return false;
