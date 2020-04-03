@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.extension.queryOne
@@ -80,6 +81,23 @@ class MarkMessageReadTask(
         internal fun performMarkRead(context: Context, microBlog: MicroBlog, account: AccountDetails,
                 conversation: ParcelableMessageConversation): Pair<String, Long>? {
             val cr = context.contentResolver
+            when (account.type) {
+                AccountType.TWITTER -> {
+                    if (account.isOfficial(context)) {
+                        val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.maxReadEvent ?: run {
+                            val message = cr.findRecentMessage(account.key, conversation.id) ?: return null
+                            return@run Pair(message.id, message.timestamp)
+                        }
+                        if (conversation.last_read_timestamp > event.second) {
+                            // Local is newer, ignore network request
+                            return event
+                        }
+                        if (microBlog.markDmRead(conversation.id, event.first).isSuccessful) {
+                            return event
+                        }
+                    }
+                }
+            }
             val message = cr.findRecentMessage(account.key, conversation.id) ?: return null
             return Pair(message.id, message.timestamp)
         }

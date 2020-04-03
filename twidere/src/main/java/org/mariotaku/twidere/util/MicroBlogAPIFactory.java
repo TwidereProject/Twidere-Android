@@ -166,6 +166,21 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     @WorkerThread
     @Nullable
     public static ExtraHeaders getExtraHeaders(Context context, ConsumerKeyType type) {
+        switch (type) {
+            case TWITTER_FOR_ANDROID: {
+                return TwitterAndroidExtraHeaders.INSTANCE;
+            }
+            case TWITTER_FOR_IPHONE:
+            case TWITTER_FOR_IPAD: {
+                return new UserAgentExtraHeaders("Twitter/6.75.2 CFNetwork/811.4.18 Darwin/16.5.0");
+            }
+            case TWITTER_FOR_MAC: {
+                return TwitterMacExtraHeaders.INSTANCE;
+            }
+            case TWEETDECK: {
+                return new UserAgentExtraHeaders(UserAgentUtils.getDefaultUserAgentStringSafe(context));
+            }
+        }
         return null;
     }
 

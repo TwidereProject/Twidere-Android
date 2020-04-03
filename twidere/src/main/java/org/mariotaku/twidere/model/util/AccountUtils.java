@@ -129,6 +129,23 @@ public class AccountUtils {
         return null;
     }
 
+    public static boolean isOfficial(@NonNull final Context context, @NonNull final UserKey accountKey) {
+        AccountManager am = AccountManager.get(context);
+        Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return false;
+        return AccountExtensionsKt.isOfficial(account, am, context);
+    }
+
+    public static boolean hasOfficialKeyAccount(Context context) {
+        final AccountManager am = AccountManager.get(context);
+        for (Account account : getAccounts(am)) {
+            if (AccountExtensionsKt.isOfficial(account, am, context)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int getAccountTypeIcon(@Nullable String accountType) {
         if (accountType == null) return R.drawable.ic_account_logo_twitter;
         switch (accountType) {

@@ -16,6 +16,27 @@ import org.mariotaku.twidere.util.text.FanfouValidator
 import org.mariotaku.twidere.util.text.MastodonValidator
 import org.mariotaku.twidere.util.text.TwitterValidator
 
+fun AccountDetails.isOfficial(context: Context): Boolean {
+    val extra = this.extras
+    if (extra is TwitterAccountExtras) {
+        return extra.isOfficialCredentials
+    }
+    val credentials = this.credentials
+    if (credentials is OAuthCredentials) {
+        return InternalTwitterContentUtils.isOfficialKey(context,
+                credentials.consumer_key, credentials.consumer_secret)
+    }
+    return false
+}
+
+val AccountExtras.official: Boolean
+    get() {
+        if (this is TwitterAccountExtras) {
+            return isOfficialCredentials
+        }
+        return false
+    }
+
 fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T {
     return credentials.newMicroBlogInstance(context, type, cls)
 }

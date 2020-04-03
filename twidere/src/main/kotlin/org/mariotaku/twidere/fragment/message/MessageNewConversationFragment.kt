@@ -44,6 +44,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.queryOne
 import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.fragment.BaseFragment
@@ -242,7 +243,11 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val activity = activity ?: return
         val selected = this.selectedRecipients
         if (selected.isEmpty()) return
-        val maxParticipants = 1
+        val maxParticipants = if (account.isOfficial(context)) {
+            defaultFeatures.twitterDirectMessageMaxParticipants
+        } else {
+            1
+        }
         if (selected.size > maxParticipants) {
             editParticipants.error = getString(R.string.error_message_message_too_many_participants)
             return

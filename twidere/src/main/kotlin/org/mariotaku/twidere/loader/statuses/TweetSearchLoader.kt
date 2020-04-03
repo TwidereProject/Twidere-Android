@@ -34,6 +34,7 @@ import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -75,6 +76,9 @@ open class TweetSearchLoader(
 
     protected open fun processQuery(details: AccountDetails, query: String): String {
         if (details.type == AccountType.TWITTER) {
+            if (details.extras?.official == true) {
+                return smQuery(query, pagination)
+            }
             return "$query exclude:retweets"
         }
         return query
@@ -104,6 +108,15 @@ open class TweetSearchLoader(
         val queryText = processQuery(account, query)
         when (account.type) {
             AccountType.TWITTER -> {
+                if (account.extras?.official == true) {
+                    val universalQuery = UniversalSearchQuery(queryText)
+                    universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
+                    universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
+                    universalQuery.setPaging(paging)
+                    val searchResult = microBlog.universalSearch(universalQuery)
+                    return searchResult.modules.mapNotNull { it.status?.data }
+                }
+
                 val searchQuery = SearchQuery(queryText)
                 searchQuery.paging(paging)
                 return microBlog.search(searchQuery)

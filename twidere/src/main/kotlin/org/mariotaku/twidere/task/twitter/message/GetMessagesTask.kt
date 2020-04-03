@@ -99,9 +99,25 @@ class GetMessagesTask(
                 // Use fanfou DM api, disabled since it's conversation api is not suitable for paging
                 // return getFanfouMessages(microBlog, details, param, index)
             }
+            AccountType.TWITTER -> {
+                // Use official DM api
+                if (details.isOfficial(context)) {
+                    return getTwitterOfficialMessages(microBlog, details, param, index)
+                }
+            }
         }
         // Use default method
         return getDefaultMessages(microBlog, details, param, index)
+    }
+
+    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+        val conversationId = param.conversationId
+        if (conversationId == null) {
+            return getTwitterOfficialUserInbox(microBlog, details, param, index)
+        } else {
+            return getTwitterOfficialConversation(microBlog, details, conversationId, param, index)
+        }
     }
 
     private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
@@ -179,6 +195,35 @@ class GetMessagesTask(
     }
 
 
+    private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
+            conversationId: String, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+        val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
+                ?: return DatabaseUpdateData(emptyList(), emptyList())
+        val paging = Paging().apply {
+            maxId(maxId)
+        }
+
+        val response = microBlog.getDmConversation(conversationId, paging).conversationTimeline
+        return createDatabaseUpdateData(context, details, response, profileImageSize)
+    }
+
+    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+        val maxId = (param.pagination?.get(index) as? SinceMaxPagination)?.maxId
+        val cursor = (param.pagination?.get(index) as? CursorPagination)?.cursor
+        val response = if (cursor != null) {
+            microBlog.getUserUpdates(cursor).userEvents
+        } else {
+            microBlog.getUserInbox(Paging().apply {
+                if (maxId != null) {
+                    maxId(maxId)
+                }
+            }).userInbox
+        } ?: throw MicroBlogException("Null response data")
+        return createDatabaseUpdateData(context, details, response, profileImageSize)
+    }
+
+
     private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
@@ -230,10 +275,16 @@ class GetMessagesTask(
                     defaultKeys, false)
             val outgoingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
                     defaultKeys, true)
+            val cursors = DataStoreUtils.getNewestConversations(context, Conversations.CONTENT_URI,
+                    twitterOfficialKeys).mapToArray { it?.request_cursor }
             accounts.forEachIndexed { index, details ->
                 if (details == null) return@forEachIndexed
-                result[index] = SinceMaxPagination.sinceId(incomingIds[index], -1)
-                result[accounts.size + index] = SinceMaxPagination.sinceId(outgoingIds[index], -1)
+                if (details.isOfficial(context)) {
+                    result[index] = CursorPagination.valueOf(cursors[index])
+                } else {
+                    result[index] = SinceMaxPagination.sinceId(incomingIds[index], -1)
+                    result[accounts.size + index] = SinceMaxPagination.sinceId(outgoingIds[index], -1)
+                }
             }
             return@lazy result
         }
@@ -250,7 +301,7 @@ class GetMessagesTask(
             val outgoingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
                     defaultKeys, true)
             val oldestConversations = DataStoreUtils.getOldestConversations(context,
-                    Conversations.CONTENT_URI, emptyArray())
+                    Conversations.CONTENT_URI, twitterOfficialKeys)
             oldestConversations.forEachIndexed { i, conversation ->
                 val extras = conversation?.conversation_extras as? TwitterOfficialConversationExtras ?: return@forEachIndexed
                 incomingIds[i] = extras.maxEntryId
@@ -291,6 +342,19 @@ class GetMessagesTask(
         protected val defaultKeys: Array<UserKey?> by lazy {
             return@lazy accounts.map { account ->
                 account ?: return@map null
+                if (account.isOfficial(context)) {
+                    return@map null
+                }
+                return@map account.key
+            }.toTypedArray()
+        }
+
+        protected val twitterOfficialKeys: Array<UserKey?> by lazy {
+            return@lazy accounts.map { account ->
+                account ?: return@map null
+                if (!account.isOfficial(context)) {
+                    return@map null
+                }
                 return@map account.key
             }.toTypedArray()
         }

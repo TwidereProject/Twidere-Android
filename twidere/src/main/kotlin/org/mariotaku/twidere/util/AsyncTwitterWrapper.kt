@@ -377,6 +377,18 @@ class AsyncTwitterWrapper(
     }
 
     fun setActivitiesAboutMeUnreadAsync(accountKeys: Array<UserKey>, cursor: Long) {
+        val task = object : ExceptionHandlingAbstractTask<Any?, Unit, MicroBlogException, Any?>(context) {
+            override val exceptionClass = MicroBlogException::class.java
+
+            override fun onExecute(params: Any?) {
+                for (accountKey in accountKeys) {
+                    val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue
+                    if (!AccountUtils.isOfficial(context, accountKey)) continue
+                    microBlog.setActivitiesAboutMeUnread(cursor)
+                }
+            }
+        }
+        TaskStarter.execute(task)
     }
 
     fun addUpdatingRelationshipId(accountKey: UserKey, userKey: UserKey) {

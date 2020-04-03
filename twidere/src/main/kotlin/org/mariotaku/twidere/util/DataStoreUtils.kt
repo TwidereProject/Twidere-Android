@@ -998,8 +998,23 @@ object DataStoreUtils {
 
     private fun <T> getOfficialSeparatedIds(context: Context, getFromDatabase: (Array<UserKey?>, Boolean) -> T,
             mergeResult: (T, T) -> T, accountKeys: Array<UserKey?>): T {
-        val officialMaxPositions = getFromDatabase(emptyArray(), true)
-        val notOfficialMaxPositions = getFromDatabase(accountKeys, false)
+        val officialKeys = Array(accountKeys.size) {
+            val key = accountKeys[it] ?: return@Array null
+            if (AccountUtils.isOfficial(context, key)) {
+                return@Array key
+            }
+            return@Array null
+        }
+        val notOfficialKeys = Array(accountKeys.size) {
+            val key = accountKeys[it] ?: return@Array null
+            if (AccountUtils.isOfficial(context, key)) {
+                return@Array null
+            }
+            return@Array key
+        }
+
+        val officialMaxPositions = getFromDatabase(officialKeys, true)
+        val notOfficialMaxPositions = getFromDatabase(notOfficialKeys, false)
         return mergeResult(officialMaxPositions, notOfficialMaxPositions)
     }
 }

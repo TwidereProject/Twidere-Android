@@ -25,6 +25,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
@@ -74,6 +75,9 @@ class DestroyMessageTask(
                 account: AccountDetails, messageId: String): Boolean {
             when (account.type) {
                 AccountType.TWITTER -> {
+                    if (account.isOfficial(context)) {
+                        return microBlog.destroyDm(messageId).isSuccessful
+                    }
                 }
             }
             microBlog.destroyDirectMessage(messageId)

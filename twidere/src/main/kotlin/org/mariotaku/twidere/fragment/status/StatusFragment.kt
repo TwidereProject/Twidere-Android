@@ -123,6 +123,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     private lateinit var navigationHelper: RecyclerViewNavigationHelper
     private lateinit var scrollListener: RecyclerViewScrollHandler<StatusDetailsAdapter>
 
+    private var loadTranslationTask: LoadTranslationTask? = null
     // Data fields
     private var conversationLoaderInitialized: Boolean = false
 
@@ -505,9 +506,18 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     internal fun loadTranslation(status: ParcelableStatus?) {
+        if (status == null) return
+        if (loadTranslationTask?.isFinished == true) return
+        loadTranslationTask = run {
+            val task = LoadTranslationTask(this, status)
+            TaskStarter.execute(task)
+            return@run task
+        }
     }
 
     internal fun reloadTranslation() {
+        loadTranslationTask = null
+        loadTranslation(adapter.status)
     }
 
     private fun setConversation(data: List<ParcelableStatus>?) {
@@ -672,6 +682,37 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return dialog
         }
     }
+
+    internal class LoadTranslationTask(fragment: StatusFragment, val status: ParcelableStatus) :
+            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.context, status.account_key) {
+
+        private val weakFragment = WeakReference(fragment)
+
+        override fun onExecute(account: AccountDetails, params: Any?): TranslationResult {
+            val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+            val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null).orEmpty()
+            val dest: String
+            if (TextUtils.isEmpty(prefDest)) {
+                dest = twitter.accountSettings.language
+                val editor = preferences.edit()
+                editor.putString(KEY_TRANSLATION_DESTINATION, dest)
+                editor.apply()
+            } else {
+                dest = prefDest
+            }
+            return twitter.showTranslation(status.originalId, dest)
+        }
+
+        override fun onSucceed(callback: Any?, result: TranslationResult) {
+            val fragment = weakFragment.get() ?: return
+            fragment.displayTranslation(result)
+        }
+
+        override fun onException(callback: Any?, exception: MicroBlogException) {
+            Toast.makeText(context, exception.getErrorMessage(context), Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     class StatusActivitySummaryLoader(
             context: Context,

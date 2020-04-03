@@ -36,6 +36,7 @@ import org.mariotaku.twidere.extension.api.batchGetRelationships
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
 import org.mariotaku.twidere.extension.model.extractFanfouHashtags
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
@@ -80,6 +81,28 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
                 }, notifications.flatMapTo(HashSet()) { notification ->
                     notification.status?.tags?.map { it.name }.orEmpty()
                 })
+            }
+            AccountType.TWITTER -> {
+                val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                if (account.isOfficial(context)) {
+                    val timeline = microBlog.getActivitiesAboutMe(paging)
+                    val activities = timeline.map {
+                        it.toParcelable(account, profileImageSize = profileImageSize)
+                    }
+
+                    return GetTimelineResult(account, activities, activities.flatMap {
+                        it.sources?.toList().orEmpty()
+                    }, timeline.flatMapTo(HashSet()) { activity ->
+                        val mapResult = mutableSetOf<String>()
+                        activity.targetStatuses?.flatMapTo(mapResult) { status ->
+                            status.entities?.hashtags?.map { it.text }.orEmpty()
+                        }
+                        activity.targetObjectStatuses?.flatMapTo(mapResult) { status ->
+                            status.entities?.hashtags?.map { it.text }.orEmpty()
+                        }
+                        return@flatMapTo mapResult
+                    })
+                }
             }
             AccountType.FANFOU -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)

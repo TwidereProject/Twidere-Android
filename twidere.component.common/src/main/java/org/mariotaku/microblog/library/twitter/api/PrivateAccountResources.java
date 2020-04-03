@@ -16,23 +16,22 @@
  * limitations under the License.
  */
 
-package org.mariotaku.twidere.model;
+package org.mariotaku.microblog.library.twitter.api;
 
-import androidx.annotation.NonNull;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.PinTweetResult;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
 
 /**
- * Created by mariotaku on 15/4/20.
+ * Created by mariotaku on 16/8/20.
  */
-public enum ConsumerKeyType {
-    TWITTER_FOR_ANDROID, TWITTER_FOR_IPHONE, TWITTER_FOR_IPAD, TWITTER_FOR_MAC,
-    TWITTER_FOR_WINDOWS_PHONE, TWITTER_FOR_GOOGLE_TV, TWEETDECK, UNKNOWN;
+public interface PrivateAccountResources extends PrivateResources {
 
-    @NonNull
-    public static ConsumerKeyType parse(String type) {
-        try {
-            return ConsumerKeyType.valueOf(type);
-        } catch (Exception e) {
-            return UNKNOWN;
-        }
-    }
+    @POST("/account/pin_tweet.json")
+    PinTweetResult pinTweet(@Param("id") String id) throws MicroBlogException;
+
+    @POST("/account/unpin_tweet.json")
+    PinTweetResult unpinTweet(@Param("id") String id) throws MicroBlogException;
+
 }

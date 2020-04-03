@@ -100,6 +100,19 @@ fun Account.setPosition(am: AccountManager, position: Int) {
     am.setUserData(this, ACCOUNT_USER_DATA_POSITION, position.toString())
 }
 
+fun Account.isOfficial(am: AccountManager, context: Context): Boolean {
+    val extras = getAccountExtras(am)
+    if (extras is TwitterAccountExtras) {
+        return extras.isOfficialCredentials
+    }
+    val credentials = getCredentials(am)
+    if (credentials is OAuthCredentials) {
+        return InternalTwitterContentUtils.isOfficialKey(context, credentials.consumer_key,
+                credentials.consumer_secret)
+    }
+    return false
+}
+
 fun AccountManager.hasInvalidAccount(): Boolean {
     val accounts = AccountUtils.getAccounts(this)
     if (accounts.isEmpty()) return false

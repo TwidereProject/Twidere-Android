@@ -31,6 +31,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.*
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -41,6 +42,7 @@ import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addConversation
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addLocalConversations
 
@@ -84,13 +86,58 @@ class SendMessageTask(
             message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         when (account.type) {
             AccountType.TWITTER -> {
-                return sendTwitterMessageEvent(microBlog, account, message)
+                if (account.isOfficial(context)) {
+                    return sendTwitterOfficialDM(microBlog, account, message)
+                } else {
+                    return sendTwitterMessageEvent(microBlog, account, message)
+                }
             }
             AccountType.FANFOU -> {
                 return sendFanfouDM(microBlog, account, message)
             }
         }
         return sendDefaultDM(microBlog, account, message)
+    }
+
+    private fun sendTwitterOfficialDM(microBlog: MicroBlog, account: AccountDetails,
+            message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
+        var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
+        var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
+        val sendResponse = try {
+            val conversationId = message.conversation_id
+            val tempConversation = message.is_temp_conversation
+
+            val newDm = NewDm()
+            if (!tempConversation && conversationId != null) {
+                newDm.setConversationId(conversationId)
+            } else {
+                newDm.setRecipientIds(message.recipient_ids)
+            }
+            newDm.setText(message.text)
+
+            if (message.media.isNotNullOrEmpty()) {
+                val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
+                val uploadResult = UpdateStatusTask.uploadMicroBlogMediaShared(context,
+                        upload, account, message.media, null, null, true, null)
+                newDm.setMediaId(uploadResult.ids[0])
+                deleteAlways = uploadResult.deleteAlways
+                deleteOnSuccess = uploadResult.deleteOnSuccess
+            }
+            microBlog.sendDm(newDm)
+        } catch (e: UpdateStatusTask.UploadException) {
+            e.deleteAlways?.forEach {
+                it.delete(context)
+            }
+            throw MicroBlogException(e)
+        } finally {
+            deleteAlways?.forEach { it.delete(context) }
+        }
+        deleteOnSuccess?.forEach { it.delete(context) }
+        val conversationId = sendResponse.entries?.firstOrNull {
+            it.message != null
+        }?.message?.conversationId
+        val response = microBlog.getDmConversation(conversationId, null).conversationTimeline
+        return GetMessagesTask.createDatabaseUpdateData(context, account, response, profileImageSize)
     }
 
     private fun sendTwitterMessageEvent(microBlog: MicroBlog, account: AccountDetails,
