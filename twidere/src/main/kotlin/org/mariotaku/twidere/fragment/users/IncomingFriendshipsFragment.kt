@@ -32,6 +32,7 @@ import org.mariotaku.twidere.loader.users.AbsRequestUsersLoader
 import org.mariotaku.twidere.loader.users.IncomingFriendshipsLoader
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
 class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.RequestClickListener {
@@ -47,6 +48,8 @@ class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.Req
         val adapter = super.onCreateAdapter(context, requestManager)
         val accountKey = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return adapter
         if (USER_TYPE_FANFOU_COM == accountKey.host) {
+            adapter.requestClickListener = this
+        } else if (AccountUtils.isOfficial(context, accountKey)) {
             adapter.requestClickListener = this
         }
         return adapter

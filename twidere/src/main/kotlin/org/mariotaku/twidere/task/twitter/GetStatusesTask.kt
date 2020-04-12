@@ -244,7 +244,7 @@ abstract class GetStatusesTask(
                 if (result == null) return@forEach
                 val account = result.account
                 val task = CacheTimelineResultTask(context, result,
-                        account.type == AccountType.STATUSNET)
+                        account.type == AccountType.STATUSNET || account.isOfficial(context))
                 TaskStarter.execute(task)
             }
         }

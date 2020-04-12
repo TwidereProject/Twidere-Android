@@ -25,6 +25,9 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.model.util.AccountUtils;
+import org.mariotaku.twidere.util.api.TwitterAndroidExtraHeaders;
+import org.mariotaku.twidere.util.api.TwitterMacExtraHeaders;
+import org.mariotaku.twidere.util.api.UserAgentExtraHeaders;
 
 import java.util.List;
 import java.util.Locale;
@@ -166,6 +169,21 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     @WorkerThread
     @Nullable
     public static ExtraHeaders getExtraHeaders(Context context, ConsumerKeyType type) {
+        switch (type) {
+            case TWITTER_FOR_ANDROID: {
+                return TwitterAndroidExtraHeaders.INSTANCE;
+            }
+            case TWITTER_FOR_IPHONE:
+            case TWITTER_FOR_IPAD: {
+                return new UserAgentExtraHeaders("Twitter/6.75.2 CFNetwork/811.4.18 Darwin/16.5.0");
+            }
+            case TWITTER_FOR_MAC: {
+                return TwitterMacExtraHeaders.INSTANCE;
+            }
+            case TWEETDECK: {
+                return new UserAgentExtraHeaders(UserAgentUtils.getDefaultUserAgentStringSafe(context));
+            }
+        }
         return null;
     }
 

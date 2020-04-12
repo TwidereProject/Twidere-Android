@@ -15,7 +15,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.util.Utils
-import java.lang.UnsupportedOperationException
 
 /**
  * Created by mariotaku on 16/3/11.
@@ -36,7 +35,9 @@ class DenyFriendshipTask(context: Context) : AbsFriendshipOperationTask(context,
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
             else -> {
-                throw UnsupportedOperationException()
+                val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
+                return twitter.denyFriendship(args.userKey.id).toParcelable(details,
+                        profileImageSize = profileImageSize)
             }
         }
     }

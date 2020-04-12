@@ -38,6 +38,7 @@ import org.mariotaku.twidere.extension.atto.filter
 import org.mariotaku.twidere.extension.atto.firstElementOrNull
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.makeOriginal
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -92,6 +93,11 @@ class ConversationLoader(
                 // val isOfficial = account.isOfficial(context)
                 val isOfficial = false
                 canLoadAllReplies = isOfficial
+                if (isOfficial) {
+                    return microBlog.showConversation(status.id, paging).mapMicroBlogToPaginated {
+                        it.toParcelable(account, profileImageSize)
+                    }
+                }
                 return showConversationCompat(microBlog, account, status, true)
             }
             AccountType.STATUSNET -> {

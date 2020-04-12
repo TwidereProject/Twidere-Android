@@ -194,6 +194,11 @@ class StreamingService : BaseService() {
     }
 
     private fun newStreamingRunnable(account: AccountDetails, preferences: AccountPreferences): StreamingRunnable<*>? {
+        when (account.type) {
+            AccountType.TWITTER -> {
+                return TwitterStreamingRunnable(this, account, preferences)
+            }
+        }
         return null
     }
 
@@ -230,6 +235,236 @@ class StreamingService : BaseService() {
         abstract fun T.beginStreaming()
 
         abstract fun onCancelled()
+    }
+
+    internal inner class TwitterStreamingRunnable(
+            context: Context,
+            account: AccountDetails,
+            accountPreferences: AccountPreferences
+    ) : StreamingRunnable<TwitterUserStream>(context, account, accountPreferences) {
+
+        private val profileImageSize = context.getString(R.string.profile_image_size)
+        private val isOfficial = account.isOfficial(context)
+
+        private var canGetInteractions: Boolean = true
+        private var canGetMessages: Boolean = true
+
+        private val interactionsTimeoutRunnable = Runnable {
+            canGetInteractions = true
+        }
+
+        private val messagesTimeoutRunnable = Runnable {
+            canGetMessages = true
+        }
+
+        val callback = object : TwitterTimelineStreamCallback(account.key.id) {
+
+            private var lastStatusTimestamps = LongArray(2)
+
+            private var homeInsertGap = false
+            private var interactionsInsertGap = false
+
+            private var lastActivityAboutMe: ParcelableActivity? = null
+
+            override fun onConnected(): Boolean {
+                homeInsertGap = true
+                interactionsInsertGap = true
+                return true
+            }
+
+            override fun onHomeTimeline(status: Status): Boolean {
+                if (!accountPreferences.isStreamHomeTimelineEnabled) {
+                    homeInsertGap = true
+                    return false
+                }
+                val parcelableStatus = status.toParcelable(account, profileImageSize = profileImageSize)
+                parcelableStatus.is_gap = homeInsertGap
+
+                val currentTimeMillis = System.currentTimeMillis()
+                if (lastStatusTimestamps[0] >= parcelableStatus.timestamp) {
+                    val extraValue = (currentTimeMillis - lastStatusTimestamps[1]).coerceAtMost(499)
+                    parcelableStatus.position_key = parcelableStatus.timestamp + extraValue
+                } else {
+                    parcelableStatus.position_key = parcelableStatus.timestamp
+                }
+                parcelableStatus.inserted_date = currentTimeMillis
+
+                lastStatusTimestamps[0] = parcelableStatus.position_key
+                lastStatusTimestamps[1] = parcelableStatus.inserted_date
+
+                val values = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
+                        .create(parcelableStatus)
+                context.contentResolver.insert(Statuses.CONTENT_URI, values)
+                homeInsertGap = false
+                return true
+            }
+
+            override fun onActivityAboutMe(activity: Activity): Boolean {
+                if (!accountPreferences.isStreamInteractionsEnabled) {
+                    interactionsInsertGap = true
+                    return false
+                }
+                if (isOfficial) {
+                    // Wait for 30 seconds to avoid rate limit
+                    if (canGetInteractions) {
+                        handler.post { getInteractions() }
+                        canGetInteractions = false
+                        handler.postDelayed(interactionsTimeoutRunnable, TimeUnit.SECONDS.toMillis(30))
+                    }
+                } else {
+                    val insertGap: Boolean
+                    if (activity.action in Activity.Action.MENTION_ACTIONS) {
+                        insertGap = interactionsInsertGap
+                        interactionsInsertGap = false
+                    } else {
+                        insertGap = false
+                    }
+                    val curActivity = activity.toParcelable(account, insertGap, profileImageSize)
+                    curActivity.account_color = account.color
+                    curActivity.position_key = curActivity.timestamp
+                    var updateId = -1L
+                    if (curActivity.action !in Activity.Action.MENTION_ACTIONS) {
+                        /* Merge two activities if:
+                         * * Not mention/reply/quote
+                         * * Same action
+                         * * Same source or target or target object
+                         */
+                        val lastActivity = this.lastActivityAboutMe
+                        if (lastActivity != null && curActivity.action == lastActivity.action) {
+                            if (curActivity.reachedCountLimit) {
+                                // Skip if more than 10 sources/targets/target_objects
+                            } else if (curActivity.isSameSources(lastActivity)) {
+                                curActivity.prependTargets(lastActivity)
+                                curActivity.prependTargetObjects(lastActivity)
+                                updateId = lastActivity._id
+                            } else if (curActivity.isSameTarget(lastActivity)) {
+                                curActivity.prependSources(lastActivity)
+                                curActivity.prependTargets(lastActivity)
+                                updateId = lastActivity._id
+                            } else if (curActivity.isSameTargetObject(lastActivity)) {
+                                curActivity.prependSources(lastActivity)
+                                curActivity.prependTargets(lastActivity)
+                                updateId = lastActivity._id
+                            }
+                            if (updateId > 0) {
+                                curActivity.min_position = lastActivity.min_position
+                                curActivity.min_sort_position = lastActivity.min_sort_position
+                            }
+                        }
+                    }
+                    val values = ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java)
+                            .create(curActivity)
+                    val resolver = context.contentResolver
+                    if (updateId > 0) {
+                        val where = Expression.equals(Activities._ID, updateId).sql
+                        resolver.update(Activities.AboutMe.CONTENT_URI, values, where, null)
+                        curActivity._id = updateId
+                    } else {
+                        val uri = resolver.insert(Activities.AboutMe.CONTENT_URI, values)
+                        if (uri != null) {
+                            curActivity._id = uri.lastPathSegment.toLongOr(-1L)
+                        }
+                    }
+                    lastActivityAboutMe = curActivity
+                }
+                return true
+            }
+
+            @WorkerThread
+            override fun onDirectMessage(directMessage: DirectMessage): Boolean {
+                if (!accountPreferences.isStreamDirectMessagesEnabled) {
+                    return false
+                }
+                if (canGetMessages) {
+                    handler.post { getMessages() }
+                    canGetMessages = false
+                    val timeout = TimeUnit.SECONDS.toMillis(if (isOfficial) 30 else 90)
+                    handler.postDelayed(messagesTimeoutRunnable, timeout)
+                }
+                return true
+            }
+
+            override fun onAllStatus(status: Status) {
+                if (!accountPreferences.isStreamNotificationUsersEnabled) {
+                    return
+                }
+                val user = status.user ?: return
+                val userKey = user.key
+                val where = Expression.and(Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
+                        Expression.equalsArgs(CachedRelationships.USER_KEY),
+                        Expression.equals(CachedRelationships.NOTIFICATIONS_ENABLED, 1)).sql
+                val whereArgs = arrayOf(account.key.toString(), userKey.toString())
+                if (context.contentResolver.queryCount(CachedRelationships.CONTENT_URI,
+                        where, whereArgs) <= 0) return
+
+                contentNotificationManager.showUserNotification(account.key, status, userKey)
+            }
+
+            override fun onStatusDeleted(event: DeletionEvent): Boolean {
+                val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
+                        Expression.equalsArgs(Columns.Column(Statuses.ID))).sql
+                val deleteWhereArgs = arrayOf(account.key.host, event.id)
+                context.contentResolver.delete(Statuses.CONTENT_URI, deleteWhere, deleteWhereArgs)
+                return true
+            }
+
+            override fun onDisconnectNotice(code: Int, reason: String?): Boolean {
+                disconnect()
+                return true
+            }
+
+            override fun onException(ex: Throwable): Boolean {
+                DebugLog.w(LOGTAG, msg = "Exception for ${account.key}", tr = ex)
+                return true
+            }
+
+            override fun onUnhandledEvent(obj: TwitterStreamObject, json: String) {
+                DebugLog.d(LOGTAG, msg = "Unhandled event ${obj.determine()} for ${account.key}: $json")
+            }
+
+            @UiThread
+            private fun getInteractions() {
+                val task = GetActivitiesAboutMeTask(context)
+                task.params = object : RefreshTaskParam {
+                    override val accountKeys: Array<UserKey> = arrayOf(account.key)
+
+                    override val pagination by lazy {
+                        val keys = accountKeys.toNulls()
+                        val sinceIds = DataStoreUtils.getRefreshNewestActivityMaxPositions(context,
+                                Activities.AboutMe.CONTENT_URI, keys)
+                        val sinceSortIds = DataStoreUtils.getRefreshNewestActivityMaxSortPositions(context,
+                                Activities.AboutMe.CONTENT_URI, keys)
+                        return@lazy Array(keys.size) { idx ->
+                            SinceMaxPagination.sinceId(sinceIds[idx], sinceSortIds[idx])
+                        }
+                    }
+
+                }
+                TaskStarter.execute(task)
+            }
+
+            @UiThread
+            private fun getMessages() {
+                val task = GetMessagesTask(context)
+                task.params = object : GetMessagesTask.RefreshMessagesTaskParam(context) {
+                    override val accountKeys: Array<UserKey> = arrayOf(account.key)
+                }
+                TaskStarter.execute(task)
+            }
+        }
+
+        override fun createStreamingInstance(): TwitterUserStream {
+            return account.newMicroBlogInstance(context, cls = TwitterUserStream::class.java)
+        }
+
+        override fun TwitterUserStream.beginStreaming() {
+            getUserStream(StreamWith.USER, callback)
+        }
+
+        override fun onCancelled() {
+            callback.disconnect()
+        }
+
     }
 
     companion object {

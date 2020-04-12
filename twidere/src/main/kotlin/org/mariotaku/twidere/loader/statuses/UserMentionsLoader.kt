@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader.statuses
 
 import android.content.Context
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -42,6 +43,9 @@ class UserMentionsLoader(
     override fun processQuery(details: AccountDetails, query: String): String {
         val screenName = query.substringAfter("@")
         if (details.type == AccountType.TWITTER) {
+            if (details.extras?.official == true) {
+                return smQuery("to:$screenName", pagination)
+            }
             return "to:$screenName exclude:retweets"
         }
         return "@$screenName -RT"

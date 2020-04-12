@@ -25,6 +25,40 @@
         <item>true</item>
     </string-array>
 
+    <string-array name="names_official_consumer_secret">
+        <!--Twitter for Android-->
+        <item>Twitter for Android</item>
+        <!--Twitter for iPhone-->
+        <item>Twitter for iPhone</item>
+        <!--Twitter for iPad-->
+        <item>Twitter for iPad</item>
+        <!--Twitter for Mac-->
+        <item>Twitter for Mac</item>
+        <!--Twitter for Windows Phone-->
+        <item>Twitter for Windows Phone</item>
+        <!--Twitter for Google TV-->
+        <item>Twitter for Google TV</item>
+        <!--TweetDeck-->
+        <item>TweetDeck</item>
+    </string-array>
+
+    <string-array name="types_official_consumer_secret">
+        <!--Twitter for Android-->
+        <item>TWITTER_FOR_ANDROID</item>
+        <!--Twitter for iPhone-->
+        <item>TWITTER_FOR_IPHONE</item>
+        <!--Twitter for iPad-->
+        <item>TWITTER_FOR_IPAD</item>
+        <!--Twitter for Mac-->
+        <item>TWITTER_FOR_MAC</item>
+        <!--Twitter for Windows Phone-->
+        <item>TWITTER_FOR_WINDOWS_PHONE</item>
+        <!--Twitter for Google TV-->
+        <item>TWITTER_FOR_GOOGLE_TV</item>
+        <!--TweetDeck-->
+        <item>TWEETDECK</item>
+    </string-array>
+
     <string-array name="value_image_sources">
         <item>camera</item>
         <item>gallery</item>
@@ -64,6 +98,23 @@
         <item>home</item>
         <item>mentions</item>
         <item>inbox</item>
+    </string-array>
+    <!-- CRC32 checksum of consumer secret of official clients to check whether user is using official keys -->
+    <string-array name="values_official_consumer_secret_crc32">
+        <!--Twitter for Android-->
+        <item>6ce85096</item>
+        <!--Twitter for iPhone-->
+        <item>deffe9c7</item>
+        <!--Twitter for iPad-->
+        <item>9f00e0cb</item>
+        <!--Twitter for Mac-->
+        <item>df27640e</item>
+        <!--Twitter for Windows Phone-->
+        <item>62bd0d33</item>
+        <!--Twitter for Google TV-->
+        <item>56d8f9ff</item>
+        <!--TweetDeck-->
+        <item>ac602936</item>
     </string-array>
     <string-array name="values_profile_image_style">
         <item>round</item>

@@ -89,6 +89,13 @@ class ComposeEditText(
         } catch (e: AbstractMethodError) {
             // http://crashes.to/s/69acd0ea0de
             return true
+        }catch (e: IndexOutOfBoundsException) {
+            e.printStackTrace()
+            // workaround
+            // https://github.com/TwidereProject/Twidere-Android/issues/1178
+            setSelection(length() - 1, length() - 1)
+            setSelection(length(), length())
+            return true
         }
     }
 

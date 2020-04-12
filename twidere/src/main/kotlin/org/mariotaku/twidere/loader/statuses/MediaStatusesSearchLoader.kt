@@ -27,10 +27,12 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.FilterScope
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -76,6 +78,9 @@ open class MediaStatusesSearchLoader(
 
     protected open fun processQuery(details: AccountDetails, query: String): String {
         if (details.type == AccountType.TWITTER) {
+            if (details.extras?.official == true) {
+                return TweetSearchLoader.smQuery("$query filter:media", pagination)
+            }
             return "$query filter:media exclude:retweets"
         }
         return query
@@ -87,6 +92,15 @@ open class MediaStatusesSearchLoader(
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         when (account.type) {
             AccountType.TWITTER -> {
+                if (account.extras?.official == true) {
+                    val universalQuery = UniversalSearchQuery(queryText)
+                    universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
+                    universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
+                    universalQuery.setPaging(paging)
+                    val searchResult = microBlog.universalSearch(universalQuery)
+                    return searchResult.modules.mapNotNull { it.status?.data }
+                }
+
                 val searchQuery = SearchQuery(queryText)
                 searchQuery.paging(paging)
                 return microBlog.search(searchQuery)

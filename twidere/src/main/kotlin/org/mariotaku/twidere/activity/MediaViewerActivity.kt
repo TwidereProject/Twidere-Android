@@ -26,6 +26,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
+import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -73,6 +74,7 @@ import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
+import kotlin.concurrent.thread
 import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener,
@@ -504,13 +506,25 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
         val pubDir = when (type) {
             CacheFileType.VIDEO -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+                }
             }
             CacheFileType.IMAGE -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                }
             }
             else -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                }
             }
         }
         val saveDir = File(pubDir, "Twidere")
@@ -521,17 +535,19 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private fun openSaveToDocumentChooser() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         val fileInfo = getCurrentCacheFileInfo(viewPager.currentItem) ?: return
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-        intent.type = fileInfo.mimeType ?: "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        val extension = fileInfo.fileExtension
-        val saveFileName = if (extension != null) {
-            "${fileInfo.fileName?.removeSuffix("_$extension")}.$extension"
-        } else {
-            fileInfo.fileName
+        thread {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.type = fileInfo.mimeType ?: "*/*"
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            val extension = fileInfo.fileExtension
+            val saveFileName = if (extension != null) {
+                "${fileInfo.fileName?.removeSuffix("_$extension")}.$extension"
+            } else {
+                fileInfo.fileName
+            }
+            intent.putExtra(Intent.EXTRA_TITLE, saveFileName)
+            startActivityForResult(intent, REQUEST_SELECT_SAVE_MEDIA)
         }
-        intent.putExtra(Intent.EXTRA_TITLE, saveFileName)
-        startActivityForResult(intent, REQUEST_SELECT_SAVE_MEDIA)
     }
 
     private fun saveMediaToContentUri(data: Uri) {

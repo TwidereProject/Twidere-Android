@@ -41,5 +41,5 @@ public interface Twitter extends SearchResources, TimelineResources, TweetResour
         ListResources, DirectMessagesResources, DirectMessagesEventResources,
         FriendsFollowersResources, FavoritesResources, SpamReportingResources,
         SavedSearchesResources, TrendsResources, PlacesGeoResources,
-        HelpResources, MutesResources {
+        HelpResources, MutesResources, TwitterPrivate {
 }

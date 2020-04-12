@@ -29,6 +29,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MENTIONS_ONLY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MY_FOLLOWING_ONLY
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
@@ -104,11 +105,11 @@ class InteractionsTabConfiguration : TabConfiguration() {
                 val am = AccountManager.get(context)
                 val accounts = AccountUtils.getAllAccountDetails(am, false)
                 interactionsAvailable = accounts.any { it.supportsInteractions }
-                requiresStreaming = accounts.all { true }
+                requiresStreaming = accounts.all { it.requiresStreaming }
             } else when (account.type) {
                 AccountType.TWITTER -> {
                     interactionsAvailable = true
-                    requiresStreaming = true
+                    requiresStreaming = !account.isOfficial(context)
                 }
                 AccountType.MASTODON -> {
                     interactionsAvailable = true
@@ -160,7 +161,7 @@ class InteractionsTabConfiguration : TabConfiguration() {
             get() = type == AccountType.TWITTER || type == AccountType.MASTODON
 
         private val AccountDetails.requiresStreaming: Boolean
-            get() = true
+            get() = !isOfficial(context)
     }
 
 }

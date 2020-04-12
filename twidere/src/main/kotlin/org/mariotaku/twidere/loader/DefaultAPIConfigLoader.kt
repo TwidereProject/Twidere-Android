@@ -62,6 +62,6 @@ class DefaultAPIConfigLoader(context: Context) : FixedAsyncTaskLoader<List<Custo
     }
 
     companion object {
-        const val DEFAULT_API_CONFIGS_URL = "https://twidere.mariotaku.org/assets/data/default_api_configs.json"
+        const val DEFAULT_API_CONFIGS_URL = "https://twidereproject.github.io/default_api_configs.json"
     }
 }

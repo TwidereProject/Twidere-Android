@@ -21,8 +21,10 @@ package org.mariotaku.twidere.model.account;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 16/2/26.
@@ -45,6 +47,17 @@ public class TwitterAccountExtras implements Parcelable, AccountExtras {
         }
     };
 
+    @JsonField(name = "official_credentials")
+    @ParcelableThisPlease
+    boolean officialCredentials;
+
+    public boolean isOfficialCredentials() {
+        return officialCredentials;
+    }
+
+    public void setIsOfficialCredentials(boolean officialCredentials) {
+        this.officialCredentials = officialCredentials;
+    }
 
     @Override
     public int describeContents() {
@@ -59,6 +72,7 @@ public class TwitterAccountExtras implements Parcelable, AccountExtras {
     @Override
     public String toString() {
         return "TwitterAccountExtras{" +
+                "officialCredentials=" + officialCredentials +
                 '}';
     }
 }

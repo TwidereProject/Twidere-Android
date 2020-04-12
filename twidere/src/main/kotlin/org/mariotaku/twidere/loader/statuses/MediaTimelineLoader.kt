@@ -34,6 +34,7 @@ import org.mariotaku.twidere.extension.model.api.mastodon.mapToPaginated
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.model.api.updateFilterInfoForUserTimeline
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -89,23 +90,32 @@ class MediaTimelineLoader(
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         when (account.type) {
             AccountType.TWITTER -> {
-                val screenName = this.screenName ?: run {
-                    return@run this.user ?: run fetchUser@ {
-                        if (userKey == null) throw MicroBlogException("Invalid parameters")
-                        val user = microBlog.tryShowUser(userKey.id, null, account.type)
-                        this.user = user
-                        return@fetchUser user
-                    }.screenName
+                if (account.isOfficial(context)) {
+                    if (userKey != null) {
+                        return microBlog.getMediaTimeline(userKey.id, paging)
+                    }
+                    if (screenName != null) {
+                        return microBlog.getMediaTimelineByScreenName(screenName, paging)
+                    }
+                } else {
+                    val screenName = this.screenName ?: run {
+                        return@run this.user ?: run fetchUser@ {
+                            if (userKey == null) throw MicroBlogException("Invalid parameters")
+                            val user = microBlog.tryShowUser(userKey.id, null, account.type)
+                            this.user = user
+                            return@fetchUser user
+                        }.screenName
+                    }
+                    val query = SearchQuery("from:$screenName filter:media exclude:retweets")
+                    query.paging(paging)
+                    val result = ResponseList<Status>()
+                    microBlog.search(query).filterTo(result) { status ->
+                        val user = status.user
+                        return@filterTo user.id == userKey?.id
+                                || user.screenName.equals(this.screenName, ignoreCase = true)
+                    }
+                    return result
                 }
-                val query = SearchQuery("from:$screenName filter:media exclude:retweets")
-                query.paging(paging)
-                val result = ResponseList<Status>()
-                microBlog.search(query).filterTo(result) { status ->
-                    val user = status.user
-                    return@filterTo user.id == userKey?.id
-                            || user.screenName.equals(this.screenName, ignoreCase = true)
-                }
-                return result
                 throw MicroBlogException("Wrong user")
             }
             AccountType.FANFOU -> {

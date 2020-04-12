@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.content.Context;
 import android.text.TextUtils;
 
 import org.mariotaku.microblog.library.twitter.model.DMResponse;
@@ -9,8 +10,13 @@ import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.MediaEntity;
 import org.mariotaku.microblog.library.twitter.model.UrlEntity;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.extension.model.api.StatusExtensionsKt;
+import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.SpanItem;
+
+import java.nio.charset.Charset;
+import java.util.zip.CRC32;
 
 import kotlin.Pair;
 
@@ -96,4 +102,55 @@ public class InternalTwitterContentUtils {
     }
 
 
+    public static boolean isOfficialKey(final Context context, final String consumerKey,
+            final String consumerSecret) {
+        if (context == null || consumerKey == null || consumerSecret == null) return false;
+        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_secret_crc32);
+        final CRC32 crc32 = new CRC32();
+        final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
+        crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
+        final long value = crc32.getValue();
+        crc32.reset();
+        for (final String keySecret : keySecrets) {
+            if (Long.parseLong(keySecret, 16) == value) return true;
+        }
+        return false;
+    }
+
+    public static String getOfficialKeyName(final Context context, final String consumerKey,
+            final String consumerSecret) {
+        if (context == null || consumerKey == null || consumerSecret == null) return null;
+        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_secret_crc32);
+        final String[] keyNames = context.getResources().getStringArray(R.array.names_official_consumer_secret);
+        final CRC32 crc32 = new CRC32();
+        final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
+        crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
+        final long value = crc32.getValue();
+        crc32.reset();
+        for (int i = 0, j = keySecrets.length; i < j; i++) {
+            if (Long.parseLong(keySecrets[i], 16) == value) return keyNames[i];
+        }
+        return null;
+    }
+
+    @NonNull
+    public static ConsumerKeyType getOfficialKeyType(final Context context, final String consumerKey,
+            final String consumerSecret) {
+        if (context == null || consumerKey == null || consumerSecret == null) {
+            return ConsumerKeyType.UNKNOWN;
+        }
+        final String[] keySecrets = context.getResources().getStringArray(R.array.values_official_consumer_secret_crc32);
+        final String[] keyNames = context.getResources().getStringArray(R.array.types_official_consumer_secret);
+        final CRC32 crc32 = new CRC32();
+        final byte[] consumerSecretBytes = consumerSecret.getBytes(Charset.forName("UTF-8"));
+        crc32.update(consumerSecretBytes, 0, consumerSecretBytes.length);
+        final long value = crc32.getValue();
+        crc32.reset();
+        for (int i = 0, j = keySecrets.length; i < j; i++) {
+            if (Long.parseLong(keySecrets[i], 16) == value) {
+                return ConsumerKeyType.parse(keyNames[i]);
+            }
+        }
+        return ConsumerKeyType.UNKNOWN;
+    }
 }

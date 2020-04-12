@@ -1127,6 +1127,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             editText.setSelection(selection.coerceIn(0..editText.length()))
         }
+        editText.requestFocus()
         return true
     }
 
