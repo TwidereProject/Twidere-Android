@@ -3,6 +3,8 @@ package org.mariotaku.twidere.extension.model
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.fanfou.FanfouStream
@@ -21,6 +23,7 @@ import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthEndpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.restfu.oauth2.OAuth2Authorization
+import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.account.cred.*

@@ -102,7 +102,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestManager = Glide.with(context)// TODO: Upgrade Glide usage
+        requestManager = Glide.with(context!!)// TODO: Upgrade Glide usage
     }
 
     override fun onStart() {
@@ -126,7 +126,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     }
 
     override fun onDestroy() {
-        requestManager.onDestroy()
+//        requestManager.onDestroy()
         extraFeaturesService.release()
         super.onDestroy()
 //        DebugModeUtils.watchReferenceLeak(this)

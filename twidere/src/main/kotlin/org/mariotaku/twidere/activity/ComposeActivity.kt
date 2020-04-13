@@ -858,7 +858,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             accountsCount.setText(null)
 
             if (displayDoneIcon) {
-                Glide.clear(accountProfileImage)
+                Glide.with(this).clear(accountProfileImage)
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
                         android.R.attr.colorForeground))
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -874,7 +874,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             accountsCount.setText(accounts.size.toString())
 
-            Glide.clear(accountProfileImage)
+            Glide.with(this).clear(accountProfileImage)
             if (displayDoneIcon) {
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
                         android.R.attr.colorForeground))

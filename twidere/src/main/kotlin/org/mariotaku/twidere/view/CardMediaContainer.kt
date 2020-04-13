@@ -117,9 +117,9 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                 item.media_url
             }
             val request = if (withCredentials) {
-                requestManager.load(AuthenticatedUri(Uri.parse(url), accountKey)).asBitmap()
+                requestManager.load(AuthenticatedUri(Uri.parse(url), accountKey))
             } else {
-                requestManager.load(url).asBitmap()
+                requestManager.load(url)
             }
             when (style) {
                 PreviewStyle.ACTUAL_SIZE -> {
@@ -148,7 +148,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             this.visibility = View.VISIBLE
             findViewById<View>(lp.videoViewId)?.visibility = View.VISIBLE
         } else {
-            Glide.clear(this)
+            Glide.with(this).clear(this)
             this.visibility = View.GONE
             findViewById<View>(lp.videoViewId)?.visibility = View.GONE
         }
