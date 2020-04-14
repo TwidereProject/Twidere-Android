@@ -344,6 +344,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }.failUi {
             val activity = weakThis.get() ?: return@failUi
             // TODO show error message
+            if (it is MicroBlogException) {
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+            }
         }.alwaysUi {
             executeAfterFragmentResumed {
                 it.supportFragmentManager.dismissDialogFragment("get_request_token")
