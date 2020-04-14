@@ -77,7 +77,7 @@ open class BaseDialogFragment : DialogFragment() {
     }
 
     override fun onDestroy() {
-        requestManager.onDestroy()
+//        requestManager.onDestroy()
         extraFeaturesService.release()
         super.onDestroy()
 //        DebugModeUtils.watchReferenceLeak(this)
