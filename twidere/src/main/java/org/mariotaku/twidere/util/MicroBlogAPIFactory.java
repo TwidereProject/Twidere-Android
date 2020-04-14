@@ -125,7 +125,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         // Not an url
         if (idxOfSlash < 0) return format;
         final int startOfHost = idxOfSlash + 3;
-        if (startOfHost < 0) return getApiBaseUrl("https://[DOMAIN.]twitter.com/", domain);
+        if (startOfHost < 0) return getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain);
         final int endOfHost = format.indexOf('/', startOfHost);
         final String host = endOfHost != -1 ? format.substring(startOfHost, endOfHost) : format.substring(startOfHost);
         final StringBuilder sb = new StringBuilder();

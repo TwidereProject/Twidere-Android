@@ -1188,7 +1188,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         private val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
-        private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
         @Throws(IOException::class)
         internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {
