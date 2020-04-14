@@ -166,7 +166,7 @@ class GetMessagesTask(
                 directMessage[DirectMessage::class.java.getDeclaredField("recipient")] = users.firstOrNull { user -> it.messageCreate.senderId == user.id }
                 directMessage[DirectMessage::class.java.getDeclaredField("createdAt")] = Date(it.createdTimestamp.toLong())
             }
-        }
+        }.filter { it.sender != null }
 
         val insertMessages = arrayListOf<ParcelableMessage>()
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
