@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -66,6 +66,7 @@ public final class PageableResponseList$$JsonObjectMapper<T> extends JsonMapper<
         switch (fieldName) {
             case "users":
             case "statuses":
+            case "events":
             case "lists": {
                 instance.addAll(m84ClassJsonMapper.parseList(jsonParser));
                 break;

@@ -47,7 +47,7 @@ abstract class UserListRelatedUsersLoader(
 ) : AbsRequestUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    override final fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
+    final override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
         when (details.type) {
             AccountType.TWITTER -> return getTwitterUsers(details, paging).mapToPaginated {
                 it.toParcelable(details, profileImageSize = profileImageSize)

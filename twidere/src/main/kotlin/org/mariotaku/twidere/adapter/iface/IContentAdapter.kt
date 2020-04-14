@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.adapter.iface
 
-import android.support.v4.text.BidiFormatter
+import androidx.core.text.BidiFormatter
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.util.AsyncTwitterWrapper

@@ -2,9 +2,9 @@ package org.mariotaku.twidere.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
@@ -18,12 +18,12 @@ import org.mariotaku.twidere.extension.onShow
 class PermissionRequestDialog : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
-        val permissions = arguments.getStringArray(EXTRA_PERMISSIONS)
-        val requestCode = arguments.getInt(EXTRA_REQUEST_CODE)
-        builder.setMessage(arguments.getString(EXTRA_MESSAGE))
+        val builder = AlertDialog.Builder(context!!)
+        val permissions = arguments!!.getStringArray(EXTRA_PERMISSIONS).orEmpty()
+        val requestCode = arguments!!.getInt(EXTRA_REQUEST_CODE)
+        builder.setMessage(arguments!!.getString(EXTRA_MESSAGE))
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
-            ActivityCompat.requestPermissions(activity, permissions, requestCode)
+            activity?.let { ActivityCompat.requestPermissions(it, permissions, requestCode) }
         }
         builder.setNegativeButton(R.string.action_later) { _, _ ->
             val callback = parentFragment as? PermissionRequestCancelCallback ?: activity as?
@@ -42,7 +42,7 @@ class PermissionRequestDialog : BaseDialogFragment() {
     companion object {
 
         fun show(fragmentManager: FragmentManager, message: String, permissions: Array<String>,
-                requestCode: Int): PermissionRequestDialog {
+                 requestCode: Int): PermissionRequestDialog {
             val df = PermissionRequestDialog()
             df.arguments = Bundle {
                 this[EXTRA_MESSAGE] = message

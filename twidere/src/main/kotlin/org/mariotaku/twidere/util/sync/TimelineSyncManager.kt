@@ -21,10 +21,11 @@ package org.mariotaku.twidere.util.sync
 
 import android.content.Context
 import android.net.Uri
-import android.support.v4.util.ArrayMap
+import androidx.collection.ArrayMap
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
 import okio.ByteString
+import okio.ByteString.Companion.encodeUtf8
 import org.mariotaku.twidere.TwidereConstants.TIMELINE_SYNC_CACHE_PREFERENCES_NAME
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.util.DebugLog
@@ -98,7 +99,7 @@ abstract class TimelineSyncManager(val context: Context) {
 
         private fun cacheKey(@ReadPositionTag positionTag: String, currentTag: String?): String {
             if (currentTag == null) return positionTag
-            return ByteString.encodeUtf8("$positionTag:${Uri.encode(currentTag)}").sha1().hex()
+            return "$positionTag:${Uri.encode(currentTag)}".encodeUtf8().sha1().hex()
         }
     }
 

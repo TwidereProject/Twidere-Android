@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.ConversationTimeline;

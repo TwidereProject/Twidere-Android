@@ -5,9 +5,9 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.FixedAsyncTaskLoader
-import android.support.v4.content.Loader
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.FixedAsyncTaskLoader
+import androidx.loader.content.Loader
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.statusnet.model.Group
 import org.mariotaku.twidere.Constants.*
@@ -38,20 +38,22 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Utils.setNdefPushMessageCallback(activity, NfcAdapter.CreateNdefMessageCallback {
+        activity?.let {
+            Utils.setNdefPushMessageCallback(it, NfcAdapter.CreateNdefMessageCallback {
             val url = group?.url ?: return@CreateNdefMessageCallback null
             NdefMessage(arrayOf(NdefRecord.createUri(url)))
         })
+        }
 
         getGroupInfo(false)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableGroup>> {
-        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableGroup>> {
+        val accountKey = args!!.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-        return ParcelableGroupLoader(context, omitIntentExtra, arguments, accountKey, groupId,
+        return ParcelableGroupLoader(context!!, omitIntentExtra, arguments, accountKey, groupId,
                 groupName)
     }
 

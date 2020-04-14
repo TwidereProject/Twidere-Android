@@ -23,14 +23,14 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v7.graphics.Palette
+import androidx.palette.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.target.Target
 import io.nayuki.qrcodegen.QrCode
 import io.nayuki.qrcodegen.QrSegment
@@ -61,7 +61,7 @@ import java.util.concurrent.ExecutionException
  */
 class UserQrDialogFragment : BaseDialogFragment() {
 
-    private val user: ParcelableUser get() = arguments.getParcelable(EXTRA_USER)
+    private val user: ParcelableUser get() = arguments?.getParcelable(EXTRA_USER)!!
 
     init {
         setStyle(STYLE_NO_TITLE, 0)
@@ -114,23 +114,23 @@ class UserQrDialogFragment : BaseDialogFragment() {
         }
     }
 
-    private fun loadProfileImage(): Promise<GlideDrawable, Exception> {
-        if (context == null || isDetached || dialog == null || (activity?.isFinishing ?: true)) {
+    private fun loadProfileImage(): Promise<Drawable, Exception> {
+        if (context == null || isDetached || dialog == null || (activity?.isFinishing != false)) {
             return Promise.ofFail(InterruptedException())
         }
         val profileImageSize = getString(R.string.profile_image_size)
-        val context = context.applicationContext
-        val requestManager = Glide.with(context)
+        val context = context?.applicationContext
+        val requestManager = Glide.with(context!!)
         val user = this.user
         return task {
             try {
-                return@task requestManager.loadOriginalProfileImage(context, user, 0)
+                return@task requestManager.loadOriginalProfileImage(context!!, user, 0)
                         .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
             } catch (e: ExecutionException) {
                 // Ignore
             }
             // Return fallback profile image
-            return@task requestManager.loadProfileImage(context, user, 0, size = profileImageSize)
+            return@task requestManager.loadProfileImage(context!!, user, 0, size = profileImageSize)
                     .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
         }
     }

@@ -33,7 +33,7 @@ import javax.inject.Inject
 class EmojiSpannableFactory(textView: TextView) : Spannable.Factory() {
 
     @Inject
-    lateinit internal var externalThemeManager: ExternalThemeManager
+    internal lateinit var externalThemeManager: ExternalThemeManager
 
     init {
         GeneralComponent.get(textView.context).inject(this)

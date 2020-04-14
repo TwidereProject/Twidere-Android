@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.view.holder
 
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_user_list.view.*

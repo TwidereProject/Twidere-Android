@@ -15,9 +15,9 @@ abstract class FileBasedPreferencesValuesSyncAction<DownloadSession : Closeable,
         val processor: Processor
 ) : FileBasedKeyValueSyncAction<DownloadSession, UploadSession>(context) {
 
-    override final val snapshotFileName: String = processor.snapshotFileName
+    final override val snapshotFileName: String = processor.snapshotFileName
 
-    override final val whatData: String = processor.whatData
+    final override val whatData: String = processor.whatData
 
     override fun addToLocal(data: MutableMap<String, String>) {
         val editor = preferences.edit()
@@ -35,7 +35,7 @@ abstract class FileBasedPreferencesValuesSyncAction<DownloadSession : Closeable,
         editor.apply()
     }
 
-    override final fun loadFromLocal(): MutableMap<String, String> {
+    final override fun loadFromLocal(): MutableMap<String, String> {
         val result = HashMap<String, String>()
         for ((k, v) in preferences.all) {
             processor.loadValue(result, k, v)

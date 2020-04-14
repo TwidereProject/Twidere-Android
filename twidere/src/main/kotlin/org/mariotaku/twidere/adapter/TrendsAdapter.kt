@@ -21,7 +21,7 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.database.Cursor
-import android.support.v4.widget.SimpleCursorAdapter
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 
 import org.mariotaku.twidere.provider.TwidereDataStore
 

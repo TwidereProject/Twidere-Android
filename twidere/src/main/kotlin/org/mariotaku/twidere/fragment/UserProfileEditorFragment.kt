@@ -24,10 +24,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.Loader
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.Loader
 import android.text.TextUtils
 import android.text.TextUtils.isEmpty
 import android.view.*
@@ -50,6 +50,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -71,7 +72,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     private var currentTask: AbstractTask<*, *, UserProfileEditorFragment>? = null
     private val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+        get() = arguments?.getParcelable(EXTRA_ACCOUNT_KEY)!!
     private var user: ParcelableUser? = null
     private var account: AccountDetails? = null
     private var userInfoLoaderInitialized: Boolean = false
@@ -84,27 +85,33 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
         if (task != null && !task.isFinished) return
         when (view.id) {
             R.id.editProfileImage -> {
-                val intent = ThemedMediaPickerActivity.withThemed(activity)
-                        .aspectRatio(1, 1)
-                        .maximumSize(512, 512)
-                        .containsVideo(false)
-                        .build()
+                val intent = activity?.let {
+                    ThemedMediaPickerActivity.withThemed(it)
+                            .aspectRatio(1, 1)
+                            .maximumSize(512, 512)
+                            .containsVideo(false)
+                            .build()
+                }
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE)
             }
             R.id.editProfileBanner -> {
-                val builder = ThemedMediaPickerActivity.withThemed(activity)
-                        .aspectRatio(3, 1)
-                        .maximumSize(1500, 500)
-                        .containsVideo(false)
-                if (account.type == AccountType.TWITTER) {
-                    builder.addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER)
+                val builder = activity?.let {
+                    ThemedMediaPickerActivity.withThemed(it)
+                            .aspectRatio(3, 1)
+                            .maximumSize(1500, 500)
+                            .containsVideo(false)
                 }
-                startActivityForResult(builder.build(), REQUEST_UPLOAD_PROFILE_BANNER_IMAGE)
+                if (account.type == AccountType.TWITTER) {
+                    builder?.addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER)
+                }
+                startActivityForResult(builder?.build(), REQUEST_UPLOAD_PROFILE_BANNER_IMAGE)
             }
             R.id.editProfileBackground -> {
-                val intent = ThemedMediaPickerActivity.withThemed(activity)
-                        .containsVideo(false)
-                        .build()
+                val intent = activity?.let {
+                    ThemedMediaPickerActivity.withThemed(it)
+                            .containsVideo(false)
+                            .build()
+                }
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE)
             }
             R.id.setLinkColor -> {
@@ -125,11 +132,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUser>> {
         progressContainer.visibility = View.VISIBLE
         editProfileContent.visibility = View.GONE
-        return ParcelableUserLoader(activity, accountKey, accountKey, null, arguments, false, false)
+        return ParcelableUserLoader(activity!!, accountKey, accountKey, null, arguments, false, false)
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
-            data: SingleResponse<ParcelableUser>) {
+                                data: SingleResponse<ParcelableUser>) {
         val user = data.data ?: this.user ?: run {
             activity?.finish()
             return
@@ -168,8 +175,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        if (!Utils.isMyAccount(activity, accountKey)) {
-            activity.finish()
+        if (!Utils.isMyAccount(activity!!, accountKey)) {
+            activity?.finish()
             return
         }
 
@@ -226,23 +233,23 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 if (resultCode == RESULT_REMOVE_BANNER) {
-                    currentTask = RemoveProfileBannerTaskInternal(context, accountKey)
+                    currentTask = context?.let { RemoveProfileBannerTaskInternal(it, accountKey) }
                 } else {
                     currentTask = UpdateProfileBannerImageTaskInternal(this, accountKey,
-                            data.data, true)
+                            data.data!!, true)
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 currentTask = UpdateProfileBackgroundImageTaskInternal(this, accountKey,
-                        data.data, false, true)
+                        data.data!!, false, true)
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 currentTask = UpdateProfileImageTaskInternal(this, accountKey,
-                        data.data, true)
+                        data.data!!, true)
             }
             REQUEST_PICK_LINK_COLOR -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -264,8 +271,9 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     }
 
     private fun displayUser(user: ParcelableUser?, account: AccountDetails?) {
+        val context = context ?: return
         if (!getUserInfoCalled) return
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (isDetached || (activity?.isFinishing != false)) return
         getUserInfoCalled = false
         this.user = user
         this.account = account
@@ -371,7 +379,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             private val linkColor: Int,
             private val backgroundColor: Int
     ) : AbsAccountRequestTask<Any?, Pair<ParcelableUser, AccountDetails>,
-            UserProfileEditorFragment>(fragment.context, accountKey) {
+            UserProfileEditorFragment>(fragment.context!!, accountKey) {
 
         init {
             this.callback = fragment
@@ -399,7 +407,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 TaskStarter.execute(task)
             } and callback.executeAfterFragmentResumed { fragment ->
                 fragment.childFragmentManager.dismissDialogFragment(DIALOG_FRAGMENT_TAG)
-                fragment.activity.finish()
+                fragment.activity?.finish()
             }
 
         }
@@ -482,7 +490,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             accountKey: UserKey,
             imageUri: Uri,
             deleteImage: Boolean
-    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.context, accountKey, imageUri, deleteImage) {
+    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
 
         init {
             callback = fragment
@@ -505,7 +513,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             imageUri: Uri,
             tile: Boolean,
             deleteImage: Boolean
-    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.context, accountKey, imageUri,
+    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri,
             tile, deleteImage) {
 
         init {
@@ -530,7 +538,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             accountKey: UserKey,
             imageUri: Uri,
             deleteImage: Boolean
-    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.context, accountKey, imageUri, deleteImage) {
+    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
 
         init {
             callback = fragment

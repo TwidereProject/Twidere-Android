@@ -3,7 +3,7 @@ package org.mariotaku.twidere.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
+import androidx.core.view.accessibility.AccessibilityEventCompat;
 import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;

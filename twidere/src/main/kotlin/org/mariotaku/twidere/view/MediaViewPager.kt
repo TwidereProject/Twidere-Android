@@ -25,7 +25,4 @@ import android.view.View
 
 class MediaViewPager(context: Context, attrs: AttributeSet? = null) : ExtendedViewPager(context, attrs) {
 
-    override fun canScroll(v: View, checkV: Boolean, dx: Int, x: Int, y: Int): Boolean {
-        return super.canScroll(v, checkV, dx, x, y)
-    }
 }

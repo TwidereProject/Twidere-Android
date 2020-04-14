@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.restfu.RestConverter;

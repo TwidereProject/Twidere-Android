@@ -32,12 +32,12 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.Loader
-import android.support.v4.util.ArraySet
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AlertDialog
+import androidx.loader.app.LoaderManager
+import androidx.core.content.ContextCompat
+import androidx.loader.content.Loader
+import androidx.collection.ArraySet
+import androidx.core.view.ViewCompat
+import androidx.appcompat.app.AlertDialog
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -143,7 +143,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
 
         if (savedInstanceState != null) {
-            apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
+            apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)!!
             apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
         } else {
             apiConfig = kPreferences[defaultAPIConfigKey]
@@ -162,10 +162,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             }
             CookieManager.getInstance().removeAllCookiesSupport()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -192,10 +188,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             REQUEST_BROWSER_MASTODON_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val code = data.getStringExtra(EXTRA_CODE)
-                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
-                    val host = extras.getString(EXTRA_HOST)
-                    val clientId = extras.getString(EXTRA_CLIENT_ID)
-                    val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)!!
+                    val host = extras.getString(EXTRA_HOST)!!
+                    val clientId = extras.getString(EXTRA_CLIENT_ID)!!
+                    val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)!!
 
                     finishMastodonBrowserLogin(host, clientId, clientSecret, code)
                 }
@@ -348,6 +344,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }.failUi {
             val activity = weakThis.get() ?: return@failUi
             // TODO show error message
+            if (it is MicroBlogException) {
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+            }
         }.alwaysUi {
             executeAfterFragmentResumed {
                 it.supportFragmentManager.dismissDialogFragment("get_request_token")
@@ -533,7 +532,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         } else when (apiConfig.credentialsType) {
             Credentials.Type.XAUTH, Credentials.Type.BASIC -> {
                 passwordSignIn.visibility = View.GONE
-                signIn.isEnabled = editPassword.text.isNotEmpty() && editUsername.text.isNotEmpty()
+                signIn.isEnabled = !(editPassword.text.isNullOrEmpty() || editUsername.text.isNullOrEmpty())
             }
             Credentials.Type.OAUTH -> {
                 passwordSignIn.visibility = View.VISIBLE
@@ -574,13 +573,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class SignInTypeChooserDialogFragment : BaseDialogFragment(),
             LoaderManager.LoaderCallbacks<List<CustomAPIConfig>> {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
             dialog.onShow {
                 it.applyTheme()
                 val listView = it.expandableList
-                val adapter = LoginTypeAdapter(context)
+                val adapter = LoginTypeAdapter(context!!)
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
                     val type = adapter.getGroup(groupPosition)
@@ -624,7 +623,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     AccountType.MASTODON, AccountType.STATUSNET)
             val result = supportedAccountTypes.mapNotNullTo(ArrayList()) { type ->
                 if (type == AccountType.MASTODON) return@mapNotNullTo LoginType(type,
-                        listOf(CustomAPIConfig.mastodon(context)))
+                        listOf(CustomAPIConfig.mastodon(context!!)))
                 return@mapNotNullTo configGroup[type]?.let { list ->
                     LoginType(type, list.sortedBy { !it.isDefault })
                 }
@@ -633,7 +632,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
 
         override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CustomAPIConfig>> {
-            return DefaultAPIConfigLoader(context)
+            return DefaultAPIConfigLoader(context!!)
         }
 
         override fun onLoaderReset(loader: Loader<List<CustomAPIConfig>>) {
@@ -695,7 +694,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         var challengeType: String? = null
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.login_verification)
             builder.setView(R.layout.dialog_login_verification_code)
             builder.positive(android.R.string.ok, this::performVerification)
@@ -705,7 +704,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return dialog
         }
 
-        override fun onCancel(dialog: DialogInterface?) {
+        override fun onCancel(dialog: DialogInterface) {
             deferred?.reject(CancelException())
         }
 
@@ -754,7 +753,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class PasswordSignInDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_password_sign_in)
             builder.positive(R.string.action_sign_in, this::onPositiveButton)
             builder.setNegativeButton(android.R.string.cancel, null)
@@ -1087,7 +1086,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         protected val profileImageSize: String = activity.getString(R.string.profile_image_size)
 
-        override final fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
+        final override fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
             try {
                 return SingleResponse.getInstance(performLogin())
             } catch (e: Exception) {
@@ -1192,7 +1191,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
 
         private val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
-        private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
         @Throws(IOException::class)
         internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {

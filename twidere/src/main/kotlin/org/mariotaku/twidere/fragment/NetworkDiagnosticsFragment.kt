@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.SystemClock
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.Selection
 import android.text.SpannableString
 import android.text.Spanned
@@ -96,7 +96,7 @@ class NetworkDiagnosticsFragment : BaseFragment() {
     internal class DiagnosticsTask(fragment: NetworkDiagnosticsFragment) : AsyncTask<Any, LogText, Unit>() {
 
         private val fragmentRef = WeakReference(fragment)
-        private val contextRef = WeakReference(fragment.activity.applicationContext)
+        private val contextRef = WeakReference(fragment.activity?.applicationContext)
 
         override fun doInBackground(vararg params: Any) {
             val context = contextRef.get() ?: return

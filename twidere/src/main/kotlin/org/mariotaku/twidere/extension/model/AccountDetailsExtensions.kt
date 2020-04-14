@@ -16,7 +16,10 @@ import org.mariotaku.twidere.util.text.FanfouValidator
 import org.mariotaku.twidere.util.text.MastodonValidator
 import org.mariotaku.twidere.util.text.TwitterValidator
 
-fun AccountDetails.isOfficial(context: Context): Boolean {
+fun AccountDetails.isOfficial(context: Context?): Boolean {
+    if (context == null) {
+        return false
+    }
     val extra = this.extras
     if (extra is TwitterAccountExtras) {
         return extra.isOfficialCredentials

@@ -22,11 +22,11 @@ package org.mariotaku.twidere.fragment
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.app.hasRunningLoadersSafe
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
@@ -72,7 +72,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         }
 
     protected open val simpleLayout: Boolean
-        get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
+        get() = arguments?.getBoolean(EXTRA_SIMPLE_LAYOUT) ?: false
 
     protected open val showFollow: Boolean
         get() = true
@@ -121,10 +121,10 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         outState.putParcelable(EXTRA_PREV_PAGINATION, prevPagination)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        args.remove(EXTRA_FROM_USER)
-        return onCreateUsersLoader(activity, args, fromUser).apply {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUser>?> {
+        val fromUser = args?.getBoolean(EXTRA_FROM_USER)
+        args?.remove(EXTRA_FROM_USER)
+        return onCreateUsersLoader(activity!!, args!!, fromUser!!).apply {
             if (this is AbsRequestUsersLoader) {
                 pagination = args.getParcelable(EXTRA_PAGINATION)
             }
@@ -140,7 +140,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }
-        if (loader is IPaginationLoader && data?.loadSuccess() ?: false) {
+        if (loader is IPaginationLoader && data?.loadSuccess() == true) {
             nextPagination = loader.nextPagination
             prevPagination = loader.prevPagination
         }
@@ -171,7 +171,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val adapter = ParcelableUsersAdapter(context, this.requestManager)
         adapter.simpleLayout = simpleLayout
         adapter.showFollow = showFollow
-        val accountType = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)?.let { key ->
+        val accountType = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)?.let { key ->
             val am = AccountManager.get(context)
             return@let AccountUtils.findByAccountKey(am, key)?.getAccountType(am)
         }
@@ -204,7 +204,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        IntentUtils.openUserProfile(activity, user, preferences[newDocumentApiKey])
+        activity?.let { IntentUtils.openUserProfile(it, user, preferences[newDocumentApiKey]) }
     }
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {
@@ -212,7 +212,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val accountKey = user.account_key ?: return
         if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
         if (user.is_following) {
-            DestroyFriendshipDialogFragment.show(fragmentManager, user)
+            fragmentManager?.let { DestroyFriendshipDialogFragment.show(it, user) }
         } else {
             twitterWrapper.createFriendshipAsync(accountKey, user.key, user.screen_name)
         }
@@ -238,7 +238,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     override fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
-            layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+                                        layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         val itemDecoration = ExtendedDividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources

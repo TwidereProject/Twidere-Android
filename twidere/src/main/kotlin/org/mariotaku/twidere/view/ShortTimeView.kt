@@ -21,7 +21,7 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.os.SystemClock
-import android.support.v7.widget.AppCompatTextView
+import androidx.appcompat.widget.AppCompatTextView
 import android.text.format.DateUtils
 import android.util.AttributeSet
 import org.mariotaku.twidere.Constants

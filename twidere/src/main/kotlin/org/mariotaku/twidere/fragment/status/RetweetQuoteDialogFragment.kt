@@ -24,9 +24,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.annotation.CheckResult
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import android.widget.CheckBox
 import android.widget.RelativeLayout
@@ -74,7 +74,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     private val Dialog.quoteOriginal: CheckBox get() = findViewById(R.id.quoteOriginal)
 
     private val text: String?
-        get() = arguments.getString(EXTRA_TEXT)
+        get() = arguments?.getString(EXTRA_TEXT)
 
     override fun AlertDialog.Builder.setupAlertDialog() {
         setTitle(R.string.title_retweet_quote_confirm)
@@ -109,7 +109,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         enterHandler.addTextChangedListener(object : SimpleTextWatcher {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                dialog.updateTextCount(s, status, account)
+                dialog?.updateTextCount(s, status, account)
             }
         })
 
@@ -140,10 +140,10 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
         editComment.setSelection(editComment.length())
 
-        dialog.updateTextCount(editComment.text, status, account)
+        dialog?.updateTextCount(editComment.text, status, account)
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         if (dialog !is Dialog) return
         if (dialog.editComment.empty) return
         dialog.saveToDrafts()
@@ -151,7 +151,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         finishRetweetQuoteActivity()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         finishRetweetQuoteActivity()
     }
@@ -200,6 +200,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             showProtectedConfirmation: Boolean): Boolean {
         val twitter = twitterWrapper
         val dialog = dialog ?: return false
+        val context = context ?: return false
         val editComment = dialog.editComment
         if (dialog.isQuoteRetweet(account)) {
             val quoteOriginalStatus = dialog.quoteOriginal.isChecked
@@ -271,7 +272,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     }
 
     private fun Dialog.saveToDrafts() {
-        val text = dialog.editComment.text.toString()
+        val text = dialog?.editComment?.text.toString()
         val draft = Draft()
         draft.unique_id = UUID.randomUUID().toString()
         draft.action_type = Draft.Action.QUOTE
@@ -284,14 +285,15 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         }
         val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
         val contentResolver = context.contentResolver
-        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)!!
         displayNewDraftNotification(draftUri)
     }
 
 
     private fun displayNewDraftNotification(draftUri: Uri) {
+        val context = context ?: return
         val contentResolver = context.contentResolver
-        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment)
+        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment!!)
         contentResolver.insert(notificationUri, null)
     }
 
@@ -301,9 +303,9 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
             val fragment = parentFragment as RetweetQuoteDialogFragment
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    val args = arguments
-                    val account: AccountDetails = args.getParcelable(EXTRA_ACCOUNT)
-                    val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
+                    val args = arguments ?: return
+                    val account: AccountDetails = args.getParcelable(EXTRA_ACCOUNT)!!
+                    val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)!!
                     if (fragment.retweetOrQuote(account, status, false)) {
                         fragment.dismiss()
                     }
@@ -314,7 +316,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(R.string.quote_protected_status_warning_message)
             builder.setPositiveButton(R.string.send_anyway, this)
             builder.setNegativeButton(android.R.string.cancel, null)
@@ -345,7 +347,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
         private val showProtectedConfirm = false
 
         fun show(fm: FragmentManager, accountKey: UserKey, statusId: String,
-                status: ParcelableStatus? = null, text: String? = null):
+                 status: ParcelableStatus? = null, text: String? = null):
                 RetweetQuoteDialogFragment {
             val f = RetweetQuoteDialogFragment()
             f.arguments = Bundle {

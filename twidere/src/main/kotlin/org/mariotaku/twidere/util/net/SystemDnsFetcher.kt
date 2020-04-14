@@ -23,7 +23,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import org.mariotaku.twidere.extension.activateNetworkCompat
 import java.net.InetAddress
 

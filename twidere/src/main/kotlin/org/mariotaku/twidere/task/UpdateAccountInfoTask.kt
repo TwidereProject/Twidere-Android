@@ -5,7 +5,7 @@ import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.support.v4.util.LongSparseArray
+import androidx.collection.LongSparseArray
 import android.text.TextUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.library.objectcursor.ObjectCursor

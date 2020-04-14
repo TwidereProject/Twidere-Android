@@ -25,14 +25,14 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.XmlRes
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
-import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
+import androidx.annotation.DrawableRes
+import androidx.annotation.XmlRes
+import androidx.fragment.app.Fragment
+import androidx.core.view.ViewCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -164,10 +164,6 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         return ACTION_NAVIGATION_BACK == action
     }
 
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         if (notifyUnsavedChange()) {
             return true
@@ -293,7 +289,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
 
         fun addPreference(tag: String, @DrawableRes icon: Int, title: String, cls: Class<out Fragment>,
-                args: Bundle? = null) {
+                          args: Bundle? = null) {
             entries.add(PreferenceEntry(tag, icon, title, 0, cls.name, args))
             notifyDataSetChanged()
         }
@@ -394,8 +390,8 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     class RestartConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(activity)
-            if (arguments.getBoolean(EXTRA_SHOULD_TERMINATE)) {
+            val builder = AlertDialog.Builder(activity!!)
+            if (arguments?.getBoolean(EXTRA_SHOULD_TERMINATE) == true) {
                 builder.setMessage(R.string.app_terminate_confirm)
                 builder.setNegativeButton(R.string.action_dont_terminate, this)
             } else {
@@ -412,7 +408,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             val activity = activity as SettingsActivity
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    if (arguments.getBoolean(EXTRA_SHOULD_TERMINATE)) {
+                    if (arguments?.getBoolean(EXTRA_SHOULD_TERMINATE) == true) {
                         val intent = Intent(context, SettingsActivity::class.java)
                         intent.putExtra(EXTRA_SHOULD_TERMINATE, true)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

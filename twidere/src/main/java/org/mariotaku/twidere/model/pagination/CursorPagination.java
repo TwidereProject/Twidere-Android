@@ -21,7 +21,7 @@ package org.mariotaku.twidere.model.pagination;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 

@@ -32,7 +32,7 @@ fun Extractor.extractMentionsAndNonMentionStartIndex(text: String, mentions: Arr
     for (entity in entities) {
         if (entity.start != nextExpectedPos) break
         // Break at first mention not found in `inReplyTo.mentions`
-        if (mentions?.none { entity.value.equals(it.screen_name, ignoreCase = true) } ?: false) break
+        if (mentions?.none { entity.value.equals(it.screen_name, ignoreCase = true) } == true) break
         nextExpectedPos = (entity.end..text.indices.endInclusive).firstOrNull {
             !text[it].isWhitespace()
         } ?: text.indices.endInclusive + 1

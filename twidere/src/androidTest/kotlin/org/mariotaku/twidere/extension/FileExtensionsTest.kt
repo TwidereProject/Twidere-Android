@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.extension
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,7 +39,7 @@ class FileExtensionsTest {
         random.nextBytes(testData)
         val compareData = context.cacheDir.tempInputStream { os ->
             os.write(testData)
-        }.use { it.readBytes(1024) }
+        }.use { it.readBytes() }
         Assert.assertArrayEquals(testData, compareData)
     }
 

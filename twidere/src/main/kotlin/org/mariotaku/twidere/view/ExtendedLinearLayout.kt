@@ -23,18 +23,18 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
+import androidx.core.view.createWindowInsetsCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.WindowInsets
 import android.widget.LinearLayout
-import org.mariotaku.ktextension.systemWindowInsets
 import org.mariotaku.twidere.view.iface.IExtendedView
 
 class ExtendedLinearLayout(context: Context, attrs: AttributeSet? = null) : LinearLayout(context, attrs), IExtendedView {
 
     override var touchInterceptor: IExtendedView.TouchInterceptor? = null
     override var onSizeChangedListener: IExtendedView.OnSizeChangedListener? = null
-    override var onApplySystemWindowInsetsListener: IExtendedView.OnApplySystemWindowInsetsListener? = null
+    override var onApplyWindowInsetsCompatListener: IExtendedView.OnApplyWindowInsetsCompatListener? = null
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (touchInterceptor != null) {
@@ -54,7 +54,7 @@ class ExtendedLinearLayout(context: Context, attrs: AttributeSet? = null) : Line
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
-        onApplySystemWindowInsetsListener?.onApplySystemWindowInsets(insets.systemWindowInsets)
+        onApplyWindowInsetsCompatListener?.onApplyWindowInsets(createWindowInsetsCompat(insets))
         return super.onApplyWindowInsets(insets)
     }
 

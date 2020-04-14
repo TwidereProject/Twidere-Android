@@ -25,7 +25,7 @@ import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -57,7 +57,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        hostMapping = activity.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        hostMapping = activity!!.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
         hostMapping.registerOnSharedPreferenceChangeListener(this)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
@@ -65,7 +65,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): HostMappingAdapter {
-        return HostMappingAdapter(activity)
+        return HostMappingAdapter(activity!!)
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -116,14 +116,14 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
         args.putBoolean(EXTRA_EDIT_MODE, true)
         val df = AddMappingDialogFragment()
         df.arguments = args
-        df.show(fragmentManager, "add_mapping")
+        fragmentManager?.let { df.show(it, "add_mapping") }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
                 val df = AddMappingDialogFragment()
-                df.show(fragmentManager, "add_mapping")
+                fragmentManager?.let { df.show(it, "add_mapping") }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -179,7 +179,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_add_host_mapping)
             builder.setTitle(R.string.add_host_mapping)
             builder.positive(android.R.string.ok, this::onPositiveClick)

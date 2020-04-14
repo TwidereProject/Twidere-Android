@@ -36,12 +36,12 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v4.net.ConnectivityManagerCompat
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.accessibility.AccessibilityEventCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.core.net.ConnectivityManagerCompat
+import androidx.core.view.GravityCompat
+import androidx.core.view.accessibility.AccessibilityEventCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.text.format.DateFormat
 import android.text.format.DateUtils
@@ -305,8 +305,8 @@ object Utils {
 
     fun getQuoteStatus(context: Context?, status: ParcelableStatus): String? {
         if (context == null) return null
-        var quoteFormat: String = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
-                KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT)
+        var quoteFormat: String = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                .getString(KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT).orEmpty()
         if (TextUtils.isEmpty(quoteFormat)) {
             quoteFormat = DEFAULT_QUOTE_FORMAT
         }
@@ -536,7 +536,7 @@ object Utils {
         return 0
     }
 
-    fun getActionBarHeight(actionBar: android.support.v7.app.ActionBar?): Int {
+    fun getActionBarHeight(actionBar: androidx.appcompat.app.ActionBar?): Int {
         if (actionBar == null) return 0
         val context = actionBar.themedContext
         val tv = TypedValue()

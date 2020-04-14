@@ -21,7 +21,7 @@ package org.mariotaku.twidere.provider;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.mariotaku.twidere.model.DraftTableInfo;
 import org.mariotaku.twidere.model.FiltersData$BaseItemTableInfo;

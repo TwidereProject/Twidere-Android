@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.view.holder.message
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_entry.view.*
 import org.mariotaku.ktextension.spannable

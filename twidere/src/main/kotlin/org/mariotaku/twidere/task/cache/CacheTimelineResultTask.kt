@@ -1,7 +1,7 @@
 package org.mariotaku.twidere.task.cache
 
 import android.content.Context
-import android.support.v4.util.ArraySet
+import androidx.collection.ArraySet
 import org.mariotaku.ktextension.ContentValues
 import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Expression

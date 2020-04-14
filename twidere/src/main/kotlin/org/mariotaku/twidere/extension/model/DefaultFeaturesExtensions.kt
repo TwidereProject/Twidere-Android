@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.SharedPreferences
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
 import java.io.IOException

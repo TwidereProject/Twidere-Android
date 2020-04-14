@@ -3,7 +3,7 @@ package org.mariotaku.twidere.activity
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.util.Log
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.R
@@ -37,7 +37,7 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             REQUEST_PICK_FILE -> {
                 resumeFragmentsRunnable = Runnable {
                     if (resultCode == RESULT_OK && data != null) {
-                        val path = data.data.path
+                        val path = data.data?.path
                         if (openImportTypeTask == null || openImportTypeTask!!.status != AsyncTask.Status.RUNNING) {
                             openImportTypeTask = OpenImportTypeTask(this@DataImportActivity, path)
                             openImportTypeTask!!.execute()

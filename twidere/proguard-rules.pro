@@ -18,6 +18,7 @@
 
 -dontobfuscate
 
+-dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn com.squareup.haha.**
 -dontwarn com.makeramen.roundedimageview.**
 -dontwarn jnamed**
@@ -73,7 +74,16 @@
 }
 
 # https://github.com/bumptech/glide
--keep class * extends com.bumptech.glide.module.GlideModule
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# for DexGuard only
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
 
 # Essential components
 -keep class * extends org.mariotaku.twidere.util.Analyzer

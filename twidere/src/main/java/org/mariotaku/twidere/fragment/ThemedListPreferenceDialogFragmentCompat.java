@@ -17,8 +17,8 @@ package org.mariotaku.twidere.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.preference.ListPreference;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.ListPreference;
 
 public class ThemedListPreferenceDialogFragmentCompat extends ThemedPreferenceDialogFragmentCompat {
     private int mClickedDialogEntryIndex;

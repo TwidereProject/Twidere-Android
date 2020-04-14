@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.extension
 
 import android.content.res.Resources
-import android.support.v4.os.LocaleListCompat
+import androidx.core.os.LocaleListCompat
 import org.mariotaku.ktextension.localesCompat
 import java.util.*
 

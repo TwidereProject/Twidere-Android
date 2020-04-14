@@ -46,6 +46,6 @@ fun CharArray.indexOf(element: Char, start: Int, len: Int): Int {
     return -1
 }
 
-operator inline fun <reified T> Array<T>.minus(array: Array<T>): Array<T> {
+inline operator fun <reified T> Array<T>.minus(array: Array<T>): Array<T> {
     return this.filterNot { it in array }.toTypedArray()
 }

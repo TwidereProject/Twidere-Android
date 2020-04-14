@@ -1,7 +1,7 @@
 package org.mariotaku.twidere.util
 
 import android.graphics.RectF
-import android.support.annotation.UiThread
+import androidx.annotation.UiThread
 import android.view.MotionEvent
 import android.view.View
 

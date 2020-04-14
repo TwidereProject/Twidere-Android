@@ -8,8 +8,12 @@ jdk: oraclejdk8
 android:
   components:
     - tools
-    - build-tools-28.0.3
-    - android-26
+    - platform-tools
+    - build-tools-29.0.2
+    - android-29
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - extra-android-support
 
 env:
   global:
@@ -22,7 +26,6 @@ addons:
       - curl
       - tar
       - gzip
-      - patch
       - openssh-client
       - git
       - ruby
@@ -39,7 +42,7 @@ cache:
 before_install:
   - ./travis/scripts/decode_private_configs.sh
   # https://github.com/travis-ci/travis-ci/issues/8651
-  - yes | sdkmanager "platforms;android-26"
+  - yes | sdkmanager "platforms;android-29"
   -
 install:
   - rvm default exec gem install fastlane
@@ -47,8 +50,6 @@ install:
   - cat ./travis/configs/gradle.properties > ./gradle.properties
 
 before_script:
-  # Validate if patches work
-  - ./travis/scripts/patch_sources.sh
   # Validate if Google components fetched successfully
   - ./travis/scripts/test_private_files.sh
 
@@ -70,12 +71,12 @@ deploy:
       repo: TwidereProject/Twidere-Android
       tags: true
   # Publish to Google Play store
-  - provider: script
-    script: ./travis/scripts/google_play_deploy.sh ./twidere/src/google/.supplyrc
-    skip_cleanup: true
-    on:
-      repo: TwidereProject/Twidere-Android
-      tags: true
+  # - provider: script
+  #   script: ./travis/scripts/google_play_deploy.sh ./twidere/src/google/.supplyrc
+  #   skip_cleanup: true
+  #   on:
+  #     repo: TwidereProject/Twidere-Android
+  #     tags: true
   # Upload common component library to Bintray
   - provider: script
     script: ./gradlew twidere.component.common:bintrayUpload

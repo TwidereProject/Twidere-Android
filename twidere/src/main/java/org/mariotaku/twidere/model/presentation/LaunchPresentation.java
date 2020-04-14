@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.model.presentation;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -119,7 +119,7 @@ public class LaunchPresentation {
             int dashIndex = str.indexOf('-');
             if (dashIndex == -1) return new Locale(str, null);
             return new Locale(str.substring(0, dashIndex),
-                    str.substring(dashIndex + 1, str.length()));
+                    str.substring(dashIndex + 1));
         }
 
         static class ListConverter extends StringBasedListTypeConverter<Locale> {

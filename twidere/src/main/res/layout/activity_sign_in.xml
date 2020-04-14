@@ -60,7 +60,7 @@
                 app:backgroundTint="?colorControlStateful"/>
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signIn"
             style="?android:buttonStyleSmall"
             android:layout_width="match_parent"

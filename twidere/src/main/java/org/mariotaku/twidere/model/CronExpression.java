@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -387,7 +387,7 @@ public class CronExpression {
             }
             final int start = parseNumber(string.substring(0, dashIdx), allowedRange,
                     textRepresentations);
-            final int endInclusive = parseNumber(string.substring(dashIdx + 1, string.length()),
+            final int endInclusive = parseNumber(string.substring(dashIdx + 1),
                     allowedRange, textRepresentations);
             return new Range(start, endInclusive);
         }

@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.util.streaming
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import org.mariotaku.microblog.library.twitter.callback.SimpleUserStreamCallback
 import org.mariotaku.microblog.library.twitter.model.*
 import java.util.*
@@ -32,12 +32,12 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
 
     private val friends = mutableSetOf<String>()
 
-    override final fun onFriendList(friendIds: Array<String>): Boolean {
+    final override fun onFriendList(friendIds: Array<String>): Boolean {
         friends.addAll(friendIds)
         return true
     }
 
-    override final fun onStatus(status: Status): Boolean {
+    final override fun onStatus(status: Status): Boolean {
         val userId = status.user.id
         var handled = false
         if (accountId == userId || userId in friends) {
@@ -57,7 +57,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return handled
     }
 
-    override final fun onFollow(createdAt: Date, source: User, target: User): Boolean {
+    final override fun onFollow(createdAt: Date, source: User, target: User): Boolean {
         if (source.id == accountId) {
             friends.add(target.id)
             return true
@@ -68,7 +68,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return false
     }
 
-    override final fun onFavorite(createdAt: Date, source: User, target: User,
+    final override fun onFavorite(createdAt: Date, source: User, target: User,
             targetObject: Status): Boolean {
         if (source.id == accountId) {
             // TODO Update my favorite status
@@ -80,7 +80,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return true
     }
 
-    override final fun onUnfollow(createdAt: Date, source: User, followedUser: User): Boolean {
+    final override fun onUnfollow(createdAt: Date, source: User, followedUser: User): Boolean {
         if (source.id == accountId) {
             friends.remove(followedUser.id)
             return true
@@ -88,7 +88,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return false
     }
 
-    override final fun onQuotedTweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
+    final override fun onQuotedTweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
             return false
         } else if (target.id == accountId) {
@@ -99,7 +99,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return true
     }
 
-    override final fun onFavoritedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
+    final override fun onFavoritedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
             return false
         } else if (target.id == accountId) {
@@ -110,7 +110,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return true
     }
 
-    override final fun onRetweetedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
+    final override fun onRetweetedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
             return false
         } else if (target.id == accountId) {
@@ -121,7 +121,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return false
     }
 
-    override final fun onUserListMemberAddition(createdAt: Date, source: User, target: User, targetObject: UserList): Boolean {
+    final override fun onUserListMemberAddition(createdAt: Date, source: User, target: User, targetObject: UserList): Boolean {
         if (source.id == accountId) {
             return false
         } else if (target.id == accountId) {
@@ -139,7 +139,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
     protected abstract fun onActivityAboutMe(activity: Activity): Boolean
 
     @WorkerThread
-    override abstract fun onDirectMessage(directMessage: DirectMessage): Boolean
+    abstract override fun onDirectMessage(directMessage: DirectMessage): Boolean
 
     @WorkerThread
     protected open fun onAllStatus(status: Status) {

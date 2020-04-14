@@ -117,7 +117,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
         protected abstract val options: Options
         protected abstract val syntax: String
 
-        override final fun execute(dumpContext: DumperContext, args: Array<String>) {
+        final override fun execute(dumpContext: DumperContext, args: Array<String>) {
             val commandLine = try {
                 GnuParser().parse(options, args)
             } catch (e: ParseException) {

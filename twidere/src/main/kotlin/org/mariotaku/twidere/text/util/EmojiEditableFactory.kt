@@ -35,7 +35,7 @@ import javax.inject.Inject
 class EmojiEditableFactory(textView: TextView) : Editable.Factory() {
 
     @Inject
-    lateinit internal var externalThemeManager: ExternalThemeManager
+    internal lateinit var externalThemeManager: ExternalThemeManager
 
     init {
         GeneralComponent.get(textView.context).inject(this)

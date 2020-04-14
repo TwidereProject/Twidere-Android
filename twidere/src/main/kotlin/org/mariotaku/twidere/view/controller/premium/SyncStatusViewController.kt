@@ -3,7 +3,7 @@ package org.mariotaku.twidere.view.controller.premium
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
@@ -91,15 +91,15 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
 
     class ConnectNetworkStorageSelectionDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val providers = DataSyncProvider.Factory.getSupportedProviders(context)
+            val providers = DataSyncProvider.Factory.getSupportedProviders(context!!)
             val itemNames = providers.mapToArray(SyncProviderEntry::name)
 
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.title_dialog_sync_connect_to)
             builder.setItems(itemNames) { _, which ->
                 val activity = activity as PremiumDashboardActivity
                 activity.startActivityForControllerResult(providers[which].authIntent,
-                        arguments.getInt(EXTRA_POSITION), REQUEST_CONNECT_NETWORK_STORAGE)
+                        arguments!!.getInt(EXTRA_POSITION), REQUEST_CONNECT_NETWORK_STORAGE)
             }
             val dialog = builder.create()
             dialog.onShow { it.applyTheme() }

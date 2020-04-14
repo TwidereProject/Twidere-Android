@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.accounts.AccountManager
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import org.mariotaku.twidere.extension.model.updateDetails
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils

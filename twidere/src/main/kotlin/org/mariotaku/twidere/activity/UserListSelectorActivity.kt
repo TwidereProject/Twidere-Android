@@ -22,12 +22,12 @@ package org.mariotaku.twidere.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
+import androidx.loader.app.hasRunningLoadersSafe
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
@@ -145,20 +145,20 @@ class UserListSelectorActivity : BaseActivity(),
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUserList>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUserList>> {
+        val accountKey = args?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val userKey = args?.getParcelable<UserKey>(EXTRA_USER_KEY)
         return UserListOwnershipsLoader(this, accountKey, userKey, null, adapter.all).apply {
-            pagination = args.getParcelable(EXTRA_PAGINATION)
+            pagination = args?.getParcelable(EXTRA_PAGINATION)
         }
     }
 
-    override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>?) {
+    override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>) {
         adapter.setData(null)
     }
 
 
-    override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>?, data: List<ParcelableUserList>?) {
+    override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>, data: List<ParcelableUserList>) {
         adapter.loadMoreIndicatorPosition = ILoadMoreSupportAdapter.NONE
         adapter.loadMoreSupportedPosition = if (adapter.all != data) {
             ILoadMoreSupportAdapter.END

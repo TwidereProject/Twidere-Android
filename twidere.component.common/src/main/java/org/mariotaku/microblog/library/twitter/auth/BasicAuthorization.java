@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.auth;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Base64;
 
 import org.mariotaku.restfu.RestRequest;

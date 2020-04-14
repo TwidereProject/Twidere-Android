@@ -170,7 +170,6 @@ public interface IntentConstants {
     String EXTRA_NEXT_PAGINATION = "next_pagination";
     String EXTRA_PREV_PAGINATION = "prev_pagination";
     String EXTRA_PAGINATION = "pagination";
-    String EXTRA_EXTRA_INTENT = "extra_intent";
     String EXTRA_IS_MY_ACCOUNT = "is_my_account";
     String EXTRA_TAB_TYPE = "tab_type";
     String EXTRA_ACCOUNT = "account";
@@ -217,7 +216,6 @@ public interface IntentConstants {
     String EXTRA_LOADING_MORE = "loading_more";
     String EXTRA_PINNED_STATUS_IDS = "pinned_status_ids";
     String EXTRA_SHOULD_INIT_LOADER = "should_init_loader";
-    String EXTRA_START_INTENT = "start_intent";
     String EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY = "select_only_item_automatically";
     String EXTRA_OBJECT = "object";
     String EXTRA_SIMPLE_LAYOUT = "simple_layout";

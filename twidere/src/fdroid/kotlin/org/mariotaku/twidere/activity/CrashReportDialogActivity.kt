@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.activity
 
 import android.os.Bundle
-import android.support.v4.widget.TextViewCompat
+import androidx.core.widget.TextViewCompat
 import android.view.View
 import android.widget.TextView
 import org.acra.dialog.CrashReportDialog

@@ -22,8 +22,8 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.content.SharedPreferences
 import android.database.Cursor
-import android.support.v4.widget.SimpleCursorAdapter
-import android.support.v7.widget.RecyclerViewAccessor
+import androidx.cursoradapter.widget.SimpleCursorAdapter
+import androidx.recyclerview.widget.RecyclerViewAccessor
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager

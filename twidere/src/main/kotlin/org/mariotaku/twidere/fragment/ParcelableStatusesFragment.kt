@@ -21,8 +21,8 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
+import androidx.loader.app.hasRunningLoadersSafe
+import androidx.loader.content.Loader
 import android.text.TextUtils
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
@@ -66,7 +66,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
 
     override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context, arguments) ?: emptyArray()
+        get() = context?.let { Utils.getAccountKeys(it, arguments) } ?: emptyArray()
 
     private var lastId: String? = null
     private var nextPagination: Pagination? = null
@@ -93,10 +93,10 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         outState.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>?> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableStatus>?> {
         val loader = super.onCreateLoader(id, args)
         if (loader is AbsRequestStatusesLoader) {
-            loader.pagination = args.getParcelable(EXTRA_PAGINATION)
+            loader.pagination = args?.getParcelable(EXTRA_PAGINATION)
         }
         return loader
     }
@@ -116,7 +116,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
-            data: List<ParcelableStatus>?): Boolean {
+                             data: List<ParcelableStatus>?): Boolean {
         if (data == null || data.isEmpty()) return false
         if (loader is IPaginationLoader) {
             return loader.nextPagination != null
@@ -141,7 +141,9 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         } else if (loader is AbsRequestStatusesLoader) {
             val e = loader.exception
             if (e != null) {
-                showError(R.drawable.ic_info_error_generic, e.getErrorMessage(context))
+                context ?.let {
+                    showError(R.drawable.ic_info_error_generic, e.getErrorMessage(it))
+                }
             } else {
                 showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
             }

@@ -63,7 +63,7 @@ object HtmlSpanBuilder {
 
     private fun applyTag(sb: SpannableStringBuilder, start: Int, end: Int, info: TagInfo,
             processor: SpanProcessor?) {
-        if (processor?.applySpan(sb, start, end, info) ?: false) return
+        if (processor?.applySpan(sb, start, end, info) == true) return
         if (info.nameLower == "br") {
             sb.append('\n')
         } else {
@@ -152,7 +152,7 @@ object HtmlSpanBuilder {
                     if (buffer[lineBreakIndex] == '\n') break
                     lineBreakIndex++
                 }
-                if (!(processor?.appendText(sb, buffer, cur, lineBreakIndex - cur, lastTag) ?: false)) {
+                if (processor?.appendText(sb, buffer, cur, lineBreakIndex - cur, lastTag) != true) {
                     sb.append(HtmlEscapeHelper.unescape(String(buffer, cur, lineBreakIndex - cur)))
                 }
                 cur = lineBreakIndex + 1

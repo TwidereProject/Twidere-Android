@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 /**
  * Response list supports cursor pagination

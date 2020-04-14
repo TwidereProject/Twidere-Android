@@ -23,8 +23,8 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
 import me.uucky.colorpicker.ColorPickerDialog
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -34,9 +34,9 @@ import org.mariotaku.twidere.fragment.iface.IDialogFragmentCallback
 
 class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
-    private var mController: ColorPickerDialog.Controller? = null
+    private var controller: ColorPickerDialog.Controller? = null
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         val a = activity
         if (a is Callback) {
@@ -46,10 +46,10 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         val a = activity
-        if (a !is Callback || mController == null) return
+        if (a !is Callback || controller == null) return
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val color = mController!!.color
+                val color = controller!!.color
                 a.onColorSelected(color)
             }
             DialogInterface.BUTTON_NEUTRAL -> {
@@ -64,33 +64,33 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
         if (savedInstanceState != null) {
             color = savedInstanceState.getInt(EXTRA_COLOR, Color.WHITE)
         } else {
-            color = args.getInt(EXTRA_COLOR, Color.WHITE)
+            color = args!!.getInt(EXTRA_COLOR, Color.WHITE)
         }
 
         val activity = activity
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity!!)
         builder.setView(me.uucky.colorpicker.R.layout.cp__dialog_color_picker)
         builder.setPositiveButton(android.R.string.ok, this)
-        if (args.getBoolean(EXTRA_CLEAR_BUTTON, false)) {
+        if (args!!.getBoolean(EXTRA_CLEAR_BUTTON, false)) {
             builder.setNeutralButton(R.string.action_clear, this)
         }
         builder.setNegativeButton(android.R.string.cancel, this)
         val dialog = builder.create()
         dialog.onShow {
             it.applyTheme()
-            mController = ColorPickerDialog.Controller(it.context, it.window.decorView)
+            controller = ColorPickerDialog.Controller(it.context, it.window!!.decorView)
 
             val showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true)
             for (presetColor in PRESET_COLORS) {
-                mController!!.addColor(ContextCompat.getColor(context, presetColor))
+                controller!!.addColor(ContextCompat.getColor(context!!, presetColor))
             }
-            mController!!.setAlphaEnabled(showAlphaSlider)
-            mController!!.setInitialColor(color)
+            controller!!.setAlphaEnabled(showAlphaSlider)
+            controller!!.setInitialColor(color)
         }
         return dialog
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         val a = activity
         if (a is Callback) {
@@ -98,9 +98,9 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        if (mController != null) {
-            outState!!.putInt(EXTRA_COLOR, mController!!.color)
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (controller != null) {
+            outState!!.putInt(EXTRA_COLOR, controller!!.color)
         }
         super.onSaveInstanceState(outState)
     }

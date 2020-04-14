@@ -68,7 +68,7 @@
                 app:hdl_headerLayout="@layout/header_user"/>
         </org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout>
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"

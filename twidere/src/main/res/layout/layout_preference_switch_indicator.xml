@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center">
 
-    <android.support.v7.widget.SwitchCompat
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@android:id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

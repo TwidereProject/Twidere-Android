@@ -1,7 +1,7 @@
 package org.mariotaku.twidere.util.sync
 
 import android.content.Context
-import android.support.v4.util.LongSparseArray
+import androidx.collection.LongSparseArray
 import org.mariotaku.ktextension.map
 import org.mariotaku.ktextension.set
 import org.mariotaku.library.objectcursor.ObjectCursor

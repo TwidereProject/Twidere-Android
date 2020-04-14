@@ -23,7 +23,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.support.v4.net.ConnectivityManagerCompat
+import androidx.core.net.ConnectivityManagerCompat
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 

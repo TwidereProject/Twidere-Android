@@ -28,7 +28,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,7 +85,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
 
         var handler: Handler? = videoViewProgress.handler
         if (handler == null) {
-            handler = Handler(activity.mainLooper)
+            handler = Handler(activity!!.mainLooper)
         }
 
 
@@ -97,7 +97,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
             pausedByUser = savedInstanceState.getBoolean(EXTRA_PAUSED_BY_USER)
             playAudio = savedInstanceState.getBoolean(EXTRA_PLAY_AUDIO)
         } else {
-            val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val am = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             // Play audio by default if ringer mode on
             playAudio = !isMutedByDefault && am.ringerMode == AudioManager.RINGER_MODE_NORMAL
         }
@@ -180,7 +180,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         requestApplyInsets()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         promotionService.setupBanner(adContainer, PromotionService.BannerType.MEDIA_PAUSE)
     }
@@ -204,14 +204,14 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         if (bestVideoUrlAndType != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
-        return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return arguments?.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
     override fun displayMedia(result: CacheDownloadLoader.Result) {
         videoView.setVideoURI(result.cacheUri)
         videoControl.visibility = View.GONE
         setMediaViewVisible(true)
-        activity.invalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
     }
 
     override fun releaseMediaResources() {
@@ -403,15 +403,15 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         internal val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
 
         internal val MediaViewerFragment.isLoopEnabled: Boolean
-            get() = arguments.getBoolean(EXTRA_LOOP, false)
+            get() = arguments?.getBoolean(EXTRA_LOOP, false) ?: false
         internal val MediaViewerFragment.isControlDisabled: Boolean
-            get() = arguments.getBoolean(EXTRA_DISABLE_CONTROL, false)
+            get() = arguments?.getBoolean(EXTRA_DISABLE_CONTROL, false) ?: false
         internal val MediaViewerFragment.isMutedByDefault: Boolean
-            get() = arguments.getBoolean(EXTRA_DEFAULT_MUTE, false)
+            get() = arguments?.getBoolean(EXTRA_DEFAULT_MUTE, false) ?: false
         internal val MediaViewerFragment.media: ParcelableMedia?
-            get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
+            get() = arguments?.getParcelable(EXTRA_MEDIA)
         internal val MediaViewerFragment.accountKey: UserKey
-            get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            get() = arguments?.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     }
 }

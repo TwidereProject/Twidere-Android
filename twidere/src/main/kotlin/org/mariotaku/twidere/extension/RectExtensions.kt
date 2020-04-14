@@ -21,7 +21,7 @@ package org.mariotaku.twidere.extension
 
 import android.graphics.Point
 import android.graphics.Rect
-import android.support.v4.view.ViewCompat
+import androidx.core.view.ViewCompat
 
 /**
  * Created by mariotaku on 2017/2/20.

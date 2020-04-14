@@ -24,9 +24,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.v4.content.pm.ShortcutInfoCompat
-import android.support.v4.content.pm.ShortcutManagerCompat
-import android.support.v4.graphics.drawable.IconCompat
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import com.bumptech.glide.Glide
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
@@ -142,13 +142,14 @@ object ShortcutCreator {
     }
 
     inline fun performCreation(fragment: BaseFragment, createPromise: () -> Promise<ShortcutInfoCompat, Exception>) {
-        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(fragment.context)) return
+        val fragmentContext = fragment.context ?: return
+        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(fragmentContext)) return
         val promise = fragment.showProgressDialog("create_shortcut")
                 .and(createPromise())
         val weakThis = WeakReference(fragment)
         promise.successUi { (_, shortcut) ->
-            val f = weakThis.get() ?: return@successUi
-            ShortcutManagerCompat.requestPinShortcut(f.context, shortcut, null)
+            val f = weakThis.get()?.context ?: return@successUi
+            ShortcutManagerCompat.requestPinShortcut(f, shortcut, null)
         }.alwaysUi {
             val f = weakThis.get() ?: return@alwaysUi
             f.dismissProgressDialog("create_shortcut")

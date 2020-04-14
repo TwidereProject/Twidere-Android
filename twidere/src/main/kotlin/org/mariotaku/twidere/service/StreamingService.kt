@@ -7,10 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.UiThread
-import android.support.annotation.WorkerThread
-import android.support.v4.app.NotificationCompat
-import android.support.v4.net.ConnectivityManagerCompat
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
+import androidx.core.app.NotificationCompat
+import androidx.core.net.ConnectivityManagerCompat
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe

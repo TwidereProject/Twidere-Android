@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
-import android.support.annotation.StringDef;
+import androidx.annotation.StringDef;
 
 import org.mariotaku.microblog.library.twitter.util.InternalArrayUtil;
 import org.mariotaku.restfu.http.SimpleValueMap;

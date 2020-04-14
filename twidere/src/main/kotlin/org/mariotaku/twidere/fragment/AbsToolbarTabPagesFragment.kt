@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.view.OnApplyWindowInsetsListener
-import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.appcompat.widget.Toolbar
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +47,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val activity = activity
-        pagerAdapter = SupportTabsAdapter(activity, childFragmentManager, null)
+        pagerAdapter = SupportTabsAdapter(activity!!, childFragmentManager, null)
         viewPager.adapter = pagerAdapter
         viewPager.offscreenPageLimit = 2
         viewPager.addOnPageChangeListener(this)
@@ -149,7 +149,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         if (height != 0) {
             insets.top = height
         } else {
-            insets.top = ThemeUtils.getActionBarHeight(context)
+            insets.top = ThemeUtils.getActionBarHeight(context!!)
         }
         return true
     }

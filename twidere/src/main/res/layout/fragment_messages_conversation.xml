@@ -160,7 +160,7 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -173,7 +173,7 @@
         tools:elevation="0dp">
 
         <include layout="@layout/layout_toolbar_message_conversation_title"/>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <View
         android:id="@+id/windowOverlay"

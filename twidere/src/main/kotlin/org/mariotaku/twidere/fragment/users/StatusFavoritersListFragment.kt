@@ -35,8 +35,8 @@ class StatusFavoritersListFragment : ParcelableUsersFragment() {
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val statusId = args.getString(EXTRA_STATUS_ID)
+        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
+        val statusId = args.getString(EXTRA_STATUS_ID)!!
         return StatusFavoritersLoader(context, accountKey, statusId, adapter.getData(), false)
     }
 

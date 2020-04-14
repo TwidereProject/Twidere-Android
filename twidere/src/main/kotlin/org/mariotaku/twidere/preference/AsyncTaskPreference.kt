@@ -22,7 +22,7 @@ package org.mariotaku.twidere.preference
 import android.content.Context
 import android.os.AsyncTask
 import android.os.AsyncTask.Status
-import android.support.v7.preference.Preference
+import androidx.preference.Preference
 import android.util.AttributeSet
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.ktextension.dismissDialogFragment

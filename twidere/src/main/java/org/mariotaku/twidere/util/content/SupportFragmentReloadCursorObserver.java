@@ -24,9 +24,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager.LoaderCallbacks;
 
 import org.mariotaku.twidere.TwidereConstants;
 

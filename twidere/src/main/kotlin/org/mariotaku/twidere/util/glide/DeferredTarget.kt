@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.util.glide
 
 import android.graphics.drawable.Drawable
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
@@ -30,18 +30,23 @@ import nl.komponents.kovenant.deferred
  * Created by mariotaku on 2017/3/21.
  */
 
-class DeferredTarget<R>(private val deferredInstance: Deferred<R, Exception> = deferred()) : SimpleTarget<R>() {
+class DeferredTarget<R>(private val deferredInstance: Deferred<R, Exception> = deferred()) : CustomTarget<R>() {
 
     val promise: Promise<R, Exception> get() = deferredInstance.promise
 
-    override fun onLoadFailed(e: Exception, errorDrawable: Drawable?) {
+    override fun onLoadFailed(errorDrawable: Drawable?) {
         if (deferredInstance.promise.isDone()) return
-        deferredInstance.reject(e)
+        deferredInstance.reject(Exception())
     }
 
-    override fun onResourceReady(resource: R, glideAnimation: GlideAnimation<in R>) {
+    override fun onResourceReady(resource: R, transition: Transition<in R>?) {
         if (deferredInstance.promise.isDone()) return
         deferredInstance.resolve(resource)
+    }
+
+    override fun onLoadCleared(placeholder: Drawable?) {
+        if (deferredInstance.promise.isDone()) return
+        deferredInstance.reject(Exception())
     }
 
 }

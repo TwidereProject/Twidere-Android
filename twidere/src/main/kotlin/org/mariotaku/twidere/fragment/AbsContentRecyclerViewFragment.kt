@@ -22,9 +22,9 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.ItemDecoration
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import android.view.*
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
@@ -104,7 +104,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         updateRefreshProgressOffset()
     }
 
-    override final fun onRefresh() {
+    final override fun onRefresh() {
         if (!triggerRefresh()) {
             refreshing = false
         }
@@ -138,7 +138,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
             //TODO hide only if top > actionBar.height
             val manager = layoutManager
             if (manager.childCount == 0) return
-            val firstView = manager.getChildAt(0)
+            val firstView = manager.getChildAt(0) ?: return
             if (manager.getPosition(firstView) != 0) {
                 activity.setControlBarVisibleAnimate(visible, this)
                 return
@@ -182,13 +182,13 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         super.onActivityCreated(savedInstanceState)
         drawerCallback = SimpleDrawerCallback(recyclerView)
 
-        val backgroundColor = ThemeUtils.getColorBackground(context)
+        val backgroundColor = ThemeUtils.getColorBackground(context!!)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context, requestManager)
-        layoutManager = onCreateLayoutManager(context)
+        adapter = onCreateAdapter(context!!, requestManager)
+        layoutManager = onCreateLayoutManager(context!!)
         scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
 
         recyclerView.layoutManager = layoutManager
@@ -216,7 +216,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         } else {
             recyclerView.setOnTouchListener(scrollListener.touchListener)
         }
-        setupRecyclerView(context, recyclerView)
+        setupRecyclerView(context!!, recyclerView)
         recyclerView.adapter = adapter
 
         scrollListener.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
@@ -225,8 +225,8 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
 
     protected open fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {
         itemDecoration = onCreateItemDecoration(context, recyclerView, layoutManager)
-        if (itemDecoration != null) {
-            recyclerView.addItemDecoration(itemDecoration)
+        itemDecoration?.let {
+            recyclerView.addItemDecoration(it)
         }
     }
 
@@ -241,7 +241,6 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         recyclerView.removeOnScrollListener(scrollListener)
         super.onStop()
     }
-
 
     override fun onDetach() {
         val activity = activity
@@ -275,7 +274,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected abstract fun onCreateAdapter(context: Context, requestManager: RequestManager): A
 
     protected open fun onCreateItemDecoration(context: Context, recyclerView: RecyclerView,
-            layoutManager: L): ItemDecoration? {
+                                              layoutManager: L): ItemDecoration? {
         return null
     }
 

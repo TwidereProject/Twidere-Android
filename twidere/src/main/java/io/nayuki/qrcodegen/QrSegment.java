@@ -23,7 +23,7 @@
 
 package io.nayuki.qrcodegen;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;

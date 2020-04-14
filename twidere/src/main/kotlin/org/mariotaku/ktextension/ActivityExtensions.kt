@@ -23,7 +23,7 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 
 
 val Activity.activityIcon: Drawable?

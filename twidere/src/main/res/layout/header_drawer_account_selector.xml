@@ -164,7 +164,7 @@
                     android:foregroundGravity="center"
                     tools:foreground="@drawable/ic_action_status_compose">
 
-                    <android.support.v7.widget.ActionMenuView
+                    <androidx.appcompat.widget.ActionMenuView
                         android:id="@+id/accountDashboardMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

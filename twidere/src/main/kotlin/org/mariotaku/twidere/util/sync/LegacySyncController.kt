@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.SystemClock
-import android.support.v4.util.ArrayMap
+import androidx.collection.ArrayMap
 import org.mariotaku.twidere.service.JobTaskService
 import org.mariotaku.twidere.service.LegacyTaskService
 import org.mariotaku.twidere.util.TaskServiceRunner

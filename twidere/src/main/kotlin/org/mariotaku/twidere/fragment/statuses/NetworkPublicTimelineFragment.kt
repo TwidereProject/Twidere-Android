@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.NetworkPublicTimelineLoader
@@ -36,6 +36,7 @@ class NetworkPublicTimelineFragment : ParcelableStatusesFragment() {
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
+            val context = context ?: return null
             val accountKey = Utils.getAccountKey(context, arguments)
             val result = ArrayList<String>()
             result.add(AUTHORITY_NETWORK_PUBLIC_TIMELINE)
@@ -45,6 +46,7 @@ class NetworkPublicTimelineFragment : ParcelableStatusesFragment() {
 
     override val readPositionTagWithArguments: String?
         get() {
+            val arguments = arguments ?: return null
             val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             if (tabPosition < 0) return null
             return "networkpublic_timeline"

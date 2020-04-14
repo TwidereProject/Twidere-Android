@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.view.holder
 
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
@@ -148,7 +148,7 @@ class UserViewHolder(
             denyRequestButton.visibility = View.GONE
         }
         if (friendshipClickListener != null && !isMySelf) {
-            if (user.extras?.blocking ?: false) {
+            if (user.extras?.blocking == true) {
                 followButton.visibility = View.GONE
                 unblockButton.visibility = View.VISIBLE
             } else {
@@ -159,7 +159,7 @@ class UserViewHolder(
                 }
                 unblockButton.visibility = View.GONE
             }
-            unmuteButton.visibility = if (user.extras?.muting ?: false) View.VISIBLE else View.GONE
+            unmuteButton.visibility = if (user.extras?.muting == true) View.VISIBLE else View.GONE
         } else {
             followButton.visibility = View.GONE
             unblockButton.visibility = View.GONE

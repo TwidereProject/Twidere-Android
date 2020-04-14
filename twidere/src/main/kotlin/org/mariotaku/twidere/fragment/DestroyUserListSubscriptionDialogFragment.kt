@@ -22,8 +22,8 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.extension.applyOnShow
@@ -47,7 +47,7 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         val userList = userList
         if (userList != null) {
             builder.setTitle(getString(R.string.unsubscribe_from_user_list, userList.name))
@@ -62,7 +62,7 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
 
     private val userList: ParcelableUserList?
         get() {
-            val args = arguments
+            val args = arguments ?: return null
             if (!args.containsKey(EXTRA_USER_LIST)) return null
             return args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
         }
@@ -72,7 +72,7 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
         val FRAGMENT_TAG = "destroy_user_list"
 
         fun show(fm: FragmentManager,
-                userList: ParcelableUserList): DestroyUserListSubscriptionDialogFragment {
+                 userList: ParcelableUserList): DestroyUserListSubscriptionDialogFragment {
             val args = Bundle()
             args.putParcelable(EXTRA_USER_LIST, userList)
             val f = DestroyUserListSubscriptionDialogFragment()

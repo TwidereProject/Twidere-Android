@@ -23,8 +23,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Color
-import android.support.v4.util.ArrayMap
-import android.support.v4.util.LruCache
+import androidx.collection.ArrayMap
+import androidx.collection.LruCache
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.USER_COLOR_PREFERENCES_NAME
 import org.mariotaku.twidere.TwidereConstants.USER_NICKNAME_PREFERENCES_NAME

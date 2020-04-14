@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.mastodon.api;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.mastodon.model.RegisteredApplication;

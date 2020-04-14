@@ -33,7 +33,7 @@ class StatusRetweetersListFragment : ParcelableUsersFragment() {
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             AbsRequestUsersLoader {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
-        val statusId = args.getString(EXTRA_STATUS_ID)
+        val statusId = args.getString(EXTRA_STATUS_ID)!!
         return StatusRetweetersLoader(context, accountKey, statusId, adapter.getData(), fromUser)
     }
 

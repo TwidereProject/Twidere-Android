@@ -53,7 +53,7 @@ abstract class AbsUserRelatedShortcutCreatorActivity : AbsShortcutCreatorActivit
         }
     }
 
-    override final fun onAccountSelected(accountKey: UserKey, extras: Bundle?) {
+    final override fun onAccountSelected(accountKey: UserKey, extras: Bundle?) {
         val selectUserIntent = Intent(this, UserSelectorActivity::class.java)
         selectUserIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
         selectUserIntent.putExtra(EXTRA_EXTRAS, Bundle {

@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.util.menu;
 
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.view.ContextMenu.ContextMenuInfo;
 
 /**

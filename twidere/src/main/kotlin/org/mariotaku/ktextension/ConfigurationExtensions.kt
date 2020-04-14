@@ -23,8 +23,8 @@ import android.annotation.TargetApi
 import android.content.res.Configuration
 import android.os.Build
 import android.os.LocaleList
-import android.support.v4.os.ConfigurationCompat
-import android.support.v4.os.LocaleListCompat
+import androidx.core.os.ConfigurationCompat
+import androidx.core.os.LocaleListCompat
 import java.util.*
 
 var Configuration.localesCompat: LocaleListCompat
@@ -56,6 +56,6 @@ private object ConfigurationExtensionsApi18 {
 private object ConfigurationExtensionsApi24 {
 
     fun setLocalesCompat(configuration: Configuration, locales: LocaleListCompat) {
-        configuration.locales = locales.unwrap() as? LocaleList
+        configuration.setLocales(locales.unwrap() as? LocaleList)
     }
 }

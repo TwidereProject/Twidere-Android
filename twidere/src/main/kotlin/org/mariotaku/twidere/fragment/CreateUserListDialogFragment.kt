@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.text.TextUtils
 import android.widget.CheckBox
 import android.widget.EditText
@@ -38,12 +38,12 @@ import org.mariotaku.twidere.util.ParseUtils
 class CreateUserListDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setView(R.layout.dialog_user_list_detail_editor)
 
         builder.setTitle(R.string.new_user_list)
         builder.positive(android.R.string.ok) { dialog ->
-            val accountKey: UserKey = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+            val accountKey: UserKey = arguments?.getParcelable(EXTRA_ACCOUNT_KEY)!!
             val editName = dialog.findViewById<EditText>(R.id.editName)!!
             val editDescription = dialog.findViewById<EditText>(R.id.editDescription)!!
             val editPublic = dialog.findViewById<CheckBox>(R.id.isPublic)!!

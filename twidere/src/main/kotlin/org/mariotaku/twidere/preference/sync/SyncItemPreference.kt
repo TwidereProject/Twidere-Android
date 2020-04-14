@@ -2,7 +2,7 @@ package org.mariotaku.twidere.preference.sync
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v7.preference.SwitchPreferenceCompat
+import androidx.preference.SwitchPreferenceCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
@@ -30,7 +30,7 @@ class SyncItemPreference(
     init {
         GeneralComponent.get(context).inject(this)
         val a = context.obtainStyledAttributes(attrs, R.styleable.SyncItemPreference)
-        syncType = a.getString(R.styleable.SyncItemPreference_syncType)
+        syncType = a.getString(R.styleable.SyncItemPreference_syncType)!!
         key = SyncPreferences.getSyncEnabledKey(syncType)
         a.recycle()
     }

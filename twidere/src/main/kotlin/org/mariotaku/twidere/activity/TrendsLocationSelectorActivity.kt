@@ -8,9 +8,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.v4.app.DialogFragment
-import android.support.v4.util.LongSparseArray
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.collection.LongSparseArray
+import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,10 +90,10 @@ class TrendsLocationSelectorActivity : BaseActivity() {
     }
 
     class TrendsLocationDialogFragment : BaseDialogFragment() {
-        private val list: Array<LocationsMap.LocationsData> get() = arguments.getTypedArray(EXTRA_DATA)
+        private val list: Array<LocationsMap.LocationsData> get() = arguments?.getTypedArray(EXTRA_DATA) ?: emptyArray()
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val selectorBuilder = AlertDialog.Builder(context)
+            val selectorBuilder = AlertDialog.Builder(context!!)
             selectorBuilder.setTitle(R.string.trends_location)
             selectorBuilder.setView(R.layout.dialog_expandable_list)
             selectorBuilder.setNegativeButton(android.R.string.cancel, null)
@@ -101,7 +101,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             dialog.onShow {
                 it.applyTheme()
                 val listView = it.expandableList
-                val adapter = ExpandableTrendLocationsListAdapter(context)
+                val adapter = ExpandableTrendLocationsListAdapter(context!!)
                 adapter.data = list
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { _, _, groupPosition, _ ->
@@ -128,12 +128,12 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             activity?.setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_LOCATION, location))
         }
 
-        override fun onDismiss(dialog: DialogInterface?) {
+        override fun onDismiss(dialog: DialogInterface) {
             super.onDismiss(dialog)
             activity?.finish()
         }
 
-        override fun onCancel(dialog: DialogInterface?) {
+        override fun onCancel(dialog: DialogInterface) {
             super.onCancel(dialog)
             activity?.finish()
         }
@@ -285,10 +285,11 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             }
 
             companion object {
+                @JvmField
                 val CREATOR = object : Parcelable.Creator<LocationsData> {
                     override fun createFromParcel(source: Parcel): LocationsData {
-                        val root = source.readParcelable<Location>(Location::class.java.classLoader)
-                        val children = source.createTypedArray(Location.CREATOR)
+                        val root = source.readParcelable<Location>(Location::class.java.classLoader)!!
+                        val children = source.createTypedArray(Location.CREATOR)!!
                         return LocationsData(root, children)
                     }
 

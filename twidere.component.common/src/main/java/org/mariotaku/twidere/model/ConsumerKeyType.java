@@ -18,7 +18,7 @@
 
 package org.mariotaku.twidere.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by mariotaku on 15/4/20.

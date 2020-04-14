@@ -26,7 +26,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.util.ServiceUtils.ServiceToken;

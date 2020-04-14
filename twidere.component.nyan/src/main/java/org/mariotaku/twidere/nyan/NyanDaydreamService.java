@@ -48,7 +48,7 @@ public class NyanDaydreamService extends DreamService implements NyanConstants,
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mNyanDaydreamView = (NyanDaydreamView) findViewById(R.id.nyan);
+        mNyanDaydreamView = findViewById(R.id.nyan);
     }
 
     @Override

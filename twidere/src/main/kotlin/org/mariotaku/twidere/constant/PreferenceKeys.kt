@@ -2,8 +2,8 @@ package org.mariotaku.twidere.constant
 
 import android.content.SharedPreferences
 import android.os.Build
-import android.support.v4.os.LocaleHelperAccessor
-import android.support.v4.util.ArraySet
+import androidx.core.os.LocaleHelperAccessor
+import androidx.collection.ArraySet
 import android.text.TextUtils
 import org.mariotaku.kpreferences.*
 import org.mariotaku.ktextension.bcp47Tag
