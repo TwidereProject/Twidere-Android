@@ -44,4 +44,6 @@ public interface DirectMessagesEventResources {
     @GET("/direct_messages/events/list.json")
     PageableResponseList<DirectMessageEventObject.Event> getDirectMessageList(@Query int count, @Query Paging paging) throws MicroBlogException;
 
+    @GET("/direct_messages/events/show.json")
+    DirectMessageEventObject showDirectMessageEvent(@Query("id") String id) throws MicroBlogException;
 }

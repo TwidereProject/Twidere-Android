@@ -33,6 +33,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.api.*
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMessageConversation
@@ -42,9 +43,9 @@ import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addConversation
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addLocalConversations
+import java.util.*
 
 /**
  * Created by mariotaku on 2017/2/8.
@@ -169,7 +170,18 @@ class SendMessageTask(
             }
             return@uploadMediaThen microBlog.newDirectMessageEvent(obj)
         }
-        return createDatabaseUpdateData(account, microBlog.showDirectMessage(response.event.id))
+        val responseEvent = microBlog.showDirectMessageEvent(response.event.id)
+        val possibleUserId = arrayOf(responseEvent.event.messageCreate.senderId, responseEvent.event.messageCreate .target.recipientId)
+        val users = microBlog.lookupUsers(possibleUserId)
+        val dm = DirectMessage().also { directMessage ->
+            directMessage[DirectMessage::class.java.getDeclaredField("text")] = responseEvent.event.messageCreate.messageData.text
+            directMessage[DirectMessage::class.java.getDeclaredField("id")] = responseEvent.event.id
+            directMessage[DirectMessage::class.java.getDeclaredField("sender")] = users.firstOrNull { user -> responseEvent.event.messageCreate.senderId == user.id }
+            directMessage[DirectMessage::class.java.getDeclaredField("recipient")] = users.firstOrNull { user -> responseEvent.event.messageCreate.target.recipientId == user.id }
+            directMessage[DirectMessage::class.java.getDeclaredField("createdAt")] = Date(responseEvent.event.createdTimestamp.toLong())
+        }
+
+        return createDatabaseUpdateData(account, dm)
     }
 
     private fun sendFanfouDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
