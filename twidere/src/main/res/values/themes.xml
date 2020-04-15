@@ -41,7 +41,6 @@
         <!-- Window attributes -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
 
         <item name="windowActionBarOverlay">true</item>
         <item name="actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>
