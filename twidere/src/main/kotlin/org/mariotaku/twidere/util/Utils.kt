@@ -89,6 +89,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES
 import org.mariotaku.twidere.view.TabPagerIndicator
 import java.io.File
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.*
 import java.util.regex.Pattern
 
@@ -607,4 +609,16 @@ object Utils {
 
     }
 
+    fun copyStream(input: InputStream, output: OutputStream, length: Int) {
+        val buffer = ByteArray(1024)
+        var bytesRead: Int = 0
+        do {
+            val read = input.read(buffer)
+            if (read == -1) {
+                break
+            }
+            output.write(buffer, 0, read)
+            bytesRead += read
+        } while (bytesRead <= length)
+    }
 }

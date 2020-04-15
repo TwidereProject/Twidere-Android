@@ -9,11 +9,12 @@ import android.graphics.Point
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
+import android.util.Base64
+import android.webkit.MimeTypeMap
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.exifinterface.media.ExifInterface
-import android.text.TextUtils
-import android.webkit.MimeTypeMap
 import net.ypresto.androidtranscoder.MediaTranscoder
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
 import org.mariotaku.ktextension.*
@@ -31,7 +32,6 @@ import org.mariotaku.microblog.library.twitter.model.StatusUpdate
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.FileBody
-import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -54,10 +54,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.text.StatusTextValidator
-import java.io.Closeable
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -834,7 +831,6 @@ class UpdateStatusTask(
             }
         }
 
-
         @Throws(IOException::class, MicroBlogException::class)
         private fun uploadMediaChucked(upload: TwitterUpload, body: Body,
                 mediaCategory: String? = null, ownerIds: Array<String>?): MediaUploadResponse {
@@ -842,12 +838,19 @@ class UpdateStatusTask(
             val length = body.length()
             val stream = body.stream()
             var response = upload.initUploadMedia(mediaType, length, mediaCategory, ownerIds)
-            val segments = if (length == 0L) 0 else (length / BULK_SIZE + 1).toInt()
-            for (segmentIndex in 0 until segments) {
-                val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - segmentIndex * BULK_SIZE).toInt()
-                val bulk = SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize.toLong(),
-                        stream)
-                upload.appendUploadMedia(response.id, segmentIndex, bulk)
+            run {
+                var streamReadLength = 0
+                var segmentIndex = 0
+                while (streamReadLength < length) {
+                    val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - streamReadLength).toInt()
+                    val output = ByteArrayOutputStream()
+                    Utils.copyStream(stream, output, currentBulkSize)
+                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
+                    upload.appendUploadMedia(response.id, segmentIndex, data)
+                    output.close()
+                    segmentIndex++
+                    streamReadLength += currentBulkSize
+                }
             }
             response = upload.finalizeUploadMedia(response.id)
             var info: MediaUploadResponse.ProcessingInfo? = response.processingInfo

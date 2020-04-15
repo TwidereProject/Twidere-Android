@@ -26,12 +26,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
+import android.util.Base64
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
-import android.text.TextUtils
-import android.util.Log
-import android.widget.Toast
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.AbstractTask
@@ -43,9 +44,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse.ProcessingInfo
-import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
-import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -66,7 +65,9 @@ import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.deleteDrafts
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -323,20 +324,26 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         notificationManager.cancel(NOTIFICATION_ID_UPDATE_STATUS)
     }
 
-
     @Throws(IOException::class, MicroBlogException::class)
     private fun uploadMedia(upload: TwitterUpload, body: Body): MediaUploadResponse {
         val mediaType = body.contentType().contentType
         val length = body.length()
         val stream = body.stream()
         var response = upload.initUploadMedia(mediaType, length, null, null)
-        val segments = if (length == 0L) 0 else (length / BULK_SIZE + 1).toInt()
-        for (segmentIndex in 0 until segments) {
-            val currentBulkSize = Math.min(BULK_SIZE, length - segmentIndex * BULK_SIZE).toInt()
-            val bulk = SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize.toLong(),
-                    stream)
-            upload.appendUploadMedia(response.id, segmentIndex, bulk)
-        }
+        run {
+                var streamReadLength = 0
+                var segmentIndex = 0
+                while (streamReadLength < length) {
+                    val currentBulkSize = Math.min(BULK_SIZE, length - streamReadLength).toInt()
+                    val output = ByteArrayOutputStream()
+                    Utils.copyStream(stream, output, currentBulkSize)
+                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
+                    upload.appendUploadMedia(response.id, segmentIndex, data)
+                    output.close()
+                    segmentIndex++
+                    streamReadLength += currentBulkSize
+                }
+            }
         response = upload.finalizeUploadMedia(response.id)
         run {
             var info: ProcessingInfo? = response.processingInfo

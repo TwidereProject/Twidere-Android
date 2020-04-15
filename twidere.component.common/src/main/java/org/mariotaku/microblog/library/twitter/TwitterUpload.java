@@ -55,7 +55,7 @@ public interface TwitterUpload {
     @Params(@KeyValue(key = "command", value = "APPEND"))
     ResponseCode appendUploadMedia(@Param("media_id") String mediaId,
                                    @Param("segment_index") int segmentIndex,
-                                   @Param("media") Body media) throws MicroBlogException;
+                                   @Param("media_data") String media) throws MicroBlogException;
 
     @POST("/media/upload.json")
     @Params(@KeyValue(key = "command", value = "FINALIZE"))
