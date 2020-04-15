@@ -1,10 +1,10 @@
 package org.mariotaku.twidere.view.holder
 
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -352,7 +352,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         if (!summaryView.empty && !isFullTextVisible) {
             text = SpannableStringBuilder.valueOf(context.getString(R.string.label_status_show_more)).apply {
                 setSpan(object : TwidereClickableSpan(adapter.linkHighlightingStyle) {
-                    override fun onClick(widget: View?) {
+                    override fun onClick(widget: View) {
                         showFullText()
                     }
                 }, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

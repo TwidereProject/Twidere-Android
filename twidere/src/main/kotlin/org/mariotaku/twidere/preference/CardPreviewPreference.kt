@@ -22,9 +22,9 @@ package org.mariotaku.twidere.preference
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceViewHolder
-import android.support.v7.widget.RecyclerView
+import androidx.preference.Preference
+import androidx.preference.PreferenceViewHolder
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import com.bumptech.glide.Glide
 import org.mariotaku.twidere.R

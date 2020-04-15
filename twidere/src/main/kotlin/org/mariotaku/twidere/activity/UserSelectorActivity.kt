@@ -22,8 +22,8 @@ package org.mariotaku.twidere.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.Loader
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import android.text.TextUtils.isEmpty
 import android.view.View
 import android.widget.AdapterView
@@ -107,10 +107,10 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         finish()
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val query = args.getString(EXTRA_QUERY)
-        val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUser>> {
+        val accountKey = args?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
+        val query = args?.getString(EXTRA_QUERY).orEmpty()
+        val fromCache = args?.getBoolean(EXTRA_FROM_CACHE)
         if (!fromCache) {
             showProgress()
         }

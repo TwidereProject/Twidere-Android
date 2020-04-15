@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.model.event;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by mariotaku on 14/12/10.

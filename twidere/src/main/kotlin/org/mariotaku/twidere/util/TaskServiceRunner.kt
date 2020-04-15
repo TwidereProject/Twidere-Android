@@ -2,7 +2,7 @@ package org.mariotaku.twidere.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.annotation.StringDef
+import androidx.annotation.StringDef
 import android.util.Log
 import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask

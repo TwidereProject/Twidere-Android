@@ -28,9 +28,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.StyleRes
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.TwilightManagerAccessor
+import androidx.annotation.StyleRes
+import androidx.core.view.ViewCompat
+import androidx.appcompat.app.TwilightManagerAccessor
 import android.view.View
 import android.view.View.MeasureSpec
 import android.widget.Toast

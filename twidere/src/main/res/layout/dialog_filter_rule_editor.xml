@@ -29,7 +29,7 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorPrimary"/>
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/advancedCollapseIndicator"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"

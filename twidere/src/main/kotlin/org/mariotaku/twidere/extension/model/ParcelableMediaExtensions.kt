@@ -47,6 +47,6 @@ val ParcelableMedia.aspect_ratio: Double
 
 val ParcelableMedia.bannerExtras: PromotionService.BannerExtras?
     get() {
-        val contentUrl = this.page_url ?: this.url ?: return null
+        val contentUrl = this.page_url ?: this.url
         return PromotionService.BannerExtras(contentUrl)
     }

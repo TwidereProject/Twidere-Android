@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.FixedAsyncTaskLoader
-import android.support.v4.content.Loader
-import android.support.v7.widget.RecyclerView
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.FixedAsyncTaskLoader
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -42,7 +42,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         LoaderCallbacks<List<Any>?> {
 
     protected val accountKey: UserKey?
-        get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        get() = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,12 +67,14 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
         dummyItemAdapter.statusClickListener = object : IStatusViewHolder.StatusClickListener {
             override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
-                IntentUtils.openStatus(getContext(), status, null)
+                getContext()?.let {
+                    IntentUtils.openStatus(it, status, null)
+                }
             }
 
             override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
-                IntentUtils.openStatus(getContext(), status.account_key, status.quoted_id)
+                getContext()?.let { IntentUtils.openStatus(it, status.account_key, status.quoted_id) }
             }
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
@@ -94,16 +96,20 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
 
             override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
                 val status = dummyItemAdapter.getStatus(statusPosition)
-                IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
-                        null)
+                activity?.let {
+                    IntentUtils.openMedia(it, status, current, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
+                            null)
+                }
             }
 
             override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
                 val activity = activity
                 val status = dummyItemAdapter.getStatus(position)
-                IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                        status.user_screen_name, status.extras?.user_statusnet_profile_url,
-                        preferences[newDocumentApiKey])
+                if (activity != null) {
+                    IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
+                            status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                            preferences[newDocumentApiKey])
+                }
             }
         }
         dummyItemAdapter.userClickListener = object : IUsersAdapter.SimpleUserClickListener() {
@@ -121,10 +127,10 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<Any>?> {
-        return ItemsLoader(context, arguments)
+        return ItemsLoader(context!!, arguments!!)
     }
 
-    override final fun onLoadFinished(loader: Loader<List<Any>?>, data: List<Any>?) {
+    final override fun onLoadFinished(loader: Loader<List<Any>?>, data: List<Any>?) {
         adapter.setData(data)
         showContent()
     }
@@ -148,8 +154,10 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper,
-                        userColorNameManager, status)
+                context?.let {
+                    MenuUtils.setupForStatus(it, menu, preferences, twitterWrapper,
+                            userColorNameManager, status)
+                }
             }
         }
     }
@@ -163,12 +171,12 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(position)
                 if (item.itemId == R.id.share) {
-                    val shareIntent = Utils.createStatusShareIntent(activity, status)
+                    val shareIntent = activity?.let { Utils.createStatusShareIntent(it, status) }
                     val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                     startActivity(chooser)
                     return true
                 }
-                return MenuUtils.handleStatusClick(activity, this, fragmentManager,
+                return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
                         preferences, userColorNameManager, twitterWrapper, status, item)
             }
         }
@@ -178,7 +186,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
     class ItemsLoader(context: Context, private val arguments: Bundle) : FixedAsyncTaskLoader<List<Any>>(context) {
 
         override fun loadInBackground(): List<Any> {
-            return arguments.getParcelableArrayList<Parcelable>(EXTRA_ITEMS)
+            return arguments.getParcelableArrayList(EXTRA_ITEMS)!!
         }
 
         override fun onStartLoading() {

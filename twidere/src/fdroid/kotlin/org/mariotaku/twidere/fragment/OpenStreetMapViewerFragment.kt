@@ -23,7 +23,7 @@ import android.content.Context
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.view.*
 import kotlinx.android.synthetic.fdroid.activity_osm_viewer.*
 import org.mariotaku.ktextension.preferExternalCacheDir
@@ -49,11 +49,11 @@ class OpenStreetMapViewerFragment : BaseFragment(), Constants {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        val args = arguments
+        val args = arguments ?: return
         val latitude = args.getDouble(EXTRA_LATITUDE, Double.NaN)
         val longitude = args.getDouble(EXTRA_LONGITUDE, Double.NaN)
         if (latitude.isNaN() || longitude.isNaN()) {
-            activity.finish()
+            activity?.finish()
             return
         }
         this.latitude = latitude

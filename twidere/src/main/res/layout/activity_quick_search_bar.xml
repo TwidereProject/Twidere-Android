@@ -27,7 +27,7 @@
     android:padding="@dimen/element_spacing_normal">
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/searchContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 android:layout_height="@dimen/element_size_normal"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatSpinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/accountSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -99,7 +99,7 @@
                 tools:listitem="@layout/list_item_suggestion_search"/>
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <!-- Make sure ad won't overlap search box -->
     <FrameLayout

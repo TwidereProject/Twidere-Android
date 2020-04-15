@@ -3,9 +3,9 @@ package org.mariotaku.twidere.view
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.support.annotation.ColorInt
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.AppCompatImageView
+import androidx.annotation.ColorInt
+import androidx.core.view.ViewCompat
+import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonView

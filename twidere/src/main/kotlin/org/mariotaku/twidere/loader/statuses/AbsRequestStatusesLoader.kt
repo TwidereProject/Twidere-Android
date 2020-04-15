@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader.statuses
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -102,7 +102,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     @SuppressWarnings("unchecked")
-    override final fun loadInBackground(): ListResponse<ParcelableStatus> {
+    final override fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
         val comparator = this.comparator
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
@@ -183,7 +183,7 @@ abstract class AbsRequestStatusesLoader(
         return ListResponse.getListInstance(data)
     }
 
-    override final fun onStartLoading() {
+    final override fun onStartLoading() {
         exception = null
         super.onStartLoading()
     }

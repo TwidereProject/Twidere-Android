@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.content.res.Resources
-import android.support.annotation.RawRes
+import androidx.annotation.RawRes
 
 /**
  * Created by mariotaku on 2017/4/16.

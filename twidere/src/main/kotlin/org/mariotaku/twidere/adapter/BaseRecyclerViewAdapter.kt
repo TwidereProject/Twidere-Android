@@ -21,8 +21,8 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v4.text.BidiFormatter
-import android.support.v7.widget.RecyclerView
+import androidx.core.text.BidiFormatter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
@@ -48,12 +48,12 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
 ) : RecyclerView.Adapter<VH>(), IContentAdapter {
 
     @Inject
-    override final lateinit var twitterWrapper: AsyncTwitterWrapper
+    final override lateinit var twitterWrapper: AsyncTwitterWrapper
 
     @Inject
-    override final lateinit var userColorNameManager: UserColorNameManager
+    final override lateinit var userColorNameManager: UserColorNameManager
     @Inject
-    override final lateinit var bidiFormatter: BidiFormatter
+    final override lateinit var bidiFormatter: BidiFormatter
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
@@ -63,11 +63,11 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
 
-    override final val profileImageSize: String = context.getString(R.string.profile_image_size)
-    override final val profileImageStyle: Int
-    override final val textSize: Float
-    override final val profileImageEnabled: Boolean
-    override final val showAbsoluteTime: Boolean
+    final override val profileImageSize: String = context.getString(R.string.profile_image_size)
+    final override val profileImageStyle: Int
+    final override val textSize: Float
+    final override val profileImageEnabled: Boolean
+    final override val showAbsoluteTime: Boolean
 
     init {
         @Suppress("UNCHECKED_CAST")

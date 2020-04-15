@@ -21,7 +21,7 @@ package org.mariotaku.twidere.extension
 
 import android.graphics.Rect
 import android.graphics.RectF
-import android.support.annotation.UiThread
+import androidx.annotation.UiThread
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView

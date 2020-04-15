@@ -22,7 +22,7 @@ package org.mariotaku.twidere.view.controller.twitter.card
 import android.accounts.AccountManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater

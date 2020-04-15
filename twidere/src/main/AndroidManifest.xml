@@ -58,6 +58,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <!-- Used for account management -->
     <uses-permission
@@ -700,7 +701,7 @@
             android:exported="true"
             tools:ignore="ExportedContentProvider"/>
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="org.mariotaku.twidere.pncfileprovider"
             android:exported="false"
             android:grantUriPermissions="true">

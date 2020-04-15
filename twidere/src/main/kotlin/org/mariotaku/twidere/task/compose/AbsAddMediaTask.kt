@@ -51,7 +51,7 @@ open class AbsAddMediaTask<Callback>(
             try {
                 val mimeTypeMap = MimeTypeMap.getSingleton()
                 val sourceMimeType = resolver.getType(source) ?: mimeTypeMap.getMimeTypeFromExtension(
-                        source.lastPathSegment.substringAfterLast('.', "tmp"))
+                        source.lastPathSegment!!.substringAfterLast('.', "tmp"))
                 val mediaType = types?.get(index) ?: sourceMimeType?.let {
                     return@let inferMediaType(it)
                 } ?: ParcelableMedia.Type.IMAGE

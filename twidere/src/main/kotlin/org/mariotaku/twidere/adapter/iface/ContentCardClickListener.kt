@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.adapter.iface
 
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.View
 
 /**

@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.model.util
 
 import android.content.ContentResolver
-import android.support.v4.util.ArraySet
+import androidx.collection.ArraySet
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.bulkInsert

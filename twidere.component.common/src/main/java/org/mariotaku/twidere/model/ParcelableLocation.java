@@ -22,8 +22,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -61,9 +61,7 @@ public class ParcelableLocation implements Parcelable {
         final ParcelableLocation other = (ParcelableLocation) obj;
         if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
             return false;
-        if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
-            return false;
-        return true;
+        return Double.doubleToLongBits(longitude) == Double.doubleToLongBits(other.longitude);
     }
 
     @Override

@@ -19,11 +19,11 @@
 
 package org.mariotaku.twidere.view.transformer
 
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.view.View
 
 object AccountsSelectorTransformer : ViewPager.PageTransformer {
-    const internal val selectorAccountsCount: Int = 3
+    internal const val selectorAccountsCount: Int = 3
 
     override fun transformPage(page: View, position: Float) {
         if (position < 0) {

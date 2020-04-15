@@ -2,7 +2,7 @@ package org.mariotaku.twidere.util.support;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 

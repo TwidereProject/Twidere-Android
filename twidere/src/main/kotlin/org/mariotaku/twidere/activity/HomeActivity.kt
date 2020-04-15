@@ -37,20 +37,20 @@ import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v4.app.NotificationCompat
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v4.view.WindowInsetsCompat
-import android.support.v4.view.unwrapped
-import android.support.v4.widget.DrawerLayout
-import android.support.v4.widget.DrawerLayoutAccessor
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.TintTypedArray
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
+import androidx.core.app.NotificationCompat
+import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.unwrapped
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.drawerlayout.widget.DrawerLayoutAccessor
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.TintTypedArray
 import android.util.SparseIntArray
 import android.view.Gravity
 import android.view.KeyEvent
@@ -345,13 +345,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         drawerToggle.onConfigurationChanged(newConfig)
     }
 
-    override fun onAttachFragment(fragment: Fragment?) {
+    override fun onAttachFragment(fragment: Fragment) {
         super.onAttachFragment(fragment)
         updateActionsButton()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
     }
 
     override fun onClick(v: View) {
@@ -705,7 +701,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (handleExtraIntent && refreshOnStart) {
             twitterWrapper.refreshAll()
         }
-        val extraIntent = intent.getParcelableExtra<Intent>(EXTRA_EXTRA_INTENT)
 
         val uri = intent.data
         @CustomTabType
@@ -725,7 +720,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                     }
                 }
             }
-            if (initialTab == -1 && (extraIntent == null || !handleExtraIntent)) {
+            if (initialTab == -1 && !handleExtraIntent) {
                 // Tab not found, open account specific page
                 when (tabType) {
                     CustomTabType.NOTIFICATIONS_TIMELINE -> {
@@ -738,10 +733,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                     }
                 }
             }
-        }
-        if (extraIntent != null && handleExtraIntent) {
-            extraIntent.setExtrasClassLoader(classLoader)
-            startActivity(extraIntent)
         }
         return initialTab
     }
@@ -1023,7 +1014,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     class AutoRefreshConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle(R.string.auto_refresh)
             builder.setMessage(R.string.message_auto_refresh_confirm)
             builder.setPositiveButton(android.R.string.ok) { _, _ ->
@@ -1037,14 +1028,14 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             return dialog
         }
 
-        override fun onDismiss(dialog: DialogInterface?) {
+        override fun onDismiss(dialog: DialogInterface) {
             kPreferences[defaultAutoRefreshAskedKey] = true
             super.onDismiss(dialog)
         }
     }
 
     companion object {
-        private val HOME_AS_UP_ATTRS = intArrayOf(android.support.v7.appcompat.R.attr.homeAsUpIndicator)
+        private val HOME_AS_UP_ATTRS = intArrayOf(android.R.attr.homeAsUpIndicator)
     }
 
 

@@ -26,16 +26,17 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
-import android.support.annotation.RequiresApi
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.ViewPager
-import android.support.v4.view.WindowInsetsCompat
-import android.support.v4.widget.ViewDragHelper
-import android.support.v7.app.WindowDecorActionBar
-import android.support.v7.app.decorToolbar
+import android.provider.MediaStore
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.viewpager.widget.ViewPager
+import androidx.core.view.WindowInsetsCompat
+import androidx.customview.widget.ViewDragHelper
+import androidx.appcompat.app.WindowDecorActionBar
+import androidx.appcompat.app.decorToolbar
 import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_media_viewer.*
@@ -73,6 +74,7 @@ import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
+import kotlin.concurrent.thread
 import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener,
@@ -103,7 +105,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private val currentFragment: MediaViewerFragment?
         get() {
             val viewPager = findViewPager()
-            val adapter = viewPager.adapter
+            val adapter = viewPager.adapter ?: return null
             val currentItem = viewPager.currentItem
             if (currentItem < 0 || currentItem >= adapter.count) return null
             return adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment
@@ -112,7 +114,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private fun getCurrentCacheFileInfo(position: Int): SaveFileTask.FileInfo? {
         if (position == -1) return null
         val viewPager = findViewPager()
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return null
         val f = adapter.instantiateItem(viewPager, position) as? MediaViewerFragment ?:
                 return null
         return f.cacheFileInfo()
@@ -219,7 +221,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val viewPager = findViewPager()
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return false
         val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= adapter.count) return false
         val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
@@ -438,7 +440,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
         val result = super.onApplyWindowInsets(v, insets)
-        val adapter = viewPager.adapter
+        val adapter = viewPager.adapter ?: return insets
         if (adapter.count == 0) return insets
         val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
         if (fragment is IBaseFragment<*>) {
@@ -504,13 +506,25 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
         val pubDir = when (type) {
             CacheFileType.VIDEO -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+                }
             }
             CacheFileType.IMAGE -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                }
             }
             else -> {
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                } else {
+                    getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                }
             }
         }
         val saveDir = File(pubDir, "Twidere")
@@ -521,17 +535,19 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private fun openSaveToDocumentChooser() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         val fileInfo = getCurrentCacheFileInfo(viewPager.currentItem) ?: return
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-        intent.type = fileInfo.mimeType ?: "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        val extension = fileInfo.fileExtension
-        val saveFileName = if (extension != null) {
-            "${fileInfo.fileName?.removeSuffix("_$extension")}.$extension"
-        } else {
-            fileInfo.fileName
+        thread {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.type = fileInfo.mimeType ?: "*/*"
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            val extension = fileInfo.fileExtension
+            val saveFileName = if (extension != null) {
+                "${fileInfo.fileName?.removeSuffix("_$extension")}.$extension"
+            } else {
+                fileInfo.fileName
+            }
+            intent.putExtra(Intent.EXTRA_TITLE, saveFileName)
+            startActivityForResult(intent, REQUEST_SELECT_SAVE_MEDIA)
         }
-        intent.putExtra(Intent.EXTRA_TITLE, saveFileName)
-        startActivityForResult(intent, REQUEST_SELECT_SAVE_MEDIA)
     }
 
     private fun saveMediaToContentUri(data: Uri) {
@@ -540,7 +556,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         (showProgressDialog("save_media_to_progress") and task {
             val a = weakThis.get() ?: throw InterruptedException()
             fileInfo.inputStream().use { st ->
-                st.copyTo(a.contentResolver.openOutputStream(data))
+                a.contentResolver.openOutputStream(data)?.use {
+                    st.copyTo(it)
+                }
             }
         }).successUi {
             val a = weakThis.get() ?: return@successUi
@@ -552,7 +570,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     private fun MediaViewerFragment.cacheFileInfo(): SaveFileTask.FileInfo? {
-        return when (this) {
+        when (this) {
             is CacheDownloadMediaViewerFragment -> {
                 val cacheUri = downloadResult?.cacheUri ?: return null
                 val type = when (this) {
@@ -561,7 +579,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                     is GifPageFragment -> CacheFileType.IMAGE
                     else -> return null
                 }
-                CacheProvider.ContentUriFileInfo(activity, cacheUri, type)
+                return activity?.let {
+                    CacheProvider.ContentUriFileInfo(it, cacheUri, type)
+                }
             }
             is ExoPlayerPageFragment -> {
                 return getRequestFileInfo()

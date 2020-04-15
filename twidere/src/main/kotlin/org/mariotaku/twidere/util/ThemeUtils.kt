@@ -28,17 +28,17 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.AttrRes
-import android.support.annotation.ColorInt
-import android.support.annotation.StyleRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.ColorUtils
-import android.support.v7.app.TwilightManagerAccessor
-import android.support.v7.view.menu.ActionMenuItemView
-import android.support.v7.widget.ActionMenuView
-import android.support.v7.widget.TintTypedArray
-import android.support.v7.widget.Toolbar
-import android.support.v7.widget.TwidereToolbar
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import androidx.annotation.StyleRes
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
+import androidx.appcompat.app.TwilightManagerAccessor
+import androidx.appcompat.view.menu.ActionMenuItemView
+import androidx.appcompat.widget.ActionMenuView
+import androidx.appcompat.widget.TintTypedArray
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.TwidereToolbar
 import android.util.TypedValue
 import android.view.*
 import android.widget.FrameLayout
@@ -371,7 +371,7 @@ object ThemeUtils {
 
     fun setCompatContentViewOverlay(window: Window, overlay: Drawable?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return
-        val contentLayout = window.findViewById<FrameLayout>(android.support.v7.appcompat.R.id.action_bar_activity_content)
+        val contentLayout = window.findViewById<FrameLayout>(com.google.android.material.R.id.action_bar_activity_content)
                 ?: window.findViewById<FrameLayout>(android.R.id.content) ?: return
         ViewSupport.setForeground(contentLayout, overlay)
     }

@@ -265,7 +265,8 @@ class BrowserSignInActivity : BaseActivity() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val dialog = super.onCreateDialog(savedInstanceState)
             dialog.onShow {
-                it.window.attributes = it.window.attributes?.apply {
+                val window = it.window ?: return@onShow
+                window.attributes = window.attributes?.apply {
                     width = WindowManager.LayoutParams.MATCH_PARENT
                 }
 

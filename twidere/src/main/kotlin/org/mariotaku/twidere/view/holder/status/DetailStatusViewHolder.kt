@@ -22,12 +22,12 @@ package org.mariotaku.twidere.view.holder.status
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
-import android.support.annotation.UiThread
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.ActionMenuView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.appcompat.widget.ActionMenuView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -381,7 +381,7 @@ class DetailStatusViewHolder(
                 }
             }
             itemView.profileContainer -> {
-                val activity = fragment.activity
+                val activity = fragment.activity ?: return
                 IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                         status.user_screen_name, status.extras?.user_statusnet_profile_url,
                         preferences[newDocumentApiKey], null)
@@ -419,7 +419,7 @@ class DetailStatusViewHolder(
         val preferences = fragment.preferences
         val twitter = fragment.twitterWrapper
         val manager = fragment.userColorNameManager
-        val activity = fragment.activity
+        val activity = fragment.activity ?: return false
         return MenuUtils.handleStatusClick(activity, fragment, fragment.childFragmentManager,
                 preferences, manager, twitter, status, item)
     }
@@ -433,7 +433,7 @@ class DetailStatusViewHolder(
     private fun initViews() {
         itemView.menuBar.setOnMenuItemClickListener(this)
         val fragment = adapter.fragment
-        val activity = fragment.activity
+        val activity = fragment.activity ?: return
         val inflater = activity.menuInflater
         val menu = itemView.menuBar.menu
         inflater.inflate(R.menu.menu_detail_status, menu)
@@ -776,7 +776,7 @@ class DetailStatusViewHolder(
 
     private class SpacingItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
 
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             if (ViewCompat.getLayoutDirection(parent) == ViewCompat.LAYOUT_DIRECTION_RTL) {
                 outRect.set(spacing, 0, 0, 0)
             } else {

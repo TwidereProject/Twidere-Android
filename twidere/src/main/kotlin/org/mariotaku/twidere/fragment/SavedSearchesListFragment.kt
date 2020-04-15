@@ -21,9 +21,9 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.app.hasRunningLoadersSafe
+import androidx.loader.content.Loader
 import android.view.View
 import android.widget.AdapterView
 import com.bumptech.glide.RequestManager
@@ -50,7 +50,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         }
 
     val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        get() = arguments?.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -75,18 +75,18 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ResponseList<SavedSearch>?> {
-        return SavedSearchesLoader(activity, accountKey)
+        return SavedSearchesLoader(activity!!, accountKey)
     }
 
     override fun onItemLongClick(view: AdapterView<*>, child: View, position: Int, id: Long): Boolean {
         val item = adapter.findItem(id) ?: return false
-        DestroySavedSearchDialogFragment.show(fragmentManager, accountKey, item.id, item.name)
+        fragmentManager?.let { DestroySavedSearchDialogFragment.show(it, accountKey, item.id, item.name) }
         return true
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
         val item = adapter.findItem(id) ?: return
-        openTweetSearch(activity, accountKey, item.query)
+        activity?.let { openTweetSearch(it, accountKey, item.query) }
     }
 
     override fun onLoaderReset(loader: Loader<ResponseList<SavedSearch>?>) {

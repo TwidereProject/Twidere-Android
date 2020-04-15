@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.view.holder
 
 import android.graphics.PorterDuff
-import android.support.v4.view.MarginLayoutParamsCompat
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.core.view.MarginLayoutParamsCompat
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_item_activity_summary_compact.view.*

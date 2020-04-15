@@ -2,9 +2,9 @@ package org.mariotaku.twidere.util
 
 import android.app.Application
 import android.content.Context
-import android.support.test.InstrumentationRegistry
-import android.support.test.filters.FlakyTest
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.filters.FlakyTest
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import android.text.TextUtils
 import org.junit.Assert
 import org.junit.Test

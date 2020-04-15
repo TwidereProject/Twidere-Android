@@ -1,8 +1,9 @@
 package org.mariotaku.twidere.preference
 
 import android.content.Context
-import android.support.v4.app.FragmentActivity
-import android.support.v7.preference.Preference
+import androidx.fragment.app.FragmentActivity
+import androidx.preference.Preference
+import androidx.preference.Preference.OnPreferenceClickListener
 import android.util.AttributeSet
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.R
@@ -28,7 +29,7 @@ class PremiumEntryPreference(context: Context, attrs: AttributeSet) : Preference
         val requiredFeature = a.getString(R.styleable.PremiumEntryPreference_requiredFeature)
         a.recycle()
         isEnabled = extraFeaturesService.isSupported()
-        setOnPreferenceClickListener {
+        onPreferenceClickListener = OnPreferenceClickListener l@{
             if (requiredFeature != null && !extraFeaturesService.isEnabled(requiredFeature)) {
                 val activity = ChameleonUtils.getActivity(context)
                 if (activity is FragmentActivity) {
@@ -36,9 +37,9 @@ class PremiumEntryPreference(context: Context, attrs: AttributeSet) : Preference
                             feature = requiredFeature, source = "preference:${key}",
                             requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                 }
-                return@setOnPreferenceClickListener true
+                return@l true
             }
-            return@setOnPreferenceClickListener false
+            return@l false
         }
     }
 

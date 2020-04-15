@@ -216,6 +216,6 @@ internal fun Credentials.authorizationHeader(
             queries.add(name, value)
         }
     }
-    val info = RestRequest("GET", false, uri.path, null, queries, null, null, null, null)
+    val info = RestRequest("GET", false, uri.path!!, null, queries, null, null, null, null)
     return auth.getHeader(endpoint, info)
 }

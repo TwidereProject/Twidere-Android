@@ -32,7 +32,7 @@ abstract class ExceptionHandlingAbstractTask<Params, Result, TaskException : Exc
 
     protected abstract val exceptionClass: Class<TaskException>
 
-    override final fun afterExecute(callback: Callback?, results: SingleResponse<Result>) {
+    final override fun afterExecute(callback: Callback?, results: SingleResponse<Result>) {
         @Suppress("UNCHECKED_CAST")
         afterExecute(callback, results.data, results.exception as? TaskException)
         if (results.data != null) {
@@ -47,7 +47,7 @@ abstract class ExceptionHandlingAbstractTask<Params, Result, TaskException : Exc
         }
     }
 
-    override final fun doLongOperation(params: Params): SingleResponse<Result> {
+    final override fun doLongOperation(params: Params): SingleResponse<Result> {
         try {
             return SingleResponse(onExecute(params))
         } catch (tr: Exception) {

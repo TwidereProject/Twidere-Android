@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.text.AttributedCharacterIterator;
 import java.text.DateFormat;

@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader.group
 
 import android.content.Context
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.statusnet.model.Group
@@ -46,10 +46,10 @@ abstract class BaseGroupsLoader(
 
     override var pagination: Pagination? = null
 
-    override final var nextPagination: Pagination? = null
+    final override var nextPagination: Pagination? = null
         private set
 
-    override final var prevPagination: Pagination? = null
+    final override var prevPagination: Pagination? = null
         private set
 
     protected val data = NoDuplicatesArrayList<ParcelableGroup>()

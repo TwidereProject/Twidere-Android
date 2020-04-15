@@ -18,7 +18,7 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.mariotaku.restfu.http.ValueMap;
 
@@ -75,10 +75,7 @@ public final class GeoQuery implements ValueMap {
         if (granularity != null ? !granularity.equals(geoQuery.granularity) : geoQuery.granularity != null)
             return false;
         if (ip != null ? !ip.equals(geoQuery.ip) : geoQuery.ip != null) return false;
-        if (location != null ? !location.equals(geoQuery.location) : geoQuery.location != null)
-            return false;
-
-        return true;
+        return location != null ? location.equals(geoQuery.location) : geoQuery.location == null;
     }
 
     public String getAccuracy() {

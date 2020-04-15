@@ -21,11 +21,11 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.Loader
-import android.support.v7.widget.RecyclerView
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
+import androidx.loader.app.hasRunningLoadersSafe
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.twidere.adapter.ParcelableGroupsAdapter
@@ -68,12 +68,8 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         return ParcelableGroupsAdapter(context, this.requestManager)
     }
 
-    override fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {
-        super.setupRecyclerView(context, recyclerView)
-    }
-
     protected val accountKey: UserKey?
-        get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        get() = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     protected fun hasMoreData(data: List<ParcelableGroup>?): Boolean {
         return data == null || !data.isEmpty()
@@ -133,10 +129,10 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         loaderManager.initLoader(0, loaderArgs, this)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableGroup>?> {
-        val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        args.remove(EXTRA_FROM_USER)
-        return onCreateUserListsLoader(activity, args, fromUser)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableGroup>?> {
+        val fromUser = args?.getBoolean(EXTRA_FROM_USER)
+        args?.remove(EXTRA_FROM_USER)
+        return onCreateUserListsLoader(activity!!, args!!, fromUser!!)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableGroup>?>) {
@@ -146,7 +142,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     }
 
     override fun onGroupClick(holder: GroupViewHolder, position: Int) {
-        IntentUtils.openGroupDetails(context, adapter.getGroup(position)!!)
+        context?.let { IntentUtils.openGroupDetails(it, adapter.getGroup(position)!!) }
     }
 
     override fun onGroupLongClick(holder: GroupViewHolder, position: Int): Boolean {

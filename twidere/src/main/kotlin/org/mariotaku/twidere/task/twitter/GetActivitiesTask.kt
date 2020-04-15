@@ -4,7 +4,7 @@ import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import android.support.annotation.UiThread
+import androidx.annotation.UiThread
 import org.mariotaku.kpreferences.get
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
@@ -181,8 +181,10 @@ abstract class GetActivitiesTask(
                 valuesList[valuesList.size - 1].put(Activities.IS_GAP, true)
             }
         }
-        // Insert previously fetched items.
-        ContentResolverUtils.bulkInsert(cr, writeUri, valuesList)
+        if (valuesList.isNotEmpty()) {
+            // Insert previously fetched items.
+            ContentResolverUtils.bulkInsert(cr, writeUri, valuesList)
+        }
 
         // Remove gap flag
         if (maxId != null && sinceId == null) {

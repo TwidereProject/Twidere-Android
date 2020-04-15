@@ -27,8 +27,8 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import com.squareup.otto.Bus
 import nl.komponents.kovenant.Promise
 import org.mariotaku.kpreferences.KPreferences

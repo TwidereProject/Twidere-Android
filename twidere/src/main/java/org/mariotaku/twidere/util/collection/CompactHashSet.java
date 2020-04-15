@@ -23,7 +23,7 @@ package org.mariotaku.twidere.util.collection;
 // update CompactIdentityHashSet.java, UniqueSet.java and
 // SoftHashMapIndex.java accordingly.
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Collection;
 import java.util.ConcurrentModificationException;

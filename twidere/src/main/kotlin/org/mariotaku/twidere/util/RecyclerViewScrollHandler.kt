@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.util
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
@@ -29,11 +29,11 @@ class RecyclerViewScrollHandler<A>(contentListSupport: ContentListSupport<A>, vi
     val touchListener: View.OnTouchListener
         get() = scrollHandler.touchListener
 
-    override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
         scrollHandler.handleScrollStateChanged(newState, RecyclerView.SCROLL_STATE_IDLE)
     }
 
-    override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         val scrollState = recyclerView!!.scrollState
         scrollHandler.handleScroll(dy, scrollState, oldState, RecyclerView.SCROLL_STATE_IDLE)
         oldState = scrollState

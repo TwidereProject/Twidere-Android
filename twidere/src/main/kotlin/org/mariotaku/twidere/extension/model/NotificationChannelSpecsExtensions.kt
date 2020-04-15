@@ -21,7 +21,7 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.Context
 import android.net.Uri
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.notification.NotificationChannelSpec
 

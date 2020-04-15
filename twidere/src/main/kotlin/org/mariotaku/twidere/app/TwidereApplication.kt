@@ -32,7 +32,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Looper
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import nl.komponents.kovenant.task
 import okhttp3.Dns
@@ -87,33 +87,33 @@ import javax.inject.Inject
 class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
     @Inject
-    lateinit internal var activityTracker: ActivityTracker
+    internal lateinit var activityTracker: ActivityTracker
     @Inject
-    lateinit internal var restHttpClient: RestHttpClient
+    internal lateinit var restHttpClient: RestHttpClient
     @Inject
-    lateinit internal var dns: Dns
+    internal lateinit var dns: Dns
     @Inject
-    lateinit internal var mediaDownloader: MediaDownloader
+    internal lateinit var mediaDownloader: MediaDownloader
     @Inject
-    lateinit internal var defaultFeatures: DefaultFeatures
+    internal lateinit var defaultFeatures: DefaultFeatures
     @Inject
-    lateinit internal var externalThemeManager: ExternalThemeManager
+    internal lateinit var externalThemeManager: ExternalThemeManager
     @Inject
-    lateinit internal var kPreferences: KPreferences
+    internal lateinit var kPreferences: KPreferences
     @Inject
-    lateinit internal var autoRefreshController: AutoRefreshController
+    internal lateinit var autoRefreshController: AutoRefreshController
     @Inject
-    lateinit internal var syncController: SyncController
+    internal lateinit var syncController: SyncController
     @Inject
-    lateinit internal var extraFeaturesService: ExtraFeaturesService
+    internal lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
-    lateinit internal var promotionService: PromotionService
+    internal lateinit var promotionService: PromotionService
     @Inject
-    lateinit internal var mediaPreloader: MediaPreloader
+    internal lateinit var mediaPreloader: MediaPreloader
     @Inject
-    lateinit internal var contentNotificationManager: ContentNotificationManager
+    internal lateinit var contentNotificationManager: ContentNotificationManager
     @Inject
-    lateinit internal var thumbor: ThumborWrapper
+    internal lateinit var thumbor: ThumborWrapper
 
     val sqLiteDatabase: SQLiteDatabase by lazy {
         StrictModeUtils.checkDiskIO()
@@ -273,7 +273,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val uid = intent.getIntExtra(Intent.EXTRA_UID, -1)
-                val packages = packageManager.getPackagesForUid(uid)
+                val packages = packageManager.getPackagesForUid(uid).orEmpty()
                 val manager = externalThemeManager
                 if (manager.emojiPackageName in packages) {
                     manager.reloadEmojiPreferences()

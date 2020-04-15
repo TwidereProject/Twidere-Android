@@ -1,7 +1,7 @@
 package org.mariotaku.twidere.view.iface
 
 import android.content.Context
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import android.util.AttributeSet
 
 import org.mariotaku.chameleon.Chameleon

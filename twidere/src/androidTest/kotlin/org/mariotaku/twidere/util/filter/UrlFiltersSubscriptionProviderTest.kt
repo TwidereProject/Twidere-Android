@@ -2,8 +2,8 @@ package org.mariotaku.twidere.util.filter
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mariotaku.twidere.model.filter.UrlFiltersSubscriptionProviderArguments
@@ -18,7 +18,7 @@ class UrlFiltersSubscriptionProviderTest {
         val context = InstrumentationRegistry.getTargetContext()
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        if (!(cm.activeNetworkInfo?.isConnected ?: false)) return
+        if (cm.activeNetworkInfo?.isConnected != true) return
 
         val url = "https://raw.githubusercontent.com/mariotaku/wtb/master/twidere/bots.xml"
         val arguments = UrlFiltersSubscriptionProviderArguments().apply {

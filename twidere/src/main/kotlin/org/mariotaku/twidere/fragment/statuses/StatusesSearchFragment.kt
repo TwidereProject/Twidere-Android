@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment.statuses
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.TweetSearchLoader
@@ -38,6 +38,8 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
+            val context = context ?: return null
+            val arguments = arguments ?: return null
             val accountKey = Utils.getAccountKey(context, arguments)
             val query = arguments.getString(EXTRA_QUERY)
             val local = arguments.getBoolean(EXTRA_LOCAL)
@@ -53,6 +55,7 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
 
     override val readPositionTagWithArguments: String?
         get() {
+            val arguments = arguments ?: return null
             val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             val sb = StringBuilder("search_")
             if (tabPosition < 0) return null
@@ -72,12 +75,12 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
             Loader<List<ParcelableStatus>?> {
         refreshing = true
         val accountKey = Utils.getAccountKey(context, args)
-        val query = arguments.getString(EXTRA_QUERY)
-        val local = arguments.getBoolean(EXTRA_LOCAL, false)
-        val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
+        val query = arguments!!.getString(EXTRA_QUERY)
+        val local = arguments!!.getBoolean(EXTRA_LOCAL, false)
+        val tabPosition = arguments!!.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return TweetSearchLoader(activity, accountKey, query, adapterData, savedStatusesFileArgs,
+        return TweetSearchLoader(activity!!, accountKey, query, adapterData, savedStatusesFileArgs,
                 tabPosition, fromUser, makeGap, local, loadingMore)
     }
 

@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.model.event;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableUserList;
 

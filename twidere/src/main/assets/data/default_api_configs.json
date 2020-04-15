@@ -3,12 +3,12 @@
     "name": "Twidere",
     "type": "twitter",
     "localized_name": "@string/provider_default",
-    "api_url_format": "https://[DOMAIN.]twitter.com/",
+    "api_url_format": "https://[DOMAIN].twitter.com/",
     "auth_type": "oauth",
     "same_oauth_url": true,
     "no_version_suffix": false,
-    "consumer_key": "i5XtSVfoWjLjKlnrvhiLPMZC0",
-    "consumer_secret": "sQncmZ2atQR6tKbqnnAtqjrECqN8k6FD4p4OoNS0XTDkUz3HGH",
+    "consumer_key": "wmtrtTaVOjUnH5pWQp4LDI5Qs",
+    "consumer_secret": "E9Q9u2yK0COJae2tLcNEdY75OPA3bxqJiGZQztraHaQUtoI2cu",
     "sign_up_url": "https://twitter.com/signup"
   },
   {

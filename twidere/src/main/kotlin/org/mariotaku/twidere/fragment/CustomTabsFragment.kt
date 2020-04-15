@@ -29,11 +29,11 @@ import android.database.Cursor
 import android.graphics.Paint
 import android.graphics.PorterDuff.Mode
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import androidx.appcompat.app.AlertDialog
 import android.util.SparseArray
 import android.view.*
 import android.widget.*
@@ -82,8 +82,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             R.id.delete -> {
                 val itemIds = listView.checkedItemIds
                 val where = Expression.`in`(Column(Tabs._ID), RawItemArray(itemIds))
-                context.contentResolver.delete(Tabs.CONTENT_URI, where.sql, null)
-                SettingsActivity.setShouldRestart(activity)
+                context?.contentResolver?.delete(Tabs.CONTENT_URI, where.sql, null)
+                activity?.let { SettingsActivity.setShouldRestart(it) }
             }
         }
         mode.finish()
@@ -93,7 +93,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        adapter = CustomTabsAdapter(context)
+        adapter = CustomTabsAdapter(context!!)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
         listView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
@@ -102,7 +102,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             df.arguments = Bundle {
                 this[EXTRA_OBJECT] = tab
             }
-            df.show(fragmentManager, TabEditorDialogFragment.TAG_EDIT_TAB)
+            fragmentManager?.let { df.show(it, TabEditorDialogFragment.TAG_EDIT_TAB) }
         }
         listView.adapter = adapter
         listView.emptyView = emptyView
@@ -130,7 +130,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity, Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER)
+        return CursorLoader(activity!!, Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -138,7 +138,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         val context = this.context
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), false)
         val itemAdd = menu.findItem(R.id.add_submenu)
-        val theme = Chameleon.getOverrideTheme(context, context)
+        val theme = Chameleon.getOverrideTheme(context!!, context)
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             val subMenu = itemAdd.subMenu
             subMenu.clear()
@@ -202,10 +202,6 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         return true
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     private fun saveTabPositions() {
         val positions = adapter.cursorPositions
         val c = adapter.cursor
@@ -217,10 +213,10 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 val values = ContentValues()
                 values.put(Tabs.POSITION, i)
                 val where = Expression.equals(Tabs._ID, id).sql
-                context.contentResolver.update(Tabs.CONTENT_URI, values, where, null)
+                context?.contentResolver?.update(Tabs.CONTENT_URI, values, where, null)
             }
         }
-        SettingsActivity.setShouldRestart(activity)
+        activity?.let { SettingsActivity.setShouldRestart(it) }
     }
 
     private fun updateTitle(mode: ActionMode?) {
@@ -234,6 +230,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         private val activityResultMap: SparseArray<TabConfiguration.ExtraConfiguration> = SparseArray()
 
         override fun onShow(dialogInterface: DialogInterface) {
+            val currentContext = context ?: return
+            val currentArguments = arguments ?: return
             val dialog = dialogInterface as AlertDialog
             dialog.applyTheme()
             @CustomTabType
@@ -242,15 +240,15 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             val conf: TabConfiguration
             when (tag) {
                 TAG_ADD_TAB -> {
-                    tabType = arguments.getString(EXTRA_TAB_TYPE)
+                    tabType = currentArguments.getString(EXTRA_TAB_TYPE)!!
                     tab = Tab()
                     conf = TabConfiguration.ofType(tabType)!!
                     tab.type = tabType
                     tab.icon = conf.icon.persistentKey
-                    tab.position = arguments.getInt(EXTRA_TAB_POSITION)
+                    tab.position = currentArguments.getInt(EXTRA_TAB_POSITION)
                 }
                 TAG_EDIT_TAB -> {
-                    tab = arguments.getParcelable(EXTRA_OBJECT)
+                    tab = currentArguments.getParcelable(EXTRA_OBJECT)!!
                     tabType = tab.type
                     conf = TabConfiguration.ofType(tabType) ?: run {
                         dismiss()
@@ -270,14 +268,14 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
-            val iconsAdapter = TabIconsAdapter(context)
-            val accountsAdapter = AccountsSpinnerAdapter(context, requestManager = requestManager)
+            val iconsAdapter = TabIconsAdapter(currentContext)
+            val accountsAdapter = AccountsSpinnerAdapter(currentContext, requestManager = requestManager)
             iconSpinner.adapter = iconsAdapter
             accountSpinner.adapter = accountsAdapter
 
             iconsAdapter.setData(DrawableHolder.builtins())
 
-            tabName.hint = conf.name.createString(context)
+            tabName.hint = conf.name.createString(currentContext)
             tabName.setText(tab.name)
             iconSpinner.setSelection(iconsAdapter.findPositionByKey(tab.icon))
 
@@ -292,7 +290,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 if (!accountRequired) {
                     accountsAdapter.add(AccountDetails.dummy())
                 }
-                val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
+                val officialKeyOnly = arguments?.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false) ?: false
                 accountsAdapter.addAll(AccountUtils.getAllAccountDetails(AccountManager.get(context), true).filter {
                     if (officialKeyOnly && !it.isOfficial(context)) {
                         return@filter false
@@ -308,26 +306,26 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 accountContainer.visibility = View.GONE
             }
 
-            val extraConfigurations = conf.getExtraConfigurations(context).orEmpty()
+            val extraConfigurations = conf.getExtraConfigurations(currentContext).orEmpty()
 
             fun inflateHeader(title: String): View {
-                val headerView = LayoutInflater.from(context).inflate(R.layout.list_item_section_header,
+                val headerView = LayoutInflater.from(currentContext).inflate(R.layout.list_item_section_header,
                         extraConfigContainer, false)
                 headerView.sectionHeader.text = title
                 return headerView
             }
 
             extraConfigurations.forEachIndexed { idx, extraConf ->
-                extraConf.onCreate(context)
+                extraConf.onCreate(currentContext)
                 extraConf.position = idx + 1
                 // Hide immutable settings in edit mode
                 if (editMode && !extraConf.isMutable) return@forEachIndexed
                 extraConf.headerTitle?.let {
                     // Inflate header with headerTitle
-                    extraConfigContainer.addView(inflateHeader(it.createString(context)))
+                    extraConfigContainer.addView(inflateHeader(it.createString(currentContext)))
                 }
-                val view = extraConf.onCreateView(context, extraConfigContainer)
-                extraConf.onViewCreated(context, view, this)
+                val view = extraConf.onCreateView(currentContext, extraConfigContainer)
+                extraConf.onViewCreated(currentContext, view, this)
                 conf.readExtraConfigurationFrom(tab, extraConf)
                 extraConfigContainer.addView(view)
             }
@@ -379,24 +377,24 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 when (tag) {
                     TAG_EDIT_TAB -> {
                         val where = Expression.equals(Tabs._ID, tab.id).sql
-                        context.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab),
+                        currentContext.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab),
                                 where, null)
                     }
                     TAG_ADD_TAB -> {
-                        context.contentResolver.insert(Tabs.CONTENT_URI, valuesCreator.create(tab))
+                        currentContext.contentResolver.insert(Tabs.CONTENT_URI, valuesCreator.create(tab))
                     }
                 }
-                SettingsActivity.setShouldRestart(activity)
+                activity?.let { it1 -> SettingsActivity.setShouldRestart(it1) }
                 dismiss()
             }
         }
 
         override fun getAccount(): AccountDetails? {
-            return dialog.findViewById<Spinner>(R.id.accountSpinner).selectedItem as? AccountDetails
+            return dialog?.findViewById<Spinner>(R.id.accountSpinner)?.selectedItem as? AccountDetails
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context!!)
             builder.setView(R.layout.dialog_custom_tab_editor)
             builder.setPositiveButton(R.string.action_save, null)
             builder.setNegativeButton(android.R.string.cancel, null)

@@ -1,27 +1,33 @@
-import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'androidsvgdrawable'
+apply plugin: 'imgenie'
 
 buildscript {
+    ext {
+        enableGoogleVariant = project.file('google-services.json').exists()
+    }
     repositories {
+        maven { url 'https://jitpack.io' }
         jcenter()
+        if (enableGoogleVariant) {
+            // START Non-FOSS component
+            google()
+            // END Non-FOSS component
+        }
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${kotlinVersion}"
-        classpath("fr.avianey.androidsvgdrawable:gradle-plugin:${pluginVersions['AndroidSvgDrawable']}") {
-            // should be excluded to avoid conflict
-            exclude group: 'xerces'
-        }
+        classpath 'com.github.mariotaku:imgenie-plugin:0.2.5'
 
-        // START Non-FOSS component
-        classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
-        // END Non-FOSS component
+        if (enableGoogleVariant) {
+            // START Non-FOSS component
+            classpath "com.google.gms:google-services:${pluginVersions['PlayServices']}"
+            // END Non-FOSS component
+        }
     }
 }
 
@@ -32,8 +38,8 @@ android {
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion globalMinSdkVersion
+        targetSdkVersion globalTargetSdkVersion
         versionCode projectVersionCode
         versionName projectVersionName
         multiDexEnabled true
@@ -41,7 +47,7 @@ android {
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'SHOW_CUSTOM_TOKEN_DIALOG', 'Boolean.parseBoolean("false")'
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -56,11 +62,13 @@ android {
     flavorDimensions 'channel'
 
     productFlavors {
-        // START Non-FOSS component
-        google {
-            dimension 'channel'
+        if (enableGoogleVariant) {
+            // START Non-FOSS component
+            google {
+                dimension 'channel'
+            }
+            // END Non-FOSS component
         }
-        // END Non-FOSS component
         fdroid {
             dimension 'channel'
         }
@@ -108,7 +116,6 @@ android {
 
     sourceSets.each {
         it.res.srcDirs += project.files("src/${it.name}/res-localized")
-        it.res.srcDirs += project.files("src/${it.name}/res-svg2png")
         it.java.srcDirs += "src/${it.name}/kotlin"
     }
 
@@ -159,17 +166,20 @@ dependencies {
     implementation project(':twidere.component.common')
     implementation project(':twidere.component.nyan')
 
-    // START Non-FOSS component
-    googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
-    googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
-    googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
-    googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
-    googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
-    googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
-    googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
-        exclude group: 'org.apache.httpcomponents'
+    if (enableGoogleVariant) {
+        // START Non-FOSS component
+        googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
+        googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
+        googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
+        googleImplementation "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
+        googleImplementation "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
+        googleImplementation "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
+        googleImplementation("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
+            exclude group: 'org.apache.httpcomponents'
+        }
+        implementation("com.google.guava:guava:28.2-android")
+        // END Non-FOSS component
     }
-    // END Non-FOSS component
 
     fdroidImplementation "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
     fdroidImplementation "ch.acra:acra:${libVersions['ACRA']}"
@@ -182,32 +192,33 @@ dependencies {
         exclude group: 'net.minidev', module: 'json-smart'
     }
     // Stetho dependency, see https://g.co/androidstudio/app-test-app-conflict
-    debugImplementation "com.google.code.findbugs:jsr305:3.0.1"
+    debugImplementation "com.google.code.findbugs:jsr305:3.0.2"
 
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
     testImplementation 'junit:junit:4.12'
 
-    androidTestImplementation "com.android.support:support-annotations:${libVersions['SupportLib']}"
-    androidTestImplementation "com.android.support.test:runner:${libVersions['SupportTest']}"
-    androidTestImplementation "com.android.support.test:rules:${libVersions['SupportTest']}"
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
     // https://g.co/androidstudio/app-test-app-conflict
-    androidTestImplementation "com.google.code.findbugs:jsr305:3.0.1"
+    androidTestImplementation "com.google.code.findbugs:jsr305:3.0.2"
 
-    implementation 'com.android.support:multidex:1.0.2'
-    implementation "com.android.support:support-annotations:${libVersions['SupportLib']}"
-    implementation "com.android.support:support-compat:${libVersions['SupportLib']}"
-    implementation "com.android.support:support-core-utils:${libVersions['SupportLib']}"
-    implementation "com.android.support:support-core-ui:${libVersions['SupportLib']}"
-    implementation "com.android.support:support-v13:${libVersions['SupportLib']}"
-    implementation "com.android.support:appcompat-v7:${libVersions['SupportLib']}"
-    implementation "com.android.support:cardview-v7:${libVersions['SupportLib']}"
-    implementation "com.android.support:recyclerview-v7:${libVersions['SupportLib']}"
-    implementation "com.android.support:palette-v7:${libVersions['SupportLib']}"
-    implementation "com.android.support:preference-v14:${libVersions['SupportLib']}"
-    implementation "com.android.support:customtabs:${libVersions['SupportLib']}"
-    implementation "com.android.support:design:${libVersions['SupportLib']}"
-    implementation "com.android.support:exifinterface:${libVersions['SupportLib']}"
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.core:core:1.2.0'
+    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
+    implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
+    implementation 'androidx.browser:browser:1.2.0'
+    implementation "androidx.drawerlayout:drawerlayout:1.1.0-alpha01"
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.exifinterface:exifinterface:1.1.0'
     implementation "com.twitter:twitter-text:${libVersions['TwitterText']}"
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     implementation 'com.squareup:otto:1.3.8'
@@ -224,6 +235,7 @@ dependencies {
     implementation "org.apache.james:apache-mime4j-core:${libVersions['Mime4J']}"
     implementation "org.apache.james:apache-mime4j-storage:${libVersions['Mime4J']}"
     implementation "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.7.4"
     implementation "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
     implementation "com.github.mariotaku:PickNCrop:${libVersions['PickNCrop']}"
     implementation "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
@@ -232,6 +244,7 @@ dependencies {
     implementation "com.github.mariotaku.RestFu:okhttp3:${libVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:logansquare:${libVersions['RestFu']}"
     implementation "com.squareup.okhttp3:okhttp:${libVersions['OkHttp']}"
+    implementation("com.squareup.okio:okio:2.4.3")
     implementation 'com.lnikkila:extendedtouchview:0.1.1'
     implementation "com.google.dagger:dagger:${libVersions['Dagger']}"
     implementation 'org.attoparser:attoparser:2.0.4.RELEASE'
@@ -240,6 +253,7 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer:${libVersions['Exoplayer']}"
     implementation "com.google.android.exoplayer:extension-okhttp:${libVersions['Exoplayer']}"
     implementation "com.github.bumptech.glide:glide:${libVersions['Glide']}"
+    kapt "com.github.bumptech.glide:compiler:${libVersions['Glide']}"
     implementation "com.github.bumptech.glide:okhttp3-integration:${libVersions['GlideOkHttp3']}@aar"
     implementation "jp.wasabeef:glide-transformations:${libVersions['GlideTransformations']}"
     implementation "com.theartofdev.edmodo:android-image-cropper:${libVersions['AndroidImageCropper']}"
@@ -260,7 +274,7 @@ dependencies {
     implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"
-    implementation "com.github.mariotaku:Chameleon:${libVersions['Chameleon']}"
+    implementation "com.github.Tlaster:Chameleon:${libVersions['Chameleon']}"
     implementation "com.github.mariotaku.UniqR:android:${libVersions['UniqR']}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${libVersions['Kotlin']}"
@@ -270,38 +284,8 @@ dependencies {
     implementation "nl.komponents.kovenant:kovenant-combine:${libVersions['Kovenant']}"
 }
 
-task svgToDrawable(type: SvgDrawableTask) {
-    // specify where to pick SVG from
-    from = files(android.sourceSets.collect { "src/${it.name}/svg/drawable" })
-    // specify the android res folder
-    to = file('src/main/res-svg2png')
-    // override files only if necessary
-    overwriteMode = 'ifModified'
-    // let generate PNG for the following densities only
-    targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
-    // relative path of the file specifying nine patch specs
-    ninePatchConfig = file('src/main/svg/drawable/9patch.json')
-    // output format of the generated resources
-    outputFormat = 'PNG'
-
-    outputType = 'drawable'
-}
-
-task svgToMipmap(type: SvgDrawableTask) {
-    // specify where to pick SVG from
-    from = files(android.sourceSets.collect { "src/${it.name}/svg/mipmap" })
-    // specify the android res folder
-    to = file('src/main/res-svg2png')
-    // override files only if necessary
-    overwriteMode = 'ifModified'
-    // let generate PNG for the following densities only
-    targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
-    // output format of the generated resources
-    outputFormat = 'PNG'
-
-    outputType = 'mipmap'
-}
-
+if (enableGoogleVariant) {
 // START Non-FOSS component
-apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.gms.google-services'
 // END Non-FOSS component
+}

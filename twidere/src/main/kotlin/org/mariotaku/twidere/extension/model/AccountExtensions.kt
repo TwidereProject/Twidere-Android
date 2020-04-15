@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.text.TextUtils
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.toHexColor
@@ -65,7 +65,7 @@ fun Account.setAccountUser(am: AccountManager, user: ParcelableUser) {
     am.setUserData(this, ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(user))
 }
 
-@android.support.annotation.ColorInt
+@androidx.annotation.ColorInt
 fun Account.getColor(am: AccountManager): Int {
     return ParseUtils.parseColor(AccountDataQueue.getUserData(am, this, ACCOUNT_USER_DATA_COLOR), 0)
 }

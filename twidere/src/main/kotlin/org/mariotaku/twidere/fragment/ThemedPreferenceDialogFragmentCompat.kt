@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.preference.PreferenceDialogFragmentCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.preference.PreferenceDialogFragmentCompat
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.onShow
@@ -29,7 +29,7 @@ abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCo
         val context = context
         val preference = preference
         onClick(null, DialogInterface.BUTTON_NEGATIVE)
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
                 .setTitle(preference.dialogTitle)
                 .setIcon(preference.dialogIcon)
                 .setPositiveButton(preference.positiveButtonText, this)

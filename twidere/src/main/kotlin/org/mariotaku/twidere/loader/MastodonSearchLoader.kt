@@ -21,7 +21,7 @@ package org.mariotaku.twidere.loader
 
 import android.accounts.AccountManager
 import android.content.Context
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.twidere.Constants

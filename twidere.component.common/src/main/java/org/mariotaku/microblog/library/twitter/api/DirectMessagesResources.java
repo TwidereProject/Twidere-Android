@@ -60,6 +60,4 @@ public interface DirectMessagesResources {
     DirectMessage sendDirectMessageToScreenName(@Param("screen_name") String screenName, @Param("text") String text,
             @Param("media_id") String mediaId) throws MicroBlogException;
 
-    @GET("/direct_messages/show.json")
-    DirectMessage showDirectMessage(@Query("id") String id) throws MicroBlogException;
 }

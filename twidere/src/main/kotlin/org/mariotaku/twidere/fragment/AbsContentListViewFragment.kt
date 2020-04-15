@@ -23,7 +23,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import android.view.*
 import android.widget.AbsListView
 import android.widget.ListAdapter
@@ -55,7 +55,9 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         }
 
     protected open val overrideDivider: Drawable?
-        get() = ThemeUtils.getDrawableFromThemeAttribute(context, android.R.attr.listDivider)
+        get() = context?.let {
+            ThemeUtils.getDrawableFromThemeAttribute(it, android.R.attr.listDivider)
+        }
 
     protected val isProgressShowing: Boolean
         get() = progressContainer.visibility == View.VISIBLE
@@ -127,12 +129,12 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val backgroundColor = ThemeUtils.getColorBackground(context)
+        val backgroundColor = ThemeUtils.getColorBackground(context!!)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context, requestManager)
+        adapter = onCreateAdapter(context!!, requestManager)
         listView.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 updateRefreshProgressOffset()

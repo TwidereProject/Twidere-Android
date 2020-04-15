@@ -25,8 +25,8 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Looper
-import android.support.v4.net.ConnectivityManagerCompat
-import android.support.v4.text.BidiFormatter
+import androidx.core.net.ConnectivityManagerCompat
+import androidx.core.text.BidiFormatter
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory

@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.preference.DialogPreference
-import android.support.v7.preference.PreferenceDialogFragmentCompat
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.preference.DialogPreference
+import androidx.preference.PreferenceDialogFragmentCompat
+import androidx.preference.PreferenceFragmentCompat
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
@@ -41,7 +41,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
         GeneralComponent.get(context).inject(this)
         val a = context.obtainStyledAttributes(attrs, R.styleable.KeyboardShortcutPreference)
         contextTag = a.getString(R.styleable.KeyboardShortcutPreference_android_tag)
-        action = a.getString(R.styleable.KeyboardShortcutPreference_android_action)
+        action = a.getString(R.styleable.KeyboardShortcutPreference_android_action)!!
         a.recycle()
 
         key = action
@@ -72,7 +72,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = KeyboardShortcutDialogFragment.newInstance(action)
         df.setTargetFragment(fragment, 0)
-        df.show(fragment.fragmentManager, action)
+        fragment.fragmentManager?.let { df.show(it, action) }
     }
 
     class KeyboardShortcutDialogFragment : ThemedPreferenceDialogFragmentCompat(), DialogInterface.OnKeyListener {
@@ -127,7 +127,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
             } else {
                 conflictLabel.visibility = View.VISIBLE
                 val label = KeyboardShortcutsHandler.getActionLabel(context, oldAction)
-                conflictLabel.text = context.getString(R.string.conflicts_with_name, label)
+                conflictLabel.text = context?.getString(R.string.conflicts_with_name, label)
                 (dialog as? AlertDialog)?.getButton(DialogInterface.BUTTON_POSITIVE)?.setText(R.string.overwrite)
             }
             return true

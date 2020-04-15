@@ -25,8 +25,8 @@ import android.content.Context
 import android.content.DialogInterface.BUTTON_NEUTRAL
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AlertDialog.Builder
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
 import android.view.View
 import android.widget.Toast
 import nl.komponents.kovenant.Promise
@@ -57,23 +57,23 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     protected abstract val Dialog.itemContent: View
 
     protected val status: ParcelableStatus?
-        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+        get() = arguments?.getParcelable(EXTRA_STATUS)
 
     protected val statusId: String
-        get() = arguments.getString(EXTRA_STATUS_ID)
+        get() = arguments?.getString(EXTRA_STATUS_ID)!!
 
     protected val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+        get() = arguments?.getParcelable(EXTRA_ACCOUNT_KEY)!!
 
     private lateinit var adapter: DummyItemAdapter
 
-    override final fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = Builder(context)
+    final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val builder = Builder(context!!)
         val accountKey = this.accountKey
 
         builder.setupAlertDialog()
 
-        adapter = DummyItemAdapter(context, requestManager = requestManager)
+        adapter = DummyItemAdapter(context!!, requestManager = requestManager)
         adapter.showCardActions = false
         adapter.showAccountsColor = true
 

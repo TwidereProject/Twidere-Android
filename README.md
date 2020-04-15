@@ -1,10 +1,12 @@
 # Twidere for Android #
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Twidere-brightgreen.svg?style=flat)](http://android-arsenal.com/details/3/2453)
-[![Travis status](https://api.travis-ci.org/TwidereProject/Twidere-Android.png)](https://travis-ci.org/TwidereProject/Twidere-Android/)
+[![Travis status](https://img.shields.io/travis/TwidereProject/Twidere-Android.svg)](https://travis-ci.org/TwidereProject/Twidere-Android/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
 
 Material Design ready and feature rich Twitter app for Android 4.0+
+
+Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
 
 ---
 

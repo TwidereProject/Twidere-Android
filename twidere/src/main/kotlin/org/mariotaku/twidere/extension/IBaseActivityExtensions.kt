@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension
 
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import nl.komponents.kovenant.Promise
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.activity.iface.IBaseActivity

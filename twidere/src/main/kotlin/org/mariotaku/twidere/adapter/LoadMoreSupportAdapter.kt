@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.RequestManager
 
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter

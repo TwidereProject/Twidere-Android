@@ -5,8 +5,8 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import kotlinx.android.synthetic.main.dialog_extra_features_introduction.*
 import org.mariotaku.ktextension.Bundle
@@ -27,12 +27,12 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
  */
 class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
 
-    val feature: String get() = arguments.getString(EXTRA_FEATURE)
-    val source: String? get() = arguments.getString(EXTRA_SOURCE)
-    val requestCode: Int get() = arguments.getInt(EXTRA_REQUEST_CODE, 0)
+    val feature: String get() = arguments?.getString(EXTRA_FEATURE)!!
+    val source: String? get() = arguments?.getString(EXTRA_SOURCE)
+    val requestCode: Int get() = arguments?.getInt(EXTRA_REQUEST_CODE, 0) ?: 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setTitle(R.string.title_extra_features)
         builder.setView(R.layout.dialog_extra_features_introduction)
         builder.setPositiveButton(R.string.action_purchase) { _, _ ->
@@ -42,7 +42,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         builder.setNegativeButton(R.string.action_later) { _, _ ->
             onDialogCancelled()
         }
-        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context, feature)
+        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context!!, feature)
         if (restorePurchaseIntent != null) {
             builder.setNeutralButton(R.string.action_restore_purchase) { _, _ ->
                 startActivityForResultOnTarget(restorePurchaseIntent)
@@ -56,7 +56,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             } else {
                 View.GONE
             }
-            val description = ExtraFeaturesService.getIntroduction(context, feature)
+            val description = ExtraFeaturesService.getIntroduction(context!!, feature)
             val featureIcon = it.featureIcon
             val featureDescription = it.featureDescription
             featureIcon.setImageResource(description.icon)
@@ -72,7 +72,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         return dialog
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         onDialogCancelled()
     }
 
@@ -83,19 +83,20 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
     }
 
     private fun startPurchase(feature: String) {
-        val purchaseIntent = extraFeaturesService.createPurchaseIntent(context, feature) ?: return
+        val currentContext = context ?: return
+        val purchaseIntent = extraFeaturesService.createPurchaseIntent(currentContext, feature) ?: return
         startActivityForResultOnTarget(purchaseIntent)
     }
 
     private fun startActivityForResultOnTarget(intent: Intent) {
         if (targetFragment != null) {
-            targetFragment.startActivityForResult(intent, targetRequestCode)
+            targetFragment?.startActivityForResult(intent, targetRequestCode)
         } else if (requestCode == 0) {
             startActivity(intent)
         } else if (parentFragment != null) {
-            parentFragment.startActivityForResult(intent, requestCode)
+            parentFragment?.startActivityForResult(intent, requestCode)
         } else {
-            activity.startActivityForResult(intent, requestCode)
+            activity?.startActivityForResult(intent, requestCode)
         }
     }
 

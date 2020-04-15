@@ -145,7 +145,7 @@ class OAuthPasswordAuthenticator(
     @Throws(ParseException::class, IOException::class)
     private fun parseAuthorizeRequestData(response: HttpResponse, data: AuthorizeRequestData) {
         val handler = object : AbstractSimpleMarkupHandler() {
-            internal var isOAuthFormOpened: Boolean = false
+            var isOAuthFormOpened: Boolean = false
             override fun handleStandaloneElement(elementName: String, attributes: MutableMap<String, String>?, minimized: Boolean, line: Int, col: Int) {
                 handleOpenElement(elementName, attributes, line, col)
                 handleCloseElement(elementName, line, col)
@@ -206,8 +206,8 @@ class OAuthPasswordAuthenticator(
             authorizeResultBuilder.headers(requestHeaders)
             authorizeResultBuilder.body(authorizationResultBody)
             val handler = object : AbstractSimpleMarkupHandler() {
-                internal var isOAuthPinDivOpened: Boolean = false
-                internal var isChallengeFormOpened: Boolean = false
+                var isOAuthPinDivOpened: Boolean = false
+                var isChallengeFormOpened: Boolean = false
 
                 override fun handleStandaloneElement(elementName: String, attributes: MutableMap<String, String>?,
                         minimized: Boolean, line: Int, col: Int) {
@@ -434,7 +434,7 @@ class OAuthPasswordAuthenticator(
         @Throws(ParseException::class, IOException::class)
         fun readOAuthPINFromHtml(reader: Reader, data: OAuthPinData) {
             val handler = object : AbstractSimpleMarkupHandler() {
-                internal var isOAuthPinDivOpened: Boolean = false
+                var isOAuthPinDivOpened: Boolean = false
                 override fun handleStandaloneElement(elementName: String,
                         attributes: MutableMap<String, String>?,
                         minimized: Boolean, line: Int, col: Int) {

@@ -22,9 +22,9 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FixedAsyncTaskLoader;
-import android.support.v4.content.LoaderAccessor;
+import androidx.annotation.NonNull;
+import androidx.loader.content.FixedAsyncTaskLoader;
+import androidx.loader.content.LoaderAccessor;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
 

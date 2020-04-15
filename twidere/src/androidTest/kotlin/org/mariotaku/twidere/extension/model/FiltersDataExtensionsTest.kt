@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.extension.model
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import android.util.Xml
 import org.junit.Assert
 import org.junit.Test

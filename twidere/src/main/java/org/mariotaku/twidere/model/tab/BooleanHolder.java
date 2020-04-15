@@ -3,8 +3,8 @@ package org.mariotaku.twidere.model.tab;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.BoolRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.BoolRes;
+import androidx.annotation.NonNull;
 
 /**
  * Created by mariotaku on 2016/11/28.

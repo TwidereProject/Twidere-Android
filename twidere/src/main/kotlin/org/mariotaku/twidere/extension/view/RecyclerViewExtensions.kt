@@ -19,16 +19,16 @@
 
 package org.mariotaku.twidere.extension.view
 
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.recyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.recyclerView
 
 fun RecyclerView.LayoutManager.calculateSpaceItemHeight(child: View, spaceViewType: Int, typeStart: Int): Int {
     val recyclerView = recyclerView ?: return 0
     var heightBeforeSpace = 0
     for (i in 0 until childCount) {
         val childToMeasure = getChildAt(i)
-        val typeToMeasure = getItemViewType(childToMeasure)
+        val typeToMeasure = getItemViewType(childToMeasure!!)
         if (typeToMeasure == spaceViewType) {
             break
         }

@@ -21,8 +21,8 @@ package org.mariotaku.twidere.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MESSAGE
@@ -36,9 +36,9 @@ import org.mariotaku.twidere.extension.onShow
 class MessageDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val activity = activity
+        val activity = activity!!
         val builder = AlertDialog.Builder(activity)
-        val args = arguments
+        val args = arguments!!
         builder.setTitle(args.getString(EXTRA_TITLE))
         builder.setMessage(args.getString(EXTRA_MESSAGE))
         builder.setPositiveButton(android.R.string.ok, null)

@@ -33,16 +33,16 @@ import android.graphics.Rect
 import android.location.*
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.view.SupportMenuInflater
-import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
-import android.support.v7.widget.FixedLinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.ViewHolder
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.app.ActivityCompat
+import androidx.core.widget.TextViewCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.SupportMenuInflater
+import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
+import androidx.recyclerview.widget.FixedLinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.text.Editable
 import android.text.Spannable
 import android.text.Spanned
@@ -395,7 +395,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     val src = MediaPickerActivity.getMediaUris(data)
                     TaskStarter.execute(AddMediaTask(this, src, null, false, false))
                     val extras = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)
-                    if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) ?: false) {
+                    if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) == true) {
                         possiblySensitive = true
                     }
                 }
@@ -447,7 +447,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_ADD_GIF -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
-                            .getMedia(data.data)
+                            .getMedia(data.data!!)
                             .extras(Bundle {
                                 this[EXTRA_IS_POSSIBLY_SENSITIVE] = data.getBooleanExtra(EXTRA_IS_POSSIBLY_SENSITIVE, false)
                             })
@@ -609,9 +609,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 if (isAccountSelectorVisible && !TwidereViewUtils.hitView(ev, accountSelectorButton)) {
-                    val layoutManager = accountSelector.layoutManager
+                    val layoutManager = accountSelector.layoutManager ?: return super.dispatchTouchEvent(ev)
                     val clickedItem = (0 until layoutManager.childCount).any {
-                        TwidereViewUtils.hitView(ev, layoutManager.getChildAt(it))
+                        val child = layoutManager.getChildAt(it)
+                        child != null && TwidereViewUtils.hitView(ev, child)
                     }
                     if (!clickedItem) {
                         isAccountSelectorVisible = false
@@ -701,11 +702,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return true
         }
         return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
-    }
-
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -862,7 +858,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             accountsCount.setText(null)
 
             if (displayDoneIcon) {
-                Glide.clear(accountProfileImage)
+                Glide.with(this).clear(accountProfileImage)
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
                         android.R.attr.colorForeground))
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -878,7 +874,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             accountsCount.setText(accounts.size.toString())
 
-            Glide.clear(accountProfileImage)
+            Glide.with(this).clear(accountProfileImage)
             if (displayDoneIcon) {
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
                         android.R.attr.colorForeground))
@@ -1131,6 +1127,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             editText.setSelection(selection.coerceIn(0..editText.length()))
         }
+        editText.requestFocus()
         return true
     }
 
@@ -1711,13 +1708,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             applyUpdateStatus(statusUpdate)
         }
         val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
-        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)!!
         displayNewDraftNotification(draftUri)
         return draftUri
     }
 
     private fun displayNewDraftNotification(draftUri: Uri) {
-        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment)
+        val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment!!)
         contentResolver.insert(notificationUri, null)
     }
 
@@ -1783,7 +1780,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     val imageSpans = s.getSpans(start, start + count, ImageSpan::class.java)
                     val imageSources = ArrayList<String>()
                     for (imageSpan in imageSpans) {
-                        imageSources.add(imageSpan.source)
+                        imageSources.add(imageSpan.source!!)
                         s.setSpan(MarkForDeleteSpan(), start, start + count,
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE)
                     }
@@ -1841,8 +1838,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity
-            val builder = AlertDialog.Builder(context)
+            val context = activity!!
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(R.string.quote_protected_status_warning_message)
             builder.setPositiveButton(R.string.send_anyway, this)
             builder.setNegativeButton(android.R.string.cancel, null)
@@ -1854,7 +1851,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     class DirectMessageConfirmFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
-        private val screenName: String get() = arguments.getString(EXTRA_SCREEN_NAME)
+        private val screenName: String get() = arguments?.getString(EXTRA_SCREEN_NAME).orEmpty()
 
         override fun onClick(dialog: DialogInterface, which: Int) {
             val activity = activity
@@ -1875,8 +1872,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity
-            val builder = AlertDialog.Builder(context)
+            val context = activity!!
+            val builder = AlertDialog.Builder(context!!)
             builder.setMessage(getString(R.string.message_format_compose_message_convert_to_status,
                     "@$screenName"))
             builder.setPositiveButton(R.string.action_send, this)
@@ -1916,11 +1913,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         }
 
-        override fun getSwipeThreshold(viewHolder: ViewHolder?): Float {
+        override fun getSwipeThreshold(viewHolder: ViewHolder): Float {
             return 0.75f
         }
 
-        override fun clearView(recyclerView: RecyclerView?, viewHolder: ViewHolder) {
+        override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             viewHolder.itemView.alpha = ALPHA_FULL
         }

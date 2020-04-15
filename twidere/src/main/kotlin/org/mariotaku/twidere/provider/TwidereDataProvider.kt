@@ -32,7 +32,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
-import android.support.v4.text.BidiFormatter
+import androidx.core.text.BidiFormatter
 import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.ktextension.isNullOrEmpty
@@ -61,25 +61,25 @@ import javax.inject.Inject
 
 class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     @Inject
-    lateinit internal var readStateManager: ReadStateManager
+    internal lateinit var readStateManager: ReadStateManager
     @Inject
-    lateinit internal var twitterWrapper: AsyncTwitterWrapper
+    internal lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject
-    lateinit internal var notificationManager: NotificationManagerWrapper
+    internal lateinit var notificationManager: NotificationManagerWrapper
     @Inject
-    lateinit internal var preferences: SharedPreferences
+    internal lateinit var preferences: SharedPreferences
     @Inject
-    lateinit internal var dns: Dns
+    internal lateinit var dns: Dns
     @Inject
-    lateinit internal var bus: Bus
+    internal lateinit var bus: Bus
     @Inject
-    lateinit internal var userColorNameManager: UserColorNameManager
+    internal lateinit var userColorNameManager: UserColorNameManager
     @Inject
-    lateinit internal var bidiFormatter: BidiFormatter
+    internal lateinit var bidiFormatter: BidiFormatter
     @Inject
-    lateinit internal var permissionsManager: PermissionsManager
+    internal lateinit var permissionsManager: PermissionsManager
     @Inject
-    lateinit internal var contentNotificationManager: ContentNotificationManager
+    internal lateinit var contentNotificationManager: ContentNotificationManager
 
     private lateinit var databaseWrapper: SQLiteDatabaseWrapper
     private lateinit var backgroundExecutor: Executor
@@ -140,6 +140,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
             sortOrder: String?): Cursor? {
+        val context = this.context ?: return null
         try {
             val tableId = DataStoreUtils.getTableId(uri)
             val table = DataStoreUtils.getTableNameById(tableId)
@@ -149,7 +150,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     return MatrixCursor(projection ?: arrayOfNulls<String>(0))
                 }
                 VIRTUAL_TABLE_ID_PERMISSIONS -> {
-                    val context = context ?: return null
                     val c = MatrixCursor(Permissions.MATRIX_COLUMNS)
                     val pm = context.packageManager
                     if (Binder.getCallingUid() == Process.myUid()) {
@@ -159,7 +159,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                         }
                     } else {
                         val map = permissionsManager.all
-                        val callingPackages = pm.getPackagesForUid(Binder.getCallingUid())
+                        val callingPackages = pm.getPackagesForUid(Binder.getCallingUid()).orEmpty()
                         for ((key, value) in map) {
                             if (key in callingPackages) {
                                 c.addRow(arrayOf<Any>(key, value))
@@ -169,7 +169,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     return c
                 }
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP -> {
-                    val accountKey = UserKey.valueOf(uri.lastPathSegment)
+                    val accountKey = UserKey.valueOf(uri.lastPathSegment!!)
                     val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
                     val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
                     val query = CachedUsersQueryBuilder.withRelationship(projection,
@@ -180,7 +180,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     return c
                 }
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE -> {
-                    val accountKey = UserKey.valueOf(uri.lastPathSegment)
+                    val accountKey = UserKey.valueOf(uri.lastPathSegment!!)
                     val accountHost = uri.getQueryParameter(EXTRA_ACCOUNT_HOST)
                     val accountType = uri.getQueryParameter(EXTRA_ACCOUNT_TYPE)
                     val query = CachedUsersQueryBuilder.withScore(projection, Expression(selection),

@@ -11,15 +11,16 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore.MediaColumns;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import kotlin.collections.ArraysKt;
+import kotlin.io.FilesKt;
 
 /**
  * Created by mariotaku on 16/4/4.
@@ -68,9 +69,20 @@ public class ShareProvider extends ContentProvider {
     }
 
     private File getFile(@NonNull Uri uri) throws FileNotFoundException {
+        final Context context = getContext();
+        if (context == null) throw new IllegalStateException();
         final String lastPathSegment = uri.getLastPathSegment();
         if (lastPathSegment == null) throw new FileNotFoundException(uri.toString());
-        return new File(getFilesDir(getContext()), lastPathSegment);
+        File filesDir = getFilesDir(context);
+        if (filesDir == null) throw new FileNotFoundException(uri.toString());
+        try {
+            filesDir = filesDir.getCanonicalFile();
+            File file = new File(filesDir, lastPathSegment).getCanonicalFile();
+            if (!FilesKt.startsWith(file, filesDir)) throw new SecurityException(uri.toString());
+            return file;
+        } catch (IOException e) {
+            throw new FileNotFoundException(uri.toString());
+        }
     }
 
     @Nullable

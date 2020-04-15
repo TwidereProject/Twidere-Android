@@ -38,15 +38,15 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FixedAsyncTaskLoader
-import android.support.v4.content.Loader
-import android.support.v4.view.MenuItemCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.view.SupportMenuInflater
-import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
+import com.google.android.material.navigation.NavigationView
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.core.content.ContextCompat
+import androidx.loader.content.FixedAsyncTaskLoader
+import androidx.loader.content.Loader
+import androidx.core.view.MenuItemCompat
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.view.SupportMenuInflater
+import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
@@ -168,7 +168,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                     R.id.compose -> {
                         val account = accountsAdapter.selectedAccount ?: return@OnMenuItemClickListener true
                         val composeIntent = Intent(INTENT_ACTION_COMPOSE)
-                        composeIntent.setClass(activity, ComposeActivity::class.java)
+                        activity?.let { composeIntent.setClass(it, ComposeActivity::class.java) }
                         composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
                         startActivity(composeIntent)
                         return@OnMenuItemClickListener true
@@ -202,10 +202,6 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         updateDefaultAccountState()
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_accounts_dashboard, container, false)
     }
@@ -217,7 +213,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 if (data.getBooleanExtra(EXTRA_SHOULD_RESTART, false)) {
                     Utils.restartActivity(activity)
                 } else if (data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)) {
-                    activity.recreate()
+                    activity?.recreate()
                 }
                 return
             }
@@ -246,24 +242,28 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 val account = accountsAdapter.selectedAccount ?: return
                 val activity = activity
                 if (account.user != null) {
-                    IntentUtils.openUserProfile(activity, account.user!!,
-                            preferences[newDocumentApiKey], null)
+                    activity?.let {
+                        IntentUtils.openUserProfile(it, account.user!!,
+                                preferences[newDocumentApiKey], null)
+                    }
                 } else {
-                    IntentUtils.openUserProfile(activity, account.key, account.key,
-                            account.user.screen_name, null, preferences[newDocumentApiKey],
-                            null)
+                    activity?.let {
+                        IntentUtils.openUserProfile(it, account.key, account.key,
+                                account.user.screen_name, null, preferences[newDocumentApiKey],
+                                null)
+                    }
                 }
             }
         }
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
-        return AccountsInfoLoader(activity, accountsAdapter.accounts == null)
+        return AccountsInfoLoader(activity!!, accountsAdapter.accounts == null)
     }
 
 
     override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (context == null || isDetached || (activity?.isFinishing != false)) return
         updateAccountProviderData(data)
     }
 
@@ -277,7 +277,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun onApplySystemWindowInsets(insets: Rect) {
-        view?.findViewById<View?>(android.support.design.R.id.design_navigation_view)?.
+        view?.findViewById<View?>(com.google.android.material.R.id.design_navigation_view)?.
                 setPadding(0, 0, 0, insets.bottom)
         systemWindowsInsets.set(insets)
         updateSystemWindowsInsets()
@@ -367,10 +367,12 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         menu.setItemAvailability(R.id.likes, !useStarsForLikes)
         menu.setItemAvailability(R.id.premium_features, extraFeaturesService.isSupported())
         if (preferences[extraFeaturesNoticeVersionKey] < EXTRA_FEATURES_NOTICE_VERSION) {
-            val icon = ContextCompat.getDrawable(context, R.drawable.ic_action_infinity)
-            val color = ContextCompat.getColor(context, R.color.material_red)
+            val icon = context?.let { ContextCompat.getDrawable(it, R.drawable.ic_action_infinity) }
+            val color = context?.let { ContextCompat.getColor(it, R.color.material_red) }
             val size = resources.getDimensionPixelSize(R.dimen.element_spacing_msmall)
-            menu.setItemIcon(R.id.premium_features, BadgeDrawable(icon, color, size))
+            if (icon != null && color != null) {
+                menu.setItemIcon(R.id.premium_features, BadgeDrawable(icon, color, size))
+            }
         } else {
             menu.setItemIcon(R.id.premium_features, R.drawable.ic_action_infinity)
         }
@@ -408,7 +410,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
     private fun hasAccountInTab(tab: SupportTabSpec, accountKey: UserKey, isActivated: Boolean): Boolean {
         if (tab.args == null) return false
-        val accountKeys = Utils.getAccountKeys(context, tab.args) ?: return isActivated
+        val accountKeys = context?.let { Utils.getAccountKeys(it, tab.args) } ?: return isActivated
         return accountKey in accountKeys
     }
 
@@ -467,7 +469,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             private var clickedColors: IntArray? = null
 
             override fun onAnimationStart(animation: Animator) {
-                if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+                if (context == null || isDetached || (activity?.isFinishing != false)) return
                 snapshotView.visibility = View.VISIBLE
                 snapshotView.setImageBitmap(snapshotBitmap)
                 val profileDrawable = profileImageView.drawable
@@ -476,7 +478,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
                 val profileImageStyle = preferences[profileImageStyleKey]
-                requestManager.loadProfileImage(context, oldSelectedAccount,
+                requestManager.loadProfileImage(context!!, oldSelectedAccount,
                         profileImageStyle, clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
                         .into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
@@ -523,7 +525,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun displayAccountBanner(account: AccountDetails) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (context == null || isDetached || (activity?.isFinishing != false)) return
         val bannerWidth = accountProfileBanner.width
         val res = resources
         val defWidth = res.displayMetrics.widthPixels
@@ -535,19 +537,19 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         } else if (user.account_color != 0) {
             ColorDrawable(user.account_color)
         } else {
-            ColorDrawable(Chameleon.getOverrideTheme(activity, activity).colorPrimary)
+            ColorDrawable(Chameleon.getOverrideTheme(activity!!, activity).colorPrimary)
         }
 
-        requestManager.loadProfileBanner(context, account.user, width).fallback(fallbackBanner)
+        requestManager.loadProfileBanner(context!!, account.user, width).fallback(fallbackBanner)
                 .into(bannerView)
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
-        if (context == null || isDetached || (activity?.isFinishing ?: true)) return
+        if (context == null || isDetached || (activity?.isFinishing != false)) return
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.spannable = account.user.name
         accountProfileScreenNameView.spannable = "@${account.user.screen_name}"
-        requestManager.loadProfileImage(context, account, preferences[profileImageStyleKey],
+        requestManager.loadProfileImage(context!!, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
                 ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)
         //TODO complete border color
@@ -560,60 +562,61 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val account = accountsAdapter.selectedAccount ?: return false
+        val currentActivity = activity ?: return false
         when (item.itemId) {
             R.id.search -> {
-                val intent = Intent(activity, QuickSearchBarActivity::class.java)
+                val intent = Intent(currentActivity, QuickSearchBarActivity::class.java)
                 intent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
                 startActivity(intent)
                 closeAccountsDrawer()
             }
             R.id.compose -> {
                 val composeIntent = Intent(INTENT_ACTION_COMPOSE)
-                composeIntent.setClass(activity, ComposeActivity::class.java)
+                composeIntent.setClass(currentActivity, ComposeActivity::class.java)
                 composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
                 startActivity(composeIntent)
             }
             R.id.likes, R.id.favorites -> {
-                IntentUtils.openUserFavorites(activity, account.key, account.key,
+                IntentUtils.openUserFavorites(currentActivity, account.key, account.key,
                         account.user.screen_name)
             }
             R.id.lists -> {
-                IntentUtils.openUserLists(activity, account.key,
+                IntentUtils.openUserLists(currentActivity, account.key,
                         account.key, account.user.screen_name)
             }
             R.id.groups -> {
-                IntentUtils.openUserGroups(activity, account.key,
+                IntentUtils.openUserGroups(currentActivity, account.key,
                         account.key, account.user.screen_name)
             }
             R.id.public_timeline -> {
-                IntentUtils.openPublicTimeline(activity, account.key)
+                IntentUtils.openPublicTimeline(currentActivity, account.key)
             }
             R.id.network_public_timeline -> {
-                IntentUtils.openNetworkPublicTimeline(activity, account.key)
+                IntentUtils.openNetworkPublicTimeline(currentActivity, account.key)
             }
             R.id.messages -> {
-                IntentUtils.openDirectMessages(activity, account.key)
+                IntentUtils.openDirectMessages(currentActivity, account.key)
             }
             R.id.interactions -> {
-                IntentUtils.openInteractions(activity, account.key)
+                IntentUtils.openInteractions(currentActivity, account.key)
             }
             R.id.edit -> {
-                IntentUtils.openProfileEditor(activity, account.key)
+                IntentUtils.openProfileEditor(currentActivity, account.key)
             }
             R.id.accounts -> {
-                IntentUtils.openAccountsManager(activity)
+                IntentUtils.openAccountsManager(currentActivity)
                 closeAccountsDrawer()
             }
             R.id.drafts -> {
-                IntentUtils.openDrafts(activity)
+                IntentUtils.openDrafts(currentActivity)
                 closeAccountsDrawer()
             }
             R.id.filters -> {
-                IntentUtils.openFilters(activity)
+                IntentUtils.openFilters(currentActivity)
                 closeAccountsDrawer()
             }
             R.id.premium_features -> {
-                val intent = Intent(activity, PremiumDashboardActivity::class.java)
+                val intent = Intent(currentActivity, PremiumDashboardActivity::class.java)
                 startActivity(intent)
                 preferences[extraFeaturesNoticeVersionKey] = EXTRA_FEATURES_NOTICE_VERSION
                 closeAccountsDrawer()
@@ -629,8 +632,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     fun setStatusBarHeight(height: Int) {
-        val top = Utils.getInsetsTopWithoutActionBarHeight(activity, height)
-        profileContainer.setPadding(0, top, 0, 0)
+        val top = activity?.let { Utils.getInsetsTopWithoutActionBarHeight(it, height) }
+        if (top != null) {
+            profileContainer.setPadding(0, top, 0, 0)
+        }
     }
 
     fun shouldDisableDrawerSlide(e: MotionEvent): Boolean {

@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import android.support.v4.content.FixedAsyncTaskLoader
+import androidx.loader.content.FixedAsyncTaskLoader
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.RestHttpClient
@@ -62,6 +62,6 @@ class DefaultAPIConfigLoader(context: Context) : FixedAsyncTaskLoader<List<Custo
     }
 
     companion object {
-        const val DEFAULT_API_CONFIGS_URL = "https://twidere.mariotaku.org/assets/data/default_api_configs.json"
+        const val DEFAULT_API_CONFIGS_URL = "https://twidereproject.github.io/default_api_configs.json"
     }
 }

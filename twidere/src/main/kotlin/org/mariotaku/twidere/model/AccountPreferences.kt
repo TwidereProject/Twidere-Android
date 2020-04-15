@@ -24,7 +24,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.media.RingtoneManager
 import android.net.Uri
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.TextUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains

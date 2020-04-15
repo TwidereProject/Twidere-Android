@@ -21,7 +21,7 @@ package org.mariotaku.twidere.activity.iface
 
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import java.util.*

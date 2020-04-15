@@ -27,7 +27,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import android.widget.Toast
 import com.squareup.otto.Subscribe
 import org.mariotaku.ktextension.*
@@ -59,7 +59,7 @@ import org.mariotaku.twidere.util.Utils
 abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
+        get() = Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
 
     abstract val contentUri: Uri
 
@@ -89,7 +89,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                     reloadActivities()
                 }
             }
-            context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
+            context?.contentResolver?.registerContentObserver(Filters.CONTENT_URI, true, contentObserver!!)
         }
         AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
         updateRefreshState()
@@ -98,7 +98,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override fun onStop() {
         if (contentObserver != null) {
-            context.contentResolver.unregisterContentObserver(contentObserver)
+            context?.contentResolver?.unregisterContentObserver(contentObserver!!)
             contentObserver = null
         }
         AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
@@ -153,6 +153,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         if (ILoadMoreSupportAdapter.START in position || refreshing) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
+        val currentContext = context ?: return
         val contentUri = this.contentUri
         getActivities(object : RefreshTaskParam {
             override val accountKeys by lazy {
@@ -161,9 +162,9 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
             override val pagination by lazy {
                 val keys = accountKeys.toNulls()
-                val maxIds = DataStoreUtils.getRefreshOldestActivityMaxPositions(context, contentUri,
+                val maxIds = DataStoreUtils.getRefreshOldestActivityMaxPositions(currentContext, contentUri,
                         keys)
-                val maxSortIds = DataStoreUtils.getRefreshOldestActivityMaxSortPositions(context,
+                val maxSortIds = DataStoreUtils.getRefreshOldestActivityMaxSortPositions(currentContext,
                         contentUri, keys)
                 return@lazy Array(keys.size) { idx ->
                     SinceMaxPagination.maxId(maxIds[idx], maxSortIds[idx])
@@ -171,7 +172,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             }
 
             override val shouldAbort: Boolean
-                get() = context == null
+                get() = currentContext == null
         })
     }
 
@@ -211,7 +212,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     override fun getFullActivity(position: Int): ParcelableActivity? {
         val _id = adapter.getRowId(position)
         val where = Expression.equals(Activities._ID, _id).sql
-        return context.contentResolver.queryOne(contentUri, Activities.COLUMNS, where, null, null,
+        return context?.contentResolver?.queryOne(contentUri, Activities.COLUMNS, where, null, null,
                 ParcelableActivity::class.java)
     }
 
@@ -262,10 +263,11 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     private fun showContentOrError() {
         val accountKeys = accountKeys
+        val currentContext = context ?: return
         if (adapter.itemCount > 0) {
             showContent()
         } else if (accountKeys.isNotEmpty()) {
-            val errorInfo = ErrorInfoStore.getErrorInfo(context,
+            val errorInfo = ErrorInfoStore.getErrorInfo(currentContext,
                     errorInfoStore[errorInfoKey, accountKeys[0]])
             if (errorInfo != null) {
                 showEmpty(errorInfo.icon, errorInfo.message)
@@ -295,6 +297,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         @Subscribe
         fun notifyGetStatusesTaskChanged(event: GetActivitiesTaskEvent) {
             if (event.uri != contentUri) return
+            val currentContext = context ?: return
             refreshing = event.running
             if (!event.running) {
                 setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
@@ -303,7 +306,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
                 val exception = event.exception
                 if (exception is GetStatusesTask.GetTimelineException && userVisibleHint) {
-                    Toast.makeText(context, exception.getToastMessage(context), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentContext, exception.getToastMessage(currentContext), Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.view.holder.message
 
 import android.os.Build
-import android.support.v4.view.GravityCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.View
 import android.widget.FrameLayout

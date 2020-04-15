@@ -74,7 +74,7 @@
                 android:textColor="?android:textColorSecondary"
                 tools:text="140"/>
 
-            <android.support.v7.widget.AppCompatCheckBox
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/quoteOriginal"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/element_size_normal"

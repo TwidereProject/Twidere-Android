@@ -84,13 +84,6 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
     private val isSelectOnlyItemAutomatically: Boolean
         get() = intent.getBooleanExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, false)
 
-    private val startIntent: Intent?
-        get() {
-            val startIntent = intent.getParcelableExtra<Intent>(EXTRA_START_INTENT)
-            startIntent?.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
-            return startIntent
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_selector)
@@ -156,12 +149,6 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
         data.putExtra(EXTRA_ID, account.key.id)
         data.putExtra(EXTRA_ACCOUNT_KEY, account.key)
         data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
-
-        val startIntent = startIntent
-        if (startIntent != null) {
-            startIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
-            startActivity(startIntent)
-        }
 
         setResult(Activity.RESULT_OK, data)
         finish()

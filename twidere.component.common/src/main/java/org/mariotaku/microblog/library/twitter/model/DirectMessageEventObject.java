@@ -48,6 +48,16 @@ public class DirectMessageEventObject {
         @JsonField(name = "message_create")
         MessageCreate messageCreate;
 
+        @JsonField(name = "created_timestamp")
+        String createdTimestamp;
+
+        public String getCreatedTimestamp() {
+            return createdTimestamp;
+        }
+
+        public void setCreatedTimestamp(String createdTimestamp) {
+            this.createdTimestamp = createdTimestamp;
+        }
 
         public String getType() {
             return type;
@@ -78,6 +88,16 @@ public class DirectMessageEventObject {
             Target target;
             @JsonField(name = "message_data")
             MessageData messageData;
+            @JsonField(name = "sender_id")
+            String senderId;
+
+            public String getSenderId() {
+                return senderId;
+            }
+
+            public void setSenderId(String senderId) {
+                this.senderId = senderId;
+            }
 
             public Target getTarget() {
                 return target;

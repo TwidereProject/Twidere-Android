@@ -1,6 +1,6 @@
 package org.mariotaku.ktextension
 
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import java.util.*
 
 /**

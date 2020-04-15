@@ -22,7 +22,7 @@ package org.mariotaku.twidere.fragment.statuses
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.Loader
+import androidx.loader.content.Loader
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -41,6 +41,8 @@ import java.util.*
 class GroupTimelineFragment : ParcelableStatusesFragment() {
     override val savedStatusesFileArgs: Array<String>?
         get() {
+            val context = context ?: return null
+            val arguments = arguments ?: return null
             val accountKey = Utils.getAccountKey(context, arguments)!!
             val groupId = arguments.getString(EXTRA_GROUP_ID)
             val groupName = arguments.getString(EXTRA_GROUP_NAME)
@@ -59,6 +61,7 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
 
     override val readPositionTagWithArguments: String?
         get() {
+            val arguments = arguments ?: return null
             val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             val sb = StringBuilder("group_")
             if (tabPosition < 0) return null
@@ -85,14 +88,18 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.compose -> {
-                val accountKey = Utils.getAccountKey(context, arguments)
-                val groupName = arguments.getString(EXTRA_GROUP_NAME)
-                if (groupName != null) {
-                    val intent = Intent(activity, ComposeActivity::class.java)
-                    intent.action = INTENT_ACTION_COMPOSE
-                    intent.putExtra(Intent.EXTRA_TEXT, "!$groupName ")
-                    intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
-                    startActivity(intent)
+                context?.let { context ->
+                    arguments?.let { arguments ->
+                        val accountKey = Utils.getAccountKey(context, arguments)
+                        val groupName = arguments.getString(EXTRA_GROUP_NAME)
+                        if (groupName != null) {
+                            val intent = Intent(activity, ComposeActivity::class.java)
+                            intent.action = INTENT_ACTION_COMPOSE
+                            intent.putExtra(Intent.EXTRA_TEXT, "!$groupName ")
+                            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+                            startActivity(intent)
+                        }
+                    }
                 }
                 return true
             }
@@ -108,7 +115,7 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
         val groupName = args.getString(EXTRA_GROUP_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return GroupTimelineLoader(activity, accountKey, groupId, groupName, adapterData,
+        return GroupTimelineLoader(activity!!, accountKey, groupId, groupName, adapterData,
                 savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
     }
 

@@ -7,7 +7,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -17,11 +17,15 @@ allprojects {
 
     ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 400
-        projectVersionName = '3.7.6'
+        projectVersionCode = 505
+        projectVersionName = '4.0.6'
 
-        globalCompileSdkVersion = 28
-        globalBuildToolsVersion = '28.0.3'
+        globalCompileSdkVersion = 29
+        globalBuildToolsVersion = '29.0.2'
+
+
+        globalMinSdkVersion = 19
+        globalTargetSdkVersion = 29
     }
 
     repositories {
@@ -29,6 +33,7 @@ allprojects {
         jcenter()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
+        google()
     }
 
 }
@@ -36,10 +41,10 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlinVersion = '1.3.0'
+            kotlinVersion = '1.3.61'
             pluginVersions = [
                     AndroidSvgDrawable: '3.0.0',
-                    PlayServices      : '3.1.1',
+                    PlayServices      : '4.3.3',
             ]
             libVersions = [
                     Kotlin               : "${kotlinVersion}",
@@ -48,19 +53,19 @@ subprojects {
                     MariotakuCommons     : '0.9.20',
                     RestFu               : '0.9.60',
                     ObjectCursor         : '0.9.21',
-                    PlayServices         : '11.4.2',
-                    MapsUtils            : '0.5',
-                    DropboxCoreSdk       : '3.0.3',
-                    GoogleDriveApi       : 'v3-rev81-1.22.0',
+                    PlayServices         : '17.0.0',
+                    MapsUtils            : '0.6.2',
+                    DropboxCoreSdk       : '3.1.3',
+                    GoogleDriveApi       : 'v3-rev193-1.25.0',
                     Exoplayer            : 'r2.2.0',
                     Toro                 : '2.1.0',
                     LoganSquare          : '1.3.7',
-                    IABv3                : '1.0.38',
+                    IABv3                : '1.1.0',
                     Mime4J               : '0.7.2',
                     OkHttp               : '3.8.1',
                     Stetho               : '1.5.0',
                     OSMDroid             : '5.6.5',
-                    LeakCanary           : '1.5.1',
+                    LeakCanary           : '2.1',
                     TwitterText          : '1.14.7',
                     MediaViewerLibrary   : '0.9.23',
                     MultiValueSwitch     : '0.9.8',
@@ -69,12 +74,12 @@ subprojects {
                     KPreferences         : '0.9.7',
                     Kovenant             : '3.3.0',
                     ParcelablePlease     : '1.0.2',
-                    Chameleon            : '0.9.22',
+                    Chameleon            : '0.9.28',
                     UniqR                : '0.9.4',
                     SQLiteQB             : '0.9.15',
-                    Glide                : '3.7.0',
-                    GlideOkHttp3         : '1.4.0',
-                    GlideTransformations : '2.0.2',
+                    Glide                : '4.11.0',
+                    GlideOkHttp3         : '4.11.0',
+                    GlideTransformations : '4.1.0',
                     AndroidImageCropper  : '2.4.6',
                     ExportablePreferences: '0.9.7',
                     ACRA                 : '4.9.2',

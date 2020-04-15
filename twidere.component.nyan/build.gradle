@@ -27,8 +27,8 @@ android {
     buildToolsVersion globalBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion globalMinSdkVersion
+        targetSdkVersion globalTargetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -41,5 +41,5 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:support-compat:${libVersions['SupportLib']}"
+    implementation 'androidx.core:core:1.2.0'
 }

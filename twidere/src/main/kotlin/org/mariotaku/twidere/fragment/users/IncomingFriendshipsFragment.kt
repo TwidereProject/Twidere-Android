@@ -46,7 +46,7 @@ class IncomingFriendshipsFragment : ParcelableUsersFragment(), IUsersAdapter.Req
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
         val adapter = super.onCreateAdapter(context, requestManager)
-        val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return adapter
+        val accountKey = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return adapter
         if (USER_TYPE_FANFOU_COM == accountKey.host) {
             adapter.requestClickListener = this
         } else if (AccountUtils.isOfficial(context, accountKey)) {

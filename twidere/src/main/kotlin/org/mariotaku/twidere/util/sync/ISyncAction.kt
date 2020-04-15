@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.util.sync
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import java.io.IOException
 
 /**

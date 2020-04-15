@@ -22,7 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.dialog_date_time_picker.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.applyTheme
@@ -44,7 +44,7 @@ class DateTimePickerDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(context!!)
         builder.setView(R.layout.dialog_date_time_picker)
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.setPositiveButton(android.R.string.ok, null)

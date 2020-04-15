@@ -40,9 +40,9 @@ import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 
 abstract class AbsAccountRequestTask<Params, Result, Callback>(context: Context, val accountKey: UserKey?) :
         ExceptionHandlingAbstractTask<Params, Result, MicroBlogException, Callback>(context) {
-    override final val exceptionClass = MicroBlogException::class.java
+    final override val exceptionClass = MicroBlogException::class.java
 
-    override final fun onExecute(params: Params): Result {
+    final override fun onExecute(params: Params): Result {
         val am = AccountManager.get(context)
         val account = accountKey?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
                 throw AccountNotFoundException()
