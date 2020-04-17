@@ -1,11 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url 'https://maven.google.com' }
+        maven { url "https://plugins.gradle.org/m2/" }
         google()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
         // NOTE: Do not place your application dependencies here; they belong
@@ -14,7 +15,6 @@ buildscript {
 }
 
 allprojects {
-
     ext {
         projectGroupId = 'org.mariotaku.twidere'
         projectVersionCode = 506
@@ -23,7 +23,6 @@ allprojects {
         globalCompileSdkVersion = 29
         globalBuildToolsVersion = '29.0.2'
 
-
         globalMinSdkVersion = 19
         globalTargetSdkVersion = 29
     }
@@ -31,11 +30,9 @@ allprojects {
     repositories {
         mavenLocal()
         jcenter()
-        maven { url 'https://maven.google.com' }
-        maven { url 'https://jitpack.io' }
+        maven { url "https://jitpack.io" }
         google()
     }
-
 }
 
 subprojects {
