@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.documentfile.provider.DocumentFile;
@@ -35,7 +36,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.library.exportablepreferences.PreferencesExporter;
 import org.mariotaku.library.exportablepreferences.annotation.PreferenceType;
 import org.mariotaku.library.objectcursor.ObjectCursor;
@@ -46,11 +46,8 @@ import org.mariotaku.twidere.model.Tab;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
-import org.osmdroid.tileprovider.modules.ZipFileArchive;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,13 +58,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import javax.annotation.Nonnull;
 
 public class DataImportExportUtils implements Constants {
 
