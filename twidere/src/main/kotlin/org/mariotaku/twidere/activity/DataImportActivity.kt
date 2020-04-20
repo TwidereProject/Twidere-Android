@@ -1,17 +1,18 @@
 package org.mariotaku.twidere.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import android.util.Log
+import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.DialogFragment
 import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.fragment.DataExportImportTypeSelectorDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.util.DataImportExportUtils
-import java.io.File
 import java.io.IOException
 
 class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFragment.Callback {
@@ -37,9 +38,9 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             REQUEST_PICK_FILE -> {
                 resumeFragmentsRunnable = Runnable {
                     if (resultCode == RESULT_OK && data != null) {
-                        val path = data.data?.path
+                        val path = data.data!!
                         if (openImportTypeTask == null || openImportTypeTask!!.status != AsyncTask.Status.RUNNING) {
-                            openImportTypeTask = OpenImportTypeTask(this@DataImportActivity, path)
+                            openImportTypeTask = OpenImportTypeTask(this@DataImportActivity, DocumentFile.fromSingleUri(this, path))
                             openImportTypeTask!!.execute()
                         }
                     } else {
@@ -62,13 +63,13 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
     }
 
-    override fun onPositiveButtonClicked(path: String?, flags: Int) {
+    override fun onPositiveButtonClicked(path: Uri?, flags: Int) {
         if (path == null || flags == 0) {
             finish()
             return
         }
         if (importSettingsTask == null || importSettingsTask!!.status != AsyncTask.Status.RUNNING) {
-            importSettingsTask = ImportSettingsTask(this, path, flags)
+            importSettingsTask = ImportSettingsTask(this, DocumentFile.fromSingleUri(this, path), flags)
             importSettingsTask!!.execute()
         }
     }
@@ -89,13 +90,14 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
 
     internal class ImportSettingsTask(
             private val activity: DataImportActivity,
-            private val path: String?,
+            private val file: DocumentFile?,
             private val flags: Int
     ) : AsyncTask<Any, Any, Boolean>() {
 
         override fun doInBackground(vararg params: Any): Boolean? {
-            if (path == null) return false
-            val file = File(path)
+            if (file == null) {
+                return false
+            }
             if (!file.isFile) return false
             try {
                 DataImportExportUtils.importData(activity, file, flags)
@@ -131,14 +133,15 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
 
     }
 
-    internal class OpenImportTypeTask(private val activity: DataImportActivity, private val path: String?) : AsyncTask<Any, Any, Int>() {
+    internal class OpenImportTypeTask(private val activity: DataImportActivity, private val file: DocumentFile?) : AsyncTask<Any, Any, Int>() {
 
         override fun doInBackground(vararg params: Any): Int? {
-            if (path == null) return 0
-            val file = File(path)
+            if (file == null) {
+                return 0
+            }
             if (!file.isFile) return 0
             try {
-                return DataImportExportUtils.getImportedSettingsFlags(file)
+                return DataImportExportUtils.getImportedSettingsFlags(activity, file)
             } catch (e: IOException) {
                 return 0
             }
@@ -151,7 +154,7 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             }
             val df = DataExportImportTypeSelectorDialogFragment()
             val args = Bundle()
-            args.putString(EXTRA_PATH, path)
+            args.putParcelable(EXTRA_PATH, file?.uri)
             args.putString(EXTRA_TITLE, activity.getString(R.string.import_settings_type_dialog_title))
             if (flags != null) {
                 args.putInt(EXTRA_FLAGS, flags)
