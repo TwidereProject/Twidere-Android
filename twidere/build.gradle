@@ -144,7 +144,7 @@ android {
         exclude 'jsr305_annotations/**'
         exclude 'error_prone/**'
         exclude 'third_party/java_src/**'
-        exclude 'sdk-version.​txt'
+        exclude 'sdk-version.txt'
         exclude 'build-data.properties'
     }
 
