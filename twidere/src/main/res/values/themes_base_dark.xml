@@ -19,7 +19,7 @@
 
 <resources>
 
-    <style name="Theme.Twidere.Dark" parent="Theme.MaterialComponents">
+    <style name="Theme.Twidere.Dark" parent="Theme.MaterialComponents.Bridge">
 
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
@@ -47,7 +47,7 @@
 
     <style name="Theme.Twidere.Dark.Content" parent="Theme.Twidere.Dark"/>
 
-    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.MaterialComponents.Dialog">
+    <style name="Theme.Twidere.Dark.Dialog" parent="Theme.MaterialComponents.Dialog.Bridge">
 
         <!-- this is a simple fix for https://github.com/TwidereProject/Twidere-Android/issues/579 -->
         <item name="android:windowBackground">@drawable/abc_dialog_material_background_dark</item>
