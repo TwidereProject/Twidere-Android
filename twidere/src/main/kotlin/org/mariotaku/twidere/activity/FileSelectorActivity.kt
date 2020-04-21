@@ -24,14 +24,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment.getExternalStorageDirectory
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_REQUEST_PERMISSIONS
-import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PICK_DIRECTORY
-import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PICK_FILE
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.FileSelectorDialogFragment
 import java.io.File
 import android.Manifest.permission as AndroidPermissions
@@ -65,7 +67,7 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-            grantResults: IntArray) {
+                                            grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_REQUEST_PERMISSIONS) {
             executeAfterFragmentResumed {
@@ -114,28 +116,31 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
     }
 
     private fun showPickFileDialog() {
-        Intent().apply {
-            if (intent.action == INTENT_ACTION_PICK_FILE) {
-                action = Intent.ACTION_GET_CONTENT
-                type = "*/*"
-            } else if (intent.action == INTENT_ACTION_PICK_DIRECTORY) {
-                action = Intent.ACTION_OPEN_DOCUMENT_TREE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Intent().apply {
+                if (intent.action == INTENT_ACTION_PICK_FILE) {
+                    action = Intent.ACTION_GET_CONTENT
+                    type = "*/*"
+                } else if (intent.action == INTENT_ACTION_PICK_DIRECTORY) {
+                    action = Intent.ACTION_OPEN_DOCUMENT_TREE
+                }
+            }.also {
+                startActivityForResult(
+                        Intent.createChooser(it, getString(R.string.pick_file)),
+                        PICKER_REQUEST_CODE
+                )
             }
-        }.also {
-            startActivityForResult(
-                    Intent.createChooser(it, getString(R.string.pick_file)),
-                    PICKER_REQUEST_CODE
-            )
+        } else {
+            val initialDirectory = intent?.data?.path?.let(::File) ?: getExternalStorageDirectory()
+            ?: File("/")
+            val f = FileSelectorDialogFragment()
+            f.arguments = Bundle {
+                this[EXTRA_ACTION] = intent.action
+                this[EXTRA_PATH] = initialDirectory.absolutePath
+                this[EXTRA_FILE_EXTENSIONS] = intent.getStringArrayExtra(EXTRA_FILE_EXTENSIONS)
+            }
+            f.show(supportFragmentManager, "select_file")
         }
-
-//        val initialDirectory = intent?.data?.path?.let(::File) ?: getExternalStorageDirectory() ?: File("/")
-//        val f = FileSelectorDialogFragment()
-//        f.arguments = Bundle {
-//            this[EXTRA_ACTION] = intent.action
-//            this[EXTRA_PATH] = initialDirectory.absolutePath
-//            this[EXTRA_FILE_EXTENSIONS] = intent.getStringArrayExtra(EXTRA_FILE_EXTENSIONS)
-//        }
-//        f.show(supportFragmentManager, "select_file")
     }
 
 }
