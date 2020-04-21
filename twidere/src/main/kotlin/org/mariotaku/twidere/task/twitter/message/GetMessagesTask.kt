@@ -37,6 +37,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.findFieldByTypes
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.target
@@ -85,6 +86,7 @@ class GetMessagesTask(
             }
             val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val messages = try {
+                if (!details.hasDm) throw APINotSupportedException(details.type)
                 getMessages(microBlog, details, param, i)
             } catch (e: MicroBlogException) {
                 return@forEachIndexed
