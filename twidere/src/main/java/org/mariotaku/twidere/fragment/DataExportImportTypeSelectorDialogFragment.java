@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.DialogInterface.OnShowListener;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -157,7 +158,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
         final FragmentActivity a = getActivity();
         final Bundle args = getArguments();
         if (args == null) return;
-        final String path = args.getString(EXTRA_PATH);
+        final Uri path = args.getParcelable(EXTRA_PATH);
         if (a instanceof Callback) {
             ((Callback) a).onPositiveButtonClicked(path, flags);
         }
@@ -171,7 +172,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
     }
 
     public interface Callback extends ISupportDialogFragmentCallback {
-        void onPositiveButtonClicked(String path, int flags);
+        void onPositiveButtonClicked(Uri path, int flags);
     }
 
     private static class Type {

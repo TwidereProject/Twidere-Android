@@ -40,6 +40,9 @@ val AccountExtras.official: Boolean
         return false
     }
 
+val AccountDetails.hasDm: Boolean
+    get() = type in arrayOf(AccountType.FANFOU, AccountType.TWITTER)
+
 fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T {
     return credentials.newMicroBlogInstance(context, type, cls)
 }
@@ -69,6 +72,16 @@ fun AccountDetails.getMediaSizeLimit(@MediaCategory mediaCategory: String? = nul
                 maxSizeSync = extras.uploadLimit
                 maxSizeAsync = extras.uploadLimit
             }
+            return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
+        }
+        AccountType.MASTODON -> {
+            val imageLimit = AccountExtras.ImageLimit().apply {
+                maxSizeSync = 8 * 1024 * 1024
+                maxSizeAsync = 8 * 1024 * 1024
+                maxHeight = 1280
+                maxWidth = 1280
+            }
+            val videoLimit = AccountExtras.VideoLimit.twitterDefault()
             return UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
         }
         else -> return null

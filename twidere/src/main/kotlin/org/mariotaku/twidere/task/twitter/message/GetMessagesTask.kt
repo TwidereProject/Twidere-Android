@@ -22,24 +22,22 @@ package org.mariotaku.twidere.task.twitter.message
 import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
-import android.os.Parcelable
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.mapToArray
+import org.mariotaku.ktextension.toIntOr
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.DMResponse
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.restfu.callback.RawCallback
-import org.mariotaku.restfu.http.HttpResponse
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.findFieldByTypes
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.*
-import org.mariotaku.twidere.extension.model.api.target
 import org.mariotaku.twidere.extension.model.api.toParcelable
 import org.mariotaku.twidere.extension.queryCount
 import org.mariotaku.twidere.extension.queryReference
@@ -61,8 +59,11 @@ import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import java.lang.Exception
 import java.util.*
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.filter
+import kotlin.collections.set
 
 /**
  * Created by mariotaku on 2017/2/8.
@@ -85,6 +86,7 @@ class GetMessagesTask(
             }
             val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val messages = try {
+                if (!details.hasDm) throw APINotSupportedException(details.type)
                 getMessages(microBlog, details, param, i)
             } catch (e: MicroBlogException) {
                 return@forEachIndexed
@@ -163,7 +165,7 @@ class GetMessagesTask(
                 directMessage[DirectMessage::class.java.getDeclaredField("text")] = it.messageCreate.messageData.text
                 directMessage[DirectMessage::class.java.getDeclaredField("id")] = it.id
                 directMessage[DirectMessage::class.java.getDeclaredField("sender")] = users.firstOrNull { user -> it.messageCreate.senderId == user.id }
-                directMessage[DirectMessage::class.java.getDeclaredField("recipient")] = users.firstOrNull { user -> it.messageCreate.senderId == user.id }
+                directMessage[DirectMessage::class.java.getDeclaredField("recipient")] = users.firstOrNull { user -> it.messageCreate.target.recipientId == user.id }
                 directMessage[DirectMessage::class.java.getDeclaredField("createdAt")] = Date(it.createdTimestamp.toLong())
             }
         }.filter { it.sender != null }

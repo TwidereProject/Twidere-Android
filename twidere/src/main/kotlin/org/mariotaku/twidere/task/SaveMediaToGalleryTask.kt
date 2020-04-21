@@ -43,8 +43,6 @@ class SaveMediaToGalleryTask(
     override fun onFileSaved(savedFile: File, mimeType: String?) {
         val context = context ?: return
 
-        MediaScannerConnection.scanFile(context, arrayOf(savedFile.path),
-                arrayOf(mimeType), null)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
             val path = when (type) {
@@ -80,9 +78,14 @@ class SaveMediaToGalleryTask(
                         fileInputStream.copyTo(it)
                     }
                 }
+                MediaScannerConnection.scanFile(context, arrayOf(uri.path),
+                        arrayOf(fileInfo.mimeType), null)
             }
+            savedFile.delete()
+        } else {
+            MediaScannerConnection.scanFile(context, arrayOf(savedFile.path),
+                    arrayOf(fileInfo.mimeType), null)
         }
-        savedFile.delete()
         Toast.makeText(context, R.string.message_toast_saved_to_gallery, Toast.LENGTH_SHORT).show()
     }
 

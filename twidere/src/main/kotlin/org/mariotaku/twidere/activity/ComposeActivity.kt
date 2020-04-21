@@ -1000,6 +1000,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             AccountType.MASTODON -> {
                 addMastodonMentions(status.text_unescaped, status.spans, mentions)
+                mentions.remove("${accountUser.screen_name}@${accountUser.key.host}")
             }
             else -> if (status.mentions.isNotNullOrEmpty()) {
                 status.mentions.filterNot {

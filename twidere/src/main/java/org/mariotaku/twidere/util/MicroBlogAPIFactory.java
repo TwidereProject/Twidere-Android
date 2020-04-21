@@ -6,11 +6,12 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.text.TextUtils;
+import android.webkit.URLUtil;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import android.text.TextUtils;
-import android.webkit.URLUtil;
 
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.restfu.http.Endpoint;
@@ -94,7 +95,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
 
     @NonNull
     public static String getApiBaseUrl(@NonNull String format, @Nullable final String domain) {
-        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)]", Pattern.CASE_INSENSITIVE).matcher(format);
+        final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)](\\.?)", Pattern.CASE_INSENSITIVE).matcher(format);
         final String baseUrl;
         if (!matcher.find()) {
             // For backward compatibility
@@ -110,7 +111,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         } else if (TextUtils.isEmpty(domain)) {
             baseUrl = matcher.replaceAll("");
         } else {
-            baseUrl = matcher.replaceAll("$1" + domain + "$2");
+            baseUrl = matcher.replaceAll("$1" + domain + "$2" + "$3");
         }
         // In case someone set invalid base url
         if (HttpUrl.parse(baseUrl) == null) {
