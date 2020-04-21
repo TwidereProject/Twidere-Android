@@ -20,16 +20,33 @@
 package androidx.core.os
 
 import android.annotation.SuppressLint
-import android.os.Build
 import java.util.*
 
 @SuppressLint("RestrictedApi")
 object LocaleHelperAccessor {
+    fun forLanguageTag(str: String): Locale {
+        if (str.contains("-")) {
+            val args = str.split("-").dropLastWhile { it.isEmpty() }.toTypedArray()
+            if (args.size > 2) {
+                return Locale(args[0], args[1], args[2])
+            } else if (args.size > 1) {
+                return Locale(args[0], args[1])
+            } else if (args.size == 1) {
+                return Locale(args[0])
+            }
+        } else if (str.contains("_")) {
+            val args = str.split("_").dropLastWhile { it.isEmpty() }.toTypedArray()
+            if (args.size > 2) {
+                return Locale(args[0], args[1], args[2])
+            } else if (args.size > 1) {
+                return Locale(args[0], args[1])
+            } else if (args.size == 1) {
+                return Locale(args[0])
+            }
+        } else {
+            return Locale(str)
+        }
 
-    fun forLanguageTag(str: String): Locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        Locale.forLanguageTag(str)
-    } else {
-        Locale(str)// TODO: Dose it work?
-//        TODO("VERSION.SDK_INT < LOLLIPOP")
+        throw IllegalArgumentException("Can not parse language tag: [$str]")
     }
 }
