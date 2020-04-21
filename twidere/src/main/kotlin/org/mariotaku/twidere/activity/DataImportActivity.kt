@@ -3,6 +3,7 @@ package org.mariotaku.twidere.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
@@ -13,6 +14,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.fragment.DataExportImportTypeSelectorDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.util.DataImportExportUtils
+import java.io.File
 import java.io.IOException
 
 class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFragment.Callback {
@@ -40,7 +42,12 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
                     if (resultCode == RESULT_OK && data != null) {
                         val path = data.data!!
                         if (openImportTypeTask == null || openImportTypeTask!!.status != AsyncTask.Status.RUNNING) {
-                            openImportTypeTask = OpenImportTypeTask(this@DataImportActivity, DocumentFile.fromSingleUri(this, path))
+                            val file = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                DocumentFile.fromSingleUri(this, path)
+                            } else {
+                                DocumentFile.fromFile(File(path.path))
+                            }
+                            openImportTypeTask = OpenImportTypeTask(this@DataImportActivity, file)
                             openImportTypeTask!!.execute()
                         }
                     } else {
@@ -69,7 +76,12 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             return
         }
         if (importSettingsTask == null || importSettingsTask!!.status != AsyncTask.Status.RUNNING) {
-            importSettingsTask = ImportSettingsTask(this, DocumentFile.fromSingleUri(this, path), flags)
+            val file = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                DocumentFile.fromSingleUri(this, path)
+            } else {
+                DocumentFile.fromFile(File(path.path))
+            }
+            importSettingsTask = ImportSettingsTask(this, file, flags)
             importSettingsTask!!.execute()
         }
     }

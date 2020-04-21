@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
@@ -15,6 +16,7 @@ import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.fragment.DataExportImportTypeSelectorDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.util.DataImportExportUtils
+import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,7 +67,12 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             return
         }
         if (task == null || task!!.status != AsyncTask.Status.RUNNING) {
-            task = ExportSettingsTask(this, DocumentFile.fromTreeUri(this, path), flags)
+            val folder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                DocumentFile.fromTreeUri(this, path)
+            } else {
+                DocumentFile.fromFile(File(path.path))
+            }
+            task = ExportSettingsTask(this, folder, flags)
             task!!.execute()
         }
     }
