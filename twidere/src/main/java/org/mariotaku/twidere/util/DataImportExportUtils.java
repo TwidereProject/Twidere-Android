@@ -26,8 +26,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -45,17 +47,19 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class DataImportExportUtils implements Constants {
@@ -79,9 +83,8 @@ public class DataImportExportUtils implements Constants {
             | FLAG_HOST_MAPPING | FLAG_KEYBOARD_SHORTCUTS | FLAG_FILTERS | FLAG_TABS;
 
     @WorkerThread
-    public static void exportData(final Context context, @NonNull final File dst, final int flags) throws IOException {
-        dst.delete();
-        try (FileOutputStream fos = new FileOutputStream(dst);
+    public static void exportData(final Context context, @NonNull final DocumentFile dst, final int flags) throws IOException {
+        try (OutputStream fos = context.getContentResolver().openOutputStream(dst.getUri());
              ZipOutputStream zos = new ZipOutputStream(fos)) {
             if (hasFlag(flags, FLAG_PREFERENCES)) {
                 exportSharedPreferencesData(zos, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES,
@@ -161,104 +164,122 @@ public class DataImportExportUtils implements Constants {
     }
 
     @WorkerThread
-    public static int getImportedSettingsFlags(@NonNull final File src) throws IOException {
-        try (ZipFile zipFile = new ZipFile(src)) {
+    public static int getImportedSettingsFlags(@NonNull final Context context, @NonNull final DocumentFile src) throws IOException {
+        try (InputStream inputStream = context.getContentResolver().openInputStream(src.getUri());
+             ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
             int flags = 0;
-            if (zipFile.getEntry(ENTRY_PREFERENCES) != null) {
+            List<String> entryNames = new ArrayList<>();
+            ZipEntry entry = null;
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                entryNames.add(entry.getName());
+            }
+            if (entryNames.contains(ENTRY_PREFERENCES)) {
                 flags |= FLAG_PREFERENCES;
             }
-            if (zipFile.getEntry(ENTRY_NICKNAMES) != null) {
+            if (entryNames.contains(ENTRY_NICKNAMES)) {
                 flags |= FLAG_NICKNAMES;
             }
-            if (zipFile.getEntry(ENTRY_USER_COLORS) != null) {
+            if (entryNames.contains(ENTRY_USER_COLORS)) {
                 flags |= FLAG_USER_COLORS;
             }
-            if (zipFile.getEntry(ENTRY_HOST_MAPPING) != null) {
+            if (entryNames.contains(ENTRY_HOST_MAPPING)) {
                 flags |= FLAG_HOST_MAPPING;
             }
-            if (zipFile.getEntry(ENTRY_KEYBOARD_SHORTCUTS) != null) {
+            if (entryNames.contains(ENTRY_KEYBOARD_SHORTCUTS)) {
                 flags |= FLAG_KEYBOARD_SHORTCUTS;
             }
-            if (zipFile.getEntry(ENTRY_FILTERS) != null) {
+            if (entryNames.contains(ENTRY_FILTERS)) {
                 flags |= FLAG_FILTERS;
             }
-            if (zipFile.getEntry(ENTRY_TABS) != null) {
+            if (entryNames.contains(ENTRY_TABS)) {
                 flags |= FLAG_TABS;
             }
             return flags;
         }
     }
 
-    public static void importData(final Context context, final File src, final int flags) throws IOException {
+    public static void importData(final Context context, final DocumentFile src, final int flags) throws IOException {
         if (src == null) throw new FileNotFoundException();
-        try (ZipFile zipFile = new ZipFile(src)) {
-            if (hasFlag(flags, FLAG_PREFERENCES)) {
-                importSharedPreferencesData(zipFile, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES,
-                        new PreferencesExporterStrategy(SharedPreferenceConstants.class));
-            }
-            if (hasFlag(flags, FLAG_NICKNAMES)) {
-                importSharedPreferencesData(zipFile, context, USER_NICKNAME_PREFERENCES_NAME, ENTRY_NICKNAMES,
-                        ConvertToStringProcessStrategy.SINGLETON);
-            }
-            if (hasFlag(flags, FLAG_USER_COLORS)) {
-                importSharedPreferencesData(zipFile, context, USER_COLOR_PREFERENCES_NAME, ENTRY_USER_COLORS,
-                        ConvertToIntProcessStrategy.SINGLETON);
-            }
-            if (hasFlag(flags, FLAG_HOST_MAPPING)) {
-                importSharedPreferencesData(zipFile, context, HOST_MAPPING_PREFERENCES_NAME, ENTRY_HOST_MAPPING,
-                        ConvertToStringProcessStrategy.SINGLETON);
-            }
-            if (hasFlag(flags, FLAG_KEYBOARD_SHORTCUTS)) {
-                importSharedPreferencesData(zipFile, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME,
-                        ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON);
-            }
-            if (hasFlag(flags, FLAG_FILTERS)) {
-                importItem(context, zipFile, ENTRY_FILTERS, FiltersData.class, new ContentResolverProcessStrategy<FiltersData>() {
-                    @Override
-                    public boolean importItem(ContentResolver cr, FiltersData filtersData) throws IOException {
-                        if (filtersData == null) return false;
-                        insertBase(cr, Filters.Keywords.CONTENT_URI, filtersData.getKeywords());
-                        insertBase(cr, Filters.Sources.CONTENT_URI, filtersData.getSources());
-                        insertBase(cr, Filters.Links.CONTENT_URI, filtersData.getLinks());
-                        insertUser(cr, Filters.Users.CONTENT_URI, filtersData.getUsers());
+        try (InputStream inputStream = context.getContentResolver().openInputStream(src.getUri());
+             ZipInputStream zipInputStream = new ZipInputStream(inputStream)
+        ) {
+            ZipEntry entry = null;
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                StringBuilder stringBuilder = new StringBuilder();
+                byte[] buffer = new byte[1024];
+                int read = 0;
+                while ((read = zipInputStream.read(buffer, 0, 1024)) >= 0) {
+                    stringBuilder.append(new String(buffer, 0, read));
+                }
+                String data = stringBuilder.toString();
+                if (hasFlag(flags, FLAG_PREFERENCES)) {
+                    importSharedPreferencesData(entry, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES,
+                            new PreferencesExporterStrategy(SharedPreferenceConstants.class), data);
+                }
+                if (hasFlag(flags, FLAG_NICKNAMES)) {
+                    importSharedPreferencesData(entry, context, USER_NICKNAME_PREFERENCES_NAME, ENTRY_NICKNAMES,
+                            ConvertToStringProcessStrategy.SINGLETON, data);
+                }
+                if (hasFlag(flags, FLAG_USER_COLORS)) {
+                    importSharedPreferencesData(entry, context, USER_COLOR_PREFERENCES_NAME, ENTRY_USER_COLORS,
+                            ConvertToIntProcessStrategy.SINGLETON, data);
+                }
+                if (hasFlag(flags, FLAG_HOST_MAPPING)) {
+                    importSharedPreferencesData(entry, context, HOST_MAPPING_PREFERENCES_NAME, ENTRY_HOST_MAPPING,
+                            ConvertToStringProcessStrategy.SINGLETON, data);
+                }
+                if (hasFlag(flags, FLAG_KEYBOARD_SHORTCUTS)) {
+                    importSharedPreferencesData(entry, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME,
+                            ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON, data);
+                }
+                if (hasFlag(flags, FLAG_FILTERS)) {
+                    importItem(context, entry, ENTRY_FILTERS, FiltersData.class, data, new ContentResolverProcessStrategy<FiltersData>() {
+                        @Override
+                        public boolean importItem(ContentResolver cr, FiltersData filtersData) throws IOException {
+                            if (filtersData == null) return false;
+                            insertBase(cr, Filters.Keywords.CONTENT_URI, filtersData.getKeywords());
+                            insertBase(cr, Filters.Sources.CONTENT_URI, filtersData.getSources());
+                            insertBase(cr, Filters.Links.CONTENT_URI, filtersData.getLinks());
+                            insertUser(cr, Filters.Users.CONTENT_URI, filtersData.getUsers());
+                            return true;
+                        }
+
+                        void insertBase(ContentResolver cr, Uri uri, List<FiltersData.BaseItem> items) throws IOException {
+                            if (items == null) return;
+                            final ObjectCursor.ValuesCreator<FiltersData.BaseItem> baseItemCreator =
+                                    ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem.class);
+                            List<ContentValues> values = new ArrayList<>(items.size());
+                            for (FiltersData.BaseItem item : items) {
+                                values.add(baseItemCreator.create(item));
+                            }
+                            ContentResolverUtils.bulkInsert(cr, uri, values);
+                        }
+
+                        void insertUser(ContentResolver cr, Uri uri, List<FiltersData.UserItem> items) throws IOException {
+                            if (items == null) return;
+                            final ObjectCursor.ValuesCreator<FiltersData.UserItem> userItemCreator =
+                                    ObjectCursor.valuesCreatorFrom(FiltersData.UserItem.class);
+                            List<ContentValues> values = new ArrayList<>(items.size());
+                            for (FiltersData.UserItem item : items) {
+                                values.add(userItemCreator.create(item));
+                            }
+                            ContentResolverUtils.bulkInsert(cr, uri, values);
+                        }
+                    });
+                }
+                if (hasFlag(flags, FLAG_TABS)) {
+                    final ObjectCursor.ValuesCreator<Tab> creator = ObjectCursor.valuesCreatorFrom(Tab.class);
+                    importItemsList(context, entry, ENTRY_TABS, Tab.class, data, (cr, items) -> {
+                        if (items == null) return false;
+                        List<ContentValues> values = new ArrayList<>(items.size());
+                        for (Tab item : items) {
+                            values.add(creator.create(item));
+                        }
+                        cr.delete(Tabs.CONTENT_URI, null, null);
+                        ContentResolverUtils.bulkInsert(cr, Tabs.CONTENT_URI, values);
                         return true;
-                    }
-
-                    void insertBase(ContentResolver cr, Uri uri, List<FiltersData.BaseItem> items) throws IOException {
-                        if (items == null) return;
-                        final ObjectCursor.ValuesCreator<FiltersData.BaseItem> baseItemCreator =
-                                ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem.class);
-                        List<ContentValues> values = new ArrayList<>(items.size());
-                        for (FiltersData.BaseItem item : items) {
-                            values.add(baseItemCreator.create(item));
-                        }
-                        ContentResolverUtils.bulkInsert(cr, uri, values);
-                    }
-
-                    void insertUser(ContentResolver cr, Uri uri, List<FiltersData.UserItem> items) throws IOException {
-                        if (items == null) return;
-                        final ObjectCursor.ValuesCreator<FiltersData.UserItem> userItemCreator =
-                                ObjectCursor.valuesCreatorFrom(FiltersData.UserItem.class);
-                        List<ContentValues> values = new ArrayList<>(items.size());
-                        for (FiltersData.UserItem item : items) {
-                            values.add(userItemCreator.create(item));
-                        }
-                        ContentResolverUtils.bulkInsert(cr, uri, values);
-                    }
-                });
-            }
-            if (hasFlag(flags, FLAG_TABS)) {
-                final ObjectCursor.ValuesCreator<Tab> creator = ObjectCursor.valuesCreatorFrom(Tab.class);
-                importItemsList(context, zipFile, ENTRY_TABS, Tab.class, (cr, items) -> {
-                    if (items == null) return false;
-                    List<ContentValues> values = new ArrayList<>(items.size());
-                    for (Tab item : items) {
-                        values.add(creator.create(item));
-                    }
-                    cr.delete(Tabs.CONTENT_URI, null, null);
-                    ContentResolverUtils.bulkInsert(cr, Tabs.CONTENT_URI, values);
-                    return true;
-                });
+                    });
+                }
             }
         }
     }
@@ -267,12 +288,12 @@ public class DataImportExportUtils implements Constants {
         return (flags & flag) != 0;
     }
 
-    private static void importSharedPreferencesData(@NonNull final ZipFile zipFile, @NonNull final Context context,
+    private static void importSharedPreferencesData(@NonNull final ZipEntry entry, @NonNull final Context context,
             @NonNull final String preferencesName, @NonNull final String entryName,
-            @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
-        final ZipEntry entry = zipFile.getEntry(entryName);
-        if (entry == null) return;
-        final JsonParser jsonParser = LoganSquare.JSON_FACTORY.createParser(zipFile.getInputStream(entry));
+            @NonNull final SharedPreferencesProcessStrategy strategy,
+            @NonNull final String data) throws IOException {
+        if (!Objects.equals(entry.getName(), entryName)) return;
+        final JsonParser jsonParser = LoganSquare.JSON_FACTORY.createParser(data);
         if (jsonParser.getCurrentToken() == null) {
             jsonParser.nextToken();
         }
@@ -300,14 +321,14 @@ public class DataImportExportUtils implements Constants {
     }
 
     private static <T> void importItemsList(@NonNull final Context context,
-            @NonNull final ZipFile zipFile,
+            @NonNull final ZipEntry entry,
             @NonNull final String entryName,
             @NonNull final Class<T> itemCls,
+            @NonNull final String data,
             @NonNull final ContentResolverProcessStrategy<List<T>> strategy)
             throws IOException {
-        final ZipEntry entry = zipFile.getEntry(entryName);
-        if (entry == null) return;
-        List<T> itemsList = JsonSerializer.parseList(zipFile.getInputStream(entry), itemCls);
+        if (!Objects.equals(entry.getName(), entryName)) return;
+        List<T> itemsList = JsonSerializer.parseList(data, itemCls);
         strategy.importItem(context.getContentResolver(), itemsList);
     }
 
@@ -317,19 +338,22 @@ public class DataImportExportUtils implements Constants {
             @NonNull final Class<T> itemCls,
             @NonNull final List<T> itemList) throws IOException {
         zos.putNextEntry(new ZipEntry(entryName));
-        JsonSerializer.serialize(itemList, zos, itemCls);
+        String json = LoganSquare.serialize(itemList);
+        OutputStreamWriter writer = new OutputStreamWriter(zos);
+        writer.write(json);
+        writer.flush();
         zos.closeEntry();
     }
 
     private static <T> void importItem(@NonNull final Context context,
-            @NonNull final ZipFile zipFile,
+            @NonNull final ZipEntry entry,
             @NonNull final String entryName,
             @NonNull final Class<T> itemCls,
+            @NonNull final String data,
             @NonNull final ContentResolverProcessStrategy<T> strategy)
             throws IOException {
-        final ZipEntry entry = zipFile.getEntry(entryName);
-        if (entry == null) return;
-        T item = JsonSerializer.parse(zipFile.getInputStream(entry), itemCls);
+        if (!Objects.equals(entry.getName(), entryName)) return;
+        T item = JsonSerializer.parse(data, itemCls);
         strategy.importItem(context.getContentResolver(), item);
     }
 
@@ -339,7 +363,10 @@ public class DataImportExportUtils implements Constants {
             @NonNull final Class<T> itemCls,
             @NonNull final T item) throws IOException {
         zos.putNextEntry(new ZipEntry(entryName));
-        JsonSerializer.serialize(item, zos, itemCls);
+        String json = LoganSquare.serialize(item);
+        OutputStreamWriter writer = new OutputStreamWriter(zos);
+        writer.write(json);
+        writer.flush();
         zos.closeEntry();
     }
 

@@ -7,7 +7,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:3.6.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -17,8 +17,8 @@ allprojects {
 
     ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 507
-        projectVersionName = '4.0.8'
+        projectVersionCode = 508
+        projectVersionName = '4.0.9'
 
         globalCompileSdkVersion = 29
         globalBuildToolsVersion = '29.0.2'

@@ -111,7 +111,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         } else if (TextUtils.isEmpty(domain)) {
             baseUrl = matcher.replaceAll("");
         } else {
-            baseUrl = matcher.replaceAll("$1" + domain + "." + "$2");
+            baseUrl = matcher.replaceAll("$1" + domain + "$2" + "$3");
         }
         // In case someone set invalid base url
         if (HttpUrl.parse(baseUrl) == null) {
