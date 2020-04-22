@@ -93,11 +93,10 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
             REQUEST_PICK_RINGTONE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val ringtone = data.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
-                    if (ringtonePreferenceKey != null) {
-                        val ringtonePreference = findPreference(ringtonePreferenceKey) as RingtonePreference?
-                        if (ringtonePreference != null) {
-                            ringtonePreference.value = ringtone?.toString()
-                        }
+                    ringtonePreferenceKey?.let {
+                        findPreference<RingtonePreference>(it)
+                    }?.let {
+                        it.value = ringtone?.toString()
                     }
                     ringtonePreferenceKey = null
                 }

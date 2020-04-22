@@ -62,35 +62,41 @@
             app:caretHeight="@dimen/element_spacing_normal"
             app:caretPosition="bottomStart"
             app:caretWidth="@dimen/element_spacing_normal"
-            app:cornerRadius="2dp">
+            app:cornerRadius="2dp"
+            app:wrapContentMaxWidthPercent="85%p">
 
-            <RelativeLayout
+            <org.mariotaku.twidere.view.CardMediaContainer
+                android:id="@+id/mediaPreview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/mediaPreview"
-                android:padding="@dimen/element_spacing_normal">
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_marginRight="@dimen/element_spacing_normal"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-                <org.mariotaku.twidere.view.CardMediaContainer
-                    android:id="@+id/mediaPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/element_spacing_normal"
-                    android:visibility="gone">
+                <include layout="@layout/layout_card_media_preview"/>
 
-                    <include layout="@layout/layout_card_media_preview"/>
+            </org.mariotaku.twidere.view.CardMediaContainer>
 
-                </org.mariotaku.twidere.view.CardMediaContainer>
-
-                <org.mariotaku.twidere.view.TimelineContentTextView
-                    android:id="@+id/text"
+            <android.widget.Space
+                    android:id="@+id/mediaTextSpace"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/mediaPreview"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"
-                    tools:text="@string/sample_status_text"/>
+                    android:layout_height="@dimen/element_spacing_normal"
+                    android:layout_below="@+id/mediaPreview"/>
 
-            </RelativeLayout>
+            <org.mariotaku.twidere.view.TimelineContentTextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mediaTextSpace"
+                android:layout_marginBottom="@dimen/element_spacing_normal"
+                android:layout_marginLeft="@dimen/element_spacing_normal"
+                android:layout_marginRight="@dimen/element_spacing_normal"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:attr/textColorPrimary"
+                tools:text="@string/sample_status_text"/>
+
         </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
         <org.mariotaku.twidere.view.FixedTextView

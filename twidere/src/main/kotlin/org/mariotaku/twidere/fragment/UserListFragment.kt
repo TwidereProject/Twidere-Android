@@ -54,6 +54,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.api.microblog.toParcelable
+import org.mariotaku.twidere.extension.neutral
 import org.mariotaku.twidere.extension.onShow
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -405,6 +406,10 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             builder.setTitle(userList.name)
             builder.setMessage(userList.description)
             builder.setPositiveButton(android.R.string.ok, null)
+            builder.neutral(R.string.action_list_creator) {
+                startActivity(IntentUtils.userProfile(userList.account_key, userList.user_key,
+                        userList.user_screen_name))
+            }
             val dialog = builder.create()
             dialog.onShow { it.applyTheme() }
             return dialog

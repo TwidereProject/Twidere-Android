@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.fragment
 
 import android.os.Bundle
+import androidx.preference.Preference
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.preference.notification.AccountNotificationChannelsPreference
@@ -38,7 +39,7 @@ class AccountNotificationSettingsFragment : BaseAccountPreferenceFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val account = this.account
-        findPreference(KEY_NOTIFICATION_LIGHT_COLOR)?.let {
+        findPreference<Preference>(KEY_NOTIFICATION_LIGHT_COLOR)?.let {
             if (account != null) {
                 it.setDefaultValue(account.color)
             }
