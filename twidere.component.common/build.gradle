@@ -43,8 +43,12 @@ buildscript {
     }
 }
 
-android {
+repositories {
+    mavenLocal()
+    jcenter()
+}
 
+android {
     compileSdkVersion globalCompileSdkVersion
     buildToolsVersion globalBuildToolsVersion
 
@@ -62,26 +66,27 @@ android {
     }
 }
 
-repositories {
-    mavenLocal()
-    jcenter()
-}
-
 dependencies {
-    annotationProcessor "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
-    annotationProcessor "com.hannesdorfmann.parcelableplease:processor:${libVersions['ParcelablePlease']}"
-    annotationProcessor "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
-    annotationProcessor "com.github.mariotaku.ExportablePreferences:processor:${libVersions['ExportablePreferences']}"
-
+/** Android support **/
     implementation 'androidx.annotation:annotation:1.1.0'
+
+
+/** Third-party dependencies **/
     implementation "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
+    annotationProcessor "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
     implementation "com.fasterxml.jackson.core:jackson-core:2.7.4"
+    implementation "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
+    annotationProcessor "com.hannesdorfmann.parcelableplease:processor:${libVersions['ParcelablePlease']}"
+
+
+/** Custom dependencies **/
     implementation "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:oauth:${libVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:oauth2:${libVersions['RestFu']}"
-    implementation "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
     implementation "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
+    annotationProcessor "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
     implementation "com.github.mariotaku.ExportablePreferences:core:${libVersions['ExportablePreferences']}"
+    annotationProcessor "com.github.mariotaku.ExportablePreferences:processor:${libVersions['ExportablePreferences']}"
     implementation "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
 }

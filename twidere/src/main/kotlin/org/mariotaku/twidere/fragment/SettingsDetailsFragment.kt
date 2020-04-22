@@ -22,9 +22,10 @@ package org.mariotaku.twidere.fragment
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import androidx.core.view.ViewCompat
-import androidx.preference.PreferenceScreen
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.preference.Preference
+import androidx.preference.PreferenceScreen
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SHOULD_TERMINATE
@@ -76,7 +77,7 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        val preference = findPreference(key) ?: return
+        val preference = findPreference<Preference>(key) ?: return
         val currentActivity = activity ?: return
         val extras = preference.extras
         if (extras != null) {
