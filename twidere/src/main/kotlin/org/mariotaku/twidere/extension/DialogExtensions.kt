@@ -31,14 +31,20 @@ fun <T : Dialog> T.applyOnShow(action: T.() -> Unit) {
     }
 }
 
-fun AlertDialog.Builder.positive(@StringRes textId: Int, action: (dialog: AlertDialog) -> Unit) {
+inline fun AlertDialog.Builder.positive(@StringRes textId: Int, crossinline action: (dialog: AlertDialog) -> Unit) {
     setPositiveButton(textId) { dialog, _ ->
         action(dialog as AlertDialog)
     }
 }
 
-fun AlertDialog.Builder.negative(@StringRes textId: Int, action: (dialog: AlertDialog) -> Unit) {
+inline fun AlertDialog.Builder.negative(@StringRes textId: Int, crossinline action: (dialog: AlertDialog) -> Unit) {
     setNegativeButton(textId) { dialog, _ ->
+        action(dialog as AlertDialog)
+    }
+}
+
+inline fun AlertDialog.Builder.neutral(@StringRes textId: Int, crossinline action: (dialog: AlertDialog) -> Unit) {
+    setNeutralButton(textId) { dialog, _ ->
         action(dialog as AlertDialog)
     }
 }
