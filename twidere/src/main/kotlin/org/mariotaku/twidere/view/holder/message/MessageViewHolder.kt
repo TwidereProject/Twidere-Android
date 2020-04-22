@@ -72,7 +72,10 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         }
         messageBubble.setOutgoing(message.is_outgoing)
 
-        text.setTextColor(ThemeUtils.getColorDependent(messageBubble.bubbleColor.defaultColor))
+        val bubbleColor = messageBubble.bubbleColor
+        if (bubbleColor != null) {
+            text.setTextColor(ThemeUtils.getColorDependent(bubbleColor.defaultColor))
+        }
 
         // Loop through text and spans to found non-space char count
         val hideText = run {
@@ -128,7 +131,11 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         const val layoutResource = R.layout.list_item_message_conversation_text
 
         fun MessageBubbleView.setOutgoing(outgoing: Boolean) {
-            setCaretPosition(if (outgoing) MessageBubbleView.TOP_END else MessageBubbleView.BOTTOM_START)
+            caretPosition = if (outgoing) {
+                MessageBubbleView.TOP or MessageBubbleView.END
+            } else {
+                MessageBubbleView.BOTTOM or MessageBubbleView.START
+            }
         }
     }
 }

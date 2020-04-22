@@ -119,6 +119,7 @@
         android:resizeableActivity="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.Twidere.NoActionBar"
         tools:ignore="UnusedAttribute">
         <uses-library

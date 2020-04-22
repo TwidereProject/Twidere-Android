@@ -82,6 +82,7 @@ subprojects {
                     AbstractTask         : '0.9.5',
                     Dagger               : '2.11',
                     StethoBeanShellREPL  : '0.1',
+                    MessageBubbleView    : '3.5',
             ]
 
         }
