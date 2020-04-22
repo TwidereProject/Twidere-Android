@@ -168,6 +168,7 @@ dependencies {
     implementation 'androidx.core:core:1.2.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha01'
     implementation 'androidx.exifinterface:exifinterface:1.1.0'
+    implementation "androidx.preference:preference:1.1.1"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.palette:palette:1.0.0'
