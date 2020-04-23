@@ -33,7 +33,7 @@ import java.util.*
 class FileExtensionsTest {
     @Test
     fun testTempFileInputStream() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val random = Random()
         val testData = ByteArray(1024)
         random.nextBytes(testData)

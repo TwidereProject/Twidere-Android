@@ -11,7 +11,7 @@ class SaveFileTaskTest {
     @Test
     @Throws(Exception::class)
     fun testGetFileNameWithExtension() {
-        assertEquals("pbs_twimg_com_media_abcdefghijklmn.jpg",
+        assertEquals("abcdefghijklmn.jpg",
                 SaveFileTask.getFileNameWithExtension("pbs_twimg_com_media_abcdefghijklmn_jpg",
                         "jpg", '_', null))
         assertEquals("pbs_twimg_com_media_abcdefghijklmn_jpg",

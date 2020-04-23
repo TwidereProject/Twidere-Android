@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 class DraftExtensionsTest {
     @Test
     fun testMimeMessageProcessing() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val draft = Draft()
         draft.action_type = Draft.Action.UPDATE_STATUS
         draft.timestamp = System.currentTimeMillis()
@@ -58,7 +58,7 @@ class DraftExtensionsTest {
             Assert.assertEquals(expected.type, actual.type)
             val stl = context.contentResolver.openInputStream(Uri.parse(expected.uri))
             val str = context.contentResolver.openInputStream(Uri.parse(actual.uri))
-            Assert.assertTrue(stl.contentEquals(str))
+            Assert.assertTrue(stl!!.contentEquals(str!!))
             stl.close()
             str.close()
         }

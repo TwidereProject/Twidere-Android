@@ -47,8 +47,8 @@ class ComposeActivityTest {
 
     @Test
     fun testReply() {
-        val context = InstrumentationRegistry.getContext()
-        val targetContext = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         val status: ParcelableStatus = context.resources.getJsonResource(R.raw.parcelable_status_848051071444410368)
         val intent = Intent(INTENT_ACTION_REPLY)
         intent.setClass(targetContext, ComposeActivity::class.java)
@@ -67,8 +67,8 @@ class ComposeActivityTest {
 
     @Test
     fun testReplyRemovedSomeMentions() {
-        val context = InstrumentationRegistry.getContext()
-        val targetContext = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         val status: ParcelableStatus = context.resources.getJsonResource(R.raw.parcelable_status_848051071444410368)
         val intent = Intent(INTENT_ACTION_REPLY)
         intent.setClass(targetContext, ComposeActivity::class.java)
@@ -87,8 +87,8 @@ class ComposeActivityTest {
 
     @Test
     fun testReplyNoMentions() {
-        val context = InstrumentationRegistry.getContext()
-        val targetContext = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         val status: ParcelableStatus = context.resources.getJsonResource(R.raw.parcelable_status_848051071444410368)
         val intent = Intent(INTENT_ACTION_REPLY)
         intent.setClass(targetContext, ComposeActivity::class.java)
@@ -109,8 +109,8 @@ class ComposeActivityTest {
 
     @Test
     fun testReplySelf() {
-        val context = InstrumentationRegistry.getContext()
-        val targetContext = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         val status: ParcelableStatus = context.resources.getJsonResource(R.raw.parcelable_status_852737226718838790)
         val intent = Intent(INTENT_ACTION_REPLY)
         intent.setClass(targetContext, ComposeActivity::class.java)
@@ -129,8 +129,8 @@ class ComposeActivityTest {
 
     @Test
     fun testReplySelfRemovedSomeMentions() {
-        val context = InstrumentationRegistry.getContext()
-        val targetContext = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         val status: ParcelableStatus = context.resources.getJsonResource(R.raw.parcelable_status_852737226718838790)
         val intent = Intent(INTENT_ACTION_REPLY)
         intent.setClass(targetContext, ComposeActivity::class.java)
@@ -149,8 +149,8 @@ class ComposeActivityTest {
 
     @Test
     fun testReplySelfNoMentions() {
-        val context = InstrumentationRegistry.getContext()
-        val targetContext = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         val status: ParcelableStatus = context.resources.getJsonResource(R.raw.parcelable_status_852737226718838790)
         val intent = Intent(INTENT_ACTION_REPLY)
         intent.setClass(targetContext, ComposeActivity::class.java)
@@ -174,7 +174,7 @@ class ComposeActivityTest {
 
     private fun ComposeActivity.getStatusUpdateTest(checkLength: Boolean): ParcelableStatusUpdate {
         val getStatusUpdate = javaClass.getDeclaredMethod("getStatusUpdate",
-                kotlin.Boolean::class.java).apply {
+                Boolean::class.java).apply {
             isAccessible = true
         }
         return getStatusUpdate(this, checkLength) as ParcelableStatusUpdate

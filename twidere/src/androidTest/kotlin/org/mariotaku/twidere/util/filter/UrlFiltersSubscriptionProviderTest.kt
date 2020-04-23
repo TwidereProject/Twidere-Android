@@ -15,7 +15,7 @@ import org.mariotaku.twidere.model.filter.UrlFiltersSubscriptionProviderArgument
 class UrlFiltersSubscriptionProviderTest {
     @Test
     fun testFetchXml() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         if (cm.activeNetworkInfo?.isConnected != true) return
