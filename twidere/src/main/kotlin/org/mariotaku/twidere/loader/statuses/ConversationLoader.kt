@@ -38,7 +38,6 @@ import org.mariotaku.twidere.extension.atto.filter
 import org.mariotaku.twidere.extension.atto.firstElementOrNull
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.makeOriginal
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -153,36 +152,23 @@ class ConversationLoader(
         }
         if (loadReplies || noSinceMaxId || sinceId != null && sinceSortId > status.sort_id) {
             // Load replies
-            var repliesLoaded = false
-//            try {
-//                if (details.type == AccountType.TWITTER) {
-//                    if (noSinceMaxId) {
-//                        statuses.addAll(loadTwitterWebReplies(details, twitter))
-//                    }
-//                    repliesLoaded = true
-//                }
-//            } catch (e: MicroBlogException) {
-//                // Ignore
-//            }
-            if (!repliesLoaded) {
-                val query = SearchQuery()
-                query.count(100)
-                if (details.type == AccountType.TWITTER) {
-                    query.query("to:${status.user_screen_name} since_id:${status.id}")
-                } else {
-                    query.query("@${status.user_screen_name}")
+            val query = SearchQuery()
+            query.count(100)
+            if (details.type == AccountType.TWITTER) {
+                query.query("to:${status.user_screen_name} since_id:${status.id}")
+            } else {
+                query.query("@${status.user_screen_name}")
+            }
+            query.sinceId(sinceId ?: status.id)
+            try {
+                val queryResult = twitter.search(query)
+                val firstId = queryResult.firstOrNull()?.id
+                if (firstId != null) {
+                    nextPagination = SinceMaxPagination.sinceId(firstId, 0)
                 }
-                query.sinceId(sinceId ?: status.id)
-                try {
-                    val queryResult = twitter.search(query)
-                    val firstId = queryResult.firstOrNull()?.id
-                    if (firstId != null) {
-                        nextPagination = SinceMaxPagination.sinceId(firstId, 0)
-                    }
-                    queryResult.filterTo(statuses) { it.inReplyToStatusId == status.id }
-                } catch (e: MicroBlogException) {
-                    // Ignore for now
-                }
+                queryResult.filterTo(statuses) { it.inReplyToStatusId == status.id }
+            } catch (e: MicroBlogException) {
+                // Ignore for now
             }
         }
         return statuses.mapTo(PaginatedArrayList()) {
