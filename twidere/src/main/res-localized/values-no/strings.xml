@@ -167,7 +167,6 @@
   <string name="edit_tabs">Rediger faner</string>
   <string name="ellipsis">&#8230;</string>
   <string name="empty_content">Tomt innhold</string>
-  <string name="enable_streaming">Aktiver strømming</string>
   <string name="error_message">Feil: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_message_too_long">Melding for lang.</string>
   <string name="error_message_no_content">Ingen innhold</string>
@@ -255,7 +254,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Strømmetjeneste</string>
   <string name="label_your_profile_image">Ditt profilbilde</string>
   <string name="large">Stor</string>
   <string name="leftside_compose_button">Ny-tweet-knappen på venstre side</string>
@@ -398,7 +396,6 @@
   <string name="preference_title_landscape">Landskap</string>
   <string name="preference_title_portrait">Portrett</string>
   <string name="preference_title_storage">Lagring</string>
-  <string name="preference_title_streaming_enabled">Aktiver strømming</string>
   <string name="preference_title_text_size">Tekststørrelse</string>
   <string name="preference_title_translate">Oversett</string>
   <string name="preference_title_trends_location">Posisjon for trender</string>
@@ -500,7 +497,6 @@
   <string name="settings_interface">Grensesnitt</string>
   <string name="settings_notifications">Varsler</string>
   <string name="settings_refresh">Oppdater</string>
-  <string name="settings_streaming">Strømming</string>
   <string name="share_format">Delingsformat</string>
   <string name="share_format_summary">\"[TITLE]\" = Innholdstittel\n\"[TEXT]\" = Innholdstekst</string>
   <string name="share_status">Del tweet</string>
@@ -530,9 +526,6 @@
   <string name="status_shortener_default">Ingen (avbryt sending)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_type_home">Hjem</string>
-  <string name="stream_type_messages">Meldinger</string>
-  <string name="streaming">Strømming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Abonnerer på listen «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="swipe_down_to_refresh">Sveip ned for å oppdatere</string>
@@ -559,7 +552,6 @@
   <string name="theme_light">Varsel-LED</string>
   <string name="thumbor_integration">Thumbor-integrasjon</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, via <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Tidslinjen vises i sanntid</string>
   <string name="timeline_sync_service">Synkroniseringstjeneste for tidslinjen</string>
   <string name="title_about">Om</string>
   <string name="title_accounts">Kontoer</string>
@@ -588,7 +580,6 @@
   <string name="title_set_nickname">Velg kallenavn</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
-  <string name="title_streaming">Strømming</string>
   <string name="title_subscription_name">Navn</string>
   <string name="title_subscription_url">Nettadresse</string>
   <string name="title_user">Bruker</string>

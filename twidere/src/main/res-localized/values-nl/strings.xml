@@ -177,7 +177,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji ondersteuning</string>
   <string name="empty_content">Lege inhoud</string>
-  <string name="enable_streaming">Streaming inschakelen</string>
   <string name="error_message">Fout: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Dit apparaat is niet compatibel met Twidere, upgraden naar de nieuwste Android OS wordt aanbevolen. \nJe kunt de onderstaande informatie verzenden om mij te helpen dit probleem te melden bij de fabrikant van je toestel.</string>
   <string name="error_message_media_upload_failed">Uploaden van media mislukt.</string>
@@ -289,7 +288,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Streaming-dienst</string>
   <string name="label_translate_from_language">Vertaal vanuit <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Vertaling</string>
   <string name="label_your_profile_image">Je profielfoto</string>
@@ -452,7 +450,6 @@
   <string name="preference_title_landscape">Landschap</string>
   <string name="preference_title_portrait">Portret</string>
   <string name="preference_title_storage">Opslag</string>
-  <string name="preference_title_streaming_enabled">Streaming inschakelen</string>
   <string name="preference_title_text_size">lettergrootte</string>
   <string name="preference_title_translate">Vertalen</string>
   <string name="preference_title_trends_location">Trends locatie</string>
@@ -569,7 +566,6 @@
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificaties</string>
   <string name="settings_refresh">Vernieuwen</string>
-  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Deel formaat</string>
   <string name="share_format_summary">\"[TITLE]\" = Inhoud titel\n\"[TEXT]\" = Inhoud tekst</string>
   <string name="share_link">Link delen</string>
@@ -583,7 +579,7 @@
   <string name="sign_in_service_twitter">Twitter</string>
   <string name="sign_in_with_ellip">Inloggen met&#8230;</string>
   <string name="sign_up">Aanmelden</string>
-  <string name="signing_in_error_browser_sign_in_hint">Fout bij het ​​aanmelden, misschien moet je de browser inlog methode gebruiken. (Dit zal aangepaste API instellingen negeren tijdens aanmelden)</string>
+  <string name="signing_in_error_browser_sign_in_hint">Fout bij het aanmelden, misschien moet je de browser inlog methode gebruiken. (Dit zal aangepaste API instellingen negeren tijdens aanmelden)</string>
   <string name="size">Grootte</string>
   <string name="small">Klein</string>
   <string name="sound">Geluid</string>
@@ -605,10 +601,6 @@
   <string name="status_shortener">Tweet verkorter</string>
   <string name="status_shortener_default">Niets (Verzending afbreken)</string>
   <!-- [noun] Accessibility label for retweet icon -->
-  <string name="stream_type_home">Thuis</string>
-  <string name="stream_type_interactions">Interacties</string>
-  <string name="stream_type_messages">Berichten</string>
-  <string name="streaming">Streaming</string>
   <string name="style">Stijl</string>
   <string name="subscribed_to_list">Geabonneerd op lijst \'\'<xliff:g id="list">%s</xliff:g>\'\'.</string>
   <string name="swipe_down_to_refresh">Naar beneden slepen om te verversen</string>
@@ -638,7 +630,6 @@
   <string name="theme_light">Licht</string>
   <string name="thumbor_integration">Thumbor integratie</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Streaming tijdlijn actief</string>
   <string name="timeline_sync_service">Tijdlijnsynchronisatieservice</string>
   <string name="title_about">Over</string>
   <string name="title_add_or_remove_from_list">Toevoegen of verwijderen uit lijst</string>
@@ -668,7 +659,6 @@
   <string name="title_set_nickname">Stel bijnaam in</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
-  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Naam</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Gebruiker</string>

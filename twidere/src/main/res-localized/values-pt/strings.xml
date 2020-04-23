@@ -288,7 +288,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Suporte de Emoji</string>
   <string name="empty_content">Nenhum conteúdo</string>
-  <string name="enable_streaming">Habilitar atualização em tempo real</string>
   <string name="error_info_oauth_timestamp_error">Por favor cheque a data de seu sistema &amp; configurações de horário.</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Este dispositivo não é compatível com Twidere, atualize para o Android mais recente. \nVocê pode enviar as informações abaixo para ajudar-me a relatar esse problema para o fabricante do dispositivo.</string>
@@ -475,7 +474,6 @@
   <string name="label_statuses_replies">Tweets e respostas</string>
   <string name="label_statuses_retweets">Tweets e retweets</string>
   <string name="label_statuses_retweets_replies">Tweets, retweets e respostas</string>
-  <string name="label_streaming_service">Serviço de streaming</string>
   <string name="label_translate_from_language">Traduzir do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translated_to_language">Traduzido do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Tradução</string>
@@ -594,7 +592,6 @@
   <string name="message_toast_no_account_permission">Permissão de conta é obrigatório</string>
   <string name="message_toast_no_account_selected">Nenhuma conta selecionada.</string>
   <string name="message_toast_no_user_selected">Nenhum usuário selecionado</string>
-  <string name="message_toast_notification_enabled_hint">Apenas disponível quando o streaming está ligado, e não é 100% confiável.</string>
   <string name="message_toast_press_again_to_close">Carregar outra vez para fechar</string>
   <string name="message_toast_profile_background_image_updated">Imagem de fundo do perfil atualizada</string>
   <string name="message_toast_profile_banner_image_updated">Banner do perfil atualizado.</string>
@@ -675,7 +672,6 @@
   <string name="notification_channel_name_content_messages">Mensagens</string>
   <string name="notification_channel_name_content_subscriptions">Inscrições</string>
   <string name="notification_channel_name_content_updates">Atualizações</string>
-  <string name="notification_channel_name_service_statuses">Status do serviço</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> lhe enviou uma mensagem direta.</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> lhe enviou <xliff:g id="messages_count">%2$d</xliff:g> mensagens diretas.</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="users_count">%2$d</xliff:g> lhe enviaram <xliff:g id="messages_count">%3$d</xliff:g> mensagens diretas.</string>
@@ -742,21 +738,17 @@
   <string name="preference_randomize_account_rename_accounts_confirm">Renomear contas existentes?</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">Ativar para intervalo de atualização mais curto, aumenta uso de bateria no Android 5.0+</string>
   <string name="preference_summary_auto_refresh_power_saving">Parar de atualizar automaticamente quando a bateria estiver fraca</string>
-  <string name="preference_summary_background_streaming">Pressione PÁGINA INICIAL ao invés de VOLTAR para manter o streaming aberto</string>
   <string name="preference_summary_chrome_custom_tab">Abre links com navegador interno (Powered by Chrome)</string>
   <string name="preference_summary_database_item_limit">Limite máximo de itens armazenados para cada conta. Defina um valor menor para economizar espaço e aumentar a velocidade de carregamento.</string>
   <string name="preference_summary_favorite_confirmation">Mostra diálogo de confirmação antes de favoritar um tweet</string>
   <string name="preference_summary_like_confirmation">Mostra diálogo de confirmação antes de curtir um tweet</string>
   <string name="preference_summary_media_preload_non_metered_network">Pré-carrega mídia apenas em redes gratuitas como Wi-Fi</string>
-  <string name="preference_summary_streaming_non_metered_network">Streaming apenas em redes gratuitas como Wi-Fi</string>
-  <string name="preference_summary_streaming_power_saving">Streaming apenas quando carregando</string>
   <string name="preference_summary_sync_timeline_positions">Quando \"lembrar posição\" estiver ativado</string>
   <string name="preference_summary_trends_location">Agora você pode configurar a localização separadamente na aba configurações.</string>
   <string name="preference_title_accounts">Contas</string>
   <string name="preference_title_advanced">Avançado</string>
   <string name="preference_title_auto_refresh_compatibility_mode">Modo de compatibilidade</string>
   <string name="preference_title_auto_refresh_power_saving">Modo de economia de bateria</string>
-  <string name="preference_title_background_streaming">Streaming em segundo plano</string>
   <string name="preference_title_chrome_custom_tab">Navegador interno</string>
   <string name="preference_title_database_item_limit">Tamanho limite do banco de dados</string>
   <string name="preference_title_favorite_confirmation">Confirmação de favorito</string>
@@ -775,10 +767,6 @@
   <string name="preference_title_override_language">Idioma do aplicativo</string>
   <string name="preference_title_portrait">Retrato</string>
   <string name="preference_title_storage">Armazenamento</string>
-  <string name="preference_title_streaming_content">Conteúdo do streaming</string>
-  <string name="preference_title_streaming_enabled">Habilitar atualização em tempo real</string>
-  <string name="preference_title_streaming_non_metered_network">Streaming em redes gratuitas</string>
-  <string name="preference_title_streaming_power_saving">Modo de economia de bateria</string>
   <string name="preference_title_tablet_mode">Modo de tablet</string>
   <string name="preference_title_text_size">Tamanho do texto</string>
   <string name="preference_title_timeline_positions">Posições da timeline</string>
@@ -904,7 +892,6 @@
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificações</string>
   <string name="settings_refresh">Atualizar</string>
-  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Formato de compartilhamento</string>
   <string name="share_format_summary">\"[TITLE]\" = Título\n\"[TEXT]\" = Conteúdo</string>
   <string name="share_link">Compartilhar link</string>
@@ -943,16 +930,9 @@
   <string name="status_shortener_default">Nada (cancelar envio)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_summary_notification_users">Os usuários ativaram \"Notificações\", não é 100% confiável.</string>
-  <string name="stream_type_home">Início</string>
-  <string name="stream_type_interactions">Interações</string>
-  <string name="stream_type_messages">Mensagens</string>
-  <string name="stream_type_notification_users">Usuários com notificações ativadas</string>
-  <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Inscrito na lista \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="summary_interactions_account_not_supported">Conta não suportada</string>
-  <string name="summary_interactions_streaming_required">Interações inteiras disponíveis apenas quando o streaming está ativado</string>
   <string name="swipe_down_to_refresh">Deslize para baixo para atualizar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -982,7 +962,6 @@
   <string name="theme_light">Claro</string>
   <string name="thumbor_integration">Integração de Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, via <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Atualização em tempo real ativada</string>
   <string name="timeline_sync_service">Serviço de sincronização da Timeline</string>
   <string name="title_about">Sobre</string>
   <string name="title_account_delete_confirm">Excluir conta</string>
@@ -1044,7 +1023,6 @@
   <string name="title_statuses">Tweets</string>
   <string name="title_statuses_and_replies">Tweets &amp; respostas</string>
   <string name="title_statuses_scheduling">Agendamento de tweets</string>
-  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nome</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

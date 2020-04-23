@@ -263,7 +263,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-stöd</string>
   <string name="empty_content">Tomt innehåll</string>
-  <string name="enable_streaming">Aktivera direktuppspelning</string>
   <string name="error_info_oauth_timestamp_error">Var god kontrollera dina systeminställningar för tid- och datum.</string>
   <string name="error_message">Fel: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Den här enheten är inte kompatibel med Twidere. Det är rekommenderat att du uppdaterar till senaste versionen av Android OS.\nDu kan skicka informationen nedanför för att hjälpa mig rapportera det här problemet till telefontillverkaren.</string>
@@ -420,7 +419,6 @@
   <string name="label_statuses_replies">Tweets och svar</string>
   <string name="label_statuses_retweets">Tweets och retweets</string>
   <string name="label_statuses_retweets_replies">Tweets, retweets och svar</string>
-  <string name="label_streaming_service">Strömningstjänst</string>
   <string name="label_translate_from_language">Översätt från <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Översättning</string>
   <string name="label_username">Användarnamn</string>
@@ -528,7 +526,6 @@
   <string name="message_toast_no_account_permission">Kontobehörighet krävs</string>
   <string name="message_toast_no_account_selected">Inget konto valt</string>
   <string name="message_toast_no_user_selected">Ingen användare vald</string>
-  <string name="message_toast_notification_enabled_hint">Endast tillgängligt när direktuppspelning är aktiverat. Observera dock att det inte är 100% pålitligt.</string>
   <string name="message_toast_press_again_to_close">Tryck igen för att stänga</string>
   <string name="message_toast_profile_banner_image_updated">Profilhuvudets bild har uppdaterats</string>
   <string name="message_toast_qr_scan_link_not_supported">Länk stöds inte</string>
@@ -658,18 +655,14 @@
   <string name="preference_randomize_account_rename_accounts_confirm">Döp om existerande konton?</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">Aktivera för snabbare uppdateringsintervall, ökar batteriförbrukningen i Android 5.0 och nyare versioner.</string>
   <string name="preference_summary_auto_refresh_power_saving">Stoppa automatisk uppdatering när batterinivån är låg</string>
-  <string name="preference_summary_background_streaming">Tryck på HEM istället för BAKÅT för att behålla direktuppspelningen igång</string>
   <string name="preference_summary_chrome_custom_tab">Öpnna länkar med den inbäddade webbläsare (Drivs av Chrome)</string>
   <string name="preference_summary_database_item_limit">Övre gräns för objekt  som lagras i databasen för varje konto. Ange ett mindre värde för att spara utrymme och läshastigheten.</string>
   <string name="preference_summary_media_preload_non_metered_network">Ladda endast media i förväg på obegränsade nätverk så som Wi-Fi-nätverk</string>
-  <string name="preference_summary_streaming_non_metered_network">Direktuppspelning endast på obegränsade nätverk så som Wi-Fi-nätverk</string>
-  <string name="preference_summary_streaming_power_saving">Direktuppspelning endast vid batteriladdning</string>
   <string name="preference_summary_trends_location">Nu kan du ange plats separat i flikinställningarna.</string>
   <string name="preference_title_accounts">Konton</string>
   <string name="preference_title_advanced">Avancerad</string>
   <string name="preference_title_auto_refresh_compatibility_mode">Kompatibilitetsläge</string>
   <string name="preference_title_auto_refresh_power_saving">Energisparläge</string>
-  <string name="preference_title_background_streaming">Bakgrundsströmmande</string>
   <string name="preference_title_chrome_custom_tab">Inbäddad webbläsare</string>
   <string name="preference_title_database_item_limit">Maxstorlek databas</string>
   <string name="preference_title_filter_manage_subscriptions">Hantera</string>
@@ -684,10 +677,6 @@
   <string name="preference_title_override_language">Appspråk</string>
   <string name="preference_title_portrait">Porträtt</string>
   <string name="preference_title_storage">Lagring</string>
-  <string name="preference_title_streaming_content">Strömmande innehåll</string>
-  <string name="preference_title_streaming_enabled">Aktivera direktströmning</string>
-  <string name="preference_title_streaming_non_metered_network">Direktströmning på obegränsade nätverk</string>
-  <string name="preference_title_streaming_power_saving">Energisparläge</string>
   <string name="preference_title_tablet_mode">Surfplatteläge</string>
   <string name="preference_title_text_size">Textstorlek</string>
   <string name="preference_title_translate">Översätt</string>
@@ -806,7 +795,6 @@
   <string name="settings_interface">Gränssnitt</string>
   <string name="settings_notifications">Notifieringar</string>
   <string name="settings_refresh">Uppdatera</string>
-  <string name="settings_streaming">Strömmande</string>
   <string name="share_format">Delningsformat</string>
   <string name="share_format_summary">\"[TITLE]\" = Innehållstitel\n\"[TEXT]\" = Innehållstext</string>
   <string name="share_link">Dela länk</string>
@@ -841,10 +829,6 @@
   <string name="status_shortener_default">Ingen (Avbryt sändning)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_type_home">Hem</string>
-  <string name="stream_type_interactions">Interaktioner</string>
-  <string name="stream_type_messages">Meddelanden</string>
-  <string name="streaming">Strömmande</string>
   <string name="style">Stil</string>
   <string name="swipe_down_to_refresh">Dra ner för att uppdatera</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
@@ -875,7 +859,6 @@
   <string name="theme_light">Ljus</string>
   <string name="thumbor_integration">Thumbor-integration</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Tidslinjestreaming körs</string>
   <string name="timeline_sync_service">Tidslinjesynkroniseringstjänst</string>
   <string name="title_about">Om</string>
   <string name="title_account_delete_confirm">Ta bort konto</string>
@@ -928,7 +911,6 @@
   <string name="title_statuses">Tweets</string>
   <string name="title_statuses_and_replies">Tweets &amp; svar</string>
   <string name="title_statuses_scheduling">Schemaläggning av tweets</string>
-  <string name="title_streaming">Strömmande</string>
   <string name="title_subscription_name">Namn</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

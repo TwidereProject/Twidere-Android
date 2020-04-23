@@ -272,7 +272,6 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">สนับสนุนอีโมจิ</string>
   <string name="empty_content">เนื้อหาว่างเปล่า</string>
-  <string name="enable_streaming">เปิดการใช้งานสตรีมมิ่ง</string>
   <string name="error_info_oauth_timestamp_error">กรุณาตรวจสอบวันของระบบของคุณ และตั้งค่าเวลา</string>
   <string name="error_message">ผิดพลาด: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">อุปกรณ์นี้ไม่เข้ากันได้กับ Twidere ขอแนะนำให้ทำการอัพเกรด Android ให้เป็น OS ล่าสุด\nคุณสามารถส่งข้อมูลด้านล่างเพื่อช่วยเราในการรายงานปัญหานี้แก่ผู้ผลิตอุปกรณ์</string>
@@ -444,7 +443,6 @@
   <string name="label_statuses_replies">ทวีตและการตอบกลับ</string>
   <string name="label_statuses_retweets">ทวีตและรีทวีต</string>
   <string name="label_statuses_retweets_replies">ทวีต รีทวีต และการตอบกลับ</string>
-  <string name="label_streaming_service">บริการการสตรีม</string>
   <string name="label_translate_from_language">แปลจากภาษา<xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">การแปลภาษา</string>
   <string name="label_username">ชื่อผู้ใช้</string>
@@ -558,7 +556,6 @@
   <string name="message_toast_no_account_permission">จำเป็นต้องมีสิทธิ์ของบัญชี</string>
   <string name="message_toast_no_account_selected">ไม่มีบัญชีผู้ใช้ที่เลือกไว้</string>
   <string name="message_toast_no_user_selected">ไม่มีผู้ใช้ที่เลือก</string>
-  <string name="message_toast_notification_enabled_hint">มีเฉพาะเมื่อตอนเปิดใช้สตรีมมิ่ง และเชื่อถือไม่ได้ 100%</string>
   <string name="message_toast_press_again_to_close">กดอีกครั้งเพื่อปิด</string>
   <string name="message_toast_profile_background_image_updated">อัพเดตภาพพื้นหลังโปรไฟล์แล้ว</string>
   <string name="message_toast_profile_banner_image_updated">อัพเดทภาพส่วนหัวเรียบร้อยแล้ว</string>
@@ -694,21 +691,17 @@
   <string name="preference_randomize_account_rename_accounts_confirm">เปลี่ยนชื่อบัญชีที่มีอยู่หรือไม่</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">เปิดใช้งานเพื่อช่วงเวลาการฟื้นฟูที่เร็วขึ้น เพิ่มการใช้พลังงานบน Android 5.0 ขึ้นไป</string>
   <string name="preference_summary_auto_refresh_power_saving">หยุดการดึงข้อมูลใหม่อัตโนมัติเมื่อแบตเตอรี่ต่ำ</string>
-  <string name="preference_summary_background_streaming">กดปุ่ม HOME แทนที่ปุ่ม BACK เพื่อเปิดการสตรีมทิ้งไว้</string>
   <string name="preference_summary_chrome_custom_tab">เปิดลิงค์กับเบราว์เซอร์ในตัว (ใช้งานโดย Chrome)</string>
   <string name="preference_summary_database_item_limit">จำนวนสูงสุดของรายการที่จะเก็บในฐานข้อมูลของแต่ละบัญชี  ตั้งเป็นค่าที่ต่ำเพื่อประหยัดเนื้อที่และเพิ่มความเร็วการโหลด</string>
   <string name="preference_summary_favorite_confirmation">แสดงการยืนยันก่อนถูกใจทวีต</string>
   <string name="preference_summary_like_confirmation">แสดงการยืนยันก่อนถูกใจทวีต</string>
   <string name="preference_summary_media_preload_non_metered_network">โหลดสื่อบนเครือข่ายไม่จำกัดปริมาณเท่านั้น เช่น Wi-Fi</string>
-  <string name="preference_summary_streaming_non_metered_network">สตรีมมิ่งบนเครือข่ายไม่จำกัดปริมาณเท่านั้น เช่น Wi-Fi</string>
-  <string name="preference_summary_streaming_power_saving">สตรีมมิ่งเมื่อชาร์จเท่านั้น</string>
   <string name="preference_summary_sync_timeline_positions">เมื่อ \"จดจำตำแหน่ง\" เปิดใช้งาน</string>
   <string name="preference_summary_trends_location">คุณสามารถตั้งค่าตำแหน่งแยกต่างหากในแท็บการตั้งค่าได้แล้ว</string>
   <string name="preference_title_accounts">บัญชีผู้ใช้</string>
   <string name="preference_title_advanced">ขั้นสูง</string>
   <string name="preference_title_auto_refresh_compatibility_mode">โหมดความเข้ากันได้</string>
   <string name="preference_title_auto_refresh_power_saving">โหมดประหยัดพลังงาน</string>
-  <string name="preference_title_background_streaming">สตรีมมิ่งเป็นพื้นหลัง</string>
   <string name="preference_title_chrome_custom_tab">เบราว์เซอร์ในตัวแอพ</string>
   <string name="preference_title_database_item_limit">จำกัดขนาดฐานข้อมูล</string>
   <string name="preference_title_favorite_confirmation">ยืนยันการถูกใจ</string>
@@ -725,10 +718,6 @@
   <string name="preference_title_override_language">ภาษาแอพ</string>
   <string name="preference_title_portrait">แนวตั้ง</string>
   <string name="preference_title_storage">พื้นที่จัดเก็บ</string>
-  <string name="preference_title_streaming_content">เนื้อหาสตรีม</string>
-  <string name="preference_title_streaming_enabled">เปิดการใช้งานสตรีมมิ่ง</string>
-  <string name="preference_title_streaming_non_metered_network">สตรีมมิ่งบนเครือข่ายไม่จำกัดปริมาณ</string>
-  <string name="preference_title_streaming_power_saving">โหมดประหยัดพลังงาน</string>
   <string name="preference_title_tablet_mode">โหมดแท็บเล็ต</string>
   <string name="preference_title_text_size">ขนาดข้อความ</string>
   <string name="preference_title_timeline_positions">ตำแหน่งไทม์ไลน์</string>
@@ -852,7 +841,6 @@
   <string name="settings_interface">อินเตอร์เฟส</string>
   <string name="settings_notifications">การแจ้งเตือน</string>
   <string name="settings_refresh">โหลดใหม่</string>
-  <string name="settings_streaming">สตรีมมิ่ง</string>
   <string name="share_format">รูปแบบการแบ่งปัน</string>
   <string name="share_format_summary">\"[TITLE]\" = หัวข้อเนื้อหา\n\"[TEXT]\" = เนื้อหา</string>
   <string name="share_link">แชร์ลิงค์</string>
@@ -891,12 +879,6 @@
   <string name="status_shortener_default">ไม่มี (ยกเลิกการส่ง)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">รีทวีต</string>
-  <string name="stream_summary_notification_users">ผู้ใช้เปิด \"การแจ้งเตือน\" เชื่อถือไม่ได้ 100%</string>
-  <string name="stream_type_home">หน้าหลัก</string>
-  <string name="stream_type_interactions">การโต้ตอบ</string>
-  <string name="stream_type_messages">ข้อความส่วนตัว</string>
-  <string name="stream_type_notification_users">ผู้ใช้เปิดใช้งานการแจ้งเตือน</string>
-  <string name="streaming">สตรีมมิ่ง</string>
   <string name="style">รูปแบบ</string>
   <string name="subscribed_to_list">ติดตามลิสต์ \"<xliff:g id="list">%s</xliff:g>\" แล้ว</string>
   <string name="summary_interactions_account_not_supported">บัญชีไม่สนับสนุน</string>
@@ -929,7 +911,6 @@
   <string name="theme_light">สว่าง</string>
   <string name="thumbor_integration">Thumbor integration</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">กำลังสตรีมมิ่งไทม์ไลน์</string>
   <string name="timeline_sync_service">บริการซิงค์ไทม์ไลน์</string>
   <string name="title_about">เกี่ยวกับ</string>
   <string name="title_account_delete_confirm">ลบบัญชี</string>
@@ -989,7 +970,6 @@
   <string name="title_statuses">ทวีต</string>
   <string name="title_statuses_and_replies">ทวีตและการตอบกลับ</string>
   <string name="title_statuses_scheduling">กำลังตั้งเวลาทวีต</string>
-  <string name="title_streaming">สตรีมมิ่ง</string>
   <string name="title_subscription_name">ชื่อ</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

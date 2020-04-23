@@ -180,7 +180,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Suport d\'emojis</string>
   <string name="empty_content">No hi ha contingut</string>
-  <string name="enable_streaming">Habilitar l\'streaming</string>
   <string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Aquest dispositiu no és compatible amb Twidere, recomanem actualitzar a l\'última versió d\'Android OS. \nPodeu enviar-me informació a continuació per ajudar-me a informar d\'aquest problema al fabricant del dispositiu.</string>
   <string name="error_message_media_upload_failed">Ha fallat la càrrega de continguts.</string>
@@ -284,7 +283,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Servei de piulades en temps real</string>
   <string name="label_translate_from_language">Tradueix des del <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Traducció</string>
   <string name="label_your_profile_image">La vostra imatge de perfil</string>
@@ -447,7 +445,6 @@
   <string name="preference_title_landscape">Horitzontal</string>
   <string name="preference_title_portrait">Vertical</string>
   <string name="preference_title_storage">Emmagatzematge</string>
-  <string name="preference_title_streaming_enabled">Habilitar l\'streaming</string>
   <string name="preference_title_text_size">Mida del text</string>
   <string name="preference_title_translate">Ajudeu a traduir el Twidere</string>
   <string name="preference_title_trends_location">Ubicació de les tendències</string>
@@ -565,7 +562,6 @@
   <string name="settings_interface">Interfície</string>
   <string name="settings_notifications">Notificacions</string>
   <string name="settings_refresh">Actualitza</string>
-  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Format per compartir</string>
   <string name="share_format_summary">\"[TITLE]\" = Títol dels continguts\n\"[TEXT]\" = Text dels continguts</string>
   <string name="share_status">Compartir tweet</string>
@@ -602,10 +598,6 @@
   <string name="status_shortener_default">Cap (Atura l\'enviament)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_type_home">Inici</string>
-  <string name="stream_type_interactions">Interaccions</string>
-  <string name="stream_type_messages">Missatges</string>
-  <string name="streaming">Streaming</string>
   <string name="style">Estil</string>
   <string name="subscribed_to_list">Us heu subscrit a la llista «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="swipe_down_to_refresh">Arrossega cap abaix per a actualitzar</string>
@@ -635,7 +627,6 @@
   <string name="theme_light">Clar</string>
   <string name="thumbor_integration">Integració amb Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">La cronologia es va actualitzant automàticament</string>
   <string name="timeline_sync_service">Servei de sincronització de la cronologia</string>
   <string name="title_about">Quant a</string>
   <string name="title_accounts">Comptes</string>
@@ -665,7 +656,6 @@
   <string name="title_set_nickname">Establiu sobrenom</string>
   <string name="title_status">Piulada</string>
   <string name="title_statuses">Piulades</string>
-  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nom</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
