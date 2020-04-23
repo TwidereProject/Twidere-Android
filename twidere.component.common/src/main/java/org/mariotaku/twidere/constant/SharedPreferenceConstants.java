@@ -156,8 +156,6 @@ public interface SharedPreferenceConstants {
     String KEY_MENTIONS_NOTIFICATION = "mentions_notification";
     @ExportablePreference(BOOLEAN)
     String KEY_DIRECT_MESSAGES_NOTIFICATION = "direct_messages_notification";
-    @ExportablePreference(BOOLEAN)
-    String KEY_ENABLE_STREAMING = "enable_streaming";
     @ExportablePreference(STRING)
     String KEY_NOTIFICATION_RINGTONE = "notification_ringtone";
     @ExportablePreference(INT)
@@ -276,12 +274,6 @@ public interface SharedPreferenceConstants {
     String KEY_FLOATING_DETAILED_CONTENTS = "floating_detailed_contents";
     @ExportablePreference(STRING)
     String KEY_MULTI_COLUMN_TAB_WIDTH = "multi_column_tab_width";
-    @ExportablePreference(BOOLEAN)
-    String KEY_STREAMING_ENABLED = "streaming_enabled";
-    @ExportablePreference(BOOLEAN)
-    String KEY_STREAMING_NON_METERED_NETWORK = "streaming_non_metered_network";
-    @ExportablePreference(BOOLEAN)
-    String KEY_STREAMING_POWER_SAVING = "streaming_power_saving";
     @ExportablePreference(STRING)
     String KEY_NAVBAR_STYLE = "navbar_style";
     @ExportablePreference(STRING)

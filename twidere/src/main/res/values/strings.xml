@@ -345,8 +345,6 @@
 
     <string name="empty_content">Empty content</string>
 
-    <string name="enable_streaming">Enable streaming</string>
-
     <string name="error_info_oauth_timestamp_error">Please check your system date &amp; time settings.</string>
     <string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
     <string name="error_message_device_incompatible">This device is not compatible with Twidere, upgrade to latest Android OS is recommended.\nYou can send information below to help me report this issue to device manufacturer.</string>
@@ -575,7 +573,6 @@
     <string name="label_statuses_replies">Tweets and replies</string>
     <string name="label_statuses_retweets">Tweets and retweets</string>
     <string name="label_statuses_retweets_replies">Tweets, retweets and replies</string>
-    <string name="label_streaming_service">Streaming service</string>
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translated_to_language">Translated to <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
@@ -711,7 +708,6 @@
     <string name="message_toast_no_account_permission">Account permission is required</string>
     <string name="message_toast_no_account_selected">No account selected</string>
     <string name="message_toast_no_user_selected">No user selected</string>
-    <string name="message_toast_notification_enabled_hint">Only available when streaming is on, and not 100% reliable.</string>
     <string name="message_toast_press_again_to_close">Press again to close</string>
     <string name="message_toast_profile_background_image_updated">Profile background image updated</string>
     <string name="message_toast_profile_banner_image_updated">Profile banner image updated</string>
@@ -803,7 +799,6 @@
     <string name="notification_channel_name_content_messages">Messages</string>
     <string name="notification_channel_name_content_subscriptions">Subscriptions</string>
     <string name="notification_channel_name_content_updates">Updates</string>
-    <string name="notification_channel_name_service_statuses">Service statuses</string>
     <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> sent you a direct message.</string>
     <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> sent you <xliff:g id="messages_count">%2$d</xliff:g> direct messages.</string>
     <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="users_count">%2$d</xliff:g> others sent you <xliff:g id="messages_count">%3$d</xliff:g> direct messages.</string>
@@ -886,21 +881,17 @@
     <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
     <string name="preference_summary_auto_refresh_compatibility_mode">Enable for faster refresh interval, increases power usage on Android 5.0+</string>
     <string name="preference_summary_auto_refresh_power_saving">Stop auto refresh when battery is low</string>
-    <string name="preference_summary_background_streaming">Press HOME instead of BACK to keep streaming open</string>
     <string name="preference_summary_chrome_custom_tab">Open links with in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
     <string name="preference_summary_favorite_confirmation">Show confirmation before favoriting a tweet</string>
     <string name="preference_summary_like_confirmation">Show confirmation before liking a tweet</string>
     <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
-    <string name="preference_summary_streaming_non_metered_network">Streaming only on free networks like Wi-Fi</string>
-    <string name="preference_summary_streaming_power_saving">Streaming only when charging</string>
     <string name="preference_summary_sync_timeline_positions">When \"Remember position\" enabled</string>
     <string name="preference_summary_trends_location">Now you can set location separately in tab settings.</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_title_auto_refresh_compatibility_mode">Compatibility mode</string>
     <string name="preference_title_auto_refresh_power_saving">Power saving mode</string>
-    <string name="preference_title_background_streaming">Background streaming</string>
     <string name="preference_title_chrome_custom_tab">In-app browser</string>
     <string name="preference_title_database_item_limit">Database size limit</string>
     <string name="preference_title_favorite_confirmation">Favorite confirmation</string>
@@ -919,10 +910,6 @@
     <string name="preference_title_override_language">App language</string>
     <string name="preference_title_portrait">Portrait</string>
     <string name="preference_title_storage">Storage</string>
-    <string name="preference_title_streaming_content">Streaming content</string>
-    <string name="preference_title_streaming_enabled">Enable streaming</string>
-    <string name="preference_title_streaming_non_metered_network">Streaming on free network</string>
-    <string name="preference_title_streaming_power_saving">Power saving mode</string>
     <string name="preference_title_tablet_mode">Tablet mode</string>
     <string name="preference_title_text_size">Text size</string>
     <string name="preference_title_timeline_positions">Timeline positions</string>
@@ -1092,7 +1079,6 @@
     <string name="settings_interface">Interface</string>
     <string name="settings_notifications">Notifications</string>
     <string name="settings_refresh">Refresh</string>
-    <string name="settings_streaming">Streaming</string>
 
     <string name="share_format">Share format</string>
     <string name="share_format_summary">\"[TITLE]\" = Content title\n\"[TEXT]\" = Content text</string>
@@ -1146,20 +1132,11 @@
     <!-- [noun] Accessibility label for retweet icon -->
     <string name="status_type_retweet">Retweet</string>
 
-    <string name="stream_summary_notification_users">Users turned "Notifications" on, not 100% reliable.</string>
-    <string name="stream_type_home">Home</string>
-    <string name="stream_type_interactions">Interactions</string>
-    <string name="stream_type_messages">Messages</string>
-    <string name="stream_type_notification_users">Notification enabled users</string>
-
-    <string name="streaming">Streaming</string>
-
     <string name="style">Style</string>
 
     <string name="subscribed_to_list">Subscribed to list \"<xliff:g id="list">%s</xliff:g>\".</string>
 
     <string name="summary_interactions_account_not_supported">Account not supported</string>
-    <string name="summary_interactions_streaming_required">Full interactions available only when streaming enabled</string>
 
     <string name="swipe_down_to_refresh">Swipe down to refresh</string>
 
@@ -1200,7 +1177,6 @@
 
     <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
 
-    <string name="timeline_streaming_running">Timeline streaming running</string>
     <string name="timeline_sync_service">Timeline sync service</string>
 
     <string name="title_about">About</string>
@@ -1263,7 +1239,6 @@
     <string name="title_statuses">Tweets</string>
     <string name="title_statuses_and_replies">Tweets &amp; replies</string>
     <string name="title_statuses_scheduling">Tweets scheduling</string>
-    <string name="title_streaming">Streaming</string>
     <string name="title_subscription_name">Name</string>
     <string name="title_subscription_url">URL</string>
     <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
