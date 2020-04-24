@@ -185,8 +185,6 @@ dependencies {
     implementation 'com.commonsware.cwac:layouts:0.4.3'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     implementation 'com.pnikosis:materialish-progress:1.7'
-    implementation "com.github.mariotaku:MessageBubbleView:${libVersions['MessageBubbleView']}"
-    implementation 'com.github.mariotaku:DragSortListView:0.6.1'
     implementation 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
     implementation "pl.droidsonroids.gif:android-gif-drawable:${libVersions['AndroidGIFDrawable']}"
     implementation 'com.sprylab.android.texturevideoview:texturevideoview:1.2.1'
@@ -216,7 +214,8 @@ dependencies {
 
 
 /** Custom dependencies **/
-    implementation 'com.github.mariotaku:MessageBubbleView:1.6'
+    implementation 'com.github.mariotaku:DragSortListView:0.6.1'
+    implementation "com.github.mariotaku:MessageBubbleView:${libVersions['MessageBubbleView']}"
     implementation 'com.github.mariotaku:DragSortListView:0.6.1'
     implementation "com.github.mariotaku.MediaViewerLibrary:base:${libVersions['MediaViewerLibrary']}"
     implementation "com.github.mariotaku.MediaViewerLibrary:subsample-image-view:${libVersions['MediaViewerLibrary']}"

@@ -60,6 +60,7 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.filter
@@ -171,19 +172,27 @@ class GetMessagesTask(
         }.filter { it.sender != null && it.recipient != null }
 
         val insertMessages = arrayListOf<ParcelableMessage>()
-        val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
-        val conversationIds = hashSetOf<String>()
-        result.forEach {
-            conversationIds.add(ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
-        }
+        val conversationIds = result.map {
+            if (it.senderId == details.key.id) {
+                ParcelableMessageUtils.outgoingConversationId(it.senderId, it.recipientId)
+            } else {
+                ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId)
+            }
+        }.distinct().toHashSet()
+
+        val conversations = hashMapOf<String, ParcelableMessageConversation>()
         conversations.addLocalConversations(context, accountKey, conversationIds)
+        // remove duplicate conversations upgrade from version 4.0.9
+        val distinct = distinctLocalConversations(context, accountKey, result.map { it.id }.toSet())
+                .distinct()
+                .filter { !it.startsWith(details.key.id) || it == details.key.id }
 
         result.forEachIndexed { i, dm ->
             addConversationMessage(insertMessages, conversations, details, dm, i, list.size,
-                    false, profileImageSize, updateLastRead)
+                    dm.senderId == details.key.id, profileImageSize, updateLastRead)
         }
-        return DatabaseUpdateData(conversations.values, insertMessages)
+        return DatabaseUpdateData(conversations.values, insertMessages, distinct)
     }
 
 
@@ -488,6 +497,26 @@ class GetMessagesTask(
                     put(Conversations.REQUEST_CURSOR, data.conversationRequestCursor)
                 }, accountWhere, accountWhereArgs)
             }
+        }
+
+
+        internal fun distinctLocalConversations(context: Context, accountKey: UserKey, messageIds: Set<String>): ArrayList<String> {
+            val where = Expression.and(Expression.inArgs(Messages.MESSAGE_ID, messageIds.size),
+                    Expression.equalsArgs(Conversations.ACCOUNT_KEY)).sql
+            val whereArgs = messageIds.toTypedArray() + accountKey.toString()
+            val result = arrayListOf<String>()
+            context.contentResolver.queryReference(Messages.CONTENT_URI, Messages.COLUMNS,
+                    where, whereArgs, null)?.use { (cur) ->
+                val indices = ObjectCursor.indicesFrom(cur, ParcelableMessage::class.java)
+                cur.moveToFirst()
+                while (!cur.isAfterLast) {
+                    val conversationId = cur.getString(indices[Messages.CONVERSATION_ID])
+                    result.add(conversationId)
+                    indices.newObject(cur)
+                    cur.moveToNext()
+                }
+            }
+            return result
         }
 
         internal fun MutableMap<String, ParcelableMessageConversation>.addLocalConversations(context: Context,

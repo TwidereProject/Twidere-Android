@@ -1032,6 +1032,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
                 return true
             }
+            R.id.copy_url -> {
+                val uri = LinkCreator.getUserWebLink(user)
+                ClipboardUtils.setText(context, uri.toString())
+                Toast.makeText(context, R.string.message_toast_link_copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                return true
+            }
             R.id.qr_code -> {
                 executeAfterFragmentResumed {
                     val df = UserQrDialogFragment()
