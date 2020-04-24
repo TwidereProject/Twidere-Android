@@ -152,6 +152,14 @@ class ConversationLoader(
         }
         if (loadReplies || noSinceMaxId || sinceId != null && sinceSortId > status.sort_id) {
             // Load replies
+            try {
+                if (details.type == AccountType.TWITTER) {
+                    // try to load thread
+                    statuses.addAll(loadTwitterWebReplies(details, twitter))
+                }
+            } catch (e: MicroBlogException) {
+                // Ignore
+            }
             val query = SearchQuery()
             query.count(100)
             if (details.type == AccountType.TWITTER) {
@@ -171,7 +179,7 @@ class ConversationLoader(
                 // Ignore for now
             }
         }
-        return statuses.mapTo(PaginatedArrayList()) {
+        return statuses.distinctBy { it.id }.mapTo(PaginatedArrayList()) {
             it.toParcelable(details, profileImageSize)
         }.apply {
             this.nextPage = nextPagination
