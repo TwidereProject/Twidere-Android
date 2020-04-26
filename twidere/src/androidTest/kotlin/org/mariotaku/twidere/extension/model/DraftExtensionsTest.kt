@@ -1,8 +1,9 @@
 package org.mariotaku.twidere.extension.model
 
+import android.media.RingtoneManager
 import android.net.Uri
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,12 +28,12 @@ class DraftExtensionsTest {
         draft.text = "Hello world 测试"
         draft.location = ParcelableLocation(-11.956, 99.625) // Randomly generated
         draft.media = arrayOf(
-                "file:///system/media/audio/ringtones/Atria.ogg",
-                "file:///system/media/audio/ringtones/Callisto.ogg",
-                "file:///system/media/audio/ringtones/Dione.ogg"
+                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE),
+                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION),
+                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM)
         ).map { uri ->
             ParcelableMediaUpdate().apply {
-                this.uri = uri
+                this.uri = uri.toString()
                 this.type = ParcelableMedia.Type.VIDEO
                 this.alt_text = String(CharArray(420).apply {
                     fill('A')
