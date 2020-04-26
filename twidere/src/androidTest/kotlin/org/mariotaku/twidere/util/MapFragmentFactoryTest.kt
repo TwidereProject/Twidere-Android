@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 class MapFragmentFactoryTest {
     @Test
     fun testGetInstance() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         MapFragmentFactory.instance.createMapFragment(context = context)
     }
 }

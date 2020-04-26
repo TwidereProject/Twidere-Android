@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 class TwidereDataStoreTest {
     @Test
     fun testBaseUris() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val resolver = context.contentResolver
         Assert.assertEquals(TwidereDataStore.BASE_CONTENT_URI, Uri.parse("content://twidere"))
         Assert.assertNull(resolver.query(TwidereDataStore.CONTENT_URI_NULL, null, null, null, null))

@@ -42,7 +42,7 @@ class ExtractorExtensionsTest {
 
     @Before
     fun setUp() {
-        val context = InstrumentationRegistry.getContext()
+        val context = InstrumentationRegistry.getInstrumentation().context
 
         // This is a tweet by @t_deyarmin, mentioning @nixcraft
         inReplyTo = context.resources.openRawResource(R.raw.parcelable_status_848051071444410368).use {
