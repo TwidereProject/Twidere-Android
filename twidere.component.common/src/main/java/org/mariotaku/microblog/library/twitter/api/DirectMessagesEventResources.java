@@ -22,9 +22,12 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessageEventObject;
 import org.mariotaku.microblog.library.twitter.model.PageableResponseList;
 import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseCode;
 import org.mariotaku.microblog.library.twitter.template.DirectMessageAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.DELETE;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.annotation.param.Raw;
@@ -46,4 +49,7 @@ public interface DirectMessagesEventResources {
 
     @GET("/direct_messages/events/show.json")
     DirectMessageEventObject showDirectMessageEvent(@Query("id") String id) throws MicroBlogException;
+
+    @DELETE("/direct_messages/events/destroy.json")
+    ResponseCode destroyDirectMessage(@Param("id") String id) throws MicroBlogException;
 }
