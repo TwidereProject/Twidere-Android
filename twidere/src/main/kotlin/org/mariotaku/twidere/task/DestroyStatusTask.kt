@@ -34,7 +34,7 @@ class DestroyStatusTask(
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, cls = Mastodon::class.java)
-                val result = mastodon.favouriteStatus(statusId)
+                val result = mastodon.fetchStatus(statusId)
                 mastodon.deleteStatus(statusId)
                 return result.toParcelable(account)
             }
