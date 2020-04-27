@@ -107,12 +107,15 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
                 if (!canEditValue) {
                     saveScopeOnly(scope)
                 } else {
-                    val value = dialog.value ?: return
+                    val value = dialog.value?.takeIf(String::isNotEmpty)
+                    if (value == null) {
+                        dialog.editText.error = getString(R.string.hint_error_field_required)
+                        return
+                    }
                     saveItem(value, scope)
                 }
             }
         }
-
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
