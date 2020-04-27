@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment.filter
 import android.accounts.AccountManager
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
@@ -50,7 +49,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
-class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
+class AddEditItemFragment : BaseDialogFragment() {
 
     private val contentUri: Uri
         get() = arguments?.getParcelable(EXTRA_URI)!!
@@ -99,20 +98,19 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
             advancedCollapseIndicator.rotation = if (value) 90f else 0f
         }
 
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        dialog as AlertDialog
-        when (which) {
-            DialogInterface.BUTTON_POSITIVE -> {
-                val scope = dialog.scopes ?: return
-                if (!canEditValue) {
-                    saveScopeOnly(scope)
-                } else {
-                    val value = dialog.value ?: return
-                    saveItem(value, scope)
-                }
+    private fun handlePositiveClick(button: View) {
+        val scope = dialog?.scopes ?: return
+        if (!canEditValue) {
+            saveScopeOnly(scope)
+        } else {
+            val value = dialog!!.value?.takeIf(String::isNotEmpty)
+            if (value == null) {
+                dialog!!.editText.error = getString(R.string.hint_error_field_required)
+                return
             }
+            saveItem(value, scope)
         }
-
+        dismiss()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -124,8 +122,8 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
         } else {
             builder.setTitle(R.string.action_add_filter_rule)
         }
-        builder.setPositiveButton(android.R.string.ok, this)
-        builder.setNegativeButton(android.R.string.cancel, this)
+        builder.setPositiveButton(android.R.string.ok, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
         dialog.applyOnShow {
             applyTheme()
@@ -143,6 +141,7 @@ class AddEditItemFragment : BaseDialogFragment(), DialogInterface.OnClickListene
             advancedToggle.setOnClickListener {
                 advancedExpanded = !advancedExpanded
             }
+            positiveButton.setOnClickListener(this@AddEditItemFragment::handlePositiveClick)
             advancedContainer.children.filter { it is CheckBox }.forEach {
                 val checkBox = it as CheckBox
                 checkBox.setOnClickListener onClick@ {
