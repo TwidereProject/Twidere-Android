@@ -3,6 +3,7 @@ package org.mariotaku.twidere.extension
 import android.app.Dialog
 import android.content.DialogInterface.*
 import android.content.res.ColorStateList
+import android.widget.Button
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import org.mariotaku.chameleon.Chameleon
@@ -55,3 +56,6 @@ fun <T : Dialog> T.onShow(action: (dialog: T) -> Unit) {
         action(dialog as T)
     }
 }
+
+inline val AlertDialog.positiveButton: Button get() = getButton(BUTTON_POSITIVE)
+inline val AlertDialog.negativeButton: Button get() = getButton(BUTTON_NEGATIVE)
