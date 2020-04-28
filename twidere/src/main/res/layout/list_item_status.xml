@@ -121,6 +121,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginEnd="@dimen/element_spacing_small"
+            android:layout_marginRight="@dimen/element_spacing_small"
             android:layout_toLeftOf="@+id/time"
             android:layout_toStartOf="@+id/time"
             android:ellipsize="end"
