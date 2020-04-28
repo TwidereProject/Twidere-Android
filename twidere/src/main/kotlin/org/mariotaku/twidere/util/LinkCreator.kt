@@ -101,14 +101,20 @@ object LinkCreator {
         return builder.build()
     }
 
-    fun getStatusWebLink(status: ParcelableStatus): Uri {
-        status.extras?.external_url?.takeIf(String::isNotEmpty)?.let {
-            return Uri.parse(it)
+    fun getStatusWebLink(status: ParcelableStatus): Uri? {
+        return when (status.account_key.host) {
+            USER_TYPE_TWITTER_COM -> getTwitterStatusLink(status.user_screen_name, status.originalId)
+            USER_TYPE_FANFOU_COM -> getFanfouStatusLink(status.id)
+            else -> status.extras?.external_url?.takeIf(String::isNotEmpty)?.let(Uri::parse)
         }
-        if (USER_TYPE_FANFOU_COM == status.account_key.host) {
-            return getFanfouStatusLink(status.id)
+    }
+
+    fun hasWebLink(status: ParcelableStatus): Boolean {
+        return when (status.account_key.host) {
+            USER_TYPE_TWITTER_COM -> true
+            USER_TYPE_FANFOU_COM -> true
+            else -> !status.extras?.external_url.isNullOrEmpty()
         }
-        return getTwitterStatusLink(status.user_screen_name, status.originalId)
     }
 
     fun getQuotedStatusWebLink(status: ParcelableStatus): Uri {
@@ -127,18 +133,24 @@ object LinkCreator {
         return getTwitterStatusLink(status.quoted_user_screen_name, status.quoted_id)
     }
 
-    fun getUserWebLink(user: ParcelableUser): Uri {
-        if (user.extras != null && user.extras?.statusnet_profile_url != null) {
-            return Uri.parse(user.extras?.statusnet_profile_url)
+    fun getUserWebLink(user: ParcelableUser): Uri? {
+        return when (user.user_type) {
+            AccountType.TWITTER -> getTwitterUserLink(user.screen_name)
+            AccountType.FANFOU -> getFanfouUserLink(user.key.id)
+            AccountType.STATUSNET -> user.extras?.statusnet_profile_url?.takeIf(String::isNotEmpty)?.let(Uri::parse)
+            AccountType.MASTODON -> getMastodonUserLink((user.key.host ?: user.account_key?.host)!!, user.screen_name)
+            else -> null
         }
-        when (user.user_type) {
-            AccountType.FANFOU -> return getFanfouUserLink(user.key.id)
-            AccountType.MASTODON -> {
-                val host = (user.key.host ?: user.account_key?.host)!! // Let it crash
-                return getMastodonUserLink(host, user.screen_name)
-            }
+    }
+
+    fun hasWebLink(user: ParcelableUser): Boolean {
+        return when (user.user_type) {
+            AccountType.TWITTER -> true
+            AccountType.FANFOU -> true
+            AccountType.STATUSNET -> !user.extras?.statusnet_profile_url.isNullOrEmpty()
+            AccountType.MASTODON -> true
+            else -> false
         }
-        return getTwitterUserLink(user.screen_name)
     }
 
     internal fun getTwitterStatusLink(screenName: String, statusId: String): Uri {
