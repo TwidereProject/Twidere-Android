@@ -301,7 +301,7 @@ class ApplicationModule(private val context: Context) {
         val builder = OkHttpClient.Builder()
         HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
         val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context)
-        return OkHttpDataSourceFactory(builder.build(), userAgent, null)
+        return OkHttpDataSourceFactory(builder.build(), userAgent)
     }
 
     @Provides
