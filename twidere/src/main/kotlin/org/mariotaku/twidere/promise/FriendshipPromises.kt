@@ -111,12 +111,6 @@ class FriendshipPromises private constructor(val application: Application) {
                     }
                     AccountType.MASTODON -> {
                         val mastodon = account.newMicroBlogInstance(application, Mastodon::class.java)
-                        if (account.key.host != userKey.host) {
-                            if (screenName == null)
-                                throw MicroBlogException("Screen name required to follow remote user")
-                            return@then mastodon.followRemoteUser("$screenName@${userKey.host}")
-                                    .toParcelable(account)
-                        }
                         mastodon.followUser(userKey.id)
                         return@then mastodon.getAccount(userKey.id).toParcelable(account)
                     }
