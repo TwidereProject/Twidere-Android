@@ -37,7 +37,7 @@ import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
@@ -317,7 +317,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         if (playerView.player != null) return
         playerView.player = run {
             val bandwidthMeter = DefaultBandwidthMeter()
-            val videoTrackSelectionFactory = AdaptiveVideoTrackSelection.Factory(bandwidthMeter)
+            val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
             val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
             val player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, DefaultLoadControl())
             if (positionBackup >= 0) {
