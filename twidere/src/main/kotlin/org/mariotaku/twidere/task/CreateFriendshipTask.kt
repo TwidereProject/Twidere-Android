@@ -32,12 +32,6 @@ class CreateFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                if (details.key.host != args.userKey.host) {
-                    if (args.screenName == null)
-                        throw MicroBlogException("Screen name required to follow remote user")
-                    return mastodon.followRemoteUser("${args.screenName}@${args.userKey.host}")
-                            .toParcelable(details)
-                }
                 mastodon.followUser(args.userKey.id)
                 return mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
