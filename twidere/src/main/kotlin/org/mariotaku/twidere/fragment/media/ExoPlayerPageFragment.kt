@@ -34,7 +34,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
@@ -328,10 +328,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     private fun initializePlayer() {
         if (playerView.player != null) return
         playerView.player = run {
-            val bandwidthMeter = DefaultBandwidthMeter()
-            val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
-            val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-            val player = ExoPlayerFactory.newSimpleInstance(context!!, trackSelector, DefaultLoadControl())
+            val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory()
+            val trackSelector = DefaultTrackSelector(context!!, videoTrackSelectionFactory)
+            val player = SimpleExoPlayer.Builder(context!!)
+              .setTrackSelector(trackSelector)
+              .build()
             if (positionBackup >= 0) {
                 player.seekTo(positionBackup)
             }
@@ -343,7 +344,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
         val uri = media?.getDownloadUri() ?: return
         val factory = AuthDelegatingDataSourceFactory(uri, account, dataSourceFactory)
-        val uriSource = ExtractorMediaSource(uri, factory, extractorsFactory, null, null)
+        val uriSource = ProgressiveMediaSource.Factory(factory, extractorsFactory).createMediaSource(uri)
         (playerView.player as? SimpleExoPlayer)?.apply {
           repeatMode = Player.REPEAT_MODE_ALL
           prepare(uriSource)
