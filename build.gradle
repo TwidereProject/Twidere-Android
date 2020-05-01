@@ -53,7 +53,7 @@ subprojects {
                     MapsUtils            : '0.6.2',
                     DropboxCoreSdk       : '3.1.3',
                     GoogleDriveApi       : 'v3-rev193-1.25.0',
-                    Exoplayer            : '2.10.8',
+                    Exoplayer            : '2.11.4',
                     Toro                 : '2.1.0',
                     LoganSquare          : '1.3.7',
                     IABv3                : '1.1.0',

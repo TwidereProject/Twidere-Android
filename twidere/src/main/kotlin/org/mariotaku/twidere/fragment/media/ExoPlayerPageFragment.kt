@@ -331,7 +331,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             val bandwidthMeter = DefaultBandwidthMeter()
             val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
             val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-            val player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, DefaultLoadControl())
+            val player = ExoPlayerFactory.newSimpleInstance(context!!, trackSelector, DefaultLoadControl())
             if (positionBackup >= 0) {
                 player.seekTo(positionBackup)
             }
