@@ -161,13 +161,25 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             }
         }
 
-        override fun onPositionDiscontinuity() {
+        override fun onPositionDiscontinuity(position: Int) {
         }
 
-        override fun onTimelineChanged(timeline: Timeline, manifest: Any?) {
+        override fun onTimelineChanged(timeline: Timeline, manifest: Any?, reason: Int) {
         }
 
         override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
+        }
+
+        override fun onSeekProcessed() {
+        }
+
+        override fun onRepeatModeChanged(repeatMode: Int) {
+        }
+
+        override fun onShuffleModeEnabledChanged(shuffleMode: Boolean) {
+        }
+
+        override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
         }
 
     }
@@ -332,21 +344,17 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         val uri = media?.getDownloadUri() ?: return
         val factory = AuthDelegatingDataSourceFactory(uri, account, dataSourceFactory)
         val uriSource = ExtractorMediaSource(uri, factory, extractorsFactory, null, null)
-        if (isLoopEnabled) {
-            playerView.player.prepare(LoopingMediaSource(uriSource))
-        } else {
-            playerView.player.prepare(uriSource)
+        (playerView.player as? SimpleExoPlayer)?.apply {
+          repeatMode = Player.REPEAT_MODE_ALL
+          prepare(uriSource)
         }
         updateVolume()
     }
 
     private fun updateVolume() {
         volumeButton.setImageResource(if (playAudio) R.drawable.ic_action_speaker_max else R.drawable.ic_action_speaker_muted)
-        val player = playerView.player ?: return
-        if (playAudio) {
-            player.volume = 1f
-        } else {
-            player.volume = 0f
+        (playerView.player as? SimpleExoPlayer)?.apply {
+          volume = if (playAudio) 1f else 0f
         }
     }
 
