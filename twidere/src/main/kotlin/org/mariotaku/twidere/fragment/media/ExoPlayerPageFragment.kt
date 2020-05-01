@@ -111,7 +111,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
     }
 
-    private val playerListener = object : ExoPlayer.EventListener {
+    private val playerListener = object : Player.EventListener {
         override fun onLoadingChanged(isLoading: Boolean) {
 
         }
