@@ -44,6 +44,7 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 * [@lordfriend](https://twitter.com/lordfriend)
 * [@ilovinheart](https://twitter.com/ilovinheart)
 * [@Rieya](https://twitter.com/Rieya)
+
 Thanks to their excellent design!
 ### Open source projects ###
 
