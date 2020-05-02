@@ -1,64 +1,113 @@
-package org.mariotaku.twidere.task
+# Twidere for Android #
 
-import android.content.Context
-import android.widget.Toast
-import org.mariotaku.microblog.library.MicroBlog
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.mastodon.Mastodon
-import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.R
-import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
-import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.event.FriendshipTaskEvent
-import org.mariotaku.twidere.util.Utils
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Twidere-brightgreen.svg?style=flat)](http://android-arsenal.com/details/3/2453)
+[![Travis status](https://img.shields.io/travis/TwidereProject/Twidere-Android.svg)](https://travis-ci.org/TwidereProject/Twidere-Android/)
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
 
-/**
- * Created by mariotaku on 16/3/11.
- */
-class CreateFriendshipTask(context: Context) : AbsFriendshipOperationTask(context, FriendshipTaskEvent.Action.FOLLOW), Constants {
+Material Design ready and feature rich Twitter app for Android 4.0+
 
-    @Throws(MicroBlogException::class)
-    override fun perform(details: AccountDetails, args: Arguments): ParcelableUser {
-        when (details.type) {
-            AccountType.FANFOU -> {
-                val fanfou = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return fanfou.createFanfouFriendship(args.userKey.id).toParcelable(details,
-                        profileImageSize = profileImageSize)
-            }
-            AccountType.MASTODON -> {
-                val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                mastodon.followUser(args.userKey.id)
-                return mastodon.getAccount(args.userKey.id).toParcelable(details)
-            }
-            else -> {
-                val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.createFriendship(args.userKey.id).toParcelable(details,
-                        profileImageSize = profileImageSize)
-            }
-        }
-    }
+Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
 
-    override fun succeededWorker(details: AccountDetails, args: Arguments, user: ParcelableUser) {
-        user.is_following = true
-        Utils.setLastSeen(context, user.key, System.currentTimeMillis())
-    }
+---
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
-        val nameFirst = kPreferences[nameFirstKey]
-        val message: String
-        if (user.is_protected) {
-            message = context.getString(R.string.sent_follow_request_to_user,
-                    manager.getDisplayName(user, nameFirst))
-        } else {
-            message = context.getString(R.string.followed_user,
-                    manager.getDisplayName(user, nameFirst))
-        }
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
+## Features ##
 
-}
+* Customizable Material Design
+* Night mode
+* Customizable tabs
+* Tweet with photos and videos
+* Powerful mute filters
+* Multiple account support
+* Custom API settings
+* Free, open source, NO ads, forever!
+
+## Enhanced Features (Available on Google Play) ##
+
+* Data sync with your cloud drive (Dropbox, Google Drive)
+* Filters subscription
+* Filters import
+* Schedule tweets even when you're offline by [Buffer](https://buffer.com/)
+* Search & share GIFs by [GIPHY](https://giphy.com/)
+
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
+[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
+
+---
+
+## Credits ##
+
+### Initiator ###
+
+* [@mariotaku](https://twitter.com/mariotaku)
+
+### Material re-design ###
+
+* [@Uucky_Lee](https://twitter.com/Uucky_Lee)
+
+### Icon designers ###
+
+* [@NovaDNG](https://twitter.com/NovaDNG)
+* [@Linkzero](https://twitter.com/Linkzero)
+* [@lordfriend](https://twitter.com/lordfriend)
+* [@ilovinheart](https://twitter.com/ilovinheart)
+* [@Rieya](https://twitter.com/Rieya)
+
+Thanks to their excellent design!
+
+### Open source projects ###
+
+See dependencies in `build.gradle`
+
+---
+
+## Support my work ##
+
+### Translation ###
+
+I started a crowdin project, so anyone can do something for Twidere. Visit this [crowdin project page](http://crowdin.net/project/twidere)
+
+### Donation ###
+
+**Donation methods**
+
+Enhanced features on Google Play
+
+PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
+
+Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
+
+**Sponsors**
+
+<a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png' width='160'/></a>
+
+If you donate on behalf of an organization or company, feel free to contact us. I'll add your logo to this list. 
+
+---
+
+## License ##
+
+
+    /*
+     * Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+     *
+     * This program is free software: you can redistribute it and/or modify
+     * it under the terms of the GNU General Public License as published by
+     * the Free Software Foundation, either version 3 of the License, or
+     * (at your option) any later version.
+     *
+     * This program is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     * GNU General Public License for more details.
+     *
+     * You should have received a copy of the GNU General Public License
+     * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+     */
+
+---
+
+## Notes ##
+
+### Closed Source Licensing ###
+
+If you wish to use Twidere's code base but don't want to release your modified source code, please contact `mariotaku.lee@gmail.com`.
