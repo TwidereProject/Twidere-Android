@@ -8,6 +8,9 @@ Material Design ready and feature rich Twitter app for Android 4.4+
 
 Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
 
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
+[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
+
 ---
 
 ## Features ##
@@ -28,8 +31,7 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 * Filters import
 * Schedule tweets even when you're offline by [Buffer](https://buffer.com/)
 * Search & share GIFs by [GIPHY](https://giphy.com/)
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
-[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
+
 ---
 ## Credits ##
 ### Initiator ###
@@ -88,5 +90,5 @@ If you donate on behalf of an organization or company, feel free to contact us. 
      * You should have received a copy of the GNU General Public License
      * along with this program.  If not, see <http://www.gnu.org/licenses/>.
      */
----
+
 
