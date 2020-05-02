@@ -44,14 +44,20 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 * [@Rieya](https://twitter.com/Rieya)
 Thanks to their excellent design!
 ### Open source projects ###
+
 See dependencies in `build.gradle`
+
 ---
+
 ## Support my work ##
+
 ### Translation ###
 I started a crowdin project, so anyone can do something for Twidere. Visit this [crowdin project page](http://crowdin.net/project/twidere)
+
 ### Donation ###
 
 **Donation methods**
+
 Enhanced features on Google Play
 
 PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
@@ -59,6 +65,7 @@ PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
 Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
 
 **Sponsors**
+
 <a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png' width='160'/></a>
 
 If you donate on behalf of an organization or company, feel free to contact us. I'll add your logo to this list. 
@@ -82,6 +89,4 @@ If you donate on behalf of an organization or company, feel free to contact us. 
      * along with this program.  If not, see <http://www.gnu.org/licenses/>.
      */
 ---
-## Notes ##
-### Closed Source Licensing ###
-If you wish to use Twidere's code base but don't want to release your modified source code, please contact `mariotaku.lee@gmail.com`.
+
