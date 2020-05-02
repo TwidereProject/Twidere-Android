@@ -50,14 +50,19 @@ See dependencies in `build.gradle`
 ### Translation ###
 I started a crowdin project, so anyone can do something for Twidere. Visit this [crowdin project page](http://crowdin.net/project/twidere)
 ### Donation ###
+
 **Donation methods**
 Enhanced features on Google Play
+
 PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
+
 Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
+
 **Sponsors**
 <a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png' width='160'/></a>
 
 If you donate on behalf of an organization or company, feel free to contact us. I'll add your logo to this list. 
+
 ---
 ## License ##
     /*
