@@ -274,11 +274,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     }
 
     override fun onApplySystemWindowInsets(insets: Rect) {
-        val lp = videoControl.layoutParams
-        if (lp is ViewGroup.MarginLayoutParams) {
-            lp.bottomMargin = insets.bottom
-            lp.leftMargin = insets.left
-            lp.rightMargin = insets.right
+        // HACK: Apply maximum reported system inset to avoid drawing under systum UI
+        (videoControl.layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+          bottomMargin = maxOf(insets.bottom, bottomMargin)
+          leftMargin = maxOf(insets.left, leftMargin)
+          rightMargin = maxOf(insets.right, rightMargin)
         }
     }
 
