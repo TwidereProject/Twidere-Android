@@ -61,7 +61,6 @@ after_failure:
 
 deploy:
   - provider: releases
-    prerelease: true
     api_key:
       secure: "S1GSwQPN1ffS1wMmkNwKY7HlZbVysfn3LJa318gKbIB2RdnNoLT6xuZSWhe5mAI41yG45wkUpfK9fah6ueZFEd74+xy4q2aqaJDhhi/xqys/8VkODaNsHMkE2aWqnWqAcRBNRA1j8eFFZDjgge1t2x924U7jDEQaOOHHHQ58lxA="
     file_glob: true
