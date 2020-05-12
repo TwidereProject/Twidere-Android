@@ -35,6 +35,10 @@
         <item>Transparent</item>
         <item>Colored</item>
     </string-array>
+    <string-array name="entries_tab_position">
+        <item>Top</item>
+        <item>Bottom</item>
+    </string-array>
     <string-array name="entries_notification_content">
         <item>Home</item>
         <item>Interactions</item>

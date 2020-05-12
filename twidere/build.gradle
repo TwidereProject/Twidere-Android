@@ -148,6 +148,12 @@ android {
 
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 dependencies {
     implementation project(':twidere.component.common')
     implementation project(':twidere.component.nyan')
@@ -174,6 +180,7 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
+    implementation "androidx.core:core-ktx:1.2.0"
 
 
 /** Third-party dependencies **/

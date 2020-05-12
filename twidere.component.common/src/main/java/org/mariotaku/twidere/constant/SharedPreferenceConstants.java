@@ -71,6 +71,9 @@ public interface SharedPreferenceConstants {
     String VALUE_COMPOSE_NOW_ACTION_TAKE_PHOTO = "take_photo";
     String VALUE_COMPOSE_NOW_ACTION_PICK_IMAGE = "pick_image";
 
+    String VALUE_TAB_POSITION_TOP = "top";
+    String VALUE_TAB_POSITION_BOTTOM = "bottom";
+
     String DEFAULT_THEME = VALUE_THEME_NAME_LIGHT;
     String DEFAULT_THEME_BACKGROUND = VALUE_THEME_BACKGROUND_DEFAULT;
     int DEFAULT_THEME_BACKGROUND_ALPHA = 160;
@@ -97,6 +100,8 @@ public interface SharedPreferenceConstants {
 
     int DEFAULT_DATABASE_ITEM_LIMIT = 100;
     int DEFAULT_LOAD_ITEM_LIMIT = 20;
+
+    String DEFAULT_TAB_POSITION = VALUE_TAB_POSITION_TOP;
 
     // Exportable preferences
 
@@ -286,6 +291,8 @@ public interface SharedPreferenceConstants {
     String KEY_NAVBAR_STYLE = "navbar_style";
     @ExportablePreference(STRING)
     String KEY_OVERRIDE_LANGUAGE = "override_language";
+    @ExportablePreference(STRING)
+    String KEY_TAB_POSITION = "tab_position";
 
     // Internal preferences
 

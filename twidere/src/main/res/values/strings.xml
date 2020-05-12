@@ -914,6 +914,7 @@
     <string name="preference_title_multi_column_tab_width">Multi column tab width</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
     <string name="preference_title_navbar_style">Navbar style</string>
+    <string name="preference_title_tab_position">Tab position</string>
     <string name="preference_title_notification_channels">Channels</string>
     <string name="preference_title_notification_ringtone">Ringtone</string>
     <string name="preference_title_override_language">App language</string>

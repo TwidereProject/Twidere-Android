@@ -2,9 +2,9 @@ package org.mariotaku.twidere.constant
 
 import android.content.SharedPreferences
 import android.os.Build
-import androidx.core.os.LocaleHelperAccessor
-import androidx.collection.ArraySet
 import android.text.TextUtils
+import androidx.collection.ArraySet
+import androidx.core.os.LocaleHelperAccessor
 import org.mariotaku.kpreferences.*
 import org.mariotaku.ktextension.bcp47Tag
 import org.mariotaku.ktextension.toLongOr
@@ -88,6 +88,7 @@ val navbarStyleKey = KStringKey(KEY_NAVBAR_STYLE, NavbarStyle.DEFAULT)
 val lastLaunchTimeKey = KLongKey("last_launch_time", -1)
 val promotionsEnabledKey = KBooleanKey("promotions_enabled", false)
 val translationDestinationKey = KNullableStringKey(KEY_TRANSLATION_DESTINATION, null)
+val tabPositionKey = KStringKey(KEY_TAB_POSITION, SharedPreferenceConstants.DEFAULT_TAB_POSITION)
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,
