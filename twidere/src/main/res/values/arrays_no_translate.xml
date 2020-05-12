@@ -94,6 +94,10 @@
         <item>transparent</item>
         <item>colored</item>
     </string-array>
+    <string-array name="values_tab_position">
+        <item>top</item>
+        <item>bottom</item>
+    </string-array>
     <string-array name="values_notification_content">
         <item>home</item>
         <item>mentions</item>

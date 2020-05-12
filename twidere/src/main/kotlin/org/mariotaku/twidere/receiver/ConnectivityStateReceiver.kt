@@ -24,7 +24,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import androidx.core.net.ConnectivityManagerCompat
-import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 
 class ConnectivityStateReceiver : BroadcastReceiver() {
@@ -36,7 +35,6 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
         val isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
         val holder = DependencyHolder.get(context)
         holder.mediaPreloader.isNetworkMetered = isNetworkMetered
-        StreamingService.startOrStopService(appContext)
     }
 
 }

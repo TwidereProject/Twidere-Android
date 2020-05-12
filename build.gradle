@@ -17,8 +17,8 @@ buildscript {
 allprojects {
     ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 510
-        projectVersionName = '4.1.1'
+        projectVersionCode = 511
+        projectVersionName = '4.1.2'
 
         globalCompileSdkVersion = 29
         globalBuildToolsVersion = "29.0.3"
@@ -53,7 +53,7 @@ subprojects {
                     MapsUtils            : '0.6.2',
                     DropboxCoreSdk       : '3.1.3',
                     GoogleDriveApi       : 'v3-rev193-1.25.0',
-                    Exoplayer            : 'r2.2.0',
+                    Exoplayer            : '2.11.4',
                     Toro                 : '2.1.0',
                     LoganSquare          : '1.3.7',
                     IABv3                : '1.1.0',

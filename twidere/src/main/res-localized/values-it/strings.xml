@@ -176,7 +176,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Supporto per Emojis</string>
   <string name="empty_content">Contenuto vuoto</string>
-  <string name="enable_streaming">Attiva streaming</string>
   <string name="error_message">Errore: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Questo dispositivo non è compatibile con Twidere, è consigliato l\'aggiornamento all\'ultima versione di Android OS.\nPuoi mandare le informazioni presenti qui sotto per aiutarmi a segnalare il problema al produttore del dispositivo.</string>
   <string name="error_message_media_upload_failed">Caricamento file fallito.</string>
@@ -279,7 +278,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Servizio di streaming</string>
   <string name="label_translate_from_language">Traduci da <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Traduzione</string>
   <string name="label_your_profile_image">La tua immagine profilo</string>
@@ -439,7 +437,6 @@
   <string name="preference_title_landscape">Landscape</string>
   <string name="preference_title_portrait">Portrait</string>
   <string name="preference_title_storage">Archivio</string>
-  <string name="preference_title_streaming_enabled">Attiva streaming</string>
   <string name="preference_title_text_size">Dimensione del testo</string>
   <string name="preference_title_translate">Traduci</string>
   <string name="preference_title_trends_location">Località per i Trends</string>
@@ -551,7 +548,6 @@
   <string name="settings_interface">Interfaccia</string>
   <string name="settings_notifications">Notifiche</string>
   <string name="settings_refresh">Aggiorna</string>
-  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Condividi formato</string>
   <string name="share_format_summary">\"[TITLE]\" = Titolo del contenuto \n\"[TEXT]\" = Testo del contenuto</string>
   <string name="share_link">Condividi link</string>
@@ -583,10 +579,6 @@
   <string name="status_shortener_default">Nessuno (annulla invio)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_type_home">Home</string>
-  <string name="stream_type_interactions">Interazioni</string>
-  <string name="stream_type_messages">Messaggi</string>
-  <string name="streaming">Streaming</string>
   <string name="style">Stile</string>
   <string name="subscribed_to_list">Iscritto alla lista \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="swipe_down_to_refresh">Tira in giù per aggiornare</string>
@@ -616,7 +608,6 @@
   <string name="theme_light">Chiaro</string>
   <string name="thumbor_integration">Integrazione Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Timeline di streaming in esecuzione</string>
   <string name="timeline_sync_service">Servizio sincronizzazione timeline</string>
   <string name="title_about">Informazioni</string>
   <string name="title_accounts">Profili</string>
@@ -647,7 +638,6 @@
   <string name="title_set_nickname">Imposta nickname</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweet</string>
-  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nome</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

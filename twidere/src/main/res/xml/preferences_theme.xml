@@ -68,4 +68,19 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.EmojiSupportPreference>
 
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+        android:entries="@array/entries_tab_position"
+        android:entryValues="@array/values_tab_position"
+        android:key="tab_position"
+        android:order="26"
+        android:title="@string/preference_title_tab_position">
+        <extra
+            android:name="should_recreate"
+            android:value="true"/>
+        <extra
+            android:name="recreate_activity"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+
+
 </PreferenceScreen>

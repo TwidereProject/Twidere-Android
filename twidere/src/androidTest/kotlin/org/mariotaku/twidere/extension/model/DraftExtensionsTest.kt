@@ -1,8 +1,9 @@
 package org.mariotaku.twidere.extension.model
 
+import android.media.RingtoneManager
 import android.net.Uri
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit
 class DraftExtensionsTest {
     @Test
     fun testMimeMessageProcessing() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val draft = Draft()
         draft.action_type = Draft.Action.UPDATE_STATUS
         draft.timestamp = System.currentTimeMillis()
@@ -27,12 +28,12 @@ class DraftExtensionsTest {
         draft.text = "Hello world 测试"
         draft.location = ParcelableLocation(-11.956, 99.625) // Randomly generated
         draft.media = arrayOf(
-                "file:///system/media/audio/ringtones/Atria.ogg",
-                "file:///system/media/audio/ringtones/Callisto.ogg",
-                "file:///system/media/audio/ringtones/Dione.ogg"
+                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE),
+                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION),
+                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_ALARM)
         ).map { uri ->
             ParcelableMediaUpdate().apply {
-                this.uri = uri
+                this.uri = uri.toString()
                 this.type = ParcelableMedia.Type.VIDEO
                 this.alt_text = String(CharArray(420).apply {
                     fill('A')
@@ -58,7 +59,7 @@ class DraftExtensionsTest {
             Assert.assertEquals(expected.type, actual.type)
             val stl = context.contentResolver.openInputStream(Uri.parse(expected.uri))
             val str = context.contentResolver.openInputStream(Uri.parse(actual.uri))
-            Assert.assertTrue(stl.contentEquals(str))
+            Assert.assertTrue(stl!!.contentEquals(str!!))
             stl.close()
             str.close()
         }

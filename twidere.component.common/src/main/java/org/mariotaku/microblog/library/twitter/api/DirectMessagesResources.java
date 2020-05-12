@@ -28,15 +28,10 @@ import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Query;
-import org.mariotaku.restfu.http.BodyType;
 
 @SuppressWarnings("RedundantThrows")
 @Params(template = DirectMessageAnnotationTemplate.class)
 public interface DirectMessagesResources {
-
-    @POST("/direct_messages/destroy.json")
-    @BodyType(BodyType.FORM)
-    DirectMessage destroyDirectMessage(@Param("id") String id) throws MicroBlogException;
 
     @GET("/direct_messages.json")
     ResponseList<DirectMessage> getDirectMessages(@Query Paging paging) throws MicroBlogException;

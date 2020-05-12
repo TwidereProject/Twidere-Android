@@ -12,13 +12,13 @@ import org.junit.runner.RunWith
 class DataStoreUtilsTest {
     @Test
     fun testCleanDatabasesByItemLimit() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         DataStoreUtils.cleanDatabasesByItemLimit(context)
     }
 
     @Test
     fun testGetAccountKeys() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         DataStoreUtils.getAccountKeys(context)
     }
 }

@@ -95,21 +95,6 @@ class AccountPreferences(
     val isAutoRefreshTrendsEnabled: Boolean
         get() = accountPreferences.getBoolean(KEY_AUTO_REFRESH_TRENDS, DEFAULT_AUTO_REFRESH_TRENDS)
 
-    val isStreamingEnabled: Boolean
-        get() = accountPreferences.getBoolean(KEY_ENABLE_STREAMING, false)
-
-    val isStreamHomeTimelineEnabled: Boolean
-        get() = accountPreferences.getBoolean("stream_home_timeline", true)
-
-    val isStreamInteractionsEnabled: Boolean
-        get() = accountPreferences.getBoolean("stream_interactions", true)
-
-    val isStreamDirectMessagesEnabled: Boolean
-        get() = accountPreferences.getBoolean("stream_direct_messages", true)
-
-    val isStreamNotificationUsersEnabled: Boolean
-        get() = accountPreferences.getBoolean("stream_notification_users", true)
-
     val isDirectMessagesNotificationEnabled: Boolean
         get() = accountPreferences.getBoolean(KEY_DIRECT_MESSAGES_NOTIFICATION,
                 DEFAULT_DIRECT_MESSAGES_NOTIFICATION)

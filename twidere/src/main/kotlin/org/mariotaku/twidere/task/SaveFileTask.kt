@@ -148,6 +148,7 @@ abstract class SaveFileTask(
                 sb.append(name
                         .removeSuffix(extension)
                         .removeSuffix(".")
+                        .removeSuffix(specialCharacter.toString())
                         .takeLastWhile { it != specialCharacter })
             } else {
                 sb.append(name)

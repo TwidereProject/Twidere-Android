@@ -156,7 +156,6 @@
   <string name="edit_tabs">Uredi tabove</string>
   <string name="ellipsis">&#8230;</string>
   <string name="empty_content">Prazan sadržaj</string>
-  <string name="enable_streaming">Omogući streaming</string>
   <string name="error_message">Greška: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_message_too_long">Poruka preduga.</string>
   <string name="error_message_no_content">Nema sadržaja</string>
@@ -242,7 +241,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Streaming servis</string>
   <string name="label_your_profile_image">Vaša slika profila</string>
   <string name="large">Veliko</string>
   <string name="leftside_compose_button">Gumb za sastavljanje na lijevoj strani</string>
@@ -379,7 +377,6 @@
   <string name="preference_title_advanced">Napredno</string>
   <string name="preference_title_database_item_limit">Limit veličine baze podataka</string>
   <string name="preference_title_storage">Pohrana</string>
-  <string name="preference_title_streaming_enabled">Omogući streaming</string>
   <string name="preference_title_text_size">Veličina teksta</string>
   <string name="preference_title_translate">Prevedi</string>
   <string name="preference_title_trends_location">Lokacija trendova</string>
@@ -480,7 +477,6 @@
   <string name="settings_interface">Sučelje</string>
   <string name="settings_notifications">Obavijesti</string>
   <string name="settings_refresh">Osvježi</string>
-  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Format dijeljenja</string>
   <string name="share_format_summary">\"[TITLE]\" = Naslov sadržaja\n\"[TEXT]\" = Tekst sadržaja</string>
   <string name="share_status">Podijeli tweet</string>
@@ -510,9 +506,6 @@
   <string name="status_shortener_default">Ništa (Prekini slanje)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_type_home">Polazno</string>
-  <string name="stream_type_messages">Poruke</string>
-  <string name="streaming">Streaming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Pretplaćeni ste na listu \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="swipe_down_to_refresh">Prijeđite prstom prema dolje za osvježavanje</string>
@@ -539,7 +532,6 @@
   <string name="theme_light">Svjetlo</string>
   <string name="thumbor_integration">Thumbor integracija</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Timeline streaming pokrenut</string>
   <string name="timeline_sync_service">Servis sinkronizacije timelinea</string>
   <string name="title_about">Više o</string>
   <string name="title_accounts">Računi</string>
@@ -567,7 +559,6 @@
   <string name="title_set_nickname">Postavi nadimak</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweetovi</string>
-  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Ime</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_user">Korisnik</string>

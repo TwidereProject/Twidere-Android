@@ -115,10 +115,12 @@ public class NyanWallpaperService extends WallpaperService implements NyanConsta
 
         private void updateHelperState() {
             final PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (pm.isScreenOn()) {
-                mHelper.start();
-            } else {
-                mHelper.stop();
+            if (pm != null) {
+                if (pm.isScreenOn()) {
+                    mHelper.start();
+                } else {
+                    mHelper.stop();
+                }
             }
         }
 

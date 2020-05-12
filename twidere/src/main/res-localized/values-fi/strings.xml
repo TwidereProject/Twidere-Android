@@ -179,7 +179,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji-tuki</string>
   <string name="empty_content">Tyhjennä sisältö</string>
-  <string name="enable_streaming">Ota striimaus käyttöön</string>
   <string name="error_message">Virhe: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_media_upload_failed">Median lähettäminen epäonnistui.</string>
   <string name="error_message_media_uploader_not_found">Mediansiirtäjää ei ole. Ehkä se on poistettu.</string>
@@ -279,7 +278,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Streamaus palvelu</string>
   <string name="label_translation">Käännös</string>
   <string name="label_your_profile_image">Profiilikuvasi</string>
   <string name="large">Suuri</string>
@@ -438,7 +436,6 @@
   <string name="preference_title_landscape">Vaakakuva</string>
   <string name="preference_title_portrait">Pystykuva</string>
   <string name="preference_title_storage">Säilytys</string>
-  <string name="preference_title_streaming_enabled">Ota striimaus käyttöön</string>
   <string name="preference_title_text_size">Tekstin koko</string>
   <string name="preference_title_translate">Käännä</string>
   <string name="preference_title_trends_location">Trendien sijainti</string>
@@ -552,7 +549,6 @@
   <string name="settings_interface">Käyttöliittymä</string>
   <string name="settings_notifications">Ilmoitukset</string>
   <string name="settings_refresh">Päivitys</string>
-  <string name="settings_streaming">Striimaus</string>
   <string name="share_format">Jakamismuoto</string>
   <string name="share_format_summary">\"[TITLE]\" = Sisällön otsikko\n\"[TEXT]\" = Sisällön teksti</string>
   <string name="share_status">Jaa twiitti</string>
@@ -586,10 +582,6 @@
   <string name="status_shortener_default">Älä lyhennä (keskeytä lähetys)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Uudelleentwiittaa</string>
-  <string name="stream_type_home">Koti</string>
-  <string name="stream_type_interactions">Vuorovaikutukset</string>
-  <string name="stream_type_messages">Viestit</string>
-  <string name="streaming">Striimaus</string>
   <string name="style">Tyyli</string>
   <string name="subscribed_to_list">Tilattiin lista \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="swipe_down_to_refresh">Pyyhkäise alas ja päivitä</string>
@@ -619,7 +611,6 @@
   <string name="theme_light">Vaalea</string>
   <string name="thumbor_integration">Thumbor-integrointi</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, via <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Aikajanan striimaus käynnissä</string>
   <string name="timeline_sync_service">Aikajanan synkronointipalvelu</string>
   <string name="title_about">Tietoja</string>
   <string name="title_accounts">Tilit</string>
@@ -649,7 +640,6 @@
   <string name="title_set_nickname">Aseta kutsumanimi</string>
   <string name="title_status">Twiitti</string>
   <string name="title_statuses">Twiitit</string>
-  <string name="title_streaming">Striimaus</string>
   <string name="title_subscription_name">Nimi</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

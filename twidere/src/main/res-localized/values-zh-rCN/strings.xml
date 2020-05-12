@@ -288,7 +288,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji支持</string>
   <string name="empty_content">空内容</string>
-  <string name="enable_streaming">启用实时流</string>
   <string name="error_info_oauth_timestamp_error">请检查您的系统日期和时间设置</string>
   <string name="error_message">发生问题：<xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">这个设备与 Twidere 不兼容，建议升级到最新的系统版本。\n您可以把下面的信息发送给我，帮助我把这个问题报告给设备制造商。</string>
@@ -475,7 +474,6 @@
   <string name="label_statuses_replies">推文和回复</string>
   <string name="label_statuses_retweets">推文和转推</string>
   <string name="label_statuses_retweets_replies">推文、转推和回复</string>
-  <string name="label_streaming_service">实时流服务</string>
   <string name="label_translate_from_language">从 <xliff:g id="language">%s</xliff:g> 翻译</string>
   <string name="label_translated_to_language">翻译到 <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">翻译</string>
@@ -594,7 +592,6 @@
   <string name="message_toast_no_account_permission">需要帐号权限</string>
   <string name="message_toast_no_account_selected">没有选择帐号</string>
   <string name="message_toast_no_user_selected">没有选择用户</string>
-  <string name="message_toast_notification_enabled_hint">仅在实时流开启时可用，且不是 100% 可靠</string>
   <string name="message_toast_press_again_to_close">再次按下以关闭</string>
   <string name="message_toast_profile_background_image_updated">个人资料背景已更新</string>
   <string name="message_toast_profile_banner_image_updated">个人资料横幅图片已更新</string>
@@ -675,7 +672,6 @@
   <string name="notification_channel_name_content_messages">私信</string>
   <string name="notification_channel_name_content_subscriptions">订阅</string>
   <string name="notification_channel_name_content_updates">更新</string>
-  <string name="notification_channel_name_service_statuses">服务状态</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> 给您发送了一条私信</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> 给您发了 <xliff:g id="messages_count">%2$d</xliff:g> 条私信</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> 和其他 <xliff:g id="users_count">%2$d</xliff:g> 人给您发了 <xliff:g id="messages_count">%3$d</xliff:g> 条私信</string>
@@ -741,21 +737,17 @@
   <string name="preference_randomize_account_rename_accounts_confirm">重命名已有的帐号吗？</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">启用以获得更快的刷新间隔，在 Android 5.0 以上会增加电量消耗。</string>
   <string name="preference_summary_auto_refresh_power_saving">电量低时停止自动刷新</string>
-  <string name="preference_summary_background_streaming">按 HOME 键而不是 BACK 键使实时流保持开启</string>
   <string name="preference_summary_chrome_custom_tab">在内置浏览器中打开链接（由 Chrome 提供技术支持）</string>
   <string name="preference_summary_database_item_limit">每个帐号在数据库中保存的推文/信息条目上限，降低数值可以节省更多存储空间以及加快载入的速度</string>
   <string name="preference_summary_favorite_confirmation">在收藏一条推文前确认</string>
   <string name="preference_summary_like_confirmation">在喜欢一条推文前确认</string>
   <string name="preference_summary_media_preload_non_metered_network">只在使用免费网络（比如Wi-Fi）时预加载媒体</string>
-  <string name="preference_summary_streaming_non_metered_network">只在使用免费网络（比如 Wi-Fi ）时开启实时流</string>
-  <string name="preference_summary_streaming_power_saving">仅在充电的时候使用实时流</string>
   <string name="preference_summary_sync_timeline_positions">当“记住位置”启用时</string>
   <string name="preference_summary_trends_location">现在您可以在标签页设置中分别设置位置了。</string>
   <string name="preference_title_accounts">帐号</string>
   <string name="preference_title_advanced">高级</string>
   <string name="preference_title_auto_refresh_compatibility_mode">兼容模式</string>
   <string name="preference_title_auto_refresh_power_saving">节能模式</string>
-  <string name="preference_title_background_streaming">后台实时流</string>
   <string name="preference_title_chrome_custom_tab">内置浏览器</string>
   <string name="preference_title_database_item_limit">数据库条目上限</string>
   <string name="preference_title_favorite_confirmation">“收藏”前确认</string>
@@ -774,10 +766,6 @@
   <string name="preference_title_override_language">应用程序语言</string>
   <string name="preference_title_portrait">纵向模式</string>
   <string name="preference_title_storage">存储</string>
-  <string name="preference_title_streaming_content">实时流内容</string>
-  <string name="preference_title_streaming_enabled">启用实时流</string>
-  <string name="preference_title_streaming_non_metered_network">在免费网络下使用实时流</string>
-  <string name="preference_title_streaming_power_saving">节能模式</string>
   <string name="preference_title_tablet_mode">平板模式</string>
   <string name="preference_title_text_size">文字尺寸</string>
   <string name="preference_title_timeline_positions">时间线位置</string>
@@ -903,7 +891,6 @@
   <string name="settings_interface">界面</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">刷新</string>
-  <string name="settings_streaming">实时流</string>
   <string name="share_format">分享格式</string>
   <string name="share_format_summary">\"[TITLE]\" = 分享内容的标题\n\"[TEXT]\" = 分享内容的正文</string>
   <string name="share_link">分享链接</string>
@@ -942,16 +929,9 @@
   <string name="status_shortener_default">无（不发送过长推文）</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">转推</string>
-  <string name="stream_summary_notification_users">打开“通知”的用户，不是100%可靠</string>
-  <string name="stream_type_home">主页</string>
-  <string name="stream_type_interactions">互动</string>
-  <string name="stream_type_messages">私信</string>
-  <string name="stream_type_notification_users">启用通知的用户</string>
-  <string name="streaming">实时流</string>
   <string name="style">风格</string>
   <string name="subscribed_to_list">订阅了列表 “<xliff:g id="list">%s</xliff:g>”</string>
   <string name="summary_interactions_account_not_supported">不支持这个帐号</string>
-  <string name="summary_interactions_streaming_required">完整的互动时间线只在实时流启用时可用</string>
   <string name="swipe_down_to_refresh">下拉以刷新</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google 云端硬盘</string>
@@ -981,7 +961,6 @@
   <string name="theme_light">亮色</string>
   <string name="thumbor_integration">Thumbor 集成</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">时间线实时流正在运行</string>
   <string name="timeline_sync_service">时间线同步服务</string>
   <string name="title_about">关于</string>
   <string name="title_account_delete_confirm">删除帐号</string>
@@ -1043,7 +1022,6 @@
   <string name="title_statuses">推文</string>
   <string name="title_statuses_and_replies">推文与回复</string>
   <string name="title_statuses_scheduling">推文排期</string>
-  <string name="title_streaming">实时流</string>
   <string name="title_subscription_name">名称</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

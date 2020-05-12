@@ -37,20 +37,6 @@ import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
-import androidx.core.app.NotificationCompat
-import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.unwrapped
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.drawerlayout.widget.DrawerLayoutAccessor
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.TintTypedArray
 import android.util.SparseIntArray
 import android.view.Gravity
 import android.view.KeyEvent
@@ -59,6 +45,18 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup.MarginLayoutParams
+import android.widget.RelativeLayout
+import androidx.annotation.StringRes
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.TintTypedArray
+import androidx.core.app.NotificationCompat
+import androidx.core.view.*
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.drawerlayout.widget.DrawerLayoutAccessor
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
 import com.squareup.otto.Subscribe
@@ -103,7 +101,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.receiver.NotificationReceiver
-import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -288,8 +285,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val initialTabPosition = handleIntent(intent, savedInstanceState == null)
         setTabPosition(initialTabPosition)
 
-        StreamingService.startOrStopService(this)
-
         if (!showDrawerTutorial() && !kPreferences[defaultAutoRefreshAskedKey]) {
             showAutoRefreshConfirm()
         }
@@ -329,9 +324,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     override fun onDestroy() {
         if (isFinishing) {
-            // Stop only when exiting explicitly
-            StreamingService.startOrStopService(this)
-
             // Delete unused items in databases.
             val context = applicationContext
             task { DataStoreUtils.cleanDatabasesByItemLimit(context) }
@@ -402,12 +394,20 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (caller === leftDrawerFragment) return super.getSystemWindowInsets(caller, insets)
         if (mainTabs == null || homeContent == null) return false
         val height = mainTabs.height
-        if (height != 0) {
-            insets.top = height
+        if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
+            if (height != 0) {
+                insets.top = height
+            } else {
+                insets.top = ThemeUtils.getActionBarHeight(this)
+            }
+            insets.bottom = systemWindowsInsets?.bottom ?: 0
         } else {
-            insets.top = ThemeUtils.getActionBarHeight(this)
+            if (height != 0) {
+                insets.bottom = height
+            } else {
+                insets.bottom = ThemeUtils.getActionBarHeight(this)
+            }
         }
-        insets.bottom = systemWindowsInsets?.bottom ?: 0
         return true
     }
 
@@ -600,19 +600,44 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 return 1 - actionsButton.translationY / total
             }
             val totalHeight = controlBarHeight.toFloat()
-            return 1 + toolbar.translationY / totalHeight
+            return 1 + if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
+                toolbar.translationY
+            }  else {
+                -toolbar.translationY
+            } / totalHeight
         }
         set(offset) {
-            val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
-            toolbar.translationY = translationY.toFloat()
-            windowOverlay.translationY = translationY.toFloat()
-            val lp = actionsButton.layoutParams
-            if (lp is MarginLayoutParams) {
-                actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
+            if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
+                val translationY = if (mainTabs.columns > 1) {
+                    0
+                } else {
+                    (controlBarHeight * (offset - 1)).toInt()
+                }
+                toolbar.translationY = translationY.toFloat()
+                windowOverlay.translationY = translationY.toFloat()
+                val lp = actionsButton.layoutParams
+                if (lp is MarginLayoutParams) {
+                    actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
+                } else {
+                    actionsButton.translationY = actionsButton.height * (1 - offset)
+                }
+                notifyControlBarOffsetChanged()
             } else {
-                actionsButton.translationY = actionsButton.height * (1 - offset)
+                val translationY = if (mainTabs.columns > 1) {
+                    0
+                } else {
+                    (toolbar.height * (offset - 1)).toInt()
+                }
+                toolbar.translationY = -translationY.toFloat()
+                windowOverlay.translationY = -translationY.toFloat()
+                val lp = actionsButton.layoutParams
+                if (lp is MarginLayoutParams) {
+                    actionsButton.translationY = (lp.bottomMargin + toolbar.height + actionsButton.height) * (1 - offset)
+                } else {
+                    actionsButton.translationY = actionsButton.height * (1 - offset)
+                }
+                notifyControlBarOffsetChanged()
             }
-            notifyControlBarOffsetChanged()
         }
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -829,6 +854,21 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             mainPager.setPageMarginDrawable(null)
             pagerAdapter.hasMultipleColumns = false
             mainTabs.columns = 1
+        }
+        if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
+            toolbar.updateLayoutParams<RelativeLayout.LayoutParams> {
+                addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
+            }
+            actionsButton.updateLayoutParams<RelativeLayout.LayoutParams> {
+                addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+            }
+        } else {
+            toolbar.updateLayoutParams<RelativeLayout.LayoutParams> {
+                addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+            }
+            actionsButton.updateLayoutParams<RelativeLayout.LayoutParams> {
+                addRule(RelativeLayout.ABOVE, toolbar.id)
+            }
         }
     }
 

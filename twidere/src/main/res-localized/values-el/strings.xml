@@ -90,7 +90,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Υπηρεσία streaming</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted

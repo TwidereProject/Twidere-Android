@@ -92,7 +92,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">स्ट्रीमिंग सर्विस</string>
   <string name="leftside_compose_button">रचना बटन बायीं ओर</string>
   <string name="list_members">सदस्यों सूचीबद्ध करें</string>
   <string name="list_subscribers">ग्राहकों सूचीबद्ध करें</string>
@@ -155,7 +154,6 @@
   <string name="sound">आवाज़</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">रीट्वीट</string>
-  <string name="stream_type_home">घर</string>
   <string name="tab_editor_hint_name">नाम</string>
   <string name="text_size">टेक्स्ट का माप</string>
   <!-- Dark theme -->

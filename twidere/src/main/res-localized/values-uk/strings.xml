@@ -181,7 +181,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Підтримка Емодзі</string>
   <string name="empty_content">Порожній вміст</string>
-  <string name="enable_streaming">Увімкнути стримінг</string>
   <string name="error_message">Помилка: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Цей пристрій несумісний з Twidere, рекомендуємо оновлення до крайньої ОС Android.\nМожна надіслати інформацію нижче, щоб допомогти мені звернутися до виробника пристрою з цією проблемою.</string>
   <string name="error_message_media_upload_failed">Не вдалося завантажити медіафайл.</string>
@@ -289,7 +288,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Сервіс стримінгу</string>
   <string name="label_translate_from_language">Переклад з <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Переклад</string>
   <string name="label_your_profile_image">Зображення вашого профілю</string>
@@ -454,7 +452,6 @@
   <string name="preference_title_landscape">Ландшафтний</string>
   <string name="preference_title_portrait">Портретний</string>
   <string name="preference_title_storage">Пам\'ять</string>
-  <string name="preference_title_streaming_enabled">Увімкнути стримінг</string>
   <string name="preference_title_text_size">Розмір тексту</string>
   <string name="preference_title_translate">Перекласти</string>
   <string name="preference_title_trends_location">Місцерозташування тенденцій</string>
@@ -572,7 +569,6 @@
   <string name="settings_interface">Інтерфейс</string>
   <string name="settings_notifications">Сповіщення</string>
   <string name="settings_refresh">Оновлення</string>
-  <string name="settings_streaming">Стримінг</string>
   <string name="share_format">Формат поширення</string>
   <string name="share_format_summary">\"[TITLE]\" = назва вмісту\n\"[TEXT]\" = текст вмісту</string>
   <string name="share_link">Поділитися посиланням</string>
@@ -609,10 +605,6 @@
   <string name="status_shortener_default">Нічого(Відміна надсилання)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Ретвіт</string>
-  <string name="stream_type_home">Головна</string>
-  <string name="stream_type_interactions">Сповіщення</string>
-  <string name="stream_type_messages">Повідомлення</string>
-  <string name="streaming">Стримінг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Підписано на список \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="swipe_down_to_refresh">Потягни вниз для оновлення</string>
@@ -642,7 +634,6 @@
   <string name="theme_light">Індикатор подій</string>
   <string name="thumbor_integration">Інтеграція з Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Стримінг стрічки запущено</string>
   <string name="timeline_sync_service">Сервіс синхронізації стрічки</string>
   <string name="title_about">Про</string>
   <string name="title_accounts">Профілі</string>
@@ -674,7 +665,6 @@
   <string name="title_set_nickname">Задати псевдо</string>
   <string name="title_status">Твіт</string>
   <string name="title_statuses">Твіти</string>
-  <string name="title_streaming">Стримінг</string>
   <string name="title_subscription_name">Ім\'я</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

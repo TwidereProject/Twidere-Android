@@ -43,14 +43,23 @@ object HttpClientFactory {
             connectionPool: ConnectionPool, cache: Cache) {
         updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
         if (Build.VERSION.SDK_INT in Build.VERSION_CODES.JELLY_BEAN until Build.VERSION_CODES.LOLLIPOP) {
-            val tlsSocketFactory = TLSSocketFactory()
-            val trustManager = Platform.get().trustManager(tlsSocketFactory) ?:
-                    systemDefaultTrustManager()
+            val tlsContext = SSLContext.getInstance("TLS")
+            val trustManager = getPlatformTrustManager()
+            val tlsSocketFactory = tlsContext.apply {
+                init(null, arrayOf(trustManager), null)
+              }.socketFactory
             builder.sslSocketFactory(tlsSocketFactory, trustManager)
         }
         updateTLSConnectionSpecs(builder)
         DebugModeUtils.initForOkHttpClient(builder)
     }
+
+    fun getPlatformTrustManager(): X509TrustManager {
+        val factory = TrustManagerFactory.getInstance(
+            TrustManagerFactory.getDefaultAlgorithm())
+        factory.init(null as KeyStore?)
+        return factory.trustManagers!![0] as X509TrustManager
+      }
 
     fun reloadConnectivitySettings(context: Context) {
         val holder = DependencyHolder.get(context)

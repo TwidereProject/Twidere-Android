@@ -623,9 +623,6 @@
             android:label="@string/label_refresh_and_sync_service"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
-            android:name=".service.StreamingService"
-            android:label="@string/label_streaming_service"/>
-        <service
             android:name=".service.LengthyOperationsService"
             android:label="@string/label_background_operation_service"/>
         <service
@@ -711,12 +708,6 @@
                 android:resource="@xml/pickncrop__file_paths"/>
         </provider>
 
-        <receiver android:name=".receiver.PowerStateReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".receiver.NotificationReceiver"
             android:exported="false">
