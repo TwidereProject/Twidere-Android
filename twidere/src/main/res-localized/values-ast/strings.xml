@@ -269,7 +269,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Sofitu de fustaxes</string>
   <string name="empty_content">Conteníu baleru</string>
-  <string name="enable_streaming">Habilitar tuits en tiempu real</string>
   <string name="error_info_oauth_timestamp_error">Comprueba los axustes de data y hora del to sistema, por favor.</string>
   <string name="error_message">Fallu: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Esti preséu nun ye compatible con Twidere, aconséyase anovar a la cabera versión d\'Andoid.\nEmbaxo pues unviar información p\'ayudame a informa d\'esti problema al fabricante del preséu.</string>
@@ -432,7 +431,6 @@
   <string name="label_statuses_replies">Tuits y rempuestes</string>
   <string name="label_statuses_retweets">Tuits y reuits</string>
   <string name="label_statuses_retweets_replies">Tuits, retuits y rempuestes</string>
-  <string name="label_streaming_service">Serviciu de tuits en tiempu real</string>
   <string name="label_translate_from_language">Tornar del <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Torna</string>
   <string name="label_username">Nome d\'usuariu</string>
@@ -545,7 +543,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_toast_no_account_permission">Ríquese\'l permisu de cuentes</string>
   <string name="message_toast_no_account_selected">Nun s\'esbillaron cuentes</string>
   <string name="message_toast_no_user_selected">Nun s\'esbillaron usuarios</string>
-  <string name="message_toast_notification_enabled_hint">El fluxu de tuits namái ta disponible cuando ta activáu pero nun ye 100% fiable.</string>
   <string name="message_toast_press_again_to_close">Volvi primir pa zarrar</string>
   <string name="message_toast_profile_background_image_updated">Anovóse la imaxe de la pancarta del perfil</string>
   <string name="message_toast_profile_banner_image_updated">Anovóse la imaxe de la pancarta del perfil</string>
@@ -687,20 +684,16 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_randomize_account_rename_accounts_confirm">¿Renomar cuentes esistentes?</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">Habilitar pa un intervalu de refrescu más rápidu, aumenta\'l consumu d\'enerxía n\'Android 5.0+</string>
   <string name="preference_summary_auto_refresh_power_saving">Para l\'auto-refrescu tando la batería baxa</string>
-  <string name="preference_summary_background_streaming">Primi ANICIU en cuentes d\'ATRÁS pa caltener abiertu\'l fluxu de tuits</string>
   <string name="preference_summary_chrome_custom_tab">Abre enllaces nel restolador integráu (cola potencia de WebView)</string>
   <string name="preference_summary_database_item_limit">Llende cimera d\'elementos atroxaos nes bases de datos pa cada cuenta. Afitar a un valor más pequeñu p\'aforrar espaciu y aumentar la velocidá de carga.</string>
   <string name="preference_summary_favorite_confirmation">Amuesa la confirmación enantes de marcar como favoritu un tuit</string>
   <string name="preference_summary_like_confirmation">Amuesa la confirmación enantes de prestar un tuit</string>
   <string name="preference_summary_media_preload_non_metered_network">Precarga medios namái en redes llibres como Wi-Fi</string>
-  <string name="preference_summary_streaming_non_metered_network">El fluxu de tuits namái en redes llibres como Wi-Fi</string>
-  <string name="preference_summary_streaming_power_saving">Fluxu de tuits namái al cargar</string>
   <string name="preference_summary_trends_location">Agora pues afitar l\'allugamientu de mou separtáu na llingüeta d\'axustes.</string>
   <string name="preference_title_accounts">Cuentes</string>
   <string name="preference_title_advanced">Avanzao</string>
   <string name="preference_title_auto_refresh_compatibility_mode">Mou de compatibilidá</string>
   <string name="preference_title_auto_refresh_power_saving">Mou d\'aforru d\'enerxía</string>
-  <string name="preference_title_background_streaming">Fluxu de tuits en segundu planu</string>
   <string name="preference_title_chrome_custom_tab">Restolador integráu</string>
   <string name="preference_title_database_item_limit">Llende de tamañu de base de datos</string>
   <string name="preference_title_favorite_confirmation">Confirmación de favoritu</string>
@@ -718,10 +711,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_title_override_language">Llingua d\'aplicación</string>
   <string name="preference_title_portrait">Vertical</string>
   <string name="preference_title_storage">Almacenamientu</string>
-  <string name="preference_title_streaming_content">Conteníu de fluxu</string>
-  <string name="preference_title_streaming_enabled">Habilitar fluxu de tuits</string>
-  <string name="preference_title_streaming_non_metered_network">Fluxu de tuits en rede llibre</string>
-  <string name="preference_title_streaming_power_saving">Mou d\'aforru d\'enerxía</string>
   <string name="preference_title_tablet_mode">Mou tableta</string>
   <string name="preference_title_text_size">Tamañu del testu</string>
   <string name="preference_title_translate">Tornar</string>
@@ -845,7 +834,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Avisos</string>
   <string name="settings_refresh">Refrescu</string>
-  <string name="settings_streaming">Fluxu de tuits</string>
   <string name="share_format">Formatu de compartición</string>
   <string name="share_format_summary">\"[TITLE]\" = Conteníu\'l títulu\n\"[TEXT]\" = Conteníu\'l testu</string>
   <string name="share_link">Compartir enllaz</string>
@@ -884,12 +872,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="status_shortener_default">Dengún (albortar l\'unviu)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retuitiar</string>
-  <string name="stream_summary_notification_users">Los usuarios activaron «Avisos», nun ye 100% fiable.</string>
-  <string name="stream_type_home">Aniciu</string>
-  <string name="stream_type_interactions">Interaiciones</string>
-  <string name="stream_type_messages">Mensaxes</string>
-  <string name="stream_type_notification_users">Los usuarios habilitaron los avisos</string>
-  <string name="streaming">Tuits en tiempu real</string>
   <string name="style">Estilu</string>
   <string name="subscribed_to_list">Soscribiéstite al llistáu «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="summary_interactions_account_not_supported">Cuenta non sofitada</string>
@@ -922,7 +904,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="theme_light">Claru</string>
   <string name="thumbor_integration">Integración Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Tán executándose los tuits en tiempu real</string>
   <string name="timeline_sync_service">Serviciu de sincronización de llinia temporal</string>
   <string name="title_about">Tocante a</string>
   <string name="title_account_delete_confirm">Desaniciu de cuenta</string>
@@ -979,7 +960,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="title_statuses">Tuits</string>
   <string name="title_statuses_and_replies">Tuits y rempuestes</string>
   <string name="title_statuses_scheduling">Planificación de tuits</string>
-  <string name="title_streaming">Fluxu de tuits</string>
   <string name="title_subscription_name">Nome</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

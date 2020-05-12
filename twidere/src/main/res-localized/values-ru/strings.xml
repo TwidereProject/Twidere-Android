@@ -250,7 +250,6 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">Поддержка смайлов</string>
   <string name="empty_content">Пустое содержимое</string>
-  <string name="enable_streaming">Включить стриминг</string>
   <string name="error_info_oauth_timestamp_error">Пожалуйста, проверьте ваши системную дату и настройки времени.</string>
   <string name="error_message">Ошибка: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Это устройство не совместимо с Twidere, рекомендуется обновление до последней версии Android.\nВы можете отправить информацию ниже, чтобы помочь мне сообщить изготовителю устройства об этой проблеме.</string>
@@ -375,7 +374,6 @@
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
   <string name="label_statuses">Твиты</string>
-  <string name="label_streaming_service">Сервис стриминга</string>
   <string name="label_translate_from_language">Переведено с <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Перевод</string>
   <string name="label_username">Имя пользователя</string>
@@ -580,7 +578,6 @@
   <string name="preference_title_landscape">Ландшафтный</string>
   <string name="preference_title_portrait">Портретный</string>
   <string name="preference_title_storage">Хранилище</string>
-  <string name="preference_title_streaming_enabled">Включить стриминг</string>
   <string name="preference_title_text_size">Размер текста</string>
   <string name="preference_title_translate">Перевести</string>
   <string name="preload_wifi_only">Предзагружать только по Wi-Fi</string>
@@ -698,7 +695,6 @@
   <string name="settings_interface">Интерфейс</string>
   <string name="settings_notifications">Уведомления</string>
   <string name="settings_refresh">Обновления</string>
-  <string name="settings_streaming">Стриминг</string>
   <string name="share_format">Формат шаринга</string>
   <string name="share_format_summary">\"[TITLE]\" = Заголовок\n\"[TEXT]\" = Сообщение</string>
   <string name="share_link">Поделиться</string>
@@ -737,10 +733,6 @@
   <string name="status_shortener_default">Ничего (Отмена отправки)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Ретвит</string>
-  <string name="stream_type_home">Лента</string>
-  <string name="stream_type_interactions">Взаимодействия</string>
-  <string name="stream_type_messages">Сообщения</string>
-  <string name="streaming">Стриминг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Подписанные на \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="swipe_down_to_refresh">Потяните вниз для обновления</string>
@@ -772,7 +764,6 @@
   <string name="theme_light">Индикатор</string>
   <string name="thumbor_integration">Интеграция с Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, через <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Стриминг ленты запущен</string>
   <string name="timeline_sync_service">Сервис синхронизации ленты</string>
   <string name="title_about">О программе</string>
   <string name="title_accounts">Аккаунты</string>
@@ -808,7 +799,6 @@
   <string name="title_set_nickname">Задать никнейм</string>
   <string name="title_status">Твит</string>
   <string name="title_statuses">Твиты</string>
-  <string name="title_streaming">Стриминг</string>
   <string name="title_subscription_name">Имя</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

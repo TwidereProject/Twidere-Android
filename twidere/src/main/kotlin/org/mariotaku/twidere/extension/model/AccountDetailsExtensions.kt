@@ -124,7 +124,3 @@ val Array<AccountDetails>.textLimit: Int
         }
         return limit
     }
-
-
-val AccountDetails.isStreamingSupported: Boolean
-    get() = type == AccountType.TWITTER

@@ -5,10 +5,8 @@ import android.net.Uri
 import android.text.TextUtils
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.fanfou.FanfouStream
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.mastodon.MastodonOAuth2
-import org.mariotaku.microblog.library.mastodon.MastodonStreaming
 import org.mariotaku.microblog.library.twitter.*
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
@@ -95,16 +93,8 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
             domain = "api"
             versionSuffix = null
         }
-        TwitterUserStream::class.java.isAssignableFrom(cls) -> {
-            domain = "userstream"
-            versionSuffix = if (noVersionSuffix) null else "/1.1/"
-        }
         TwitterCaps::class.java.isAssignableFrom(cls) -> {
             domain = "caps"
-            versionSuffix = null
-        }
-        FanfouStream::class.java.isAssignableFrom(cls) -> {
-            domain = "stream"
             versionSuffix = null
         }
         TwitterWeb::class.java.isAssignableFrom(cls) -> {
@@ -116,10 +106,6 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
             versionSuffix = null
         }
         MastodonOAuth2::class.java.isAssignableFrom(cls) -> {
-            domain = null
-            versionSuffix = null
-        }
-        MastodonStreaming::class.java.isAssignableFrom(cls) -> {
             domain = null
             versionSuffix = null
         }
@@ -165,14 +151,6 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
                     holder.connectionPool, holder.cache)
             factory.setHttpClient(uploadHttpClient)
         }
-        TwitterUserStream::class.java, FanfouStream::class.java, MastodonStreaming::class.java -> {
-            val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
-            // Use longer read timeout for streaming
-            conf.readTimeoutSecs = 300
-            val streamHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns,
-                    holder.connectionPool, holder.cache)
-            factory.setHttpClient(streamHttpClient)
-        }
         else -> {
             factory.setHttpClient(holder.restHttpClient)
         }
@@ -185,9 +163,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
         }
         AccountType.FANFOU -> {
             factory.setConstantPool(sFanfouConstantPool)
-            if (cls != FanfouStream::class.java) {
-                extraRequestParams = mapOf("format" to "html")
-            }
+            extraRequestParams = mapOf("format" to "html")
         }
     }
     factory.setRestConverterFactory(TwitterConverterFactory)

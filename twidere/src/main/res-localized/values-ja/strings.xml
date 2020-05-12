@@ -287,7 +287,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">絵文字対応</string>
   <string name="empty_content">コンテンツなし</string>
-  <string name="enable_streaming">ストリーミングを使用</string>
   <string name="error_info_oauth_timestamp_error">システムの日付と時刻の設定を確認してください。</string>
   <string name="error_message">エラー：<xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">このデバイスには、Twidereとの互換性がありません。最新のAndroid OSへのアップグレードが推奨されます。\nデバイスの製造元にこの問題を報告するために、以下の情報を送信できます。</string>
@@ -473,7 +472,6 @@
   <string name="label_statuses_replies">ツイートと返信</string>
   <string name="label_statuses_retweets">ツイートとリツイート</string>
   <string name="label_statuses_retweets_replies">ツイートとリツイートと返信</string>
-  <string name="label_streaming_service">ストリーミングサービス</string>
   <string name="label_translate_from_language"><xliff:g id="language">%s</xliff:g>から翻訳</string>
   <string name="label_translated_to_language"><xliff:g id="language">%s</xliff:g> へ翻訳</string>
   <string name="label_translation">翻訳</string>
@@ -601,7 +599,6 @@
   <string name="message_toast_no_account_permission">アカウントの権限が必要です</string>
   <string name="message_toast_no_account_selected">アカウントが選択されていません</string>
   <string name="message_toast_no_user_selected">ユーザを選択してください</string>
-  <string name="message_toast_notification_enabled_hint">ストリーミングが音のときにのみ利用できますが、100% の信頼性はありません。</string>
   <string name="message_toast_press_again_to_close">閉じるにはもう一度押して下さい</string>
   <string name="message_toast_profile_background_image_updated">プロファイルの背景画像を更新しました</string>
   <string name="message_toast_profile_banner_image_updated">ヘッダー画像を更新しました</string>
@@ -681,7 +678,6 @@
   <string name="notification_channel_name_content_interactions">みんなの反応</string>
   <string name="notification_channel_name_content_messages">メッセージ</string>
   <string name="notification_channel_name_content_updates">アップデート</string>
-  <string name="notification_channel_name_service_statuses">サービスの状態</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g>からDMが届きました。</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g>はあなたに<xliff:g id="messages_count">%2$d</xliff:g>通のDMを送信しました。</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g>と他<xliff:g id="users_count">%2$d</xliff:g>人があなたに<xliff:g id="messages_count">%3$d</xliff:g>通のDMを送信しました。</string>
@@ -747,21 +743,17 @@
   <string name="preference_randomize_account_rename_accounts_confirm">既存のアカウント名を変更しますか？</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">更新間隔を短くしますが、Android 5.0+では電池の消費が早くなります</string>
   <string name="preference_summary_auto_refresh_power_saving">電池残量不足時に自動更新を停止します</string>
-  <string name="preference_summary_background_streaming">バックの代わりにホームで戻るとバックグラウンドでストリーミング接続を維持</string>
   <string name="preference_summary_chrome_custom_tab">Chrome カスタムタブでリンクを開く</string>
   <string name="preference_summary_database_item_limit">各アカウントのデータベースに格納するアイテムの上限数です。\n小さな値に設定すると読み込み速度を速くできます。</string>
   <string name="preference_summary_favorite_confirmation">ツイートをいいねする前に確認を表示</string>
   <string name="preference_summary_like_confirmation">ツイートをお気に入りする前に確認を表示</string>
   <string name="preference_summary_media_preload_non_metered_network">Wi-Fi などの無料のネットワーク上でのみメディアを先読みします</string>
-  <string name="preference_summary_streaming_non_metered_network">WiFi時のみストリーミングに接続する</string>
-  <string name="preference_summary_streaming_power_saving">充電中のみストリーミングに接続する</string>
   <string name="preference_summary_sync_timeline_positions">「位置を記憶」の有効時</string>
   <string name="preference_summary_trends_location">タブの設定でトレンドの地域を個別に設定できます。</string>
   <string name="preference_title_accounts">アカウント</string>
   <string name="preference_title_advanced">詳細設定</string>
   <string name="preference_title_auto_refresh_compatibility_mode">互換性モード</string>
   <string name="preference_title_auto_refresh_power_saving">省電力モード</string>
-  <string name="preference_title_background_streaming">バックグラウンドでストリーミング</string>
   <string name="preference_title_chrome_custom_tab">Chrome カスタムタブ</string>
   <string name="preference_title_database_item_limit">アイテム制限</string>
   <string name="preference_title_favorite_confirmation">お気に入りの確認</string>
@@ -780,10 +772,6 @@
   <string name="preference_title_override_language">アプリの言語</string>
   <string name="preference_title_portrait">ポートレイト</string>
   <string name="preference_title_storage">ストレージ</string>
-  <string name="preference_title_streaming_content">ストリーミング コンテンツ</string>
-  <string name="preference_title_streaming_enabled">ストリーミングを使用</string>
-  <string name="preference_title_streaming_non_metered_network">無料ネットワーク使用時にストリーミング</string>
-  <string name="preference_title_streaming_power_saving">省電力モード</string>
   <string name="preference_title_tablet_mode">タブレットモード</string>
   <string name="preference_title_text_size">フォントサイズ</string>
   <string name="preference_title_timeline_positions">タイムラインの位置</string>
@@ -909,7 +897,6 @@
   <string name="settings_interface">インターフェース</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">更新</string>
-  <string name="settings_streaming">ストリーミング</string>
   <string name="share_format">共有形式</string>
   <string name="share_format_summary">\"[TITLE]\" = タイトル\n\"[TEXT]\" = ツイート内容</string>
   <string name="share_link">共有リンク</string>
@@ -948,16 +935,9 @@
   <string name="status_shortener_default">なし (送信を取り消す)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">リツイート</string>
-  <string name="stream_summary_notification_users">「通知」を有効にしたユーザー。100% の信頼性はありません。</string>
-  <string name="stream_type_home">ホーム</string>
-  <string name="stream_type_interactions">みんなの反応</string>
-  <string name="stream_type_messages">メッセージ</string>
-  <string name="stream_type_notification_users">通知を有効にしたユーザー</string>
-  <string name="streaming">ストリーミング</string>
   <string name="style">スタイル</string>
   <string name="subscribed_to_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を保存しました。</string>
   <string name="summary_interactions_account_not_supported">アカウントはサポートされていません</string>
-  <string name="summary_interactions_streaming_required">完全なインタラクションは、ストリーミングの有効時のみ利用できます。</string>
   <string name="swipe_down_to_refresh">下にスワイプすると更新されます</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google ドライブ</string>
@@ -987,7 +967,6 @@
   <string name="theme_light">ライト</string>
   <string name="thumbor_integration">Thumbor 連携</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">タイムラインストリーミング動作中</string>
   <string name="timeline_sync_service">タイムライン同期サービス</string>
   <string name="title_about">バージョン情報</string>
   <string name="title_account_delete_confirm">サインアウト</string>
@@ -1049,7 +1028,6 @@
   <string name="title_statuses">ツイート</string>
   <string name="title_statuses_and_replies">ツイート &amp; 返信</string>
   <string name="title_statuses_scheduling">ツイートの予約</string>
-  <string name="title_streaming">ストリーミング</string>
   <string name="title_subscription_name">名前</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

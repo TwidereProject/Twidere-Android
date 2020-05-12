@@ -997,10 +997,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.enable_notifications -> {
                 val newState = !item.isChecked
-                if (newState) {
-                    Toast.makeText(context, R.string.message_toast_notification_enabled_hint,
-                            Toast.LENGTH_SHORT).show()
-                }
                 val update = FriendshipUpdate()
                 update.deviceNotifications(newState)
                 twitter.updateFriendship(accountKey, user.key, update)

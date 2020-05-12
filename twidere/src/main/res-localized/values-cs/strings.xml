@@ -178,7 +178,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Služby datových proudů</string>
   <string name="label_translation">Překlad</string>
   <string name="label_your_profile_image">Váš profilový obrázek</string>
   <string name="large">Velké</string>
@@ -337,9 +336,6 @@
   <string name="status_not_updated">Tweet nebyl odeslán.</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweetovat</string>
-  <string name="stream_type_home">Domů</string>
-  <string name="stream_type_interactions">Interakce</string>
-  <string name="stream_type_messages">Zprávy</string>
   <string name="system_default">Výchozí systémové nastavení</string>
   <string name="tab_display_option_icon">Ikona</string>
   <string name="tab_display_option_icon_and_label">Ikona a popisek</string>

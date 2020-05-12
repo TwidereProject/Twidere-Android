@@ -244,7 +244,6 @@
   <string name="ellipsis">...</string>
   <string name="emoji_support">Dukungan emoji</string>
   <string name="empty_content">Konten kosong</string>
-  <string name="enable_streaming">Aktifkan Streaming</string>
   <string name="error_info_oauth_timestamp_error">Mohon cek tanggal sistem Anda &amp; pengaturan waktu.</string>
   <string name="error_message">Kesalahan: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Perangkat ini tidak kompatibel dengan Twidere, dianjurkan melakukan pembaruan ke OS Android terbaru.\nAnda dapat mengirim informasi di bawah untuk membantu kami melaporkan masalah ini kepada perakit perangkat.</string>
@@ -370,7 +369,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Layanan streaming</string>
   <string name="label_translate_from_language">Terjemahkan dari <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Terjemahan</string>
   <string name="label_your_profile_image">Gambar profil kamu</string>
@@ -568,9 +566,6 @@
   <string name="preference_title_landscape">Lanskap</string>
   <string name="preference_title_portrait">Layar Tegak</string>
   <string name="preference_title_storage">Penyimpanan</string>
-  <string name="preference_title_streaming_enabled">Mengaktifkan streaming</string>
-  <string name="preference_title_streaming_non_metered_network">Streaming pada jaringan gratis</string>
-  <string name="preference_title_streaming_power_saving">Mode hemat daya</string>
   <string name="preference_title_tablet_mode">Mode tablet</string>
   <string name="preference_title_text_size">Ukuran teks</string>
   <string name="preference_title_translate">Terjemahkan</string>
@@ -693,7 +688,6 @@
   <string name="settings_interface">Antarmuka</string>
   <string name="settings_notifications">Notifikasi</string>
   <string name="settings_refresh">Segarkan</string>
-  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Bagikan format</string>
   <string name="share_format_summary">\"[TITLE]\" = Konten title\n\"[TEXT]\" = Teks konten</string>
   <string name="share_link">Bagikan tautan</string>
@@ -732,8 +726,6 @@
   <string name="status_shortener_default">Tidak ada (Batal mengirim)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_type_messages">Pesan</string>
-  <string name="streaming">Streaming</string>
   <string name="style">Gaya</string>
   <string name="subscribed_to_list">Berlangganan ke daftar \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="swipe_down_to_refresh">Gesek ke bawah untuk menyegarkan</string>
@@ -764,7 +756,6 @@
   <string name="theme_light">Terang</string>
   <string name="thumbor_integration">Integrasi dengan Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Timeline streaming yang berjalan</string>
   <string name="timeline_sync_service">Layanan sinkronisasi timeline</string>
   <string name="title_about">Tentang</string>
   <string name="title_accounts">Akun</string>
@@ -799,7 +790,6 @@
   <string name="title_set_nickname">Tentukan nama panggilan</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Kicauan</string>
-  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nama</string>
   <string name="title_subscription_url">Alamat web</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s </xliff:g>: <xliff:g id="summary">%2$s </xliff:g></string>

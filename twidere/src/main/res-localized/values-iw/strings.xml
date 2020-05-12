@@ -179,7 +179,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">שירות הזרמה</string>
   <string name="label_translation">תרגום</string>
   <string name="label_your_profile_image">תמונת הפרופיל שלך</string>
   <string name="large">גדול</string>
@@ -351,8 +350,6 @@
   <string name="status_shortener_default">ללא (בטל שליחה)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">ציוץ מחדש</string>
-  <string name="stream_type_home">בית</string>
-  <string name="stream_type_messages">הודעות</string>
   <string name="system_default">ברירת המחדל של המערכת</string>
   <string name="tab_display_option_icon">סמל</string>
   <string name="tab_display_option_icon_and_label">סמל ותווית</string>

@@ -280,7 +280,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji támogatás</string>
   <string name="empty_content">Üres</string>
-  <string name="enable_streaming">Közvetítés engedélyezése</string>
   <string name="error_info_oauth_timestamp_error">Kérjük, ellenőrizd a rendszer dátum- &amp; időbeállításait.</string>
   <string name="error_message">Hiba: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Ez az eszköz nem kompatibilis a Twidere alkalmazással, ajánlott a legújabb Android OS verzióra frissítés.\nKüldhetsz információt lejjebb, hogy segíts nekem jelenteni ezt a problémát a készülék gyártójának.</string>
@@ -462,7 +461,6 @@
   <string name="label_statuses_replies">Tweetek és válaszok</string>
   <string name="label_statuses_retweets">Tweetek és retweetek</string>
   <string name="label_statuses_retweets_replies">Tweetek, retweetek, válaszok</string>
-  <string name="label_streaming_service">Közvetítő szolgáltatás</string>
   <string name="label_translate_from_language">Fordítás <xliff:g id="language">%s</xliff:g> nyelvről</string>
   <string name="label_translation">Fordítás</string>
   <string name="label_username">Felhasználónév</string>
@@ -576,7 +574,6 @@
   <string name="message_toast_no_account_permission">Fiókengedély szükséges</string>
   <string name="message_toast_no_account_selected">Nincs fiók kiválasztva.</string>
   <string name="message_toast_no_user_selected">Nincs kijelölt felhasználó</string>
-  <string name="message_toast_notification_enabled_hint">Csak akkor elérhető, amikor a közvetítés engedélyezve van és nem 100% megbízható.</string>
   <string name="message_toast_press_again_to_close">Nyomd meg újra a bezáráshoz</string>
   <string name="message_toast_profile_background_image_updated">Profil háttérkép frissítve</string>
   <string name="message_toast_profile_banner_image_updated">Fejléckép frissítve</string>
@@ -717,21 +714,17 @@
   <string name="preference_randomize_account_rename_accounts_confirm">Átnevezed a meglévő fiókokat?</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">Engedélyezd a gyorsabb frissítési időközhöz, növeli az energiafelhasználást Android 5.0 vagy későbbi rendszereken</string>
   <string name="preference_summary_auto_refresh_power_saving">Alacsony akkunál nem frissít automatikusan</string>
-  <string name="preference_summary_background_streaming">Nyomd le a \"HOME\" gombot a \"BACK\" helyett a közvetítés nyitva tartásához</string>
   <string name="preference_summary_chrome_custom_tab">Hivatkozások megnyitása az alkalmazáson belüli böngészővel (Technológia: Chrome)</string>
   <string name="preference_summary_database_item_limit">Az adatbázisokban tárolt elemek számának felső határa kisebb értékre állítva fiókonként a helymegtakarításhoz és a betöltési sebesség növeléséhez.</string>
   <string name="preference_summary_favorite_confirmation">Megerősítés megjelenítése egy tweet kedvencnek jelölése előtt</string>
   <string name="preference_summary_like_confirmation">Megerősítés megjelenítése egy tweet kedvelése előtt</string>
   <string name="preference_summary_media_preload_non_metered_network">Média előzetes betöltése csak ingyenes elérés pl.: Wi-Fi esetén</string>
-  <string name="preference_summary_streaming_non_metered_network">Közvetítés csak ingyenes elérés pl.: Wi-Fi esetén</string>
-  <string name="preference_summary_streaming_power_saving">Közvetítés csak töltés közben</string>
   <string name="preference_summary_sync_timeline_positions">Amikor a \"Pozíció megjegyzése\" engedélyezve van</string>
   <string name="preference_summary_trends_location">Most beállíthatod a tartózkodási helyet külön a fülek beállításaiban.</string>
   <string name="preference_title_accounts">Fiókok</string>
   <string name="preference_title_advanced">Haladó</string>
   <string name="preference_title_auto_refresh_compatibility_mode">Kompatibilitási mód</string>
   <string name="preference_title_auto_refresh_power_saving">Energiatakarékos mód</string>
-  <string name="preference_title_background_streaming">Háttérközvetítés</string>
   <string name="preference_title_chrome_custom_tab">Alkalmazáson belüli böngésző</string>
   <string name="preference_title_database_item_limit">Adatbázis méretkorlát</string>
   <string name="preference_title_favorite_confirmation">Kedvencnek jelölés megerősítése</string>
@@ -749,10 +742,6 @@
   <string name="preference_title_override_language">Alkalmazás nyelve</string>
   <string name="preference_title_portrait">Álló</string>
   <string name="preference_title_storage">Tárhely</string>
-  <string name="preference_title_streaming_content">Közvetített tartalom</string>
-  <string name="preference_title_streaming_enabled">Közvetítés engedélyezése</string>
-  <string name="preference_title_streaming_non_metered_network">Közvetítés ingyenes elérés esetén</string>
-  <string name="preference_title_streaming_power_saving">Energiatakarékos mód</string>
   <string name="preference_title_tablet_mode">Táblamód</string>
   <string name="preference_title_text_size">Szövegméret</string>
   <string name="preference_title_timeline_positions">Idővonal helyzetek</string>
@@ -878,7 +867,6 @@
   <string name="settings_interface">Felhasználói felület</string>
   <string name="settings_notifications">Értesítések</string>
   <string name="settings_refresh">Frissít</string>
-  <string name="settings_streaming">Közvetítés</string>
   <string name="share_format">Megosztás formátuma</string>
   <string name="share_format_summary">\"[TITLE]\" = Tartalom címe\n\"[TEXT]\" = Tartalom szövege</string>
   <string name="share_link">Hivatkozás megosztása</string>
@@ -917,16 +905,9 @@
   <string name="status_shortener_default">Egyik sem (Küldés megszakítása)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
-  <string name="stream_summary_notification_users">Felhasználók bekapcsolták az értesítéseket, nem 100%-ban megbízható.</string>
-  <string name="stream_type_home">Kezdőlap</string>
-  <string name="stream_type_interactions">Események</string>
-  <string name="stream_type_messages">Üzenetek</string>
-  <string name="stream_type_notification_users">Értesítést engedélyező felhasználók</string>
-  <string name="streaming">Közvetítés</string>
   <string name="style">Stílus</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listára feliratkozva.</string>
   <string name="summary_interactions_account_not_supported">A fiók nem támogatott</string>
-  <string name="summary_interactions_streaming_required">Az események egésze csak akkor elérhető ha a közvetítés engedélyezve van</string>
   <string name="swipe_down_to_refresh">Húzd le a frissítéshez</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -956,7 +937,6 @@
   <string name="theme_light">Világos</string>
   <string name="thumbor_integration">Thumbor integráció</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Idővonal közvetítés fut</string>
   <string name="timeline_sync_service">Idővonal szinkronizációs szolgáltatás</string>
   <string name="title_about">Általános infó</string>
   <string name="title_account_delete_confirm">Fiók törlése</string>
@@ -1017,7 +997,6 @@
   <string name="title_statuses">Tweet</string>
   <string name="title_statuses_and_replies">Tweetek &amp; válaszok</string>
   <string name="title_statuses_scheduling">Tweetek ütemezése</string>
-  <string name="title_streaming">Közvetítés</string>
   <string name="title_subscription_name">Név</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

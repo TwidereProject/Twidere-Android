@@ -287,7 +287,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Soporte de risoños</string>
   <string name="empty_content">Sen contido</string>
-  <string name="enable_streaming">Activar streaming</string>
   <string name="error_info_oauth_timestamp_error">Por favor comproba data e hora nos teus axustes.</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Este dispositivo non é compatible con Twidere, recoméndase actualizar á última versión de Android OS.\nAbaixo podes enviar información para axudarme a informar deste problema ao fabricante.</string>
@@ -473,7 +472,6 @@
   <string name="label_statuses_replies">Chíos e respostas</string>
   <string name="label_statuses_retweets">Chíos e rechouchíos</string>
   <string name="label_statuses_retweets_replies">Chíos, rechouchíos e respostas</string>
-  <string name="label_streaming_service">Servizo streaming</string>
   <string name="label_translate_from_language">Traducir do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translated_to_language">Traducir do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Tradución</string>
@@ -591,7 +589,6 @@
   <string name="message_toast_no_account_permission">Requírese permiso de conta</string>
   <string name="message_toast_no_account_selected">Sen conta seleccionada.</string>
   <string name="message_toast_no_user_selected">Usuario non seleccionado</string>
-  <string name="message_toast_notification_enabled_hint">Só dispoñible cando o streaming está aceso, e non 100% fiable.</string>
   <string name="message_toast_press_again_to_close">Preme outra vez para pechar</string>
   <string name="message_toast_profile_background_image_updated">Actualizada a imaxe de fondo do perfil</string>
   <string name="message_toast_profile_banner_image_updated">Actualizada a imaxe banner do perfil.</string>
@@ -672,7 +669,6 @@
   <string name="notification_channel_name_content_messages">Mensaxes</string>
   <string name="notification_channel_name_content_subscriptions">Subscricións</string>
   <string name="notification_channel_name_content_updates">Actualizacións</string>
-  <string name="notification_channel_name_service_statuses">Estado do servizo</string>
   <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> enviouche unha mensaxe directa.</string>
   <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> enviouche <xliff:g id="messages_count">%2$d</xliff:g> mensaxes directas.</string>
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="users_count">%2$d</xliff:g> enviáronche <xliff:g id="messages_count">%3$d</xliff:g> mensaxes directas.</string>
@@ -738,21 +734,17 @@
   <string name="preference_randomize_account_rename_accounts_confirm">Renomear contas existentes?</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">Activar para mellor intervalo de recarga, incrementa o uso de batería en Android 5.0+</string>
   <string name="preference_summary_auto_refresh_power_saving">Parar auto-recarga cando a batería está baixa</string>
-  <string name="preference_summary_background_streaming">Preme INICIO no canto de ATRÁS para gardar aberto o streaming</string>
   <string name="preference_summary_chrome_custom_tab">Abre ligazóns en navegador nativo (Powered by Chrome)</string>
   <string name="preference_summary_database_item_limit">Límite máximo de elementos gardados para cada conta, insire un valor menor para salvar espazo e incrementar a velocidade de carga.</string>
   <string name="preference_summary_favorite_confirmation">Confirmar antes de marcar favorito</string>
   <string name="preference_summary_like_confirmation">Confirmar antes de gustar</string>
   <string name="preference_summary_media_preload_non_metered_network">Pre-carga multimedia só en redes sen custo, como wifi</string>
-  <string name="preference_summary_streaming_non_metered_network">Streaming só en redes sen custo, como wifi</string>
-  <string name="preference_summary_streaming_power_saving">Streaming só durante a carga</string>
   <string name="preference_summary_sync_timeline_positions">Cando está activo \"Lembrar posición\"</string>
   <string name="preference_summary_trends_location">Agora podes seleccionar a localización de xeito independente na lapela de axustes.</string>
   <string name="preference_title_accounts">Contas</string>
   <string name="preference_title_advanced">Avanzado</string>
   <string name="preference_title_auto_refresh_compatibility_mode">Modo de compatibilidade</string>
   <string name="preference_title_auto_refresh_power_saving">Modo de aforro de batería</string>
-  <string name="preference_title_background_streaming">Streaming en segundo plano</string>
   <string name="preference_title_chrome_custom_tab">Navegador nativo</string>
   <string name="preference_title_database_item_limit">Límite da base de datos</string>
   <string name="preference_title_favorite_confirmation">Confirmación favorito</string>
@@ -771,10 +763,6 @@
   <string name="preference_title_override_language">Idioma da aplicación</string>
   <string name="preference_title_portrait">Vertical</string>
   <string name="preference_title_storage">Almacenamento</string>
-  <string name="preference_title_streaming_content">Contido do streaming</string>
-  <string name="preference_title_streaming_enabled">Activar streaming</string>
-  <string name="preference_title_streaming_non_metered_network">Streaming en redes sen custo</string>
-  <string name="preference_title_streaming_power_saving">Modo de aforro de batería</string>
   <string name="preference_title_tablet_mode">Modo tablet</string>
   <string name="preference_title_text_size">Tamaño do texto</string>
   <string name="preference_title_timeline_positions">Posicións da liña de tempo</string>
@@ -900,7 +888,6 @@
   <string name="settings_interface">Aparencia</string>
   <string name="settings_notifications">Notificacións</string>
   <string name="settings_refresh">Recargar</string>
-  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Formato para compartir</string>
   <string name="share_format_summary">\"[TITLE]\" = Contido título\n\"[TEXT]\" = Contido texto</string>
   <string name="share_link">Compartir ligazón</string>
@@ -939,16 +926,9 @@
   <string name="status_shortener_default">Ningún (abortar envío)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Rechouchiar</string>
-  <string name="stream_summary_notification_users">Usuarios que habilitaron \"Notificacións\", non é 100% fiable.</string>
-  <string name="stream_type_home">Liña de tempo</string>
-  <string name="stream_type_interactions">Interaccións</string>
-  <string name="stream_type_messages">Mensaxes</string>
-  <string name="stream_type_notification_users">Notificación a usuarios habilitados</string>
-  <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Subscribiches á lista \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="summary_interactions_account_not_supported">Conta non soportada</string>
-  <string name="summary_interactions_streaming_required">As interaccións completas só están dispoñibles cando está activado o streaming</string>
   <string name="swipe_down_to_refresh">Arrastra cara abaixo para recargar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
   <string name="sync_provider_name_google_drive">Google Drive</string>
@@ -978,7 +958,6 @@
   <string name="theme_light">Lixeiro</string>
   <string name="thumbor_integration">Integración Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
-  <string name="timeline_streaming_running">Actualización en tempo real</string>
   <string name="timeline_sync_service">Servizo de sincronización da liña de tempo</string>
   <string name="title_about">Acerca de</string>
   <string name="title_account_delete_confirm">Eliminar conta</string>
@@ -1040,7 +1019,6 @@
   <string name="title_statuses">Chíos</string>
   <string name="title_statuses_and_replies">Chíos e respostas</string>
   <string name="title_statuses_scheduling">Programando chíos</string>
-  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nome</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

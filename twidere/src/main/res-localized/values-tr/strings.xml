@@ -245,7 +245,6 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji destek</string>
   <string name="empty_content">Boş içerik</string>
-  <string name="enable_streaming">Akışı etkinleştir</string>
   <string name="error_message">Hata: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_device_incompatible">Bu cihaz Twidere ile uyumlu değildir, en son Android işletim sistemi yükseltme önerilir.\nYardımcı olabilmek için aşağıdaki bilgileri gönderebilirsiniz.</string>
   <string name="error_message_media_upload_failed">Medya aktarımı başarısız.</string>
@@ -353,7 +352,6 @@
   <!-- Mastodon feature, post to followers only -->
   <!-- Mastodon feature, post to public timelines -->
   <!-- Mastodon feature, do not show in public timelines -->
-  <string name="label_streaming_service">Akış servisi</string>
   <string name="label_translate_from_language">Şunu çevir <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Çevir</string>
   <string name="label_your_profile_image">Profil fotoğrafınız</string>
@@ -518,7 +516,6 @@
   <string name="preference_title_landscape">Yatay</string>
   <string name="preference_title_portrait">Dikey</string>
   <string name="preference_title_storage">Depolama</string>
-  <string name="preference_title_streaming_enabled">Akışı etkinleştir</string>
   <string name="preference_title_text_size">Yazı Boyutu</string>
   <string name="preference_title_translate">Çevir</string>
   <string name="preference_title_trends_location">Gündem konumu</string>
@@ -636,7 +633,6 @@
   <string name="settings_interface">Arayüz</string>
   <string name="settings_notifications">Bildirimler</string>
   <string name="settings_refresh">Yenile</string>
-  <string name="settings_streaming">Akış</string>
   <string name="share_format">Paylaşma şekli</string>
   <string name="share_format_summary">\"[TITLE]\" = İçerik başlığı\n\"[TEXT]\" = İçerik metni</string>
   <string name="share_link">Bağlantı paylaş</string>
@@ -673,10 +669,6 @@
   <string name="status_shortener_default">Hiçbiri (Göndermekten vazgeç)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet et</string>
-  <string name="stream_type_home">Anasayfa</string>
-  <string name="stream_type_interactions">Etkileşimler</string>
-  <string name="stream_type_messages">Mesajlar</string>
-  <string name="streaming">Akış</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listesine abone olundu.</string>
   <string name="swipe_down_to_refresh">Yenileme için aşağı doğru sürükleyin</string>
@@ -706,7 +698,6 @@
   <string name="theme_light">Işık</string>
   <string name="thumbor_integration">Thumbor entegrasyonu</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, <xliff:g id="source">%2$s</xliff:g> kullanılarak</string>
-  <string name="timeline_streaming_running">Zaman çizelgesi akışı çalıştır</string>
   <string name="timeline_sync_service">Zaman çizelgesi senkronizasyon servisi</string>
   <string name="title_about">Hakkında</string>
   <string name="title_accounts">Hesaplar</string>
@@ -737,7 +728,6 @@
   <string name="title_set_nickname">Lakap ayarla</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweetler</string>
-  <string name="title_streaming">Akış</string>
   <string name="title_subscription_name">Ad</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
