@@ -22,12 +22,6 @@ package org.mariotaku.twidere.view.holder.status
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
-import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.appcompat.widget.ActionMenuView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -38,6 +32,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
+import androidx.appcompat.widget.ActionMenuView
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
@@ -339,7 +339,7 @@ class DetailStatusViewHolder(
 
 
         val lang = status.lang
-        if (CheckUtils.isValidLocale(lang) && account.isOfficial(context)) {
+        if (CheckUtils.isValidLocale(lang) /* && account.isOfficial(context)*/) {
             translateContainer.visibility = View.VISIBLE
             if (translation != null) {
                 val locale = Locale(translation.translatedLang)

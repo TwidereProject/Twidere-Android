@@ -10,6 +10,7 @@ import org.mariotaku.ktextension.bcp47Tag
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
+import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
@@ -86,6 +87,7 @@ val lastLaunchTimeKey = KLongKey("last_launch_time", -1)
 val promotionsEnabledKey = KBooleanKey("promotions_enabled", false)
 val translationDestinationKey = KNullableStringKey(KEY_TRANSLATION_DESTINATION, null)
 val tabPositionKey = KStringKey(KEY_TAB_POSITION, SharedPreferenceConstants.DEFAULT_TAB_POSITION)
+val yandexKeyKey = KStringKey(SharedPreferenceConstants.KEY_YANDEX_KEY, TwidereConstants.YANDEX_KEY)
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,

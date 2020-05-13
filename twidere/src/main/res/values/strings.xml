@@ -326,6 +326,8 @@
     <string name="dns_server">DNS Server</string>
     <string name="dns_server_summary">Set DNS Server for network requests.</string>
 
+    <string name="yandex_key">Yandex Api Key</string>
+
     <string name="draft_saved">Draft saved</string>
 
     <string name="drafts_hint_messages">Your unsent tweets will save here</string>
