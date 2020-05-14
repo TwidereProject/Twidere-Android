@@ -890,6 +890,7 @@
     <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
     <string name="preference_summary_sync_timeline_positions">When \"Remember position\" enabled</string>
     <string name="preference_summary_trends_location">Now you can set location separately in tab settings.</string>
+    <string name="preference_summary_auto_hide_tabs">Hide Tab when there\'s only one tab</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_title_auto_refresh_compatibility_mode">Compatibility mode</string>
@@ -908,6 +909,7 @@
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
     <string name="preference_title_navbar_style">Navbar style</string>
     <string name="preference_title_tab_position">Tab position</string>
+    <string name="preference_title_auto_hide_tab">Auto hide Tab</string>
     <string name="preference_title_notification_channels">Channels</string>
     <string name="preference_title_notification_ringtone">Ringtone</string>
     <string name="preference_title_override_language">App language</string>
