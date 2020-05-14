@@ -71,6 +71,7 @@ class StatusDetailsAdapter(
     private val inflater: LayoutInflater
     private val cardBackgroundColor: Int
     private val showCardActions = !preferences[hideCardActionsKey]
+    private val showCardNumbers = !preferences[hideCardNumbersKey]
     private var recyclerView: RecyclerView? = null
     private var detailMediaExpanded: Boolean = false
 
@@ -171,6 +172,11 @@ class StatusDetailsAdapter(
 
     override fun getStatusCount(raw: Boolean): Int {
         return getTypeCount(ITEM_IDX_CONVERSATION) + getTypeCount(ITEM_IDX_STATUS) + getTypeCount(ITEM_IDX_REPLY)
+    }
+
+    override fun isCardNumbersShown(position: Int): Boolean {
+        if (position == RecyclerView.NO_POSITION) return showCardNumbers
+        return showCardNumbers || showingActionCardPosition == position
     }
 
     override fun isCardActionsShown(position: Int): Boolean {

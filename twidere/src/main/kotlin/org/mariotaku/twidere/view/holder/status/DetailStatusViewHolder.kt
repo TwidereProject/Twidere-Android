@@ -52,6 +52,7 @@ import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.StatusDetailsAdapter
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.hideCardNumbersKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
@@ -543,7 +544,7 @@ class DetailStatusViewHolder(
                     (holder as ProfileImageViewHolder).displayUser(getUser(position)!!)
                 }
                 ITEM_VIEW_TYPE_COUNT -> {
-                    (holder as CountViewHolder).displayCount(getCount(position)!!)
+                    (holder as CountViewHolder).displayCount(getCount(position)!!, preferences[hideCardNumbersKey])
                 }
             }
         }
@@ -702,7 +703,7 @@ class DetailStatusViewHolder(
                 adapter.notifyItemClick(layoutPosition)
             }
 
-            fun displayCount(count: LabeledCount) {
+            fun displayCount(count: LabeledCount, hideNumbers: Boolean) {
                 val label: String
                 when (count.type) {
                     KEY_REPLY_COUNT -> {
@@ -718,7 +719,9 @@ class DetailStatusViewHolder(
                         throw UnsupportedOperationException("Unsupported type " + count.type)
                     }
                 }
-                itemView.count.text = Utils.getLocalizedNumber(Locale.getDefault(), count.count)
+                if (!hideNumbers) {
+                    itemView.count.text = Utils.getLocalizedNumber(Locale.getDefault(), count.count)
+                }
                 itemView.label.text = label
             }
         }

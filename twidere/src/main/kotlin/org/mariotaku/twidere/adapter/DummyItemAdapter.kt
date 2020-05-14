@@ -2,9 +2,9 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.SparseBooleanArray
 import androidx.core.text.BidiFormatter
 import androidx.recyclerview.widget.RecyclerView
-import android.util.SparseBooleanArray
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
@@ -13,8 +13,8 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.constant.*
-import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.extension.model.activityStatus
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -63,6 +63,8 @@ class DummyItemAdapter(
 
     var showCardActions: Boolean = false
 
+    var showCardNumbers: Boolean = false
+
     private var showingActionCardPosition = RecyclerView.NO_POSITION
     private val showingFullTextStates = SparseBooleanArray()
 
@@ -97,6 +99,11 @@ class DummyItemAdapter(
     override fun getAccountKey(position: Int, raw: Boolean) = UserKey.INVALID
 
     override fun findStatusById(accountKey: UserKey, statusId: String) = null
+
+    override fun isCardNumbersShown(position: Int): Boolean {
+        if (position == RecyclerView.NO_POSITION) return showCardNumbers
+        return showCardNumbers || showingActionCardPosition == position
+    }
 
     override fun isCardActionsShown(position: Int): Boolean {
         if (position == RecyclerView.NO_POSITION) return showCardActions
@@ -181,6 +188,7 @@ class DummyItemAdapter(
         mediaPreviewEnabled = preferences[mediaPreviewKey]
         sensitiveContentEnabled = preferences[displaySensitiveContentsKey]
         showCardActions = !preferences[hideCardActionsKey]
+        showCardNumbers = !preferences[hideCardNumbersKey]
         linkHighlightingStyle = preferences[linkHighlightOptionKey]
         lightFont = preferences[lightFontKey]
         useStarsForLikes = preferences[iWantMyStarsBackKey]

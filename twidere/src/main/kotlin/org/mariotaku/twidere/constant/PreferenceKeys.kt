@@ -89,6 +89,8 @@ val translationDestinationKey = KNullableStringKey(KEY_TRANSLATION_DESTINATION, 
 val tabPositionKey = KStringKey(KEY_TAB_POSITION, SharedPreferenceConstants.DEFAULT_TAB_POSITION)
 val yandexKeyKey = KStringKey(SharedPreferenceConstants.KEY_YANDEX_KEY, TwidereConstants.YANDEX_KEY)
 val autoHideTabs = KBooleanKey(SharedPreferenceConstants.KEY_AUTO_HIDE_TABS, true)
+val hideCardNumbersKey = KBooleanKey(KEY_HIDE_CARD_NUMBERS, false)
+
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
     override fun read(preferences: SharedPreferences) = preferences.getInt(key, def).coerceIn(100,

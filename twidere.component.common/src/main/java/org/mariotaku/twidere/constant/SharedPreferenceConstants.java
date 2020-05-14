@@ -289,6 +289,8 @@ public interface SharedPreferenceConstants {
     String KEY_YANDEX_KEY = "yandex_key";
     @ExportablePreference(BOOLEAN)
     String KEY_AUTO_HIDE_TABS = "auto_hide_tabs";
+    @ExportablePreference(BOOLEAN)
+    String KEY_HIDE_CARD_NUMBERS = "hide_card_numbers";
 
     // Internal preferences
 

@@ -79,6 +79,7 @@ abstract class ParcelableStatusesAdapter(
     final override val mediaPreviewEnabled: Boolean = Utils.isMediaPreviewEnabled(context, preferences)
     final override val sensitiveContentEnabled: Boolean = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
     private val showCardActions: Boolean = !preferences[hideCardActionsKey]
+    private val showCardNumbers: Boolean = !preferences[hideCardNumbersKey]
 
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
 
@@ -259,6 +260,11 @@ abstract class ParcelableStatusesAdapter(
         }, { status ->
             return@getFieldValue status.account_key
         }, def, raw)!!
+    }
+
+    override fun isCardNumbersShown(position: Int): Boolean {
+        if (position == RecyclerView.NO_POSITION) return showCardNumbers
+        return showCardNumbers || showingActionCardId == getItemId(position)
     }
 
     override fun isCardActionsShown(position: Int): Boolean {

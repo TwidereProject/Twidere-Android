@@ -75,6 +75,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
         adapter = DummyItemAdapter(context!!, requestManager = requestManager)
         adapter.showCardActions = false
+        adapter.showCardNumbers = false
         adapter.showAccountsColor = true
 
         val dialog = builder.create()
