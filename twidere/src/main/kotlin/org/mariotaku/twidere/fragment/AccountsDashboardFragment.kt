@@ -51,6 +51,7 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
@@ -108,6 +109,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     private val floatingProfileImageSnapshot by lazy { accountsHeader.floatingProfileImageSnapshot }
     private val accountProfileImageView by lazy { accountsHeader.profileImage }
     private val accountProfileNameView by lazy { accountsHeader.name }
+    private val accountUserTypeView by lazy { accountsHeader.user_type }
     private val accountProfileScreenNameView by lazy { accountsHeader.screenName }
     private val accountDashboardMenu by lazy { accountsHeader.accountDashboardMenu }
     private val profileContainer by lazy { accountsHeader.profileContainer }
@@ -548,6 +550,12 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         if (context == null || isDetached || (activity?.isFinishing != false)) return
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.spannable = account.user.name
+        accountsAdapter.accounts?.groupBy { it.type }?.count()?.let {
+            it > 1
+        }?.let {
+            accountUserTypeView.isVisible = it
+        }
+        accountUserTypeView.spannable = account.type
         accountProfileScreenNameView.spannable = "@${account.user.screen_name}"
         requestManager.loadProfileImage(context!!, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
