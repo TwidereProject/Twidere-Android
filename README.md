@@ -4,9 +4,12 @@
 [![Travis status](https://img.shields.io/travis/TwidereProject/Twidere-Android.svg)](https://travis-ci.org/TwidereProject/Twidere-Android/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
 
-Material Design ready and feature rich Twitter app for Android 4.0+
+Material Design ready and feature rich Twitter app for Android 4.4+
 
 Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
+
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
+[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
 
 ---
 
@@ -29,19 +32,13 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 * Schedule tweets even when you're offline by [Buffer](https://buffer.com/)
 * Search & share GIFs by [GIPHY](https://giphy.com/)
 
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
-[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
-
 ---
-
 ## Credits ##
-
+### Initiator ###
+* [@mariotaku](https://twitter.com/mariotaku)
 ### Material re-design ###
-
 * [@Uucky_Lee](https://twitter.com/Uucky_Lee)
-
 ### Icon designers ###
-
 * [@NovaDNG](https://twitter.com/NovaDNG)
 * [@Linkzero](https://twitter.com/Linkzero)
 * [@lordfriend](https://twitter.com/lordfriend)
@@ -49,7 +46,6 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 * [@Rieya](https://twitter.com/Rieya)
 
 Thanks to their excellent design!
-
 ### Open source projects ###
 
 See dependencies in `build.gradle`
@@ -59,7 +55,6 @@ See dependencies in `build.gradle`
 ## Support my work ##
 
 ### Translation ###
-
 I started a crowdin project, so anyone can do something for Twidere. Visit this [crowdin project page](http://crowdin.net/project/twidere)
 
 ### Donation ###
@@ -76,13 +71,10 @@ Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
 
 <a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png' width='160'/></a>
 
-If you donate on behalf of an organization or company, feel free to contact me. I'll add your logo to this list. 
+If you donate on behalf of an organization or company, feel free to contact us. I'll add your logo to this list. 
 
 ---
-
 ## License ##
-
-
     /*
      * Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
      *
@@ -100,10 +92,4 @@ If you donate on behalf of an organization or company, feel free to contact me. 
      * along with this program.  If not, see <http://www.gnu.org/licenses/>.
      */
 
----
 
-## Notes ##
-
-### Closed Source Licensing ###
-
-If you wish to use Twidere's code base but don't want to release your modified source code, please contact `mariotaku.lee@gmail.com`.
