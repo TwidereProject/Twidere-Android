@@ -35,13 +35,11 @@ import android.view.ViewGroup
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import kotlinx.android.synthetic.main.layout_media_viewer_exo_player_view.*
 import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
@@ -346,7 +344,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         val factory = AuthDelegatingDataSourceFactory(uri, account, dataSourceFactory)
         val uriSource = ProgressiveMediaSource.Factory(factory, extractorsFactory).createMediaSource(uri)
         (playerView.player as? SimpleExoPlayer)?.apply {
-          repeatMode = Player.REPEAT_MODE_ALL
+          repeatMode = if (isLoopEnabled) Player.REPEAT_MODE_ALL else Player.REPEAT_MODE_OFF
           prepare(uriSource)
         }
         updateVolume()
