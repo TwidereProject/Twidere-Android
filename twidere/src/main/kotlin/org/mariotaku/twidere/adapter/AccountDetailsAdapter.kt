@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerViewAccessor
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.recyclerview.widget.RecyclerViewAccessor
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
@@ -59,8 +59,9 @@ class AccountDetailsAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = super.getView(position, convertView, parent)
+        val showType = objects.groupBy { it.type }.count().let { it > 1 }
         val holder = view.tag as? AccountViewHolder ?: run {
-            val h = AccountViewHolder(this, view)
+            val h = AccountViewHolder(this, view, showType)
             view.tag = h
             return@run h
         }

@@ -26,6 +26,7 @@ import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
@@ -63,7 +64,12 @@ class AccountsSpinnerAdapter(
             text1?.visibility = View.VISIBLE
             text1?.spannable = item.user.name
             text2?.visibility = View.VISIBLE
-            text2?.spannable = "@${item.user.screen_name}"
+            val showType = objects.filter { it.type != null }.groupBy { it.type }.count().let { it > 1 }
+            text2?.spannable = if (item.type == AccountType.MASTODON) {
+                item.account.name
+            } else {
+                "${if (showType) item.type else ""}@${item.user.screen_name}"
+            }
             if (icon != null) {
                 if (profileImageEnabled) {
                     icon.visibility = View.VISIBLE

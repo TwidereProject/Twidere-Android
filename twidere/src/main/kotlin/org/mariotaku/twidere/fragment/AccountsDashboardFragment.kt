@@ -38,20 +38,20 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-import androidx.loader.app.LoaderManager.LoaderCallbacks
-import androidx.core.content.ContextCompat
-import androidx.loader.content.FixedAsyncTaskLoader
-import androidx.loader.content.Loader
-import androidx.core.view.MenuItemCompat
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.view.SupportMenuInflater
-import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import androidx.appcompat.view.SupportMenuInflater
+import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
+import androidx.core.content.ContextCompat
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.isVisible
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.FixedAsyncTaskLoader
+import androidx.loader.content.Loader
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
@@ -109,7 +109,6 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     private val floatingProfileImageSnapshot by lazy { accountsHeader.floatingProfileImageSnapshot }
     private val accountProfileImageView by lazy { accountsHeader.profileImage }
     private val accountProfileNameView by lazy { accountsHeader.name }
-    private val accountUserTypeView by lazy { accountsHeader.user_type }
     private val accountProfileScreenNameView by lazy { accountsHeader.screenName }
     private val accountDashboardMenu by lazy { accountsHeader.accountDashboardMenu }
     private val profileContainer by lazy { accountsHeader.profileContainer }
@@ -550,13 +549,14 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         if (context == null || isDetached || (activity?.isFinishing != false)) return
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.spannable = account.user.name
-        accountsAdapter.accounts?.groupBy { it.type }?.count()?.let {
+        val showType = accountsAdapter.accounts?.groupBy { it.type }?.count()?.let {
             it > 1
-        }?.let {
-            accountUserTypeView.isVisible = it
+        } ?: false
+        accountProfileScreenNameView.spannable = if (account.type == AccountType.MASTODON) {
+            account.account.name
+        } else {
+            "${if (showType) account.type else ""}@${account.user.screen_name}"
         }
-        accountUserTypeView.spannable = account.type
-        accountProfileScreenNameView.spannable = "@${account.user.screen_name}"
         requestManager.loadProfileImage(context!!, account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
                 ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)
