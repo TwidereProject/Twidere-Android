@@ -48,7 +48,7 @@ class StatusRetweetersLoader(
         when (details.type) {
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                val response = mastodon.getStatusFavouritedBy(statusId)
+                val response = mastodon.getStatusRebloggedBy(statusId)
                 return PaginatedArrayList<ParcelableUser>(response.size).apply {
                     response.mapTo(this) { account ->
                         account.toParcelable(details)
