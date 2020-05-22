@@ -58,7 +58,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.viewpager.widget.ViewPager
 import androidx.core.view.WindowCompat
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -152,7 +152,7 @@ import java.util.*
 
 class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
-        SystemWindowInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
+        SystemWindowInsetsCallback, RefreshScrollTopInterface, ViewPager.OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
         IToolBarSupportFragment, StatusesFragmentDelegate,
         AbsContentRecyclerViewFragment.RefreshCompleteListener {
@@ -378,7 +378,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-
+        userProfileSwipeLayout.setEnabled(state == ViewPager.SCROLL_STATE_IDLE)
     }
 
     override fun scrollBy(dy: Float) {
