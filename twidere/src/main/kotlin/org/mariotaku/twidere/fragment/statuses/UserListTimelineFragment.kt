@@ -28,6 +28,7 @@ import org.mariotaku.twidere.fragment.ParcelableStatusesFragment
 import org.mariotaku.twidere.loader.statuses.UserListTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.util.Utils
 import java.util.*
 
@@ -94,6 +95,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {
         refreshing = true
+        val extras = arguments?.getParcelable<HomeTabExtras>(EXTRA_EXTRAS)
         val accountKey = Utils.getAccountKey(context, args)
         val listId = args.getString(EXTRA_LIST_ID)
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
@@ -102,7 +104,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return UserListTimelineLoader(activity!!, accountKey, listId, userKey, screenName, listName,
-                adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
+                adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore, extras)
     }
 
 }

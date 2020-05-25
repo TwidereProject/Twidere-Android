@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="account_options">Možnosti účtu</string>
+    <string name="account_type_fanfou">Fanfou</string>
+    <string name="account_type_mastodon">Mostodon</string>
+    <string name="account_type_statusnet">StatusNet</string>
+    <string name="account_type_twitter">Twitter</string>
+    <!-- [verb] Accept a friend request (follow request) -->
+    <string name="action_accept_friend_request">Přijmout</string>
+    <!-- [verb] Accept a permission request like allow to use camera etc. -->
+    <string name="action_accept_permission_request">Přijmout</string>
+    <!-- [verb] Add an item to a list/collection -->
+    <string name="action_add">Přidat</string>
+    <string name="action_add_content_warning">Přidat varování o obsahu</string>
+    <!-- [verb] Add a member to a message conversation -->
+    <string name="action_add_conversation_participant">Přidat člena</string>
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">Přidat pravidlo</string>
+    <string name="action_add_filters_subscription">Přidat objednávku</string>
+    <string name="action_add_gif">Přidat GIF</string>
+    <string name="action_add_media">Přidat média</string>
+    <string name="action_add_member">Přidat člena</string>
+    <string name="action_add_name_to_home_screen">Přidat <xliff:g example="Name" id="name">%1$s</xliff:g> na domácí obrazovku</string>
+    <string name="action_add_tab">Přidat záložku</string>
+    <string name="action_add_tab_to_home_screen">Přidat záložku na domácí obrazovku</string>
+    <string name="action_add_to_filter">Přidat do filtru</string>
+    <string name="action_add_to_home_screen">Přidat na domácí obrazovku</string>
+    <string name="action_add_to_home_screen_more">Přidat na domácí obrazovku&#8230;</string>
+    <string name="action_add_to_list">Přidat do seznamu</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">Blokovat</string>
+    <string name="action_buffer_disconnect">Odpojit od mezipaměti</string>
+    <string name="action_buffer_settings">Nastavení</string>
+    <string name="action_buffer_update_now">Publikovat nyní</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_cancel_retweet">Zrušit retweet</string>
+    <string name="action_center">Vyrovnat do středu</string>
+    <string name="action_change_language">Změnit jazyk</string>
+    <string name="action_clear">Vymazat</string>
+    <string name="action_clear_messages">Vymazat všechny zprávy</string>
+    <string name="action_clear_messages_and_delete_conversation">Vyčistit a smazat konverzaci</string>
+    <string name="action_comment">Komentovat</string>
+    <string name="action_compose">Napsat</string>
+    <string name="action_compose_message_convert_to_status">Převést na tweet</string>
+    <string name="action_connect_to_buffer">Připojit</string>
+    <string name="action_conversation_info">Info o konverzaci</string>
+    <string name="action_create_conversation">Založit konverzaci</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">Smazat</string>
+    <string name="action_delete_messages">Odstranit zprávy</string>
+    <string name="action_disable_promotions">Vypnout povýšení</string>
+    <string name="action_dont_restart">Nerestartovat</string>
+    <string name="action_dont_terminate">Neuzavírat</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_edit">Editovat</string>
+    <string name="action_edit_conversation_avatar">Upravit ikonu</string>
+    <string name="action_edit_conversation_name">Upravit jméno</string>
+    <string name="action_edit_filter_rule">Upravit pravidlo</string>
+    <string name="action_enable">Povolit</string>
+    <string name="action_enable_notifications">Povolit upozornění</string>
+    <string name="action_enable_promotions">Zapnout povýšení</string>
+    <string name="action_enable_retweets">Povolit retweety</string>
+    <string name="action_export_to_muted_users">Exportovat do utišených uživatelů</string>
+    <string name="action_favorite">Přidat do oblíbených</string>
+    <string name="action_filter_import_from_blocked_users">Import z blokovaných uživatelů</string>
+    <string name="action_filter_import_from_muted_users">Import z utišených uživatelů</string>
+    <string name="action_filter_subscriptions_card_manage">Správa objednávek</string>
+    <string name="action_finish">Dokončit</string>
+    <string name="action_follow">Sledovat</string>
+    <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
+    <!-- [verb] Perform import action -->
+    <string name="action_import">Importovat</string>
+    <string name="action_import_from">Importovat z&#8230;</string>
+    <string name="action_invert_selection">Obrácený výběr</string>
+    <!-- Used for decide something later, like permission request -->
+    <string name="action_later">Později</string>
+    <string name="action_leave_conversation">Opustit konverzaci</string>
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_like">To se mi líbí</string>
+    <string name="action_list_creator">Vypsat původce</string>
+    <string name="action_location">Umístění</string>
+    <string name="action_manage_in_buffer">Správa v mezipaměti</string>
+    <string name="action_mark_as_read">Označit jako prečtený</string>
+    <string name="action_mute">Ztlumit</string>
+    <string name="action_mute_notifications">Ztlumit oznámení</string>
+    <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, uloženo <xliff:g id="time">%2$s</xliff:g></string>
+    <string name="action_next_step">Další</string>
+    <string name="action_no_thanks">Ne, děkuji</string>
+    <string name="action_open_in_browser">Otevřít v prohlížeči</string>
+    <string name="action_pick_color">Vybrat barvu</string>
+    <string name="action_purchase">Koupit</string>
+    <string name="action_purchase_features_pack">Koupit balík funkcí</string>
+    <string name="action_qr_code">QR kód</string>
+    <string name="action_quote">Poznámka</string>
+    <string name="action_record_video">Nahrát video</string>
+    <string name="action_refresh">Aktualizovat</string>
+    <string name="action_refresh_launch_presentations">Aktualizovat spouštěcí obrazovky</string>
+    <string name="action_register">Registrovat</string>
+    <string name="action_remove_conversation_avatar">Odstranit ikonu</string>
+    <string name="action_reply">Odpovědět</string>
+    <string name="action_report_spam">Nahlásit spam</string>
+    <!-- [verb] Restore purchase -->
+    <string name="action_restore_purchase">Obnovit</string>
+    <string name="action_retry">Opakovat</string>
+    <!-- [verb] Action for performing retweet -->
+    <string name="action_retweet">Retweetovat</string>
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">Uložit</string>
+    <string name="action_save_to">Uložit do&#8230;</string>
+    <string name="action_search">Hledat</string>
+    <string name="action_select_all">Vybrat vše</string>
+    <string name="action_select_none">Nevybrat nic</string>
+    <string name="action_select_user">Vybrat uživatele</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">Poslat</string>
+    <string name="action_set_color">Nastavit barvu</string>
+    <string name="action_set_nickname">Nastavit přezdívku</string>
+    <string name="action_set_status_visibility">Nastavit viditelnost</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="action_share">Sdílet</string>
+    <string name="action_sign_in">Přihlásit se</string>
+    <!-- [verb] Used for skip some settings -->
+    <string name="action_skip">Přeskočit</string>
+    <string name="action_start">Start</string>
+    <string name="action_status_attachment">Příloha tweetu</string>
+    <string name="action_status_block_users">Blokovaní uživatelé&#8230;</string>
+    <string name="action_status_mute_users">Ztlumení uživatelé&#8230;</string>
+    <string name="action_status_pin">Připnout tweet</string>
+    <string name="action_status_schedule">Naplánovat tweet</string>
+    <string name="action_status_unpin">Odepnout tweet</string>
+    <string name="action_subscribe">Odebírat</string>
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <string name="action_sync_connect_to_storage">Připojit</string>
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_disconnect">Odpojit</string>
+    <string name="action_sync_settings">Nastavení</string>
+    <string name="action_sync_sync_now">Synchronizovat nyní</string>
+    <string name="action_take_photo">Vyfotit</string>
+    <string name="action_toggle">Přepnout</string>
+    <string name="action_translate">Překlad</string>
+    <string name="action_twitter_mute_user">Ztlumit uživatele</string>
+    <string name="action_twitter_muted_users">Ztlumit uživatele</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_unblock">Odblokovat</string>
+    <string name="action_undo_like">To se mi nelíbí</string>
+    <string name="action_unfavorite">Odstranit z oblíbených</string>
+    <string name="action_unfollow">Přestat sledovat</string>
+    <string name="action_unmute">Odtlumit</string>
+    <string name="action_unsubscribe">Neodebírat</string>
+    <string name="action_view_map">Mapa</string>
+    <string name="activated_accounts">Aktivované účty</string>
+    <string name="activities_about_me">Aktivity o mně</string>
+    <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> přidal do oblíbených</string>
+    <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> přidali do oblíbených</string>
+    <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> přidal do oblíbených tweet, kde jste zatagován</string>
+    <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> přidali do oblíbených tweet, kde jste zatagován</string>
+    <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> přidal do oblíbených tweet, kde jste zmíněn</string>
+    <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> přidali do oblíbených tweet, kde jste zmíněn</string>
+    <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> přidal váš retweet do oblíbených</string>
+    <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> přidali váš retweet do oblíbených</string>
+    <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> vás sleduje</string>
+    <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> vás sledují</string>
+    <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> lajknul</string>
+    <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> lajkli</string>
+    <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> lajkoval tweet se štítkem na Vás</string>
+    <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> lajkovali tweet se štítkem na Vás</string>
+    <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> lajkoval tweet se zmínkou o Vás</string>
+    <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> lajkoval tweet se zmínkou o Vás</string>
+    <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> lajkoval Váš retweet</string>
+    <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> lajkovali Váš retweet</string>
+    <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> Vás přidal do seznamu</string>
+    <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> Vás přidali do seznamu</string>
+    <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> Vás přidal do seznamu \"<xliff:g id="list">%2$s</xliff:g>\"</string>
+    <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> Vás oštítkoval</string>
+    <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> Vás oštítkovali</string>
+    <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweetoval</string>
+    <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> retweetovali</string>
+    <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweetovali tweet se štítkem na Vás</string>
+    <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> retweetovali tweet se štítkem na Vás</string>
+    <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweetoval tweet se zmínkou o Vás</string>
+    <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> retweetovali tweet se zmínkou o Vás</string>
+    <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweetoval Váš tweet</string>
+    <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> retweetovali Váš tweet</string>
+    <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> se přidal k Twitteru</string>
+    <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> a <xliff:g id="other">%2$s</xliff:g> se přidali k Twitteru</string>
+    <string name="add_account">Přidat účet</string>
+    <string name="add_host_mapping">Přidat mapu serverů</string>
+    <string name="add_image">Přidat obrázek</string>
+    <string name="and_N_more">a <xliff:g id="count">%d</xliff:g> dalších</string>
+    <string name="api_url_format">Formát adresy URL rozhraní API</string>
+    <string name="app_description">Vaše vlastní Twitter aplikace</string>
+    <!-- App name, normally you don't need to translate this. -->
+    <string name="app_name">Twidere</string>
+    <string name="app_restart_confirm">Pro aktivaci nastavení se Twidere restartuje.</string>
+    <string name="app_terminate_confirm">Pro aktivaci nastavení se Twidere ukončí.</string>
+    <string name="appearance">Vzhled</string>
+    <string name="auth_type_basic">Základní</string>
+    <string name="auth_type_oauth">OAuth</string>
+    <string name="auth_type_oauth2">OAuth 2</string>
+    <string name="auth_type_twip_o">Mód twip O</string>
+    <string name="auth_type_xauth">xAuth</string>
+    <string name="auto_refresh">Automatická aktualizace</string>
+    <string name="background">Pozadí</string>
+    <string name="bandwidth_saving_mode">Režim šetření dat</string>
+    <string name="bandwidth_saving_mode_summary">Vypnout náhled medií na měřeném připojení</string>
+    <string name="belongs_to">Patří do</string>
+    <string name="block_user_confirm_message">Blokovat <xliff:g example="Username" id="name">%s</xliff:g>? Tento uživatel Vás nebude moci následovat, zmínit Vás nebo Vám poslat přímou zprávu.</string>
+    <string name="bug_reports">Hlášení chyb</string>
+    <string name="bug_reports_summary">Pohání nás Fabric</string>
+    <string name="builtin_dns_resolver">Vestavěný DNS rezolvér</string>
+    <string name="cache_size_limit">Maximální velikost mezipaměti</string>
+    <string name="cant_load_all_replies_explanation">Kvůli omezení Twitteru vůči twitter applikacím třetích stran nemá Twidere žádný přístup k odpovědím na tweet, nemůžeme zaručit, že Twidere bude moci načíst všechny odpovědi na tweet.</string>
+    <string name="cant_load_all_replies_message">Nemohu načíst všechny odpovědi. &lt;a href=\"#dialog\";&gt;Proč?&lt;/a&gt;</string>
+    <string name="cards">Karty</string>
+    <string name="clear_cache">Vymazat mezipaměť</string>
+    <string name="clear_cache_summary">Vyčistit mezipaměť s uloženými médii.</string>
+    <string name="clear_databases">Vymazat databázi</string>
+    <string name="clear_databases_summary">Vyčistit všechny tweety, profily, zprávy. Údaje Vašeho účtu se neztratí.</string>
+    <string name="clear_search_history">Vymazat historii vyhledávání</string>
+    <string name="click_item_to_configure">Pro konfiguraci klikněte na položku</string>
+    <string name="close_accounts_dashboard">Zavřít ovládací panel účtů</string>
+    <string name="color">Barva</string>
+    <string name="combined_notifications">Kombinovaná oznámení</string>
+    <string name="combined_notifications_summary_off">Oznámení se zobrazí odděleně</string>
+    <string name="combined_notifications_summary_on">Oznámení se seskupí</string>
+    <string name="comment_hint">Komentář&#8230;</string>
+    <string name="compact_cards">Kompaktní karty</string>
+    <string name="compact_cards_summary">Ukázat na obrazovce víc karet</string>
+    <string name="compose_now">Vytvořit hned</string>
+    <string name="compose_now_action">Akce Napsat nyní</string>
+    <string name="compose_now_summary">Nahradí zkratku Google Now obrazovkou Napsat</string>
+    <string name="conflicts_with_name">V rozporu s \"<xliff:g id="name">%s</xliff:g>\"</string>
+    <string name="connection_timeout">Časový limit připojení vypršel</string>
+    <string name="consumer_key">Zákaznický kód</string>
+    <string name="consumer_secret">Tajný zákaznický kód</string>
+    <string name="content">Obsah</string>
+    <string name="content_and_storage">Obsah &amp; Úložiště</string>
+    <string name="content_description_sticker">Nálepka</string>
+    <string name="content_to_notify">Oznámit při obsahu</string>
+    <string name="content_to_refresh">Obsah k aktualizaci</string>
+    <string name="contributors_list_summary">Pokud jste nenalezli své jméno, prosím, sdělte to našemu projektovému účtu</string>
+    <string name="copy_link">Kopírovat odkaz</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="count_label_retweets">Retweety</string>
+    <string name="created_by">Vytvořil(a) <xliff:g id="created_by">%s </xliff:g></string>
+    <string name="created_list">Založen seznam \"<xliff:g id="list">%s</xliff:g>\".</string>
+    <string name="current_status">Aktuální tweet</string>
+    <string name="custom_host_mapping">Upravená mapa serverů</string>
+    <string name="custom_host_mapping_summary">Mapa serverů jako /etc/hosts, ale nežádá si další oprávnění.</string>
+    <string name="dark_theme">Tmavý motiv</string>
+    <string name="default_account">Výchozí účet</string>
+    <string name="default_api_settings">Výchozí nastavení API</string>
+    <string name="default_api_settings_summary">Tyto nastavení platí pouze pro nově přihlášené účty</string>
+    <string name="default_ringtone">Výchozí vyzvánění</string>
+    <string name="delete_conversation">Odstranit konverzaci</string>
+    <string name="delete_conversation_confirm_message">Odstranit všechny zprávy z této konverzace?</string>
+    <string name="delete_drafts_confirm">Odstranit vybrané koncepty?</string>
+    <string name="delete_message_confirm_message">Odstranit tuto zprávu?</string>
+    <string name="delete_user">Smazat uživatele <xliff:g id="name">%s</xliff:g></string>
+    <string name="delete_user_confirm_message">Smazat <xliff:g id="name">%s</xliff:g>? Nelze zvrátit.</string>
+    <string name="delete_user_from_list_confirm">Smazat <xliff:g id="user">%1$s</xliff:g> ze seznamu \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
+    <string name="delete_user_list">Smazat seznam <xliff:g id="name">%s</xliff:g></string>
+    <string name="delete_user_list_confirm_message">Smazat seznam <xliff:g id="name">%s</xliff:g>? Nelze zvrátit.</string>
+    <string name="delete_users">Odstranit uživatele</string>
+    <string name="deleted_list">Seznam \"<xliff:g id="list">%s</xliff:g>\" smazán.</string>
+    <string name="deleted_user_from_list"><xliff:g id="user">%1$s</xliff:g> smazán ze seznamu \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+    <string name="denied_users_follow_request">Požadavek následovat uživatele <xliff:g id="user">%s</xliff:g> odepřen.</string>
+    <string name="deny">Odmítnout</string>
+    <string name="destroy_saved_search">Smazat uložené hledání \"<xliff:g id="name">%s</xliff:g>\"</string>
+    <string name="destroy_saved_search_confirm_message">Smazat uložené hledání \"<xliff:g id="name">%s</xliff:g>\"? Můžete opětovně uložit později.</string>
+    <string name="destroy_status">Odstranit tweet</string>
+    <string name="destroy_status_confirm_message">Odstranit tento tweet?</string>
+    <string name="developed_by">Vytvořeno</string>
+    <string name="discard">Zahodit</string>
+    <string name="display_sensitive_contents">Zobrazit citlivý obsah</string>
+    <string name="display_sensitive_contents_summary">Zobrazit citlivý obsah bez zmínky v časové linii</string>
+    <string name="dns_server">DNS Server</string>
+    <string name="dns_server_summary">Nastavit DNS Server pro síťové požadavky.</string>
+    <string name="draft_saved">Šablona uložena</string>
+    <string name="drafts_hint_messages">Vaše neodeslané tweety budou uloženy zde</string>
+    <string name="drawer_toggle">Přepnutí zásuvky</string>
+    <string name="edit_api">Upravit API</string>
+    <string name="edit_description">Upravit popis</string>
+    <string name="edit_draft">Změnit koncept</string>
+    <string name="edit_media">Změnit media</string>
+    <string name="edit_tab">Upravit záložku</string>
+    <string name="edit_tabs">Změnit záložky</string>
+    <string name="ellipsis">&#8230;</string>
+    <string name="emoji_support">Podpora emoji</string>
+    <string name="empty_content">Prázdný obsah</string>
+    <string name="error_info_oauth_timestamp_error">Prosím, zkontrolujte nastavení data &amp; času svého systému.</string>
+    <string name="error_message">Error: <xliff:g id="message">%s</xliff:g></string>
+    <string name="error_message_device_incompatible">Toto zařízení není s Twidere kompatibilní, upgrade na poslední verzi Androidu se doporučuje.\nMůžete zaslat níže uvedenou informaci a tím mi pomoci nahlásit chybu výrobci zařízení.</string>
+    <string name="error_message_media_message_attachment_not_supported">Připojení médií k DM není podporováno</string>
+    <string name="error_message_media_message_too_many">Příliš mnoho médií</string>
+    <string name="error_message_media_upload_failed">Nahrání médií selhalo.</string>
+    <string name="error_message_media_uploader_not_found">Nahrávač médií nebyl nalezen, možná byl odinstalován.</string>
+    <string name="error_message_message_too_long">Zpráva je příliš dlouhá.</string>
+    <string name="error_message_message_too_many_participants">Příliš mnoho účastníků</string>
+    <string name="error_message_no_content">Žádný obsah</string>
+    <string name="error_message_rate_limit">Limit Twitteru byl překročen, zkuste to znovu <xliff:g id="time">%s</xliff:g></string>
+    <string name="error_message_scheduler_not_available">Plánovač tweetů není dostupný</string>
+    <string name="error_message_status_too_long">Příliš dlouhý tweet.</string>
+    <string name="error_message_tweet_shorten_failed">Zkrácení tweetu selhalo.</string>
+    <string name="error_message_tweet_shortener_not_found">Zkracovač tweetů nebyl nalezen, možná byl odinstalován.</string>
+    <string name="error_message_video_upload_not_supported">Nahrání videa není podporováno</string>
+    <string name="error_no_access_for_credentials">Vaše aplikace nemá přístup k tomuto zdroji.</string>
+    <string name="error_no_dm_permission">Oprávnění k přímé zprávě chybí, zkontrolujte nastavení oprávnění Vaši aplikace pro Twitter.</string>
+    <string name="error_title_device_incompatible">Nekompatibilní zařízení</string>
+    <string name="error_too_many_photos_fanfou">Příliš mnoho fotografií</string>
+    <string name="error_unknown_error">Neznámá chyba, pravděpodobně bug.</string>
+    <string name="exclude_this_host">Vyloučit tohoto hostitele</string>
+    <string name="excluded">Vyloučeno</string>
+    <string name="export_settings">Exportovat nastavení</string>
+    <string name="export_settings_type_dialog_title">Exportovat nastavení&#8230;</string>
+    <string name="extensions">Rozšíření</string>
+    <string name="external_group_host_format">Externí skupina na <xliff:g id="host">%s</xliff:g></string>
+    <string name="external_user_host_format">Externí uživatel na <xliff:g id="host">%s</xliff:g></string>
+    <string name="extra_configurations">Speciální konfigurace</string>
+    <string name="extra_feature_description_advanced_filters">Filtrovat objednávky, pokročilá pravidla, atd</string>
+    <string name="extra_feature_description_schedule_status">Naplánovat tweet (odeslat později)</string>
+    <string name="extra_feature_description_share_gif">Sdílet GIF v tweetu</string>
+    <string name="extra_feature_description_sync_data">Synchronizovat data s Dropbox, Google Drive atd.</string>
+    <string name="extra_feature_title_advanced_filters">Pokročilé filtry</string>
+    <!-- Enhanced (paid) features description -->
+    <string name="extra_features_description">Podpořte Twidere a získejte rozšířené funkce</string>
+    <string name="extra_features_pack_description">Nebo získejte všechny funkce zakoupením balíčku funkcí (včetně funkcí v budoucích verzích)</string>
+    <!-- Enhanced (paid) features title -->
+    <string name="extra_features_restore_purchase_hint">Pokud jste již rozšířené funkce zakoupili, můžete použít \'Obnovit\' k obnovení koupě.</string>
+    <string name="fab_visible">Plovoucí tlačítko akcí</string>
+    <string name="fab_visible_summary">Zobrazit plovoucí tlačítko funkcí</string>
+    <string name="fast_image_loading">Rychlý náčet obrázků</string>
+    <string name="fast_image_loading_summary">Umožní rychlejší náčet obrázků, vypněte, pokud se některé obrázky nemohou zobrazit.</string>
+    <string name="filter_everywhere">Fitrovat všude</string>
+    <string name="filter_everywhere_description">Toto bude v Twidere filtrováno:\n ·Tweety uživatelů\n ·Tweety zmiňující tohoto uživatele\n ·Retweety/citace tohoto uživatele</string>
+    <string name="filter_type_keywords">Klíčová slova</string>
+    <string name="filter_type_links">Odkazy</string>
+    <string name="filter_type_sources">Zdroje</string>
+    <string name="filter_type_users">Uživatelé</string>
+    <string name="filter_user_confirm_message">Přidat <xliff:g example="Username" id="name">%1$s</xliff:g> do filtru?</string>
+    <string name="follow_request_sent">Požadavek k sledování odeslán</string>
+    <string name="followed_user">Sleduji <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="following_only">Pouze Vámi sledovaní</string>
+    <string name="following_only_summary">Zobrazit oznámení pouze od uživatelů, které sledujete.</string>
+    <string name="following_you">Sledují Vás</string>
+    <string name="follows">Sledovat</string>
+    <string name="font">Písmo</string>
+    <string name="font_family">Rodina písma</string>
+    <string name="from_camera">Z fotoaparátu</string>
+    <string name="from_gallery">Z galerie</string>
+    <string name="from_name">Od <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="from_name_and_N_others">Od <xliff:g id="name">%1$s</xliff:g> a <xliff:g id="name">%2$d</xliff:g> jiných</string>
+    <string name="from_name_and_name">Od <xliff:g id="name">%1$s</xliff:g> a <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="function">Funkce</string>
+    <string name="general">Obecné</string>
+    <string name="getting_location">Získávání polohy</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="group">Skupina</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="groups">Skupiny</string>
+    <string name="hashtag">Hashtag</string>
+    <string name="hidden_settings">Skrytá nastavení</string>
+    <string name="hidden_settings_warning_message">NIKDY neupravujte tato nastavení, pokud nevíte, k čemu slouží, jinak to:\n * Zabije Vaši kočku\n * Vypustí jaderné zbraně v Severní Koreji\n * Změní všechny Mahou Shoujo na Majo\n * Zničí vesmír</string>
+    <string name="hidden_settings_warning_title">VAROVÁNÍ: Tato nastavení mohou ublížit!</string>
+    <string name="hide_card_actions">Skrýt akce na karty</string>
+    <string name="hide_quotes">Skrýt citace</string>
+    <string name="hide_replies">Skrýt odpovědi</string>
+    <string name="hide_retweets">Schovat retweety</string>
+    <string name="highlight">Zvýraznění</string>
+    <string name="highlight_and_underline">Zvýraznění a podtržení</string>
+    <string name="hint_accounts_dashboard_message">Pro otevření panelu účtů přetáhněte od okraje obrazovky.</string>
+    <string name="hint_accounts_dashboard_title">Panel účtů</string>
+    <string name="hint_conversation_name">Název konverzace</string>
+    <string name="hint_empty_filters_subscriptions">Žádné objednávky</string>
+    <string name="hint_error_field_required">Požadováno</string>
+    <string name="hint_error_message_no_content">Žádný obsah</string>
+    <string name="hint_message_select_user">Hledat uživatele</string>
+    <string name="hint_no_account">Žádný účet</string>
+    <string name="hint_search_gif">Hledat GIF</string>
+    <string name="hint_status_reply_to_user_removed">Bude odesláno jako citace, protože zmínka na autora tweetu byla odstraněna. &lt;a href=\"#dialog\";&gt; Proč?&lt;/a&gt;</string>
+    <string name="hints">Nápovědy</string>
+    <string name="home_refresh">Aktualizovat na domácí časové ose</string>
+    <string name="host_mapping_address">Adresa (Může být další adresa serveru)</string>
+    <string name="host_mapping_host">Server</string>
+    <string name="i_want_my_stars_back">Chci své hvězdy zpět!</string>
+    <string name="i_want_my_stars_back_summary">Použít oblíbené (★) místo lajk (♥︎)</string>
+    <string name="icon">Ikona</string>
+    <string name="icon_restored_message">Ikona obnovena!</string>
+    <string name="import_export_settings">Nastavení importu/exportu</string>
+    <string name="import_settings">Import nastavení</string>
+    <string name="import_settings_type_dialog_title">Import nastavení&#8230;</string>
+    <string name="in_reply_to_name">V odpovědi <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="inbox">Doručená pošta</string>
+    <string name="incoming_friendships">Nevyřízené požadavky následování</string>
+    <string name="input_text">Zadat text</string>
+    <string name="interactions">Interakce</string>
+    <string name="invalid_consumer_key">Neplatný spotřebitelský klíč</string>
+    <string name="invalid_consumer_secret">Neplatná spotřebitelská tajnost</string>
+    <string name="invalid_list_name">Musí začínat písmenem a může obsahovat pouze písmena, číslice, \"-\" nebo \"_\".</string>
+    <string name="invalid_tab">Neplatný panel</string>
+    <string name="jump_to_top">Přeskočit nahoru</string>
+    <string name="just_now">Právě teď</string>
+    <string name="keyboard_shortcut_back">Zpět</string>
+    <string name="keyboard_shortcut_hint">Stisknout klávesy</string>
+    <string name="keyboard_shortcuts">Klávesové zkratky</string>
+    <string name="keyword_filter_name">Klíčové slovo: <xliff:g id="name">%s </xliff:g></string>
+    <string name="label_account">Účet</string>
+    <string name="label_account_type">Typ účtu</string>
+    <string name="label_advanced">Pokročilé</string>
+    <string name="label_auth_type">Typ autentifikace</string>
+    <string name="label_background_operation_service">Služba na pozadí</string>
+    <string name="label_buffer_accounts">Účty v mezipaměti</string>
+    <string name="label_buffer_due_at_no_time">Bez uvedení času</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_g">G</string>
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_pg">PG</string>
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_pg13">PG-13</string>
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_r">R</string>
+    <string name="label_content_warning">Varování k obsahu</string>
+    <string name="label_data_provider">Poskytovatel databáze pro Twidere</string>
+    <string name="label_feedback_content">Obsah</string>
+    <string name="label_feedback_title">Název</string>
+    <string name="label_filter_apply_to">Provést na&#8230;</string>
+    <string name="label_filter_for">Na&#8230;</string>
+    <string name="label_filter_scope_home">Domů</string>
+    <string name="label_filter_scope_interactions">Interakce</string>
+    <string name="label_filter_scope_messages">Zprávy</string>
+    <string name="label_filter_scope_search_other">Další</string>
+    <string name="label_filter_scope_search_results">Výsledky hledání</string>
+    <string name="label_filter_target_description">Popis</string>
+    <string name="label_filter_target_name">Název</string>
+    <string name="label_filter_target_text">Text</string>
+    <string name="label_filters_subscription">Objednávka</string>
+    <string name="label_follow_request_sent">Požadavek k následování odeslán</string>
+    <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> přes <xliff:g example="api" id="source">%2$s</xliff:g></string>
+    <string name="label_location_coarse">Hrubá (město)</string>
+    <string name="label_location_no_location">Žádná</string>
+    <string name="label_location_precise">Přesná (souřadnice)</string>
+    <string name="label_location_your_coarse_location">Vaše hrubá poloha</string>
+    <string name="label_mastodon_host">Mastodon server</string>
+    <string name="label_media">Média</string>
+    <string name="label_original_status">Původní tweet</string>
+    <string name="label_password">Heslo</string>
+    <string name="label_password_sign_in">Přihlášení heslem</string>
+    <string name="label_photo">Foto</string>
+    <string name="label_photos">Fotografie</string>
+    <string name="label_poll">Anketa</string>
+    <string name="label_powered_by_giphy">Pohání nás GIPHY</string>
+    <string name="label_quote_name">Citace <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="label_quote_name_text">Citace <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="label_refresh_and_sync_service">Služba Aktualizace &amp; Synchronizace</string>
+    <string name="label_refresh_service">Obnovit službu</string>
+    <string name="label_reply_name">Odpověď <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="label_reply_name_text">Odpoveď <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="label_schedule_time_buffer_default">Výchozí Bufferu</string>
+    <string name="label_send_at">Odeslat kdy</string>
+    <string name="label_sensitive_content">Citlivý obsah</string>
+    <string name="label_status_hint">Co se děje?</string>
+    <string name="label_status_not_available">Tweet není k dispozici</string>
+    <string name="label_status_show_more">Ukázat víc</string>
+    <string name="label_status_type_reply">Odpovědět</string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <string name="label_status_visibility_direct">Přímo</string>
+    <!-- Mastodon feature, post to followers only -->
+    <string name="label_status_visibility_private">Soukromě</string>
+    <!-- Mastodon feature, post to public timelines -->
+    <string name="label_status_visibility_public">Věřejně</string>
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="label_status_visibility_unlisted">Mimo seznam</string>
+    <string name="label_statuses">Tweety</string>
+    <string name="label_statuses_replies">Tweety a odpovědi</string>
+    <string name="label_statuses_retweets">Tweety a retweety</string>
+    <string name="label_statuses_retweets_replies">Tweety, retweety a odpovědi</string>
+    <string name="label_translate_from_language">Přeložit z <xliff:g id="language">%s</xliff:g></string>
+    <string name="label_translated_to_language">Přeložit do <xliff:g id="language">%s</xliff:g></string>
+    <string name="label_translation">Překlad</string>
+    <string name="label_username">Uživatelské jméno</string>
+    <string name="label_video">Video</string>
+    <string name="label_your_profile_image">Váš profilový obrázek</string>
+    <string name="large">Velké</string>
+    <string name="leftside_compose_button">Tlačítko Napsat na levé straně</string>
+    <string name="leftside_compose_button_summary">Přesunout tlačítko Napsat doleva.</string>
+    <string name="link_highlight_option">Možnost zvýraznění odkazu</string>
+    <string name="link_to_quoted_status">Odkázat na citovaný tweet</string>
+    <string name="list_members">Vyjmenovat členy</string>
+    <string name="list_subscribers">Vyjmenovat odběratele</string>
+    <string name="list_timeline">Seznam časové osy</string>
+    <string name="listed">Uvedené</string>
+    <string name="lists">Seznamy</string>
+    <string name="lists_following_user">Uvede následující tohoto uživatele</string>
+    <string name="lists_following_user_with_name">Uvede následující uživatele <xliff:g id="name">%s</xliff:g></string>
+    <string name="load_defaults">Načíst výchozí hodnoty</string>
+    <string name="load_item_limit">Limit zobrazených položek</string>
+    <string name="load_item_limit_summary">Zadejte limit položek k zobrazení.</string>
+    <string name="load_media">Načíst média</string>
+    <string name="load_more">Načíst další</string>
+    <string name="load_more_from_top">Načíst více shora</string>
+    <string name="load_more_from_top_summary">Užitečné, pokud dáváte přednost čtení zdola nahoru</string>
+    <string name="location_countrywide">V celé zemi</string>
+    <string name="login_challenge_retype_email_hint">Zadejte znovu emailovou adresu spojenou s Vaším účtem Twitteru.</string>
+    <string name="login_challenge_retype_phone_hint">Zadejte znovu telefonní číslo spojené s Vaším účtem Twitteru.</string>
+    <string name="login_type_default">Výchozí</string>
+    <string name="login_type_user_settings">Uživatelská nastavení</string>
+    <string name="login_verification">Ověření přihlášení</string>
+    <string name="login_verification_pin_hint">Odečtěte PIN kód ze svého telefonu a zadejte pro přihlášení.</string>
+    <string name="login_verification_push_hint">Přijměte požadavek na ověření přihlášení z aplikace Twitteru, jakmile schválen, klikněte OK.</string>
+    <string name="long_click_to_open_menu">Dlouhým stiskem zobrazíte menu</string>
+    <string name="mark_as_sensitive">Označit jako citlivé</string>
+    <string name="media">Média</string>
+    <string name="media_preload">Přednáčet médií</string>
+    <string name="media_preview">Náhled médií</string>
+    <string name="media_preview_style">Styl náhledu médií</string>
+    <string name="media_uploader">Nahrávač médií</string>
+    <string name="media_uploader_default">Výchozí (Twitter)</string>
+    <string name="members">Členové</string>
+    <string name="mention_this_user">Zmínit tohoto uživatele</string>
+    <string name="mention_user">Zmínit <xliff:g id="user">%s</xliff:g></string>
+    <string name="mention_user_name">Zmínit <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="mentions_only">Pouze zmínky</string>
+    <string name="message_account_delete_confirm">Tento účet bude z Twidere odtraněn.</string>
+    <string name="message_api_data_corrupted">Poškozená API data.</string>
+    <string name="message_api_url_format_help">[DOMAIN]: Twitter API doména.\nPříklad: https://[DOMAIN].twitter.com/ bude nahrazena na https://api.twitter.com/.</string>
+    <string name="message_app_crashed">Twidere se zbořila. Odešlete hlášení o chybě a tím mi pomůžete chybu napravit.</string>
+    <string name="message_auto_refresh_confirm">Zapnout samo-obnovení za účelem automatického načtení tweetů?</string>
+    <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> blokován.</string>
+    <string name="message_buffer_delete_schedule_confirm">Smazat tento plán?</string>
+    <string name="message_buffer_disconnect_confirm">Odpojit of Bufferu?</string>
+    <string name="message_clear_messages_confirm">Vymazat všechny zprávy?</string>
+    <string name="message_conversation_created">Konverzace byla založena.</string>
+    <string name="message_destroy_conversation_confirm">Opustit tuto konverzaci?</string>
+    <string name="message_direct_message_deleted">Přímá zpráva smazána.</string>
+    <string name="message_direct_message_sent">Přímá zpráva odeslána.</string>
+    <string name="message_error_buffer_connection_failed">Nemohu se spojit s Bufferem.</string>
+    <string name="message_error_buffer_media_not_supported">Plánování médií s Bufferem jesště není podporováno</string>
+    <string name="message_error_invalid_account">Data některých  účtů jsou poškozená, Twidere odstraní tyto účty, aby se nezbořil.</string>
+    <string name="message_format_compose_message_convert_to_status">Tento tweet bude odeslán jako zpráva uživateli <xliff:g id="name">%1$s</xliff:g>, pokračovat? Konverze na normální tweet přinese jeden znak navíc.</string>
+    <string name="message_format_conversation_avatar_update">Avatar konverzace změněn</string>
+    <string name="message_format_conversation_avatar_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> změnil avatara konverzace</string>
+    <string name="message_format_conversation_name_update">Název konverzace se změnil na <xliff:g example="User" id="name">%1$s</xliff:g></string>
+    <string name="message_format_conversation_name_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> změnil název konverzace na <xliff:g example="New name" id="name">%2$s</xliff:g></string>
+    <string name="message_format_participants_join"><xliff:g example="User" id="name">%1$s</xliff:g> se přidal(a)</string>
+    <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> přidal <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
+    <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> odešli</string>
+    <string name="message_format_sender_time">&lt;xliff:g example="User" id="sender"&gt; · &lt;xliff:g example="12:00" id="time"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="message_gif_sharing_introduction">Hledat &amp; sdílet GIF s GIPHY</string>
+    <string name="message_info_buffer_queue_empty">Fronta Bufferu je prázdná</string>
+    <string name="message_join_conversation">Přidali se k konverzaci.</string>
+    <string name="message_please_wait">Počkejte prosím.</string>
+    <!--
+      ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
+      ~ periods should be omitted
+    -->
+    <string name="message_toast_already_logged_in">Jste již přihlášeni.</string>
+    <string name="message_toast_cannot_get_location">Nelze získat vaši polohu.</string>
+    <string name="message_toast_error_occurred">Stala se chyba, zkuste to, prosím, znovu.</string>
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <string name="message_toast_link_copied_to_clipboard">Odkaz zkopírován do schránky</string>
+    <!-- Toast message for network errors -->
+    <string name="message_toast_no_account">Žádný účet</string>
+    <string name="message_toast_no_account_selected">Nevybrán žádný účet.</string>
+    <string name="message_toast_retweet_cancelled">Retweet zrušen</string>
+    <string name="message_toast_saved_to_gallery">Uloženo do galerie.</string>
+    <string name="message_toast_status_updated">Tweet odeslán.</string>
+    <string name="message_toast_wrong_username_password">Nesprávné uživatelské jméno/heslo</string>
+    <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweetoval</string>
+    <string name="name_with_nickname"><xliff:g id="name">%1$s </xliff:g> (<xliff:g id="nickname">%2$s </xliff:g>)</string>
+    <string name="navigation">Navigace</string>
+    <string name="network">Síť</string>
+    <string name="network_diagnostics">Diagnostika sítě</string>
+    <string name="new_user_list">Nový seznam</string>
+    <!-- Next item (tweet, user etc.) -->
+    <string name="next_item">Další</string>
+    <string name="next_step">Další</string>
+    <string name="no_extension_installed">Žádná nainstalovaná rozšíření</string>
+    <string name="no_location">Poloha není k dispozici</string>
+    <string name="no_rule">Žádné pravidlo</string>
+    <string name="no_status_content_text">Žádný obsah</string>
+    <string name="no_user_found">Nenalezen žádný uživatel</string>
+    <string name="notification_light_color">Světlá barva</string>
+    <!-- Notification method, flashing LED light -->
+    <!-- Notification method, ringtone -->
+    <string name="notification_method_ringtone">Vyzváněcí tón</string>
+    <!-- Notification method, device vibration -->
+    <string name="notification_method_vibration">Vibrace</string>
+    <string name="notification_type_home">Domů</string>
+    <string name="notification_type_interactions">Interakce</string>
+    <string name="notification_type_messages">Zprávy</string>
+    <string name="notifications">Oznámení</string>
+    <string name="notifications_type">Typ oznámení</string>
+    <string name="other_settings">Další nastavení</string>
+    <string name="page_down">Stránka dolů</string>
+    <string name="page_up">Stránka nahoru</string>
+    <string name="pause">Pozastavit</string>
+    <string name="permission_description_none">Nejsou potřebná žádná oprávnění</string>
+    <string name="permissions_request">Žádost o oprávnění</string>
+    <string name="pick_file">Vybrat soubor</string>
+    <string name="preference_title_accounts">Účty</string>
+    <string name="preference_title_advanced">Pokročilé</string>
+    <string name="preference_title_database_item_limit">Limit velikosti databáze</string>
+    <string name="preference_title_landscape">Vodorovně</string>
+    <string name="preference_title_portrait">Svisle</string>
+    <string name="preference_title_storage">Úložiště</string>
+    <string name="preference_title_text_size">Velikost textu</string>
+    <string name="preference_title_translate">Překlad</string>
+    <string name="preview">Náhled</string>
+    <!-- Media will be cropped to fit preview -->
+    <string name="preview_style_crop">Oříznout</string>
+    <!-- Actual size, media preview will be scaled respectively -->
+    <!-- Media will be scaled to fit preview -->
+    <string name="preview_style_scale">Měřítko</string>
+    <!-- Previous item (tweet, user etc.) -->
+    <string name="previous_item">Předchozí</string>
+    <string name="profile">Profil</string>
+    <string name="profile_background_color">Barva pozadí</string>
+    <string name="profile_image">Profilový obrázek</string>
+    <string name="profile_images">Profilové obrázky</string>
+    <string name="profile_link_color_main_color">Barva odkazu (hlavní barva)</string>
+    <string name="profile_text_color">Barva textu</string>
+    <string name="profile_updated">Profil aktualizován.</string>
+    <string name="progress">Průběh</string>
+    <!-- Normally you don't need to translate this -->
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
+    <string name="provider_fanfou">Fanfou</string>
+    <string name="proxy">Server proxy</string>
+    <string name="proxy_host">Hostitel proxy</string>
+    <string name="proxy_password">Heslo proxy serveru</string>
+    <string name="proxy_port">Port proxy serveru</string>
+    <string name="proxy_summary">Použít proxy server pro všechny síťové požadavky.</string>
+    <string name="proxy_type">Typ proxy serveru</string>
+    <string name="proxy_username">Uživatelské jméno serveru proxy</string>
+    <string name="quick_send">Stisknout \"Enter\" pro odeslání</string>
+    <string name="quote_format">Formát poznámky</string>
+    <string name="quote_format_summary">\"[TEXT]\" = Text tweetu\n\"[NAME]\" = Jméno uživatele</string>
+    <string name="quote_user">Citovat uživatele <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="refresh_interval">Interval aktualizace</string>
+    <string name="refresh_on_start">Aktualizovat při startu</string>
+    <string name="refresh_type_home">Domů</string>
+    <string name="refresh_type_interactions">Interakce</string>
+    <string name="refresh_type_messages">Zprávy</string>
+    <string name="refresh_type_trends">Trendy</string>
+    <string name="remember_position">Zapamatovat si pozici</string>
+    <string name="remove">Odstranit</string>
+    <string name="replies">Odpovědi</string>
+    <string name="report_for_spam">Nahlásit spam</string>
+    <string name="reported_user_for_spam">Uživatel nahlášen kvůli spamu.</string>
+    <string name="reported_users_for_spam">Uživatelé nahlášení kvůli spamu.</string>
+    <string name="requested">Požadováno</string>
+    <string name="retweeted_by_count">Retweetováno <xliff:g id="retweet_count">%d</xliff:g> uživateli</string>
+    <string name="retweeted_by_name">Retweetováno uživatelem <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="retweeted_by_name_with_count">Retweetováno uživatelem <xliff:g id="user_name">%1$s</xliff:g> a <xliff:g id="retweet_count">%2$d</xliff:g> dalšími</string>
+    <string name="revoke_permissions">Odvolat oprávnění</string>
+    <string name="round">Kulaté</string>
+    <string name="safety">Bezpečnost</string>
+    <string name="same_oauth_signing_url">Použít stejnou adresu URL pro přihlášení OAuth</string>
+    <string name="save_to_gallery">Uložit do galerie</string>
+    <string name="saved_searches">Uložená hledání</string>
+    <string name="search_hint">Hledat Tweety nebo uživatele</string>
+    <string name="search_statuses">Hledat Tweety</string>
+    <string name="search_type_statuses">Tweety</string>
+    <string name="search_type_users">Uživatelé</string>
+    <string name="security_key">Bezpečnostní klíč</string>
+    <string name="select_account">Vyberte účet</string>
+    <string name="select_accounts">Vybrat účty</string>
+    <string name="select_user">Vybrat uživatele</string>
+    <string name="send_crash_report">Odeslat hlášení o pádu Twidere</string>
+    <string name="send_direct_message">Poslat DM</string>
+    <string name="server_address">Adresa serveru</string>
+    <string name="settings_interface">Rozhraní</string>
+    <string name="settings_notifications">Oznámení</string>
+    <string name="settings_refresh">Aktualizovat</string>
+    <string name="share_link">Sdílet odkaz</string>
+    <string name="show_absolute_time">Zobrazit absolutní čas</string>
+    <string name="show_absolute_time_summary">Zobrazit absolutní čas ve tweetech</string>
+    <string name="show_in_timeline">Zobrazit na časové ose</string>
+    <string name="sign_in_service_email">E-mail</string>
+    <string name="sign_in_service_google_id">Google ID</string>
+    <string name="sign_in_service_twitter">Twitter</string>
+    <string name="sign_in_with_ellip">Přihlásit se pomocí&#8230;</string>
+    <string name="sign_up">Zaregistrovat se</string>
+    <string name="size">Velikost</string>
+    <string name="small">Malé</string>
+    <string name="sound">Zvuk</string>
+    <string name="source_clipboard">Schránka</string>
+    <string name="source_filter_name">Zdroj: <xliff:g id="name">%s </xliff:g></string>
+    <string name="source_gallery">Galerie</string>
+    <string name="special_thanks_to">Zvláštní poděkování</string>
+    <string name="sponsored_by">Sponzorováno</string>
+    <string name="square">Hranaté</string>
+    <string name="status_not_updated">Tweet nebyl odeslán.</string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <string name="status_type_retweet">Retweetovat</string>
+    <string name="system_default">Výchozí systémové nastavení</string>
+    <string name="tab_display_option_icon">Ikona</string>
+    <string name="tab_display_option_icon_and_label">Ikona a popisek</string>
+    <string name="tab_display_option_label">Popisek</string>
+    <string name="tab_editor_hint_name">Jméno</string>
+    <string name="tabs">Záložky</string>
+    <string name="text_size">Velikost textu</string>
+    <string name="text_size_summary">Velikost textu tweetů.</string>
+    <string name="theme">Téma</string>
+    <string name="theme_auto">Automatické</string>
+    <string name="theme_background_default">Výchozí</string>
+    <string name="theme_background_solid">Čistě bílá/černá</string>
+    <!-- Dark theme -->
+    <string name="theme_dark">Tmavé</string>
+    <!-- Light theme -->
+    <string name="theme_light">Světlé</string>
+    <string name="title_about">O aplikaci</string>
+    <string name="title_accounts">Účty</string>
+    <string name="title_add_or_remove_from_list">Přidat nebo odstranit ze seznamu</string>
+    <string name="title_blocked_users">Blokovaní uživatelé</string>
+    <string name="title_compose">Napsat</string>
+    <string name="title_direct_messages">Zprávy</string>
+    <string name="title_drafts">Koncepty</string>
+    <string name="title_edit_details">Upravit detaily</string>
+    <string name="title_edit_profile">Upravit profil</string>
+    <!-- Enhanced (paid) features title -->
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_favorites">Oblíbené</string>
+    <string name="title_filters">Filtry</string>
+    <string name="title_filters_subscription_url">URL</string>
+    <string name="title_followers">Sledující</string>
+    <string name="title_following">Sledovaní</string>
+    <string name="title_home">Domů</string>
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_likes">Oblíbené</string>
+    <string name="title_mentions">Zmínky</string>
+    <string name="title_nicknames">Přezdívky</string>
+    <string name="title_open_source_license">Licence otevřeného kódu</string>
+    <string name="title_premium_features_name">Twidere ∞</string>
+    <string name="title_retweet_quote_confirm">Retweetovat sledujícím?</string>
+    <string name="title_search">Hledat</string>
+    <string name="title_set_nickname">Nastavit přezdívku</string>
+    <string name="title_status">Tweet</string>
+    <string name="title_statuses">Tweety</string>
+    <string name="title_subscription_name">Jméno</string>
+    <string name="title_subscription_url">URL</string>
+    <string name="title_user">Uživatel</string>
+    <string name="title_user_colors">Uživatelské barvy</string>
+    <string name="title_user_list_memberships">Patří do</string>
+    <string name="title_users_retweeted_this">Uživatelů retweetovalo</string>
+    <string name="translators">Překladatelé</string>
+    <string name="trends">Trendy</string>
+    <!-- 'Tweet' here is a verb -->
+    <string name="underline">Podtržení</string>
+    <string name="uninstall">Odinstalovat</string>
+    <string name="unknown_language">Neznámý jazyk</string>
+    <string name="unknown_location">Neznámá poloha</string>
+    <string name="unread_count">Počet nepřečtených položek</string>
+    <string name="unsubscribe_from_user_list_confirm_message">Odhlásit ze seznamu \"<xliff:g id="name">%s </xliff:g>\"? Můžeže se opět prihlásit později.</string>
+    <string name="update_status">Poslat tweet</string>
+    <string name="updating_status_notification">Odesílání tweetu&#8230;</string>
+    <string name="usage_statistics">Statistiky využití</string>
+    <string name="user_blocked">Blokovat tohoto uživatele.</string>
+    <string name="user_filter_name">Uživatel: <xliff:g id="name">%s </xliff:g></string>
+    <!-- User list description -->
+    <string name="user_list_details_description">Popis</string>
+    <!-- User list is public -->
+    <string name="user_list_details_is_public">Veřejné</string>
+    <!-- User list name -->
+    <string name="user_list_details_name">Jméno</string>
+    <string name="user_lists">Seznamy</string>
+    <string name="user_profile_description">Popis</string>
+    <string name="user_profile_location">Pozice</string>
+    <string name="user_profile_name">Jméno</string>
+    <string name="user_profile_url">URL</string>
+    <string name="user_type_protected">Chráněný</string>
+    <string name="user_type_verified">Ověřený</string>
+    <string name="user_unblocked">Uživatel odblokován.</string>
+    <string name="users_blocked">Blokovat tyto uživatele.</string>
+    <string name="label_drafts_all">Všechny</string>
+    <string name="label_drafts_statuses">Tweety</string>
+    <string name="label_drafts_others">Další</string>
+</resources>

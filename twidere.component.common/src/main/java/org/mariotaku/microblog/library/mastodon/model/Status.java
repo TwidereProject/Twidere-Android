@@ -104,6 +104,11 @@ public class Status {
     @JsonField(name = "sensitive")
     boolean sensitive;
     /**
+     * Whether the authenticated user has pinned the status
+     */
+    @JsonField(name = "pinned")
+    boolean pinned;
+    /**
      * If not empty, warning text that should be displayed before the actual content
      */
     @JsonField(name = "spoiler_text")
@@ -194,6 +199,10 @@ public class Status {
         return sensitive;
     }
 
+    public boolean isPinned() {
+        return pinned;
+    }
+
     public String getSpoilerText() {
         return spoilerText;
     }
@@ -251,6 +260,7 @@ public class Status {
                 ", reblogged=" + reblogged +
                 ", favourited=" + favourited +
                 ", sensitive=" + sensitive +
+                ", pinned=" + pinned +
                 ", spoilerText='" + spoilerText + '\'' +
                 ", visibility='" + visibility + '\'' +
                 ", mediaAttachments=" + Arrays.toString(mediaAttachments) +

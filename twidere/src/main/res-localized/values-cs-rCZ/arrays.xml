@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Domů</item>
+        <item>Interakce</item>
+        <item>Přímé zprávy</item>
+        <item>Trendy</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>Napsat</item>
+        <item>Vyfotit</item>
+        <item>Přidat média</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Interakce</item>
+        <item>Přímé zprávy</item>
+        <item>Trendy</item>
+        <item>Uložená hledání</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Fotoaparát</item>
+        <item>Galerie</item>
+        <item>Schránka</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Oříznout</item>
+        <item>Měřítko</item>
+        <item>Skutečná velikost</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Domů</item>
+        <item>Interakce</item>
+        <item>Přímé zprávy</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Kulaté</item>
+        <item>Hranaté</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>Reverzní proxy server</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>Uživatel</item>
+        <item>Časová osa uživatele</item>
+        <item>Oblíbené položky uživatele</item>
+        <item>Seznam</item>
+        <item>Seznam časové osy</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 minuty</item>
+        <item>5 minut</item>
+        <item>10 minut</item>
+        <item>15 minut</item>
+        <item>30 minut</item>
+        <item>1 hodina</item>
+        <item>2 hodiny</item>
+        <item>4 hodiny</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>Uzké</item>
+        <item>Normální</item>
+        <item>Široké</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>Ikona</item>
+        <item>Popisek</item>
+        <item>Ikona a popisek</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>Světlé</item>
+        <item>Tmavé</item>
+        <item>Automatické</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>Výchozí</item>
+        <item>Čistě bílá/černá</item>
+        <item>Průhledné</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>Odpovědi</item>
+        <item>Retweety</item>
+    </string-array>
+</resources>

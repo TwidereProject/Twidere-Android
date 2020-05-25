@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Aniciu</item>
+        <item>Interaiciones</item>
+        <item>Mensaxes direutos</item>
+        <item>Tendencies</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Interaiciones</item>
+        <item>Mensaxes direutos</item>
+        <item>Tendencies</item>
+        <item>Saved searches</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Cámara</item>
+        <item>Galería</item>
+        <item>Cartafueyu</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Crop</item>
+        <item>Scale</item>
+        <item>Tamañu real</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Aniciu</item>
+        <item>Interaiciones</item>
+        <item>Mensaxes direutos</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Círculu</item>
+        <item>Cuadráu</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>Reverse proxy</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 minutos</item>
+        <item>5 minutos</item>
+        <item>10 minutos</item>
+        <item>15 minutos</item>
+        <item>30 minutos</item>
+        <item>1 hora</item>
+        <item>2 hores</item>
+        <item>4 hores</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>Claridá</item>
+        <item>Escuridá</item>
+        <item>Auto</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>Por defeutu</item>
+        <item>Pure white/black</item>
+        <item>Tresparente</item>
+    </string-array>
+</resources>

@@ -52,7 +52,7 @@ abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<Rec
     }
 
     override fun scrollToPositionWithOffset(position: Int, offset: Int) {
-        layoutManager.scrollToPositionWithOffset(0, 0)
+        layoutManager.scrollToPositionWithOffset(position, offset)
     }
 
     override fun onCreateLayoutManager(context: Context): LinearLayoutManager {

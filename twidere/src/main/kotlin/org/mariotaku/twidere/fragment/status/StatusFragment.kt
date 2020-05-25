@@ -32,18 +32,18 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.FixedLinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import android.text.TextUtils
-import android.view.*
-import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
@@ -71,13 +71,11 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.constant.yandexKeyKey
 import org.mariotaku.twidere.extension.*
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.key
 import org.mariotaku.twidere.extension.model.api.toParcelable
-import org.mariotaku.twidere.extension.model.getAccountType
-import org.mariotaku.twidere.extension.model.media_type
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.model.originalId
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
@@ -100,12 +98,14 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.RecyclerViewScrollHandler.RecyclerViewCallback
+import org.mariotaku.twidere.util.dagger.DependencyHolder
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener
+import org.mariotaku.yandex.YandexAPIFactory
 import java.lang.ref.WeakReference
 
 /**
@@ -689,8 +689,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private val weakFragment = WeakReference(fragment)
 
         override fun onExecute(account: AccountDetails, params: Any?): TranslationResult {
-            val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null).orEmpty()
+            val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val dest: String
             if (TextUtils.isEmpty(prefDest)) {
                 dest = twitter.accountSettings.language
@@ -700,7 +700,21 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             } else {
                 dest = prefDest
             }
-            return twitter.showTranslation(status.originalId, dest)
+            if (account.isOfficial(context)) {
+                return twitter.showTranslation(status.originalId, dest)
+            } else {
+                val holder = DependencyHolder.get(context)
+                val api = YandexAPIFactory(preferences[yandexKeyKey], "https://translate.yandex.net/")
+                        .setHttpClient(holder.restHttpClient)
+                        .build()
+                val result = api.search(status.text_plain, "${status.lang}-${dest.split('-').firstOrNull()}")
+                return TranslationResult().also {
+                    it[TranslationResult::class.java.getDeclaredField("text")] = result.text?.firstOrNull()
+                    it[TranslationResult::class.java.getDeclaredField("id")] = status.originalId
+                    it[TranslationResult::class.java.getDeclaredField("translatedLang")] = result.lang?.split('-')?.lastOrNull()
+                    it[TranslationResult::class.java.getDeclaredField("lang")] = result.lang?.split('-')?.firstOrNull()
+                }
+            }
         }
 
         override fun onSucceed(callback: Any?, result: TranslationResult) {

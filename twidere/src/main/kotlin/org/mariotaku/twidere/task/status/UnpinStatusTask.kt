@@ -22,9 +22,14 @@ package org.mariotaku.twidere.task.status
 import android.content.Context
 import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.PinTweetResult
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusPinEvent
@@ -37,11 +42,25 @@ import org.mariotaku.twidere.task.AbsAccountRequestTask
 class UnpinStatusTask(context: Context, accountKey: UserKey, val id: String) : AbsAccountRequestTask<Any?,
         PinTweetResult, Any?>(context, accountKey) {
 
+    @Throws(MicroBlogException::class)
     override fun onExecute(account: AccountDetails, params: Any?): PinTweetResult {
-        val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
-        return twitter.unpinTweet(id)
+        when (account.type) {
+            AccountType.MASTODON -> {
+                val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
+                val status = mastodon.unpinStatus(id)
+                val result = PinTweetResult()
+                result[PinTweetResult::class.java.getDeclaredField("pinnedTweets")] = status.id
+                return result
+            }
+            AccountType.TWITTER -> {
+                val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
+                return twitter.unpinTweet(id)
+            }
+            else -> {
+                throw APINotSupportedException(account.type)
+            }
+        }
     }
-
     override fun onSucceed(callback: Any?, result: PinTweetResult) {
         super.onSucceed(callback, result)
         Toast.makeText(context, R.string.message_toast_status_unpinned, Toast.LENGTH_SHORT).show()

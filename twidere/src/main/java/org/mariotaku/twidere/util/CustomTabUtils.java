@@ -24,11 +24,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
-import android.text.TextUtils;
+import androidx.fragment.app.Fragment;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.Constants;
@@ -156,6 +157,7 @@ public class CustomTabUtils implements Constants {
             case CustomTabType.NOTIFICATIONS_TIMELINE: {
                 return new InteractionsTabExtras();
             }
+            case CustomTabType.LIST_TIMELINE:
             case CustomTabType.HOME_TIMELINE: {
                 return new HomeTabExtras();
             }

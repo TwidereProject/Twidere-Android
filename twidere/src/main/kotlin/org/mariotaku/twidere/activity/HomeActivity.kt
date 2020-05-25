@@ -392,7 +392,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
         if (caller === leftDrawerFragment) return super.getSystemWindowInsets(caller, insets)
-        if (mainTabs == null || homeContent == null) return false
+        if (mainTabs == null || homeContent == null || toolbar == null || !toolbar.isVisible) return false
         val height = mainTabs.height
         if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
             if (height != 0) {
@@ -589,7 +589,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     override var controlBarOffset: Float
         get() {
-            if (mainTabs.columns > 1) {
+            if (mainTabs.columns > 1 || !toolbar.isVisible) {
                 val lp = actionsButton.layoutParams
                 val total: Float
                 total = if (lp is MarginLayoutParams) {
@@ -608,7 +608,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
         set(offset) {
             if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
-                val translationY = if (mainTabs.columns > 1) {
+                val translationY = if (mainTabs.columns > 1 || !toolbar.isVisible) {
                     0
                 } else {
                     (controlBarHeight * (offset - 1)).toInt()
@@ -623,7 +623,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 }
                 notifyControlBarOffsetChanged()
             } else {
-                val translationY = if (mainTabs.columns > 1) {
+                val translationY = if (mainTabs.columns > 1 || !toolbar.isVisible) {
                     0
                 } else {
                     (toolbar.height * (offset - 1)).toInt()
@@ -855,7 +855,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             pagerAdapter.hasMultipleColumns = false
             mainTabs.columns = 1
         }
-        if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
+        if (pagerAdapter.count == 1 && preferences[autoHideTabs]) {
+            toolbar.isVisible = false
+            actionsButton.updateLayoutParams<RelativeLayout.LayoutParams> {
+                addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+            }
+        } else if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
             toolbar.updateLayoutParams<RelativeLayout.LayoutParams> {
                 addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)
             }

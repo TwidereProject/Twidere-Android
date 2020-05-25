@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Home</item>
+        <item>Interazioni</item>
+        <item>Messaggi diretti</item>
+        <item>Trends</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>Componi</item>
+        <item>Scatta una foto</item>
+        <item>Aggiungi Media</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Interazioni</item>
+        <item>Messaggi diretti</item>
+        <item>Trends</item>
+        <item>Ricerche salvate</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Fotocamera</item>
+        <item>Galleria</item>
+        <item>Appunti</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Ritaglia</item>
+        <item>Scala</item>
+        <item>Dimensione Reale</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Home</item>
+        <item>Interazioni</item>
+        <item>Messaggi diretti</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Rotonda</item>
+        <item>Quadrata</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>Reverse Proxy</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>Utente</item>
+        <item>Storico utente</item>
+        <item>Utenti preferiti</item>
+        <item>Lista</item>
+        <item>Elenco timeline</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 minuti</item>
+        <item>5 minuti</item>
+        <item>10 minuti</item>
+        <item>15 minuti</item>
+        <item>30 minuti</item>
+        <item>1 ora</item>
+        <item>2 ore</item>
+        <item>4 ore</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>Stretto</item>
+        <item>Normale</item>
+        <item>Largo</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>Icona</item>
+        <item>Etichetta</item>
+        <item>Icone ed etichette</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>Chiaro</item>
+        <item>Scuro</item>
+        <item>Automatico</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>Predefinito</item>
+        <item>Bianco/Nero puro</item>
+        <item>Trasparente</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>Risposte</item>
+        <item>Retweet</item>
+    </string-array>
+</resources>

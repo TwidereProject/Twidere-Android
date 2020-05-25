@@ -22,12 +22,6 @@ package org.mariotaku.twidere.view.holder.status
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
-import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.appcompat.widget.ActionMenuView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -38,6 +32,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
+import androidx.appcompat.widget.ActionMenuView
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
@@ -52,6 +52,7 @@ import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.StatusDetailsAdapter
 import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.hideCardNumbersKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
@@ -339,7 +340,7 @@ class DetailStatusViewHolder(
 
 
         val lang = status.lang
-        if (CheckUtils.isValidLocale(lang) && account.isOfficial(context)) {
+        if (CheckUtils.isValidLocale(lang) /* && account.isOfficial(context)*/) {
             translateContainer.visibility = View.VISIBLE
             if (translation != null) {
                 val locale = Locale(translation.translatedLang)
@@ -543,7 +544,7 @@ class DetailStatusViewHolder(
                     (holder as ProfileImageViewHolder).displayUser(getUser(position)!!)
                 }
                 ITEM_VIEW_TYPE_COUNT -> {
-                    (holder as CountViewHolder).displayCount(getCount(position)!!)
+                    (holder as CountViewHolder).displayCount(getCount(position)!!, preferences[hideCardNumbersKey])
                 }
             }
         }
@@ -702,7 +703,7 @@ class DetailStatusViewHolder(
                 adapter.notifyItemClick(layoutPosition)
             }
 
-            fun displayCount(count: LabeledCount) {
+            fun displayCount(count: LabeledCount, hideNumbers: Boolean) {
                 val label: String
                 when (count.type) {
                     KEY_REPLY_COUNT -> {
@@ -718,7 +719,9 @@ class DetailStatusViewHolder(
                         throw UnsupportedOperationException("Unsupported type " + count.type)
                     }
                 }
-                itemView.count.text = Utils.getLocalizedNumber(Locale.getDefault(), count.count)
+                if (!hideNumbers) {
+                    itemView.count.text = Utils.getLocalizedNumber(Locale.getDefault(), count.count)
+                }
                 itemView.label.text = label
             }
         }

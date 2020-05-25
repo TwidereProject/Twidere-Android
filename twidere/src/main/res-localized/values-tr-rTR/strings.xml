@@ -1,0 +1,1013 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="account_options">Hesap ayarları</string>
+    <string name="account_type_fanfou">Fanfou</string>
+    <string name="account_type_mastodon">Mastodon</string>
+    <string name="account_type_statusnet">StatusNet</string>
+    <string name="account_type_twitter">Twitter</string>
+    <!-- [verb] Accept a friend request (follow request) -->
+    <string name="action_accept_friend_request">Kabul et</string>
+    <!-- [verb] Accept a permission request like allow to use camera etc. -->
+    <string name="action_accept_permission_request">Kabul et</string>
+    <!-- [verb] Add an item to a list/collection -->
+    <string name="action_add">Ekle</string>
+    <string name="action_add_content_warning">Içerik uyarısı ekleyin</string>
+    <!-- [verb] Add a member to a message conversation -->
+    <string name="action_add_conversation_participant">Üye ekle</string>
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">Kural ekle</string>
+    <string name="action_add_filters_subscription">Abonelik ekle</string>
+    <string name="action_add_gif">GIF ekle</string>
+    <string name="action_add_media">Medya ekle</string>
+    <string name="action_add_member">Üye ekle</string>
+    <string name="action_add_name_to_home_screen">Ana ekrana <xliff:g example="Name" id="name">%1$s</xliff:g> ekle</string>
+    <string name="action_add_tab">Sekme ekle</string>
+    <string name="action_add_tab_to_home_screen">Ana ekrana sekme ekle</string>
+    <string name="action_add_to_filter">Filtre ekle</string>
+    <string name="action_add_to_home_screen">Ana ekrana ekle</string>
+    <string name="action_add_to_home_screen_more">Ana ekrana ekle&#8230;</string>
+    <string name="action_add_to_list">Listeye ekle</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">Engelle</string>
+    <string name="action_buffer_disconnect">Bağlantısını kesme Tampon</string>
+    <string name="action_buffer_settings">Ayarlar</string>
+    <string name="action_buffer_update_now">Şimdi yayınla</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_cancel_retweet">Retweeti iptal et</string>
+    <string name="action_center">Merkez</string>
+    <string name="action_change_language">Dili değiştir</string>
+    <string name="action_clear">Temizle</string>
+    <string name="action_clear_messages">İletileri temizle</string>
+    <string name="action_clear_messages_and_delete_conversation">Konuşmayı temizle ve sil</string>
+    <string name="action_comment">Yorum Yap</string>
+    <string name="action_compose">Tweet yaz</string>
+    <string name="action_compose_message_convert_to_status">Dönüştür tweet</string>
+    <string name="action_connect_to_buffer">Bağlamak</string>
+    <string name="action_conversation_info">Sohbet info</string>
+    <string name="action_create_conversation">Sohbet oluştur</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">Sil</string>
+    <string name="action_delete_messages">İletileri sil</string>
+    <string name="action_disable_promotions">Promosyonları devre dışı bırak</string>
+    <string name="action_dont_restart">Yeniden başlatma</string>
+    <string name="action_dont_terminate">Çıkma</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_edit">Düzenle</string>
+    <string name="action_edit_conversation_avatar">Düzenle simgesi</string>
+    <string name="action_edit_conversation_name">Adı düzenle</string>
+    <string name="action_edit_filter_rule">Kuralı düzenle</string>
+    <string name="action_enable">Etkinleştir</string>
+    <string name="action_enable_notifications">Bildirimleri etkinleştir</string>
+    <string name="action_enable_promotions">Promosyonları etkinleştir</string>
+    <string name="action_enable_retweets">Retweet\'leri etkinleştir</string>
+    <string name="action_export_to_muted_users">Sessiz kullanıcılara dışarı aktar</string>
+    <string name="action_favorite">Favorilerine ekle</string>
+    <string name="action_filter_import_from_blocked_users">Bloke içe kullanıcıları</string>
+    <string name="action_filter_import_from_muted_users">İçe sessiz  kullanıcılar</string>
+    <string name="action_filter_subscriptions_card_manage">Abonelikleri Yönet</string>
+    <string name="action_finish">Bitir</string>
+    <string name="action_follow">Takip et</string>
+    <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
+    <!-- [verb] Perform import action -->
+    <string name="action_import">İthalat</string>
+    <string name="action_import_from">Şuradan import&#8230;</string>
+    <string name="action_invert_selection">Zıt seçim</string>
+    <!-- Used for decide something later, like permission request -->
+    <string name="action_later">Sonra</string>
+    <string name="action_leave_conversation">Sohbetten ayrıl</string>
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_like">Beğen</string>
+    <string name="action_list_creator">Liste oluşturucu</string>
+    <string name="action_location">Yer</string>
+    <string name="action_manage_in_buffer">Tamponda Yönet</string>
+    <string name="action_mark_as_read">Okundu olarak işaretle</string>
+    <string name="action_mute">Sessize al</string>
+    <string name="action_mute_notifications">Sessiz bildirimleri</string>
+    <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, <xliff:g id="time">%2$s</xliff:g> itibari ile kaydedildi</string>
+    <string name="action_next_step">Sonraki</string>
+    <string name="action_no_thanks">Hayır, teşekkürler</string>
+    <string name="action_open_in_browser">Tarayıcıda aç</string>
+    <string name="action_pick_color">Renk seç</string>
+    <string name="action_purchase">Satın alma</string>
+    <string name="action_purchase_features_pack">Özellik paketi satın al</string>
+    <string name="action_qr_code">QR kod</string>
+    <string name="action_quote">Alıntı yap</string>
+    <string name="action_record_video">Video kaydetmek</string>
+    <string name="action_refresh">Yenile</string>
+    <string name="action_refresh_launch_presentations">Başlangıç ekranlarını yenile</string>
+    <string name="action_register">Kayıt olmak</string>
+    <string name="action_remove_conversation_avatar">Simgesini kaldır</string>
+    <string name="action_reply">Cevapla</string>
+    <string name="action_report_spam">Spam bildir</string>
+    <!-- [verb] Restore purchase -->
+    <string name="action_restore_purchase">Geri</string>
+    <string name="action_retry">Tekrar Dene</string>
+    <!-- [verb] Action for performing retweet -->
+    <string name="action_retweet">Retweet et</string>
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">Kaydet</string>
+    <string name="action_save_to">İçine kaydet&#8230;</string>
+    <string name="action_search">Ara</string>
+    <string name="action_select_all">Hepsini seç</string>
+    <string name="action_select_none">Hiçbir şey seçilmedi</string>
+    <string name="action_select_user">Kullanıcı seç</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">Gönder</string>
+    <string name="action_set_color">Rengi ayarla</string>
+    <string name="action_set_nickname">Lakap ayarla</string>
+    <string name="action_set_status_visibility">Görünürlüğü ayarla</string>
+    <string name="action_settings">Ayarlar</string>
+    <string name="action_share">Paylaş</string>
+    <string name="action_sign_in">Oturum aç</string>
+    <!-- [verb] Used for skip some settings -->
+    <string name="action_skip">Atlamak</string>
+    <string name="action_start">Başlat</string>
+    <string name="action_status_attachment">Tweet eki</string>
+    <string name="action_status_block_users">Kullanıcıları engelle&#8230;</string>
+    <string name="action_status_mute_users">Kullanıcıları sessize al&#8230;</string>
+    <string name="action_status_pin">Pin tweet</string>
+    <string name="action_status_schedule">Tweet programı</string>
+    <string name="action_status_unpin">Tweet\'ini unpin</string>
+    <string name="action_subscribe">Abone ol</string>
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <string name="action_sync_connect_to_storage">Bağlan</string>
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_disconnect">Bağlantıyı kes</string>
+    <string name="action_sync_settings">Ayarlar</string>
+    <string name="action_sync_sync_now">Şimdi senkronize et</string>
+    <string name="action_take_photo">Fotoğraf çek</string>
+    <string name="action_toggle">Değiştir</string>
+    <string name="action_translate">Çevir</string>
+    <string name="action_twitter_mute_user">Kullanıcının tweetlerini gösterme</string>
+    <string name="action_twitter_muted_users">Tweetleri gösterilmeyen kullanıcılar</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_unblock">Engeli kaldır</string>
+    <string name="action_undo_like">Beğenmekten Vazgeç</string>
+    <string name="action_unfavorite">Favorilerinden çıkar</string>
+    <string name="action_unfollow">Takibi bırak</string>
+    <string name="action_unmute">Sesini aç</string>
+    <string name="action_unsubscribe">Abonelikten çık</string>
+    <string name="action_view_map">Harita</string>
+    <string name="activated_accounts">Etkinleştirilmiş hesaplar</string>
+    <string name="activities_about_me">Etkileşimler</string>
+    <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favorited</string>
+    <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> favorited</string>
+    <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g>etiketlenmiş olduğunuz bir tweet\'i favorilerine ekledi</string>
+    <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> bir favorilere tweet Eğer etiketlendi</string>
+    <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> bir favorilere tweet Eğer bahsedildi</string>
+    <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> bir favorilere tweet Eğer bahsedildi</string>
+    <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favorilere senin retweet</string>
+    <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> favorilere senin retweet</string>
+    <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> sizi takip ediyor</string>
+    <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> sizi takip ediyor</string>
+    <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> beğendi</string>
+    <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> beğendi</string>
+    <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> bir sevdim tweet Eğer etiketlendi</string>
+    <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> bir sevdim tweet Eğer etiketlendi</string>
+    <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> sizden bahsettiğiniz bir tweet\'i  beğendi</string>
+    <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> senden bahsedilen bir tweet\'i beğendi</string>
+    <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> retweetinizi beğendi</string>
+    <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> retweetinizi beğendiler</string>
+    <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> sizi listeye ekledi</string>
+    <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> sizi kendi listelerine ekledi</string>
+    <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> sizi listeye ekledi \"<xliff:g id="list">%2$s</xliff:g>\"</string>
+    <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> sizi etiketledi</string>
+    <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> sizi etiketledi</string>
+    <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweetledi</string>
+    <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> retweetledi</string>
+    <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> etiketlendiğiniz bir tweeti retweetledi</string>
+    <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> etiketlendiğiniz bir tweeti retweetledi</string>
+    <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> sizden bahsedilen bir tweeti retweetledi</string>
+    <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> sizden bahsedilen bir tweeti retweetledi</string>
+    <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweetinizi retweetledi</string>
+    <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> retweetizi retweetledi</string>
+    <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> Twitter\'e katıldı</string>
+    <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> Tweeter\'e katıldı</string>
+    <string name="add_account">Hesap ekle</string>
+    <string name="add_host_mapping">Sunucu haritalama ekle</string>
+    <string name="add_image">Resim ekle</string>
+    <string name="and_N_more">ve <xliff:g id="count">%d</xliff:g> daha</string>
+    <string name="api_url_format">API URL Format</string>
+    <string name="app_description">Senin Twitter uygulaman</string>
+    <!-- App name, normally you don't need to translate this. -->
+    <string name="app_name">Twidere</string>
+    <string name="app_restart_confirm">Ayarların etkin olması için Twidere\'yi yeniden başlat.</string>
+    <string name="app_terminate_confirm">Twidere ayarları uygulamak için kapatılacak.</string>
+    <string name="appearance">Görünüm</string>
+    <string name="auth_type_basic">Temel</string>
+    <string name="auth_type_oauth">OAuth</string>
+    <string name="auth_type_oauth2">OAuth 2</string>
+    <string name="auth_type_twip_o">twip O modu</string>
+    <string name="auth_type_xauth">xAuth</string>
+    <string name="auto_refresh">Otomatik yenile</string>
+    <string name="background">Arkaplan</string>
+    <string name="bandwidth_saving_mode">Bant genişliği tasarruf modu</string>
+    <string name="bandwidth_saving_mode_summary">Sınırlı ağlarda medya önizlemesini kapat</string>
+    <string name="belongs_to">Ait olduğu</string>
+    <string name="block_user_confirm_message"><xliff:g id="name">%s</xliff:g> engellemek ister misiniz? Kullanıcı sizi takip edemez, sizden bahsedemez ve size direkt mesaj gönderemez.</string>
+    <string name="bug_reports">Hata raporları</string>
+    <string name="bug_reports_summary">Fabric tarafından desteklenmektedir</string>
+    <string name="builtin_dns_resolver">Yerleşik DNS çözümleyicisi</string>
+    <string name="cache_size_limit">Önbellek boyutu sınırı</string>
+    <string name="cant_load_all_replies_explanation">Twitter üçüncü parti yazılımlara limit uygulamakta olup, Twidere tweet cevaplarına erişemeyebilir, bundan dolayısıyla Twidere tüm cevapları listeleme garantisini verememektedir.</string>
+    <string name="cant_load_all_replies_message">Tüm cevaplar yüklenemedi. &lt;a href=\"#dialog\";&gt;Neden?&lt;/a&gt;</string>
+    <string name="cards">Kartlar</string>
+    <string name="clear_cache">Önbelleği temizle</string>
+    <string name="clear_cache_summary">Kayıtlı medya önbelleğini temizle.</string>
+    <string name="clear_databases">Veritabanlarını temizle</string>
+    <string name="clear_databases_summary">Tüm tweetleri, profilleri, mesajları sil. Hesabınızdaki veriler silinmez.</string>
+    <string name="clear_search_history">Arama geçmişini temizle</string>
+    <string name="click_item_to_configure">Yapılandırmak için bir ayarı tıklatın</string>
+    <string name="close_accounts_dashboard">Hesap tablosunu kapat</string>
+    <string name="color">Renk</string>
+    <string name="combined_notifications">Kombine bildirimleri</string>
+    <string name="combined_notifications_summary_off">Bildirimler ayrı ayrı görüntülenir</string>
+    <string name="combined_notifications_summary_on">Bildirimler gruplandırılarak görüntülenir</string>
+    <string name="comment_hint">Yorum&#8230;</string>
+    <string name="compact_cards">Kompak kartlar</string>
+    <string name="compact_cards_summary">Ekranda daha fazla kart görüntüle</string>
+    <string name="compose_now">Şimdi Oluştur</string>
+    <string name="compose_now_action">Şimdi eylem oluşturma</string>
+    <string name="compose_now_summary">Oluşturma ekranında Google Now kısayolunu değiştir</string>
+    <string name="conflicts_with_name"><xliff:g id="name">%s</xliff:g> ile çakışıyor</string>
+    <string name="connection_timeout">Bağlantı zaman aşımı</string>
+    <string name="consumer_key">Müşteri anahtarı</string>
+    <string name="consumer_secret">Müşteri gizli</string>
+    <string name="content">İçerik</string>
+    <string name="content_and_storage">İçerik &amp; Saklama</string>
+    <string name="content_description_sticker">Etiket</string>
+    <string name="content_to_notify">Bildirimi yapılacak içerik</string>
+    <string name="content_to_refresh">Yenilenecek içerik</string>
+    <string name="contributors_list_summary">Eğer isminizi görmüyorsanız, lütfen proje hesabımıza bildiriniz.</string>
+    <string name="copy_link">Bağlantıyı kopyala</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="count_label_retweets">Retweetler</string>
+    <string name="created_by"><xliff:g id="created_by">%s</xliff:g> tarafından oluşturuldu</string>
+    <string name="created_list"><xliff:g id="list">%s</xliff:g> listesi oluşturuldu.</string>
+    <string name="current_status">Güncel tweet</string>
+    <string name="custom_host_mapping">Özel sunucu haritalama</string>
+    <string name="custom_host_mapping_summary">/etc/hosts şeklinde sunucu haritalama, ancak ekstra izin gerektirmez.</string>
+    <string name="dark_theme">Karanlık tema</string>
+    <string name="default_account">Varsayılan hesap</string>
+    <string name="default_api_settings">Varsayılan API ayarları</string>
+    <string name="default_api_settings_summary">Bu ayarlar sadece yeni giriş yapılmış hesaplara uygulanır</string>
+    <string name="default_ringtone">Varsayılan zil sesi</string>
+    <string name="delete_conversation">Konuşmayı sil</string>
+    <string name="delete_conversation_confirm_message">Bu konuşmadaki tüm iletiler silinsin mi?</string>
+    <string name="delete_drafts_confirm">Seçili taslağı sil?</string>
+    <string name="delete_message_confirm_message">Bu mesaj sil?</string>
+    <string name="delete_user"><xliff:g id="name">%s</xliff:g> kullanıcısını sil</string>
+    <string name="delete_user_confirm_message"><xliff:g id="name">%s</xliff:g> sil? Bu işlem geri alınamaz.</string>
+    <string name="delete_user_from_list_confirm"><xliff:g id="user">%1$s</xliff:g> kullanıcısını \"<xliff:g id="list">%2$s</xliff:g>\" listesinden sil?</string>
+    <string name="delete_user_list">Listeyi sil <xliff:g id="name">%s</xliff:g></string>
+    <string name="delete_user_list_confirm_message"><xliff:g id="name">%s</xliff:g> listesini sil? Bu işlem geri alınamaz.</string>
+    <string name="delete_users">Kullanıcıları sil</string>
+    <string name="deleted_list">\"<xliff:g id="list">%s</xliff:g>\" listesi silindi.</string>
+    <string name="deleted_user_from_list"><xliff:g id="user">%1$s</xliff:g> listeden silindi \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+    <string name="denied_users_follow_request"><xliff:g id="user">%s</xliff:g> takip talebi reddedildi.</string>
+    <string name="deny">Reddet</string>
+    <string name="destroy_saved_search">\"<xliff:g id="name">%s</xliff:g>\" kayıtlı aramayı sil</string>
+    <string name="destroy_saved_search_confirm_message">\"<xliff:g id="name">%s</xliff:g>\" kayıtlı aramayı sil? Daha sonra tekrar kaydetmeniz gerekecektir.</string>
+    <string name="destroy_status">Tweeti sil</string>
+    <string name="destroy_status_confirm_message">Bu tweeti sil?</string>
+    <string name="developed_by">Tarafından geliştirildi</string>
+    <string name="discard">Yoksay</string>
+    <string name="display_sensitive_contents">Hassas içeriği görüntüle</string>
+    <string name="display_sensitive_contents_summary">Hassas içeriği uyarmadan zaman akışında görüntüle</string>
+    <string name="dns_server">DNS Sunucusu</string>
+    <string name="dns_server_summary">Ağ istekleri için DNS sunucusu ayarlayın.</string>
+    <string name="draft_saved">Taslak kaydedildi</string>
+    <string name="drafts_hint_messages">Gönderilmemiş tweetleri buradan kurtarabilirsiniz</string>
+    <string name="drawer_toggle">Çekmeceyi aç/kapat</string>
+    <string name="edit_api">API düzenle</string>
+    <string name="edit_description">Açıklama düzenle</string>
+    <string name="edit_draft">Taslağı düzenle</string>
+    <string name="edit_media">Medya düzenle</string>
+    <string name="edit_tab">Sekmeyi düzenle</string>
+    <string name="edit_tabs">Sekmeleri düzenle</string>
+    <string name="ellipsis">&#8230;</string>
+    <string name="emoji_support">Emoji destek</string>
+    <string name="empty_content">Boş içerik</string>
+    <string name="error_info_oauth_timestamp_error">Sistem tarihinizi kontrol edin &amp; time settings.</string>
+    <string name="error_message">Hata: <xliff:g id="message">%s</xliff:g></string>
+    <string name="error_message_device_incompatible">Bu cihaz Twidere ile uyumlu değildir, en son Android işletim sistemi yükseltme önerilir.\nYardımcı olabilmek için aşağıdaki bilgileri gönderebilirsiniz.</string>
+    <string name="error_message_media_message_attachment_not_supported">Desteklenmeyen DM için medya ekle</string>
+    <string name="error_message_media_message_too_many">Çok fazla medya</string>
+    <string name="error_message_media_upload_failed">Medya aktarımı başarısız.</string>
+    <string name="error_message_media_uploader_not_found">Resim Yükleyici bulunamadı, belki de kaldırılmıştır.</string>
+    <string name="error_message_message_too_long">Mesaj çok uzun.</string>
+    <string name="error_message_message_too_many_participants">Çok fazla katılımcı</string>
+    <string name="error_message_no_content">İçerik yok</string>
+    <string name="error_message_rate_limit">Twitter\'ın sorgulama limiti aşıldı, lütfen <xliff:g id="time">%s</xliff:g> süre sonra tekrar deneyin</string>
+    <string name="error_message_scheduler_not_available">Tweet zamanlama uygun değil</string>
+    <string name="error_message_status_too_long">Tweet çok uzun.</string>
+    <string name="error_message_tweet_shorten_failed">Tweet kısaltılamadı.</string>
+    <string name="error_message_tweet_shortener_not_found">Tweet kısaltıcı bulunamadı, belki kaldırılmıştır.</string>
+    <string name="error_message_video_upload_not_supported">Desteklenmeyen video yükleme</string>
+    <string name="error_no_access_for_credentials">Uygulamanız kaynağına ulaşılamıyor, \'Force using private APIs\' açık hale getirdiniz mi?</string>
+    <string name="error_no_dm_permission">Direkt mesaj yetkisi yok, Twitter uygulamanızın ayarlarını kontrol ediniz.</string>
+    <string name="error_title_device_incompatible">Uyumsuz Cihaz</string>
+    <string name="error_too_many_photos_fanfou">Çok fazla fotoğraf</string>
+    <string name="error_unknown_error">Hata: Bilinmeyen sorun, bir yazılım hatası olabilir.</string>
+    <string name="exclude_this_host">Bu host hariç</string>
+    <string name="excluded">Hariç</string>
+    <string name="export_settings">Ayarları dışa aktar</string>
+    <string name="export_settings_type_dialog_title">Ayarları dışa aktar&#8230;</string>
+    <string name="extensions">Eklentiler</string>
+    <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> harici grup</string>
+    <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g> harici kullanıcı</string>
+    <string name="extra_configurations">Ekstra ayarlar</string>
+    <string name="extra_feature_description_advanced_filters">Aboneleri filtrele, gelişmiş kurallar vb</string>
+    <string name="extra_feature_description_schedule_status">Tweeti zamanla ( sonra gönder)</string>
+    <string name="extra_feature_description_share_gif">Tweette GIF paylaş</string>
+    <string name="extra_feature_description_sync_data">Verileri Dropbox, Google Drive vb ile senkronize edin</string>
+    <string name="extra_feature_title_advanced_filters">Gelişmiş filtreler</string>
+    <!-- Enhanced (paid) features description -->
+    <string name="extra_features_description">Twidereyi destekle ve gelişmiş özellikler elde et</string>
+    <string name="extra_features_pack_description">Veya tüm özellikleri almak için özellik paketi satın alın (gelecekteki sürümlerdeki özellikler de dahil olmak üzere)</string>
+    <!-- Enhanced (paid) features title -->
+    <string name="extra_features_restore_purchase_hint">Daha önce gelişmiş özellikleri satın aldıysanız, satın alma işlemini geri almak için \'Geri Al\' ı kullanabilirsiniz.</string>
+    <string name="fab_visible">Kayan hareket butonu</string>
+    <string name="fab_visible_summary">Kayan hareket butonunu göster</string>
+    <string name="fast_image_loading">Hızlı foto yükleme</string>
+    <string name="fast_image_loading_summary">Etkinleştirmek resimleri hızlı yüklemeyi gerçekleştirir, kapatırsanız bazı resimleri göremeyebilirsiniz.</string>
+    <string name="filter_everywhere">Heryeri filtrele</string>
+    <string name="filter_everywhere_description">Şunlar Twidere\'de filtrelenecektir:\n. Kullanıcının tweetleri\n. Bu kullanıcının mentionlandığı tweetler\n. Bu kullanıcının Retweetleri/Alıntıları</string>
+    <string name="filter_type_keywords">Anahtar kelimeler</string>
+    <string name="filter_type_links">Kısayollar</string>
+    <string name="filter_type_sources">Kaynaklar</string>
+    <string name="filter_type_users">Kullanıcılar</string>
+    <string name="filter_user_confirm_message"><xliff:g example="Username" id="name">%1$s</xliff:g> filtreye eklensin mi?</string>
+    <string name="follow_request_sent">Takip isteği gönderildi</string>
+    <string name="followed_user"><xliff:g id="user">%s</xliff:g> takiplendi.</string>
+    <string name="following_only">Sadece takip ettiklerin</string>
+    <string name="following_only_summary">Sadece takip ettiğim kullanıcıların bildirimlerini göster.</string>
+    <string name="following_you">Sizi takip ediyor</string>
+    <string name="follows">Takipçiler</string>
+    <string name="font">Yazıtipi</string>
+    <string name="font_family">Yazı tipi ailesi</string>
+    <string name="from_camera">Kameradan</string>
+    <string name="from_gallery">Galeriden</string>
+    <string name="from_name"><xliff:g id="name">%1$s</xliff:g>\'dan</string>
+    <string name="from_name_and_N_others"><xliff:g id="name">%1$s</xliff:g> ve <xliff:g id="name">%2$d</xliff:g> kişi tarafından</string>
+    <string name="from_name_and_name"><xliff:g id="name">%1$s</xliff:g> ve <xliff:g id="name">%2$s</xliff:g>\'den</string>
+    <string name="function">Fonksiyon</string>
+    <string name="general">Genel</string>
+    <string name="getting_location">Konumu bul</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="group">Grup</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="groups">Gruplar</string>
+    <string name="hashtag">Etiket</string>
+    <string name="hidden_settings">Gizli ayarlar</string>
+    <string name="hidden_settings_warning_message">ASLA bu ayarları bilmiyorsanız değiştirmeyin, veya şunlar olur:\n * Kediniz ölür\n * Kuzey Kore\'nin nükleer silahını ateşlersiniz\n * Fenerbahçe\'yi şampiyon yapabilirsiniz\n * Evreni yok edebilirsiniz</string>
+    <string name="hidden_settings_warning_title">UYARI: Bu ayarları değiştirmek uygulamaya zarar verebilir!</string>
+    <string name="hide_card_actions">Kart eylemlerini gizle</string>
+    <string name="hide_quotes">Alıntıları gizle</string>
+    <string name="hide_replies">Cevapları gizle</string>
+    <string name="hide_retweets">Retweet\'leri gizle</string>
+    <string name="highlight">Vurgula</string>
+    <string name="highlight_and_underline">Vurgulama ve altçizgi</string>
+    <string name="hint_accounts_dashboard_message">Hesap kontrol panelini açmak için ekran kenarından parmağınızı kaydırınız.</string>
+    <string name="hint_accounts_dashboard_title">Hesap kontrol paneli</string>
+    <string name="hint_conversation_name">Sohbet ismi</string>
+    <string name="hint_empty_filters_subscriptions">Abonelik yok</string>
+    <string name="hint_error_field_required">Gerekli</string>
+    <string name="hint_error_message_no_content">İçerik yok</string>
+    <string name="hint_message_select_user">Kullanıcıları ara</string>
+    <string name="hint_no_account">Hesap yok</string>
+    <string name="hint_search_gif">GIF ara</string>
+    <string name="hint_status_reply_to_user_removed">Tweet yazarının mention\'ı kaldırıldığı için alıntı olarak gönderilecek. &lt;a href=\"#dialog\";&gt;Neden?&lt;/a&gt;</string>
+    <string name="hints">İpuçları</string>
+    <string name="home_refresh">Zaman akışında yenile</string>
+    <string name="host_mapping_address">Adres (başka bir sunucu adresi olabilir)</string>
+    <string name="host_mapping_host">Sunucu</string>
+    <string name="i_want_my_stars_back">Ben yıldızımı geri istiyorum!</string>
+    <string name="i_want_my_stars_back_summary">Beğeni (♥︎) yerine favori (★) simgesini kullan</string>
+    <string name="icon">Simge</string>
+    <string name="icon_restored_message">Simge geri yüklendi!</string>
+    <string name="import_export_settings">Ayarları Al/Ver</string>
+    <string name="import_settings">Ayarları import et</string>
+    <string name="import_settings_type_dialog_title">Ayarları içe aktar&#8230;</string>
+    <string name="in_reply_to_name"><xliff:g id="user_name">%s</xliff:g>\'e cevap olarak</string>
+    <string name="inbox">Gelen kutusu</string>
+    <string name="incoming_friendships">Beklemedeki takip istekleri</string>
+    <string name="input_text">giriş metni</string>
+    <string name="interactions">Etkileşimler</string>
+    <string name="invalid_consumer_key">Consumer key geçersiz</string>
+    <string name="invalid_consumer_secret">Consumer secret geçersiz</string>
+    <string name="invalid_list_name">Bir harf ile başlamalı ve yalnızca harf, rakam, \"-\" ve \"_\" içerebilir.</string>
+    <string name="invalid_tab">Geçersiz sekme</string>
+    <string name="jump_to_top">En üste zıpla</string>
+    <string name="just_now">Şimdi</string>
+    <string name="keyboard_shortcut_back">Geri</string>
+    <string name="keyboard_shortcut_hint">Tuşlara bas</string>
+    <string name="keyboard_shortcuts">Klavye kısayolları</string>
+    <string name="keyword_filter_name">Anahtar Kelime: <xliff:g id="name">%s</xliff:g></string>
+    <string name="label_account">Hesap</string>
+    <string name="label_account_type">Hesap türü</string>
+    <string name="label_advanced">Gelişmiş</string>
+    <string name="label_auth_type">Yetkilendirme tipi</string>
+    <string name="label_background_operation_service">Arkaplan çalışma servisi</string>
+    <string name="label_buffer_due_at_no_time">Zamansız</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_g">Genel kullanıcı</string>
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_pg">7 yaş üstü</string>
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_pg13">13 yaş üstü</string>
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_r">18 yaş üstü</string>
+    <string name="label_content_warning">İçerik uyarısı</string>
+    <string name="label_data_provider">Twidere veritabanı sağlayıcı</string>
+    <string name="label_feedback_content">İçerik</string>
+    <string name="label_feedback_title">Başlık</string>
+    <string name="label_filter_apply_to">&#8230;\'ya uygula</string>
+    <string name="label_filter_for">&#8230; için</string>
+    <string name="label_filter_scope_home">Ana sayfa</string>
+    <string name="label_filter_scope_interactions">Etkileşimler</string>
+    <string name="label_filter_scope_messages">Mesajlar</string>
+    <string name="label_filter_scope_search_other">Diğer</string>
+    <string name="label_filter_scope_search_results">Arama sonuçları</string>
+    <string name="label_filter_target_description">Açıklama</string>
+    <string name="label_filter_target_name">Ad</string>
+    <string name="label_filter_target_text">Metin</string>
+    <string name="label_filters_subscription">Abonelik</string>
+    <string name="label_follow_request_sent">Takip isteği gönderildi</string>
+    <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> tarafından <xliff:g example="api" id="source">%2$s</xliff:g></string>
+    <string name="label_location_no_location">Hiçbiri</string>
+    <string name="label_location_precise">Tam (Kordinat)</string>
+    <string name="label_location_your_coarse_location">Kabaca konumunuz</string>
+    <string name="label_mastodon_host">Mastodon sitesi</string>
+    <string name="label_media">Medya</string>
+    <string name="label_original_status">Orijinal tweet</string>
+    <string name="label_password">Şifre</string>
+    <string name="label_password_sign_in">Şifre ile oturum açma</string>
+    <string name="label_photo">Fotoğraf</string>
+    <string name="label_photos">Fotoğraflar</string>
+    <string name="label_poll">Anket</string>
+    <string name="label_powered_by_giphy">GIPHY tarafından desteklenmektedir</string>
+    <string name="label_quote_name">Alıntı <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="label_quote_name_text">Alıntı <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="label_refresh_and_sync_service">&amp; Senkronizasyon servisini yenile</string>
+    <string name="label_refresh_service">Servisi yenile</string>
+    <string name="label_reply_name">Buna yanıtla <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="label_reply_name_text">Bunlara yanıtla <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="label_schedule_time_buffer_default">Arabellek varsayılanı</string>
+    <string name="label_send_at">Gönderilen zaman</string>
+    <string name="label_sensitive_content">Hassas içerik</string>
+    <string name="label_status_hint">Neler oluyor?</string>
+    <string name="label_status_not_available">Tweet mevcut değil</string>
+    <string name="label_status_show_more">Daha fazla göster</string>
+    <string name="label_status_type_reply">Yanıtla</string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <string name="label_status_visibility_direct">Doğrudan</string>
+    <!-- Mastodon feature, post to followers only -->
+    <string name="label_status_visibility_private">Özel</string>
+    <!-- Mastodon feature, post to public timelines -->
+    <string name="label_status_visibility_public">Herkese açık</string>
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="label_status_visibility_unlisted">Liste dışı</string>
+    <string name="label_statuses">Tweetler</string>
+    <string name="label_statuses_replies">Tweetler ve yanıtlar</string>
+    <string name="label_statuses_retweets">Tweetler ve retweetler</string>
+    <string name="label_statuses_retweets_replies">Tweetler, retweetler ve yanıtlar</string>
+    <string name="label_translate_from_language">Şunu çevir <xliff:g id="language">%s</xliff:g></string>
+    <string name="label_translated_to_language"><xliff:g id="language">%s</xliff:g> Tercüme edildi</string>
+    <string name="label_translation">Çevir</string>
+    <string name="label_username">Kullanıcı adı</string>
+    <string name="label_video">Video</string>
+    <string name="label_your_profile_image">Profil fotoğrafınız</string>
+    <string name="large">Büyük</string>
+    <string name="leftside_compose_button">Solda tweet yaz butonu</string>
+    <string name="leftside_compose_button_summary">Tweet yaz butonunu sola yerleştirir.</string>
+    <string name="link_highlight_option">Link vurgula seçeneği</string>
+    <string name="link_to_quoted_status">Alıntılanmış tweet\'a link</string>
+    <string name="list_members">Liste üyeleri</string>
+    <string name="list_subscribers">Abone listesini göster</string>
+    <string name="list_timeline">Zaman akışını listele</string>
+    <string name="listed">Listelenen</string>
+    <string name="lists">Listeler</string>
+    <string name="lists_following_user">Bu kullanıcıyı takip eden listeler</string>
+    <string name="lists_following_user_with_name"><xliff:g id="name">%s</xliff:g>\'ı takip eden listeler</string>
+    <string name="load_defaults">Varsayılanları Yükle</string>
+    <string name="load_item_limit">Yeni nesne yükleme limiti</string>
+    <string name="load_item_limit_summary">Bir defada yüklenecek en çok nesne sayısını belirler.</string>
+    <string name="load_media">Medya yükle</string>
+    <string name="load_more">Daha fazlası</string>
+    <string name="load_more_from_top">Üstten daha fazla yükle</string>
+    <string name="load_more_from_top_summary">Aşağıdan yukarıya doğru okuyanlar için kullanabilirsiniz</string>
+    <string name="location_countrywide">Ülke Çapında</string>
+    <string name="login_challenge_retype_email_hint">Twitter hesabınızla ilişkili email adresini yeniden yazın.</string>
+    <string name="login_challenge_retype_phone_hint">Twitter hesabınızla ilişkili telefon numarasını yeniden yazın.</string>
+    <string name="login_type_default">Varsayılan</string>
+    <string name="login_type_user_settings">Kullanıcı ayarları</string>
+    <string name="login_verification">Giriş doğrulama</string>
+    <string name="login_verification_pin_hint">Telefonu PIN kodu için kontrol edin ve oturum açmak için girin.</string>
+    <string name="login_verification_push_hint">Twitter uygulaması giriş onayı vermeniz gerekmekte olup, onay işlemini vermek için Tamam\'ı tıklayın.</string>
+    <string name="long_click_to_open_menu">Menüyü açmak için uzun tıklayınız</string>
+    <string name="mark_as_sensitive">Hassas olarak işaretle</string>
+    <string name="media">Medya</string>
+    <string name="media_preload">Medyayı önceden yükleme</string>
+    <string name="media_preview">Medya önizleme</string>
+    <string name="media_preview_style">Medya önizleme biçimi</string>
+    <string name="media_uploader">Medya yükleyici</string>
+    <string name="media_uploader_default">Varsayılan (Twitter)</string>
+    <string name="members">Üyeler</string>
+    <string name="mention_this_user">Bu kullanıcıdan bahset</string>
+    <string name="mention_user">dahil et: <xliff:g id="user">%s</xliff:g></string>
+    <string name="mention_user_name"><xliff:g id="name">%1$s</xliff:g> \'e söyle</string>
+    <string name="mentions_only">Sadece bahsedenler</string>
+    <string name="message_account_delete_confirm">Bu hesap Twidere\'den silinecek.</string>
+    <string name="message_api_data_corrupted">API verisi bozulmuş.</string>
+    <string name="message_api_url_format_help">[DOMAIN]: Twitter API domain.\nExample: https://[DOMAIN].twitter.com/ adı https://api.twitter.com/ için değiştirilecek.</string>
+    <string name="message_app_crashed">Twidere çöktü. Bu sorunu gidermek için hata raporu gönder.</string>
+    <string name="message_auto_refresh_confirm">Yeni tweetleri otomatik almak için oto yenilemek etkinleştirilsin mi?</string>
+    <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> engelledi.</string>
+    <string name="message_buffer_delete_schedule_confirm">Bu zamanlamayı silmek istiyor musunuz?</string>
+    <string name="message_buffer_disconnect_confirm">Arabellek bağlantısı kesilsin mi?</string>
+    <string name="message_clear_messages_confirm">Tüm mesajları temizle?</string>
+    <string name="message_conversation_created">Konuşma olusturuldu.</string>
+    <string name="message_destroy_conversation_confirm">Bu konuşmadan ayrınılsın mı?</string>
+    <string name="message_direct_message_deleted">Doğrudan mesaj silindi.</string>
+    <string name="message_direct_message_sent">Doğrudan mesaj gönderildi.</string>
+    <string name="message_error_buffer_connection_failed">Arabelleğe bağlantı kurulamadı</string>
+    <string name="message_error_buffer_media_not_supported">Arabellek ile medya zamanlama henüz desteklenmiyor</string>
+    <string name="message_error_invalid_account">Bazı hesap verileri bozuk, Twidere çökmeyi önlemek için bu hesapları kaldıracak.</string>
+    <string name="message_format_compose_message_convert_to_status">Bu tweet <xliff:g id="name">%1$s</xliff:g>\'a bir mesaj olarak gönderilecek, devam edilsin mi? Normal bir tweete dönüştürmek fazladan bir karakter kullanacaktır.</string>
+    <string name="message_format_conversation_avatar_update">Konuşma avatarı değiştirildi</string>
+    <string name="message_format_conversation_avatar_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> konuşma avatarını değiştirdi</string>
+    <string name="message_format_conversation_name_update">Konuşma ismi <xliff:g example="User" id="name">%1$s</xliff:g> olarak değiştirildi</string>
+    <string name="message_format_conversation_name_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> konuşma ismini <xliff:g example="New name" id="name">%2$s</xliff:g> olarak değiştirdi</string>
+    <string name="message_format_participants_join"><xliff:g example="User" id="name">%1$s</xliff:g> katıldı</string>
+    <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g>, <xliff:g example="Recipient" id="recipient">%2$s</xliff:g>\'i ekledi</string>
+    <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> çıktı</string>
+    <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
+    <string name="message_gif_sharing_introduction">GIF arama &amp; paylaşma GIPHY tarafından sağlanıyor</string>
+    <string name="message_info_buffer_queue_empty">Arabellek kuyruğu boş</string>
+    <string name="message_join_conversation">Sohbete katıldı.</string>
+    <string name="message_permission_request_compose_location">Twidere, tweetlerinize konum ekleyebilmek için konum iznine ihtiyaç duyuyor.</string>
+    <string name="message_permission_request_save_media">Twidere, veri saklayabilmek için depolama iznine ihtiyaç duyuyor.</string>
+    <string name="message_permission_request_share_media">Twidere, bazı uygulamalara medya paylaşmak için depolama iznine ihtiyaç duyuyor.</string>
+    <string name="message_pin_status_confirm">Bu tweet sabitlensin mi? bu, önceden sabitlenmiş tweetin yerini alacaktır.</string>
+    <string name="message_please_wait">Lütfen bekleyin.</string>
+    <string name="message_promotions_reward">Bütün gelişmiş özellikleri ücretsiz kullanmak için promosyonları etkinleştirin, sizi rahatsız etmeyeceğimize söz veriyoruz!</string>
+    <string name="message_status_reply_to_user_removed_explanation">Twitter, cevaplarda tweet yazarının her zaman mentionlanmasını sağlar. Eğer tweet yazarı kaldırılmışsa, Twidere içeriği korumak için bu cevabı alıntı olarak gönderecektir.</string>
+    <string name="message_status_scheduling_connect_buffer_hint">Arabelleğe bağlanarak çevrimdışıyken dahi tweetleri zamanlayın</string>
+    <string name="message_status_scheduling_connected_to_buffer">Twidere artık arabelleğe bağlı</string>
+    <string name="message_summary_type_sticker">[Sticker]</string>
+    <string name="message_sync_data_connect_hint">Veri eşitlemek için Twidere\'yi ağ depolama alanıyla bağlayın</string>
+    <string name="message_sync_data_synced_with_name">Twidere artık <xliff:g example="ownCloud" id="name">%s </xliff:g> ile senkronize</string>
+    <string name="message_sync_disconnect_from_name_confirm"><xliff:g example="ownCloud" id="name">%s</xliff:g> ile bağlantı kesilsin mi?</string>
+    <string name="message_sync_last_synced_time">Son senkronize ediliş: <xliff:g example="2017/1/1 12:00" id="time">%s </xliff:g></string>
+    <string name="message_tab_field_is_required">\"<xliff:g example="Field" id="name">%s</xliff:g>\" alanı gereklidir</string>
+    <string name="message_ticker_promotions_reward">Tüm gelişmiş özellikleri ücretsiz kullanmak için promosyonları etkinleştirin!</string>
+    <!--
+      ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
+      ~ periods should be omitted
+    -->
+    <string name="message_toast_accepted_users_follow_request"><xliff:g id="user">%s</xliff:g>\'in takip isteği kabul edildi</string>
+    <string name="message_toast_added_to_filter">Filtreye eklendi</string>
+    <string name="message_toast_added_user_to_list"><xliff:g id="user">%1$s</xliff:g>, \"<xliff:g id="list">%2$s</xliff:g>\" listesine eklendi</string>
+    <string name="message_toast_already_logged_in">Zaten giriş yaptınız</string>
+    <string name="message_toast_cannot_get_location">Konumunuz alınamıyor.</string>
+    <string name="message_toast_compose_write_storage_no_permission">Çekilen fotoğraf/videoyu silmek için izin gerekli</string>
+    <string name="message_toast_duplicate_filter_rule">Kural yineleniyor</string>
+    <string name="message_toast_error_occurred">Bir hata oluştu, lütfen daha sonra deneyin.</string>
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <string name="message_toast_extra_features_not_purchased">Gelişmiş özellikler satın alınmadı</string>
+    <string name="message_toast_filters_import_hint">Açmak için \"+\" ya basın</string>
+    <string name="message_toast_internal_storage_install_required">SD karta yükleme desteklenmiyor, yeniden başlatmadan sonra hesaplar kaybolabilir.</string>
+    <string name="message_toast_invalid_mastodon_host">Geçersiz Mastadon sunucusu</string>
+    <string name="message_toast_link_copied_to_clipboard">Bağlantı panoya kopyalandı</string>
+    <string name="message_toast_livewp_daydream_enabled_message">Ayarlar\'a girerek sizin için hazırladığımız küçük hediyeyi bulabilirsiniz :)</string>
+    <string name="message_toast_login_verification_failed">Giriş doğrulaması başarısız oldu.</string>
+    <string name="message_toast_media_saved">Medya kaydedildi</string>
+    <!-- Toast message for network errors -->
+    <string name="message_toast_network_error">Ağ hatası</string>
+    <string name="message_toast_network_error_with_message">Ağ hatası: <xliff:g id="message">%s </xliff:g></string>
+    <string name="message_toast_no_account">Hesap yok</string>
+    <string name="message_toast_no_account_permission">Hesap izni gerekli</string>
+    <string name="message_toast_no_account_selected">Hesap seçilmedi.</string>
+    <string name="message_toast_no_user_selected">Hiçbir kullanıcı seçilmedi</string>
+    <string name="message_toast_press_again_to_close">Kapatmak için tekrar basın</string>
+    <string name="message_toast_profile_background_image_updated">Profil arka plan resmi güncellendi</string>
+    <string name="message_toast_profile_banner_image_updated">Profil afiş resmi güncellendi.</string>
+    <string name="message_toast_profile_image_updated">Profil resmi güncellendi</string>
+    <string name="message_toast_qr_scan_link_not_supported">Bağlantı desteklenmiyor</string>
+    <string name="message_toast_qr_scanner_not_supported">QR tarayıcı desteklenmiyor</string>
+    <string name="message_toast_retweet_cancelled">Retweet iptal edildi</string>
+    <string name="message_toast_save_media_no_storage_permission">Medyayı kaydetmek için depolama izni gerekmektedir.</string>
+    <string name="message_toast_saved_to_gallery">Galeriye kaydet.</string>
+    <string name="message_toast_schedule_future_time_required">Tarih/Zaman gelecekte olmalı</string>
+    <string name="message_toast_search_deleted">Arama silindi</string>
+    <string name="message_toast_search_name_deleted"><xliff:g example="SearchQuery" id="name">%1$s</xliff:g> Araması silindi</string>
+    <string name="message_toast_search_name_saved"><xliff:g example="SearchQuery" id="name">%1$s</xliff:g> Araması kaydedildi</string>
+    <string name="message_toast_search_saved">Arama kaydedildi</string>
+    <string name="message_toast_select_file_no_storage_permission">Dosya seçmek için depolama izni gerektirir.</string>
+    <string name="message_toast_share_media_no_storage_permission">Bazı uygulamalar medya paylaşmak için depolama izni gerektirir.</string>
+    <string name="message_toast_ssl_tls_error">TLS hatası, lütfen saat ve proxy ayarlarınızı kontrol edin</string>
+    <string name="message_toast_status_deleted">Tweet silindi</string>
+    <string name="message_toast_status_favorited">Tweet favorilendi</string>
+    <string name="message_toast_status_like_removed">Beğeni silindi</string>
+    <string name="message_toast_status_liked">Tweet beğenildi</string>
+    <string name="message_toast_status_pinned">Tweet sabitlendi</string>
+    <string name="message_toast_status_retweeted">Retweetlendi</string>
+    <string name="message_toast_status_saved_to_draft">Tweet taslaklara kaydedildi.</string>
+    <string name="message_toast_status_scheduled">Twit programlandı</string>
+    <string name="message_toast_status_unfavorited">Tweet favorilerden çıkarıldı</string>
+    <string name="message_toast_status_unpinned">Tweet sabitleme geri alındı</string>
+    <string name="message_toast_status_updated">Tweet gönderildi.</string>
+    <string name="message_toast_unable_to_load_more_statuses">Daha eski tweetler yüklenemiyor</string>
+    <string name="message_toast_user_filters_removed">Filtrelerden kaldırıldı</string>
+    <string name="message_toast_users_filters_added">Filtrelere eklendi</string>
+    <string name="message_toast_wrong_api_key">Geçersiz API url\'si veya müşteri anahtar\'ı/gizli\'si, Lütfen onları tekrar kontrol edin.</string>
+    <string name="message_toast_wrong_username_password">Yanlış kullanıcı adı/şifre</string>
+    <string name="message_unpin_status_confirm">Bu tweetin sabitlenmesi kaldırılsın mı?</string>
+    <string name="message_video_too_long">Video çok uzun</string>
+    <string name="message_video_too_short">Video çok kısa</string>
+    <string name="multi_select">Çoklu seçim</string>
+    <string name="mute_user">Sustur <xliff:g id="name">%s</xliff:g></string>
+    <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>\'i sessize al? Artık zaman akışınızda bu kişinin Tweetlerini görmeyeceksiniz.</string>
+    <string name="muted_user"><xliff:g id="name">%s</xliff:g> susturuldu</string>
+    <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> ve birbaşkası daha retweet etti</string>
+    <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> ve <xliff:g id="retweet_count">%2$d</xliff:g> kişi daha bunu retweet etti</string>
+    <string name="name_first">Önce ismi göster</string>
+    <string name="name_first_summary_off">Önce \@screenname göster</string>
+    <string name="name_first_summary_on">İsmi ilk göster</string>
+    <string name="name_not_set"><xliff:g id="name">%s</xliff:g> ayarlanmadı</string>
+    <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> bunu retweet etti</string>
+    <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>(<xliff:g id="nickname">%2$s</xliff:g>)</string>
+    <string name="navigation">Navigasyon</string>
+    <string name="network">Ağ</string>
+    <string name="network_diagnostics">Ağ tanılama</string>
+    <string name="new_direct_message">Yeni direkt mesaj</string>
+    <string name="new_document_api">Yeni Belge API</string>
+    <string name="new_document_api_summary">Yeni görev olarak profil ve medya aç</string>
+    <string name="new_user_list">Yeni liste</string>
+    <!-- Next item (tweet, user etc.) -->
+    <string name="next_item">Sonraki</string>
+    <string name="next_step">Sonraki</string>
+    <string name="next_tab">Sonraki sekme</string>
+    <string name="no_close_after_status_updated">Tweeti gönderdikten sonra \"Yeni tweet\"i açık tut</string>
+    <string name="no_close_after_status_updated_summary">Geveze için küçük bir hediye</string>
+    <string name="no_extension_installed">Kurulu eklenti bulunamadı</string>
+    <string name="no_location">Konum yok</string>
+    <string name="no_rule">Kural yok</string>
+    <string name="no_status_content_text">İçerik yok</string>
+    <string name="no_tab">Sekme yok</string>
+    <string name="no_tab_hint">Sekme yok</string>
+    <string name="no_user_found">Kullanıcı bulunamadı</string>
+    <string name="no_version_suffix">Düzeltme yok</string>
+    <string name="none">Hiçbiri</string>
+    <string name="notification_channel_description_content_interactions">Mentionlama ve retweet gibi etkileşimler</string>
+    <string name="notification_channel_description_content_messages">Direkt mesajar gibi önemli mesajlar</string>
+    <string name="notification_channel_descriptions_content_subscriptions">Kullanıcının tweet bildirimleri</string>
+    <string name="notification_channel_descriptions_content_updates">Ana sayfa zaman akışındaki yeni tweetler gibi gelişmeler</string>
+    <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> sana direkt mesaj gönderdi.</string>
+    <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="messages_count">%2$d</xliff:g> kişi sana doğrudan mesaj gönderdi.</string>
+    <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> ve diğer <xliff:g id="users_count">%2$d</xliff:g> kişi sana <xliff:g id="messages_count">%3$d</xliff:g> tane doğrudan mesaj gönderdi.</string>
+    <string name="notification_light_color">Işık Rengi</string>
+    <string name="notification_mention"><xliff:g id="user">%s</xliff:g> senden bahsetti.</string>
+    <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> ve diğer <xliff:g id="count">%2$d</xliff:g> kişi senden bahsetti.</string>
+    <!-- Notification method, flashing LED light -->
+    <!-- Notification method, ringtone -->
+    <!-- Notification method, device vibration -->
+    <string name="notification_status"><xliff:g id="user">%s</xliff:g> tarafından yeni tweet</string>
+    <string name="notification_status_multiple"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="count">%2$d</xliff:g> kişi yeni tweet attı</string>
+    <string name="notification_type_home">Anasayfa</string>
+    <string name="notification_type_interactions">Etkileşimler</string>
+    <string name="notification_type_messages">Mesajlar</string>
+    <string name="notifications">Bildirimler</string>
+    <string name="notifications_type">Bildirim şekli</string>
+    <string name="open_accounts_dashboard">Hesap tablosunu aç</string>
+    <string name="open_twitter_links">Twitter linklerini aç</string>
+    <string name="open_with_account">Hesap ile aç</string>
+    <string name="other_settings">Diğer ayarlar</string>
+    <string name="overwrite">Üzerine yaz</string>
+    <string name="page_down">Sayfa aşağısı</string>
+    <string name="page_up">Sayfa yukarısı</string>
+    <string name="password_sign_in_twitter_only">Parola oturum açma (yalnızca Twitter)</string>
+    <string name="pause">Duraklat</string>
+    <string name="pebble_notifications">Çakıl bildirimler</string>
+    <string name="pebble_notifications_summary">Pebble\'nize bildirimler gönderin</string>
+    <string name="permission_description_accounts">Hesap bilgisini oku</string>
+    <string name="permission_description_direct_messages">Direkt mesaj Oku/Yaz/Gönder</string>
+    <string name="permission_description_none">Herhangi bir izin gerekmez</string>
+    <string name="permission_description_preferences">Ayarları oku</string>
+    <string name="permission_description_read">Tweetleri ve önyüklenmiş bazı içerikleri oku</string>
+    <string name="permission_description_refresh">Zaman akışını yenile (Direkt mesajlar dahil)</string>
+    <string name="permission_description_shorten_status">Twidere uygulaması tweet kısaltma kullanabilir, o yüzden tweet gönderme yetkisi istemektedir.</string>
+    <string name="permission_description_sync_timeline">Twidere uygulaması pozisyonunuzu görme özelliğini kullanabilir, o yüzden pozisyon görüntüleme yetkisi istemektedir.</string>
+    <string name="permission_description_upload_media">Twidere uygulaması medya gönderme özelliğini kullanmaktadır, o yüzden medya görüntüleme yetkisi istemektedir.</string>
+    <string name="permission_description_write">Veritabanına yaz, durumu güncelle</string>
+    <string name="permission_label_shorten_status">Tweet kısalt</string>
+    <string name="permission_label_sync_timeline">Zaman akışını senk. et</string>
+    <string name="permission_label_upload_media">Medya yükle</string>
+    <string name="permissions_request">İzin isteği</string>
+    <string name="permissions_request_message">Uygulama bazı izinler istiyor</string>
+    <string name="phishing_link_warning">Sahte adres linki uyarısı</string>
+    <string name="phishing_link_warning_message_1">Direkt mesajdaki bir linke basıyorsunuz, sizi sahte bir adrese yönlendirebilir.\n\nSitenin adresini iki kez kontrol etmeden herhangi bir kişisel bilginizi vermeyin.</string>
+    <string name="phishing_link_warning_message_2">Devam etmek istediğinizden emin misiniz?</string>
+    <string name="phishing_link_warning_summary">Direkt mesajdaki bir muhtemel sahte adrese tıklarken uyar.</string>
+    <string name="photo">Fotoğraf</string>
+    <string name="pick_file">Dosya seç</string>
+    <string name="pinned_status">Sabitlenmiş tweet</string>
+    <string name="play">Oynat</string>
+    <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+    <string name="preference_multitasking_summary">Yeni görev olarak profil ve medya aç</string>
+    <string name="preference_summary_auto_refresh_power_saving">Batarya zayıfsa oto yenilemeyi durdur</string>
+    <string name="preference_summary_database_item_limit">Her hesap için veritabanında tutulan nesne sayısının üst limiti, depolama alanından tasarruf ve yükleme hızında artış için daha düşük değer seçiniz.</string>
+    <string name="preference_title_accounts">Hesaplar</string>
+    <string name="preference_title_advanced">Gelişmiş</string>
+    <string name="preference_title_database_item_limit">Veritabanı boyutu limiti</string>
+    <string name="preference_title_landscape">Yatay</string>
+    <string name="preference_title_portrait">Dikey</string>
+    <string name="preference_title_storage">Depolama</string>
+    <string name="preference_title_tablet_mode">Tablet modu</string>
+    <string name="preference_title_text_size">Yazı Boyutu</string>
+    <string name="preference_title_timeline_positions">Zaman akışı pozisyonları</string>
+    <string name="preference_title_translate">Çevir</string>
+    <string name="preference_title_trends_location">Gündem konumu</string>
+    <string name="preload_wifi_only">Yalnız Wi-Fi kullanarak önyükleme yap</string>
+    <string name="preview">Önizleme</string>
+    <string name="preview_images">Resim önizleme</string>
+    <!-- Media will be cropped to fit preview -->
+    <string name="preview_style_crop">Kırp</string>
+    <!-- Actual size, media preview will be scaled respectively -->
+    <string name="preview_style_real_size">Gerçek boyut</string>
+    <!-- Media will be scaled to fit preview -->
+    <string name="preview_style_scale">Ölçekle</string>
+    <!-- Previous item (tweet, user etc.) -->
+    <string name="previous_item">Önceki</string>
+    <string name="previous_tab">Önceki sekme</string>
+    <string name="profile">Profil</string>
+    <string name="profile_background">Profil arka planı</string>
+    <string name="profile_background_color">Arkaplan rengi</string>
+    <string name="profile_banner">Profil afişi</string>
+    <string name="profile_image">Profil resmi</string>
+    <string name="profile_image_style">Profil resmi biçimi</string>
+    <string name="profile_images">Profil resimleri</string>
+    <string name="profile_link_color_main_color">Bağlantı rengi (ana renk)</string>
+    <string name="profile_text_color">Metin rengi</string>
+    <string name="profile_updated">Profil güncellendi.</string>
+    <string name="progress">İlerleme</string>
+    <string name="project_account">Proje şifresi</string>
+    <string name="projects_we_took_part">Projelerde yer aldık</string>
+    <!-- Normally you don't need to translate this -->
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
+    <string name="provider_fanfou">Fanfou</string>
+    <string name="provider_mastodon">Mastodon</string>
+    <string name="proxy">Proxy</string>
+    <string name="proxy_host">Proxy sunucusu</string>
+    <string name="proxy_password">Proxy şifresi</string>
+    <string name="proxy_port">Proxy portu</string>
+    <string name="proxy_summary">Tüm ağ istekleri için proxy kullanır.</string>
+    <string name="proxy_type">Proxy türü</string>
+    <string name="proxy_username">Proxy kullanıcı adı</string>
+    <string name="query">Sorgu</string>
+    <string name="quick_send">Göndermek İçin \"Enter\"a Basın</string>
+    <string name="quick_send_summary">\"Enter\"a basıldığında tweet\'i gönder.</string>
+    <string name="quote_format">Alıntı şekli</string>
+    <string name="quote_format_summary">\"[TEXT]\" = Tweet metni\n\"[NAME]\" = Twitter kullanıcı adı</string>
+    <string name="quote_original_status">Özgün tweeti alıntıla</string>
+    <string name="quote_protected_status_warning_message">Bu tweet korumalı.\n\nKorumalı kullanıcılar genellikle herkese açık tweet atmak istemez.</string>
+    <string name="quote_user">Alıntı yap <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="rate_limit">Sorgulama limiti</string>
+    <string name="read_from_bottom">Aşağıdan oku</string>
+    <string name="read_from_bottom_summary_off">Yenilemeden sonra en son tweet\'e git</string>
+    <string name="read_from_bottom_summary_on">Yenilemeden sonra okuma konumunu koru</string>
+    <string name="recent_media">Son medya</string>
+    <string name="refresh_after_status_updated">Tweet gönderildikten sonra tazele</string>
+    <string name="refresh_after_status_updated_summary">Tweet gönderildikten sonra zaman çizelgesini tazele.</string>
+    <string name="refresh_interval">Yenileme aralığı</string>
+    <string name="refresh_on_start">Başlangıçta yenile</string>
+    <string name="refresh_on_start_summary">Başlangıçta zaman akışını ve bahsedenleri yenile.</string>
+    <string name="refresh_type_home">Anasayfa</string>
+    <string name="refresh_type_interactions">Etkileşimler</string>
+    <string name="refresh_type_messages">Mesajlar</string>
+    <string name="refresh_type_trends">Gündem</string>
+    <string name="remember_position">Konumu hatırla</string>
+    <string name="remember_position_summary">Liste/Sekme konumunu Twidere kapanmadan kaydet</string>
+    <string name="remove">Kaldır</string>
+    <string name="remove_from_filter">Filtreden kaldır</string>
+    <string name="remove_sensitive_mark">Hassas işaretini kaldır</string>
+    <string name="replies">Yanıtlar</string>
+    <string name="report_for_spam">Spam bildir</string>
+    <string name="report_usage_statistics_now">Kullanım istatistiklerini şimdi gönder</string>
+    <string name="report_user"><xliff:g id="name">%s</xliff:g> Şikayet Et</string>
+    <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g> spam yaptığı için raporlamak ister misiniz? Ayrıca bu kullanıcı engellenecek.</string>
+    <string name="reported_user_for_spam">Bu kullanıcının spam yolladığını bildirdiniz.</string>
+    <string name="reported_users_for_spam">Bu kullanıcıların spam yolladığını bildirdiniz.</string>
+    <string name="requested">İstendi</string>
+    <string name="reset_keyboard_shortcuts_confirm">Klavye kısayollarını varsayılana döndür?</string>
+    <string name="reset_to_default">Varsayılana dön</string>
+    <string name="retry_on_network_issue">Ağ sorunu üzerinde yeniden deneyin</string>
+    <string name="retry_on_network_issue_summary">Ağ sorununu otomatik kurtarmayı yeniden deneyin</string>
+    <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> kullanıcı bunu retweet etti</string>
+    <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g> bunu retweet etti</string>
+    <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ve <xliff:g id="retweet_count">%2$d</xliff:g> kişi daha bunu retweet etti</string>
+    <string name="retweets_of_me">Benim retweet ettiklerim</string>
+    <string name="revoke_permissions">İzinleri kaldır</string>
+    <string name="round">Yuvarlak</string>
+    <string name="safety">Güvenlik</string>
+    <string name="same_oauth_signing_url">Otomatik giriş için aynı url\'yi kullan</string>
+    <string name="save_to_gallery">Galeriye kaydet</string>
+    <string name="saved_searches">Kayıtlı aramalar</string>
+    <string name="saved_searches_already_saved_hint">Belki de zaten bu arama kaydedilmiştir</string>
+    <string name="scheduled_statuses">Zamanlanmış tweetler</string>
+    <string name="scrapyard">Scrapyard</string>
+    <string name="search_hint">Tweet yada kullanıcı ara</string>
+    <string name="search_hint_users">Kullanıcı ara</string>
+    <string name="search_statuses">Tweet/ler ara</string>
+    <string name="search_type_federated">Birleşik</string>
+    <string name="search_type_local">Yerel</string>
+    <string name="search_type_media">Medya</string>
+    <string name="search_type_statuses">Tweetler</string>
+    <string name="search_type_users">Kullanıcılar</string>
+    <string name="security_key">Güvenlik anahtarı</string>
+    <string name="select_account">Hesap seç</string>
+    <string name="select_accounts">Hesapları seç</string>
+    <string name="select_accounts_for_compose">Oluşturmak için hesapları seç</string>
+    <string name="select_user">Kullanıcı seç</string>
+    <string name="select_user_list">Kullanıci listesi seç</string>
+    <string name="send_anyway">Yine de gönder</string>
+    <string name="send_at">Gönder</string>
+    <string name="send_crash_report">Twidere çökme raporunu gönder</string>
+    <string name="send_direct_message">DM gönder</string>
+    <string name="send_follow_request">Takip isteği gönder</string>
+    <string name="sending_direct_message">Direkt mesaj yollanıyor</string>
+    <string name="sensitive_content_warning">Bu tweet hassas içeriğe sahip olabilir, devam edilsin mi?</string>
+    <string name="sent_follow_request_to_user"><xliff:g id="user">%s</xliff:g> kişisine takip isteği gönderildi.</string>
+    <string name="server_address">Sunucu adresi</string>
+    <string name="set_consumer_key_secret_message">Twidere token\'i sınırı geçiyorsa, https://apps.twitter.com/ adresinden bir uygulama oluşturabilir ve consumer key ve secret kısımlarına yapıştırın.\nEğer, varsayılan anahtar kullanmaya devam ederseniz oturum açmanız mümkün olmayabilir.</string>
+    <string name="settings_interface">Arayüz</string>
+    <string name="settings_notifications">Bildirimler</string>
+    <string name="settings_refresh">Yenile</string>
+    <string name="share_format">Paylaşma şekli</string>
+    <string name="share_format_summary">\"[TITLE]\" = İçerik başlığı\n\"[TEXT]\" = İçerik metni</string>
+    <string name="share_link">Bağlantı paylaş</string>
+    <string name="share_status">Tweeti paylaş</string>
+    <string name="shortener_version_incompatible">Tweet kısaltması desteklenmiyor</string>
+    <string name="show_absolute_time">Tam saati göster</string>
+    <string name="show_absolute_time_summary">Tweetlerdeki tam zamanı gösterir</string>
+    <string name="show_in_timeline">Timeline\'da göster</string>
+    <string name="sign_in_service_email">E-posta</string>
+    <string name="sign_in_service_google_id">Google Kimliği</string>
+    <string name="sign_in_service_twitter">Twitter</string>
+    <string name="sign_in_with_ellip">Şununla giriş yap&#8230;</string>
+    <string name="sign_up">Kaydol</string>
+    <string name="signing_in_error_browser_sign_in_hint">Oturum açma hatası, tarayıcı kullanarak giriş yapmanız gerekebilir. (Bu durum özel API ayarlarını oturum açma sırasında göz ardı eder)</string>
+    <string name="size">Boyut</string>
+    <string name="small">Küçük</string>
+    <string name="sound">Ses</string>
+    <string name="source"><xliff:g id="source">%s</xliff:g></string>
+    <string name="source_camera">Kamera</string>
+    <string name="source_clipboard">Pano</string>
+    <string name="source_filter_name">Kaynak: <xliff:g id="name">%s</xliff:g></string>
+    <string name="source_gallery">Galeri</string>
+    <string name="special_thanks_to">Özel teşekkürler</string>
+    <string name="sponsored_by">Sponsor</string>
+    <string name="square">Kare</string>
+    <string name="state_blocking">Engelleniyor</string>
+    <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
+    <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
+    <string name="status_is_duplicate">Aynı tweet daha önce gönderilmiş.</string>
+    <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="status_not_updated">Tweet gönderilmedi.</string>
+    <string name="status_not_updated_summary">Tweet gönderilmedi, ve taslaklara kaydedildi.</string>
+    <string name="status_share_subject_format_with_time">Tweeti gönderen <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), <xliff:g id="time">%3$s</xliff:g></string>
+    <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
+    <string name="status_shortener">Tweet kısaltıcı</string>
+    <string name="status_shortener_default">Hiçbiri (Göndermekten vazgeç)</string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <string name="status_type_retweet">Retweet et</string>
+    <string name="style">Stil</string>
+    <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listesine abone olundu.</string>
+    <string name="summary_interactions_account_not_supported">Hesap desteklenmiyor</string>
+    <string name="swipe_down_to_refresh">Yenileme için aşağı doğru sürükleyin</string>
+    <string name="system_default">Sistem varsayılanı</string>
+    <string name="tab_display_option">Sekme gösterme seçeneği</string>
+    <string name="tab_display_option_icon">Simge</string>
+    <string name="tab_display_option_icon_and_label">Simge ve etiket</string>
+    <string name="tab_display_option_label">Etiket</string>
+    <string name="tab_editor_hint_name">Ad</string>
+    <string name="tabs">Sekmeler</string>
+    <string name="tcp_dns_query">TCP DNS sorgualama</string>
+    <string name="tcp_dns_query_summary">DNS isterken DNS sızmasından kaçınmak için TCP protokolü\'nü kullanın.</string>
+    <string name="text_copied">Metin panoya kopyalandı.</string>
+    <string name="text_size">Yazı Boyutu</string>
+    <string name="text_size_summary">Tweeti harf sayısı.</string>
+    <string name="theme">Tema</string>
+    <string name="theme_auto">Otomatik</string>
+    <string name="theme_background_default">Varsayılan</string>
+    <string name="theme_background_solid">Tamamen beyaz/siyah</string>
+    <string name="theme_background_transparent">Transparan</string>
+    <string name="theme_color">Tema rengi</string>
+    <!-- Dark theme -->
+    <string name="theme_dark">Karanlık</string>
+    <string name="theme_dark_actionbar">Koyu AksiyonBarı</string>
+    <string name="theme_font_family">Tema font ailesi</string>
+    <!-- Light theme -->
+    <string name="theme_light">Işık</string>
+    <string name="thumbor_integration">Thumbor entegrasyonu</string>
+    <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, <xliff:g id="source">%2$s</xliff:g> kullanılarak</string>
+    <string name="timeline_sync_service">Zaman çizelgesi senkronizasyon servisi</string>
+    <string name="title_about">Hakkında</string>
+    <string name="title_accounts">Hesaplar</string>
+    <string name="title_add_or_remove_from_list">Listeye ekle veya sil</string>
+    <string name="title_block_user">Blok <xliff:g id="name">%s</xliff:g></string>
+    <string name="title_blocked_users">Engellenmiş kullanıcılar</string>
+    <string name="title_browser_sign_in">Tarayıcıdan giriş</string>
+    <string name="title_compose">Tweet yaz</string>
+    <string name="title_direct_messages">Mesajlar</string>
+    <string name="title_drafts">Taslaklar</string>
+    <string name="title_edit_details">Detayları Düzenle</string>
+    <string name="title_edit_profile">Profil düzenle</string>
+    <!-- Enhanced (paid) features title -->
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_favorites">Favoriler</string>
+    <string name="title_filters">Filtreler</string>
+    <string name="title_filters_subscription_url">URL</string>
+    <string name="title_followers">Takipçiler</string>
+    <string name="title_following">takip ediliyor</string>
+    <string name="title_home">Anasayfa</string>
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_likes">Beğen</string>
+    <string name="title_mentions">Bahsedenler</string>
+    <string name="title_nicknames">Lakaplar</string>
+    <string name="title_open_source_license">Açık kaynak kod lisansı</string>
+    <string name="title_premium_features_name">Twidere ∞</string>
+    <string name="title_search">Ara</string>
+    <string name="title_set_nickname">Lakap ayarla</string>
+    <string name="title_status">Tweet</string>
+    <string name="title_statuses">Tweetler</string>
+    <string name="title_subscription_name">Ad</string>
+    <string name="title_subscription_url">URL</string>
+    <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+    <string name="title_user">Kullanıcı</string>
+    <string name="title_user_colors">Kullanıcı renkleri</string>
+    <string name="title_user_list_memberships">Ait olduğu</string>
+    <string name="title_users_favorited_this">Kullanıcılar bunu beğendi</string>
+    <string name="title_users_liked_this">Kullanıcılar bunu beğendi</string>
+    <string name="title_users_retweeted_this">Kullanıcılar bunu retweetledi</string>
+    <string name="translation_destination">Çeviri hedefi</string>
+    <string name="translators">Çevirmenler</string>
+    <string name="trends">Gündem</string>
+    <string name="trends_location">Gündem konumu</string>
+    <string name="trends_location_summary">Yerel gündem için konum belirler.</string>
+    <!-- 'Tweet' here is a verb -->
+    <string name="tweet_from_name"><xliff:g id="text">%1$s</xliff:g> tarafından Tweet</string>
+    <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
+    <string name="twidere_test">Twidere test</string>
+    <string name="type_name_to_search">İsim arama</string>
+    <string name="type_to_compose">Tweet yazınız</string>
+    <string name="unblocked_user"><xliff:g id="user">%s</xliff:g> engeli kaldırıldı.</string>
+    <string name="underline">Altçizgi</string>
+    <string name="unfollow_user">Unfollow <xliff:g id="name">%s</xliff:g></string>
+    <string name="unfollow_user_confirm_message"><xliff:g id="name">%s</xliff:g>\'i takibi bırak? Artık bu kullanıcının tweetlerini görmeyeceksiniz.</string>
+    <string name="unfollowed_user"><xliff:g id="user">%s</xliff:g> takipten çıkarıldı.</string>
+    <string name="uninstall">Kaldır</string>
+    <string name="unknown_language">Bilinmeyen bir dil</string>
+    <string name="unknown_location">Bilinmeyen konum</string>
+    <string name="unmute_user"><xliff:g id="name">%s</xliff:g> susturmayı kaldır</string>
+    <string name="unmuted_user"><xliff:g id="name">%s</xliff:g> susturma kaldırıldı</string>
+    <string name="unread_count">Okunmamış sayısı</string>
+    <string name="unsubscribe_from_user_list"><xliff:g id="name">%s</xliff:g> listesinin aboneliğinden çık</string>
+    <string name="unsubscribe_from_user_list_confirm_message"><xliff:g id="name">%s</xliff:g> listesi üyeliğinden çıkılsın mı? Daha sonra tekrar üye olabilirsiniz.</string>
+    <string name="unsubscribed_from_list">\"<xliff:g id="list">%s</xliff:g>\" listesine abonelik iptal edildi.</string>
+    <string name="unsupported_activity_action_summary">Lütfen yukarıdaki eylemi raporla</string>
+    <string name="unsupported_login_verification_type_name">Desteklenmeyen giriş doğrulaması <xliff:g id="name">%1$s</xliff:g>, lütfen destek hesabına rapor edin.</string>
+    <string name="update_status">Tweet yolla</string>
+    <string name="updated_list_details">\"<xliff:g id="list">%s</xliff:g>\" listesinin detayları güncellendi.</string>
+    <string name="updating_status_notification">Tweet gönderiliyor&#8230;</string>
+    <string name="uploader_version_incompatible">Medya yükleme desteklenmiyor</string>
+    <string name="usage_statistics">Kullanım istatistikleri</string>
+    <string name="usage_statistics_header_summary">Twidere bazı araştırma projelerinde yer aldı, bu projelere katılmak Twidere ve bazı diğer uygulamalar için iyi olacak.</string>
+    <string name="usage_statistics_notification_summary">Twidere\'yi geliştirmemize yardımcı ol!</string>
+    <string name="user_blocked">Bu kullanıcıyı engellediniz.</string>
+    <string name="user_filter_name">Kullanıcı: <xliff:g id="name">%s</xliff:g></string>
+    <string name="user_list_details">Liste ayrıntıları</string>
+    <!-- User list description -->
+    <string name="user_list_details_description">Açıklama</string>
+    <!-- User list is public -->
+    <string name="user_list_details_is_public">Herkese açık</string>
+    <!-- User list name -->
+    <string name="user_list_details_name">Ad</string>
+    <string name="user_lists">Listeler</string>
+    <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> senden bahsetti</string>
+    <string name="user_mentions">Adının geçtikleri</string>
+    <string name="user_profile_description">Açıklama</string>
+    <string name="user_profile_location">Konum</string>
+    <string name="user_profile_name">Ad</string>
+    <string name="user_profile_url">URL</string>
+    <string name="user_protected_summary">Bu kısıtlı kullanıcının tweetlerini görmek için ona takip isteği göndermen gerek</string>
+    <string name="user_type_protected">Korumalı</string>
+    <string name="user_type_verified">Doğrulanmış</string>
+    <string name="user_unblocked">Bu kullanıcıyı engellenenlerden çıkardınız.</string>
+    <string name="users_blocked">Bu kullanıcılar engellendi.</string>
+    <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'nın listeleri</string>
+    <string name="label_drafts_all">Tüm</string>
+    <string name="label_drafts_statuses">Tweetler</string>
+    <string name="label_drafts_others">Diğerleri</string>
+</resources>

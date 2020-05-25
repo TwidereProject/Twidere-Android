@@ -23,7 +23,7 @@ import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.TabAccountFlags
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.statuses.UserListTimelineFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
@@ -31,7 +31,9 @@ import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.StringHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.argument.UserListArguments
+import org.mariotaku.twidere.model.tab.conf.BooleanExtraConfiguration
 import org.mariotaku.twidere.model.tab.conf.UserListExtraConfiguration
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 
 /**
  * Created by mariotaku on 2016/11/27.
@@ -54,7 +56,10 @@ class UserListTimelineTabConfiguration : TabConfiguration() {
     }
 
     override fun getExtraConfigurations(context: Context) = arrayOf(
-            UserListExtraConfiguration(EXTRA_USER_LIST).headerTitle(R.string.title_user_list)
+            UserListExtraConfiguration(EXTRA_USER_LIST).headerTitle(R.string.title_user_list),
+            BooleanExtraConfiguration(EXTRA_HIDE_RETWEETS, R.string.hide_retweets, false).mutable(true),
+            BooleanExtraConfiguration(EXTRA_HIDE_QUOTES, R.string.hide_quotes, false).mutable(true)
+//            BooleanExtraConfiguration(EXTRA_HIDE_REPLIES, R.string.hide_replies, false).mutable(true)
     )
 
     override fun applyExtraConfigurationTo(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
@@ -63,6 +68,34 @@ class UserListTimelineTabConfiguration : TabConfiguration() {
             EXTRA_USER_LIST -> {
                 val userList = (extraConf as UserListExtraConfiguration).value ?: return false
                 arguments.listId = userList.id
+            }
+        }
+        val extras = tab.extras as HomeTabExtras
+        when (extraConf.key) {
+            EXTRA_HIDE_RETWEETS -> {
+                extras.isHideRetweets = (extraConf as BooleanExtraConfiguration).value
+            }
+            EXTRA_HIDE_QUOTES -> {
+                extras.isHideQuotes = (extraConf as BooleanExtraConfiguration).value
+            }
+            EXTRA_HIDE_REPLIES -> {
+                extras.isHideReplies = (extraConf as BooleanExtraConfiguration).value
+            }
+        }
+        return true
+    }
+
+    override fun readExtraConfigurationFrom(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+        val extras = tab.extras as? HomeTabExtras ?: return false
+        when (extraConf.key) {
+            EXTRA_HIDE_RETWEETS -> {
+                (extraConf as BooleanExtraConfiguration).value = extras.isHideRetweets
+            }
+            EXTRA_HIDE_QUOTES -> {
+                (extraConf as BooleanExtraConfiguration).value = extras.isHideQuotes
+            }
+            EXTRA_HIDE_REPLIES -> {
+                (extraConf as BooleanExtraConfiguration).value = extras.isHideReplies
             }
         }
         return true

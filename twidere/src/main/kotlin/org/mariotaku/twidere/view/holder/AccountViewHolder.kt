@@ -19,14 +19,15 @@
 
 package org.mariotaku.twidere.view.holder
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import org.mariotaku.ktextension.spannable
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -35,7 +36,8 @@ import org.mariotaku.twidere.view.iface.IColorLabelView
 
 class AccountViewHolder(
         val adapter: AccountDetailsAdapter,
-        itemView: View
+        itemView: View,
+        val showType: Boolean
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val content = itemView as IColorLabelView
@@ -61,7 +63,11 @@ class AccountViewHolder(
 
     fun display(details: AccountDetails) {
         name.spannable = details.user.name
-        screenName.spannable = "@${details.user.screen_name}"
+        screenName.spannable = if (details.type == AccountType.MASTODON) {
+            details.account.name
+        } else {
+            "${if (showType) details.type else ""}@${details.user.screen_name}"
+        }
         setAccountColor(details.color)
         profileImage.visibility = View.VISIBLE
         adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,

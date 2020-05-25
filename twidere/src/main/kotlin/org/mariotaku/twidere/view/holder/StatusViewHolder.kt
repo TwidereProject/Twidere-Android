@@ -1,10 +1,5 @@
 package org.mariotaku.twidere.view.holder
 
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
-import androidx.core.widget.TextViewCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -14,6 +9,11 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.*
@@ -378,7 +378,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
         textView.hideIfEmpty()
 
-        if (replyCount > 0) {
+        if (replyCount > 0 && isCardNumbersShown) {
             replyCountView.spannable = UnitConvertUtils.calculateProperCount(replyCount)
         } else {
             replyCountView.spannable = null
@@ -406,7 +406,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                             status.my_retweet_id)
         }
 
-        if (retweetCount > 0) {
+        if (retweetCount > 0 && isCardNumbersShown) {
             retweetCountView.spannable = UnitConvertUtils.calculateProperCount(retweetCount)
         } else {
             retweetCountView.spannable = null
@@ -420,7 +420,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             favoriteIcon.isActivated = creatingFavorite || status.is_favorite
         }
 
-        if (favoriteCount > 0) {
+        if (favoriteCount > 0 && isCardNumbersShown) {
             favoriteCountView.spannable = UnitConvertUtils.calculateProperCount(favoriteCount)
         } else {
             favoriteCountView.spannable = null
@@ -575,6 +575,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             listener.onLiked()
         }
     }
+
+    private val isCardNumbersShown: Boolean
+        get() = adapter.isCardNumbersShown(layoutPosition)
 
     private val isCardActionsShown: Boolean
         get() = adapter.isCardActionsShown(layoutPosition)

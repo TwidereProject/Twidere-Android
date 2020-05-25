@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Acasa</item>
+        <item>Interacţiuni</item>
+        <item>Mesaje directe</item>
+        <item>Tendinţe</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>Compune</item>
+        <item>Faceti o fotografie</item>
+        <item>Adauga media</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Interacţiuni</item>
+        <item>Mesaje directe</item>
+        <item>Tendinţe</item>
+        <item>Căutări salvate</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Camera</item>
+        <item>Galerie</item>
+        <item>Clipboard</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Crop</item>
+        <item>Scale</item>
+        <item>Dimensiune reala</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Acasa</item>
+        <item>Interacţiuni</item>
+        <item>Mesaje directe</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Rotund</item>
+        <item>Square</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>Inverseaza proxy</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>Utilizator</item>
+        <item>Cronologie utilizator</item>
+        <item>Favorite utilizator</item>
+        <item>Listeaza</item>
+        <item>Listeaza cronologie</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 minute</item>
+        <item>5 minute</item>
+        <item>10 minute</item>
+        <item>15 minute</item>
+        <item>30 minute</item>
+        <item>1 oră</item>
+        <item>2 ore</item>
+        <item>4 ore</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>Ingust</item>
+        <item>Normal</item>
+        <item>Larg</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>Pictograma</item>
+        <item>Eticheta</item>
+        <item>Pictograma si eticheta</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>Lumina</item>
+        <item>Intuneric</item>
+        <item>Automat</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>Default</item>
+        <item>Pur ab/negru</item>
+        <item>Transparent</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>Raspunsuri</item>
+        <item>Retweets</item>
+    </string-array>
+</resources>
