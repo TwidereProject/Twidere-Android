@@ -66,7 +66,11 @@ I started a crowdin project, so anyone can do something for Twidere. Visit this 
 
 Enhanced features on Google Play
 
-PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
+Patreon: [<img a src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="100" herf="https://www.patreon.com/bePatron?u=36020799"/>](https://www.patreon.com/twidere)
+
+PayPal:  http://paypal.me/yisiliu2
+
+AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
 
 Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
 
