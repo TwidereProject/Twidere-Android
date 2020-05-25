@@ -3,8 +3,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Twidere-brightgreen.svg?style=flat)](http://android-arsenal.com/details/3/2453)
 [![Travis status](https://img.shields.io/travis/TwidereProject/Twidere-Android.svg)](https://travis-ci.org/TwidereProject/Twidere-Android/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
-[![Patron](https://c5.patreon.com/external/logo/become_a_patron_button@2x.png)](https://www.patreon.com/bePatron?u=36020799)
-
+[<img a src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="100" herf="https://www.patreon.com/bePatron?u=36020799"/>](https://www.patreon.com/bePatron?u=36020799)
 
 Material Design ready and feature rich Twitter app for Android 4.4+
 
