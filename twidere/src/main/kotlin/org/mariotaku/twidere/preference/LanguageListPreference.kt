@@ -8,7 +8,14 @@ import java.util.*
 
 class LanguageListPreference(context: Context, attrs: AttributeSet? = null) : EntrySummaryListPreference(context, attrs) {
     init {
-        val locales = BuildConfig.TRANSLATION_ARRAY.map { Locale(it.split('-')[0], it.split('-')[1]) }.let {
+        val locales = BuildConfig.TRANSLATION_ARRAY.map {
+            val splits = it.split('-')
+            if (splits.count() > 1) {
+                Locale(splits[0], splits[1])
+            } else {
+                Locale(it)
+            }
+        }.let {
             it + Locale.US
         }.sortedBy {
             it.getDisplayName(it)
