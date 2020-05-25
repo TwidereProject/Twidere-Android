@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 32 Could not authenticate you: Your call could not be completed as dialed. -->
+    <string name="error_twitter_32">Non autenticado, se cadra precisas entrar de novo.</string>
+    <!-- 34 Sorry, that page does not exist: Corresponds with HTTP 404 - the specified resource was not found. -->
+    <string name="error_twitter_34">Este chío, usuario ou páxina non existe.</string>
+    <!-- 88 Rate limit exceeded: The request limit for this resource has been reached for the current rate limit window. -->
+    <string name="error_twitter_88">Cota límite excedida, téntao máis tarde.</string>
+    <!-- 89 Invalid or expired token: The access token used in the request is incorrect or has expired. Used in API v1.1 -->
+    <string name="error_twitter_89">A túa información de entrada é incorrecta ou expirou. Por favor, entra de novo.</string>
+    <!-- 64 Your account is suspended and is not permitted to access this feature: Corresponds with an HTTP 403 - the access token being used belongs to a suspended user and they can't complete the action you're trying to take -->
+    <string name="error_twitter_64">A túa conta está suspendida e non se lle permite acceder a esta característica.</string>
+    <!-- 130 Over capacity: Corresponds with HTTP 503 - Twitter is temporarily over capacity. -->
+    <string name="error_twitter_130">Twitter está temporalmente sobrecargado.</string>
+    <!-- 131 Internal error: Corresponds with HTTP 500 - An unknown internal error occurred. -->
+    <string name="error_twitter_131">O servidor de Twitter pode estar temporalmente caído. Por favor, téntao máis tarde.</string>
+    <!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
+    <string name="error_twitter_135">Por favor, comproba o reloxo do sistema.</string>
+    <!-- 136 Blocked by user while retweeting: You have been blocked from retweeting this user's tweets at their request. -->
+    <string name="error_twitter_136">Este usuario estache a bloquear.</string>
+    <string name="error_twitter_139">Xa marcaches favorito este chío.</string>
+    <!-- 144 No status found with that ID. -->
+    <string name="error_twitter_144">Non se atopou o chío, se cadra foi eliminado.</string>
+    <string name="error_twitter_161">Xa enviaches petición de seguimento a este usuario.</string>
+    <!-- 172 You have been blocked from following this account at the request of the user. -->
+    <string name="error_twitter_162">Estás bloqueado por este usuario.</string>
+    <!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
+    <string name="error_twitter_172">Xa gardaches esta busca.</string>
+    <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
+    <string name="error_twitter_179">Non podes ver este chío, é dun usuario protexido.</string>
+    <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
+    <string name="error_twitter_187">Xa enviaches este chío.</string>
+    <string name="error_twitter_193">A foto que queres subir é grande de máis.</string>
+    <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
+    <string name="error_twitter_215">Se cadra precisas entrar de novo.</string>
+    <string name="error_twitter_326">A túa conta foi suspendida, máis detalles en https://twitter.com/ </string>
+    <string name="error_twitter_327">Xa rechouchiaches este chío.</string>
+</resources>

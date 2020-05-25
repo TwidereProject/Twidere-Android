@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- [verb] Accept a friend request (follow request) -->
+    <!-- [verb] Accept a permission request like allow to use camera etc. -->
+    <!-- [verb] Add an item to a list/collection -->
+    <!-- [verb] Add a member to a message conversation -->
+    <string name="action_add_conversation_participant">Tilføj medlem</string>
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">Tilføj regel</string>
+    <string name="action_add_member">Tilføj medlem</string>
+    <string name="action_add_tab">Tilføj fane</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">Bloker</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_cancel_retweet">Annuller retweet</string>
+    <string name="action_clear">Ryd</string>
+    <string name="action_compose">Komponer</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">Slet</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_edit">Redigere</string>
+    <string name="action_favorite">Favoriser</string>
+    <string name="action_follow">Følg</string>
+    <!-- [verb] Perform import action -->
+    <!-- Used for decide something later, like permission request -->
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_open_in_browser">Åben i browser</string>
+    <string name="action_pick_color">Vælg farve</string>
+    <string name="action_quote">Citat</string>
+    <string name="action_refresh">Genopfrisk</string>
+    <string name="action_reply">Svar</string>
+    <string name="action_report_spam">Rapporter spam</string>
+    <!-- [verb] Restore purchase -->
+    <string name="action_retry">Prøv igen</string>
+    <!-- [verb] Action for performing retweet -->
+    <string name="action_retweet">Retweet</string>
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">Gem</string>
+    <string name="action_search">Søg</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">Send</string>
+    <string name="action_set_color">Bestem farve</string>
+    <string name="action_set_nickname">Giv kælenavn</string>
+    <string name="action_share">Del</string>
+    <!-- [verb] Used for skip some settings -->
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_settings">Indstillinger</string>
+    <string name="action_take_photo">Tag billede</string>
+    <string name="action_twitter_mute_user">Dæmp bruger</string>
+    <string name="action_twitter_muted_users">Dæmpede brugere</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_unblock">Fjern blokering</string>
+    <string name="action_unfavorite">Slet favorisering</string>
+    <string name="action_unfollow">Følg ikke mere</string>
+    <string name="action_view_map">Kort</string>
+    <string name="add_account">Tilføj konto</string>
+    <string name="add_image">Tilføj billede</string>
+    <!-- App name, normally you don't need to translate this. -->
+    <string name="auth_type_basic">Basik</string>
+    <string name="auth_type_oauth">OAuth</string>
+    <string name="auth_type_xauth">xAuth</string>
+    <string name="auto_refresh">Autoopdater</string>
+    <string name="clear_cache">Ryd cache</string>
+    <string name="clear_databases">Ryd database</string>
+    <string name="clear_databases_summary">Slet alle tweets, profiler, beskeder. Dine kontooplysninger vil ikke gå tabt.</string>
+    <string name="consumer_key">Forbruger nøgle</string>
+    <string name="consumer_secret">Forbruger hemmelighed</string>
+    <string name="content">Indhold</string>
+    <string name="content_and_storage">Indhold &amp; Lager</string>
+    <string name="content_to_notify">Indhold at notificere</string>
+    <string name="content_to_refresh">Indhold at opdatere</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="count_label_retweets">Retweeter</string>
+    <string name="default_api_settings">Standard API indstillinger</string>
+    <string name="default_api_settings_summary">Disse indstillinger gælder kun for brugere der er logget ind fornyeligt</string>
+    <string name="discard">Kasser</string>
+    <string name="edit_api">Redigere API</string>
+    <string name="edit_tab">Rediger fane</string>
+    <string name="error_message">Fejl: <xliff:g id="message">%s</xliff:g></string>
+    <string name="error_message_message_too_long">Besked for lang.</string>
+    <string name="error_message_no_content">Intet indhold</string>
+    <string name="error_message_status_too_long">Tweet for lang.</string>
+    <string name="error_message_tweet_shorten_failed">Tweetforkortelse mislykkedes.</string>
+    <string name="error_message_tweet_shortener_not_found">Tweetforkorter ikke fundet, måske er den blevet afinstalleret.</string>
+    <string name="error_unknown_error">Fejl: Ukendt fejl, dette er nok en fejl.</string>
+    <string name="extensions">Udvidelser</string>
+    <!-- Enhanced (paid) features description -->
+    <!-- Enhanced (paid) features title -->
+    <string name="filter_type_keywords">Nøgleord</string>
+    <string name="filter_type_links">Link</string>
+    <string name="filter_type_sources">Kilder</string>
+    <string name="filter_type_users">Brugere</string>
+    <string name="follow_request_sent">Følgeanmodning sendt</string>
+    <string name="following_you">Følger dig</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="hashtag">Hashtag</string>
+    <string name="hint_error_message_no_content">Intet indhold</string>
+    <string name="home_refresh">Opdater i hjemmetidslinje</string>
+    <string name="host_mapping_address">Adresse (Kan være en anden værtsadresse)</string>
+    <string name="host_mapping_host">Vært</string>
+    <string name="icon">Ikon</string>
+    <string name="in_reply_to_name">Som svar på <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="inbox">Indboks</string>
+    <string name="label_auth_type">Godkendelsestype</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_refresh_service">Genopfrisk service</string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <!-- Mastodon feature, post to followers only -->
+    <!-- Mastodon feature, post to public timelines -->
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="leftside_compose_button">Komponerknap til venstre</string>
+    <string name="leftside_compose_button_summary">Sæt komponerknappen til venstre side.</string>
+    <string name="list_members">Listemedlemmer</string>
+    <string name="list_subscribers">Listeabonnenter</string>
+    <string name="list_timeline">Listetidslinje</string>
+    <string name="lists">Lister</string>
+    <string name="lists_following_user">Lister der følger denne bruger</string>
+    <string name="load_item_limit">Element indlæsnings begrænsning</string>
+    <string name="load_item_limit_summary">Sæt objektgrænse per indlæsning.</string>
+    <string name="media_uploader">Medieuploader</string>
+    <string name="media_uploader_default">Standard (Twitter)</string>
+    <string name="mention_this_user">Nævn denne bruger</string>
+    <string name="mention_user_name">Nævn <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="message_please_wait">Vent venligst.</string>
+    <!--
+      ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
+      ~ periods should be omitted
+    -->
+    <string name="message_toast_already_logged_in">Du har allerede logget ud.</string>
+    <string name="message_toast_cannot_get_location">Kunne ikke finde din placering.</string>
+    <string name="message_toast_error_occurred">En fejl opstod, prøv igen.</string>
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <!-- Toast message for network errors -->
+    <string name="message_toast_no_account_selected">Ingen konto valgt.</string>
+    <string name="message_toast_saved_to_gallery">Gemte til galleri.</string>
+    <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> og en anden retweetede</string>
+    <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre retweetede</string>
+    <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweetede</string>
+    <string name="network">Netværk</string>
+    <string name="new_user_list">Ny liste</string>
+    <!-- Next item (tweet, user etc.) -->
+    <string name="no_status_content_text">Intet indhold</string>
+    <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> sendte dig en direkte besked.</string>
+    <string name="notification_light_color">Lysfarve</string>
+    <string name="notification_mention"><xliff:g id="user">%s</xliff:g> nævnte dig.</string>
+    <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre nævnte dig.</string>
+    <!-- Notification method, flashing LED light -->
+    <!-- Notification method, ringtone -->
+    <!-- Notification method, device vibration -->
+    <string name="notification_status">Ny tweet af <xliff:g id="user">%s</xliff:g></string>
+    <string name="notification_status_multiple">Ny tweet af <xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre</string>
+    <string name="notification_type_home">Hjem</string>
+    <string name="notification_type_messages">Beskeder</string>
+    <string name="notifications">Notifikationer</string>
+    <string name="notifications_type">Notifikationstyper</string>
+    <string name="other_settings">Indstillinger andre</string>
+    <string name="overwrite">Overskriv</string>
+    <string name="pause">Pause</string>
+    <string name="pick_file">Vælg fil</string>
+    <string name="play">Afspil</string>
+    <string name="preference_summary_auto_refresh_power_saving">Stop automatisk opdatering når batteriet er lavt</string>
+    <string name="preference_summary_database_item_limit">Øvre grænse for objekter gemt i databaser for hver bruger, giv en mindre værdi for at spare plads og øge indlæsningstiden.</string>
+    <string name="preference_title_accounts">Brugere</string>
+    <string name="preference_title_advanced">Avanceret</string>
+    <string name="preference_title_database_item_limit">Database størrelsesbegrænsning</string>
+    <string name="preference_title_storage">Opbevaring</string>
+    <string name="preference_title_text_size">Tekst størrelse</string>
+    <string name="preference_title_trends_location">Lokation for trends</string>
+    <string name="preview">Forhåndsvisning</string>
+    <!-- Media will be cropped to fit preview -->
+    <!-- Actual size, media preview will be scaled respectively -->
+    <!-- Media will be scaled to fit preview -->
+    <!-- Previous item (tweet, user etc.) -->
+    <!-- Normally you don't need to translate this -->
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
+    <string name="proxy">Proxy</string>
+    <string name="proxy_host">Proxyvært</string>
+    <string name="proxy_port">Proxyport</string>
+    <string name="quick_send">Tryk \"Enter\" for at sende</string>
+    <string name="quick_send_summary">Send tweet når der trykkes \"Enter\".</string>
+    <string name="quote_format">Citat format</string>
+    <string name="quote_user">Citer <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="refresh_after_status_updated">Opdater efter tweet er sendt</string>
+    <string name="refresh_after_status_updated_summary">Opdater tidslinjer og nævnelser efter tweet er sendt.</string>
+    <string name="refresh_interval">Opdateringsinterval</string>
+    <string name="refresh_on_start">Opdater ved start</string>
+    <string name="refresh_on_start_summary">Opdater tidslinje og nævnelser ved start.</string>
+    <string name="refresh_type_home">Hjem</string>
+    <string name="refresh_type_messages">Beskeder</string>
+    <string name="refresh_type_trends">Trends</string>
+    <string name="remember_position">Husk placering</string>
+    <string name="remember_position_summary">Husk liste/fane position før Twidere lukkes</string>
+    <string name="report_for_spam">Rapporter spam</string>
+    <string name="reported_user_for_spam">Rapporterede denne bruger for spam.</string>
+    <string name="reported_users_for_spam">Rapporterede disse brugere for spam.</string>
+    <string name="retweeted_by_count">Retweetet af <xliff:g id="retweet_count">%d</xliff:g> brugere</string>
+    <string name="retweeted_by_name">Retweetet af <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="retweeted_by_name_with_count">Retweetet af <xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre</string>
+    <string name="saved_searches">Gemte søgninger</string>
+    <string name="search_hint">Søg tweets eller brugere</string>
+    <string name="search_statuses">Søg i tweets</string>
+    <string name="search_type_statuses">Tweets</string>
+    <string name="search_type_users">Brugere</string>
+    <string name="select_account">Vælg konto</string>
+    <string name="send_direct_message">Send direkte besked</string>
+    <string name="settings_notifications">Notifikationer</string>
+    <string name="settings_refresh">Genopfrisk</string>
+    <string name="share_format">Delingsformat</string>
+    <string name="share_format_summary">\"[TITLE] = Indholdstitel\n\"[TEXT]\" = Indholdstekst</string>
+    <string name="show_absolute_time">Vis absolut tid</string>
+    <string name="show_absolute_time_summary">Vis absolut tid i tweets</string>
+    <string name="sign_up">Tilmeld</string>
+    <string name="sound">Lyd</string>
+    <string name="source"><xliff:g id="source">%s</xliff:g></string>
+    <string name="status_is_duplicate">Din tweet er et duplikat.</string>
+    <string name="status_shortener">Tweetforkorter</string>
+    <string name="status_shortener_default">Ingen (Annuller afsendelse)</string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <string name="status_type_retweet">Retweet</string>
+    <string name="tab_display_option_icon">Ikon</string>
+    <string name="tab_editor_hint_name">Navn</string>
+    <string name="tabs">Faner</string>
+    <string name="text_copied">Tekst kopieret til udklipsholderen.</string>
+    <string name="text_size">Tekst størrelse</string>
+    <string name="text_size_summary">Tekststørrelse for tweets.</string>
+    <!-- Dark theme -->
+    <!-- Light theme -->
+    <string name="theme_light">Lys</string>
+    <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+    <string name="title_about">Om</string>
+    <string name="title_accounts">Brugere</string>
+    <string name="title_blocked_users">Blokerede brugere</string>
+    <string name="title_browser_sign_in">Browser log ind</string>
+    <string name="title_compose">Komponer</string>
+    <string name="title_direct_messages">Beskeder</string>
+    <string name="title_drafts">Udkast</string>
+    <string name="title_edit_details">Rediger detaljer</string>
+    <string name="title_edit_profile">Rediger profil</string>
+    <!-- Enhanced (paid) features title -->
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_favorites">Favoritter</string>
+    <string name="title_filters">Filtre</string>
+    <string name="title_filters_subscription_url">URL</string>
+    <string name="title_followers">Følgere</string>
+    <string name="title_following">Følger</string>
+    <string name="title_home">Hjem</string>
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_mentions">Nævnelser</string>
+    <string name="title_open_source_license">Open source licens</string>
+    <string name="title_search">Søg</string>
+    <string name="title_set_nickname">Giv kælenavn</string>
+    <string name="title_status">Tweet</string>
+    <string name="title_statuses">Tweets</string>
+    <string name="title_subscription_name">Navn</string>
+    <string name="title_subscription_url">URL</string>
+    <string name="title_user">Bruger</string>
+    <string name="title_users_favorited_this">Brugere retweetede dette</string>
+    <string name="title_users_retweeted_this">Brugere retweetede dette</string>
+    <string name="trends">Trends</string>
+    <string name="trends_location">Lokation for trends</string>
+    <string name="trends_location_summary">Vælg lokation for lokale trends.</string>
+    <!-- 'Tweet' here is a verb -->
+    <string name="type_to_compose">Tryk for at komponere</string>
+    <string name="uninstall">Afinstallér</string>
+    <string name="user_blocked">Bloker denne bruger.</string>
+    <!-- User list description -->
+    <string name="user_list_details_description">Beskrivelse</string>
+    <!-- User list is public -->
+    <string name="user_list_details_is_public">Offentlig</string>
+    <!-- User list name -->
+    <string name="user_list_details_name">Navn</string>
+    <string name="user_lists">Lister</string>
+    <string name="user_mentions">Brugernævnelse</string>
+    <string name="user_profile_description">Beskrivelse</string>
+    <string name="user_profile_location">Placering</string>
+    <string name="user_profile_name">Navn</string>
+    <string name="user_profile_url">URL</string>
+    <string name="user_unblocked">Ublokerede disse brugere.</string>
+    <string name="users_blocked">Blokerede disse brugere.</string>
+</resources>

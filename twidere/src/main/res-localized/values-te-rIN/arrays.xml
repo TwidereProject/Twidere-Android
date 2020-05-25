@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>ముంగిలి</item>
+        <item>సంభాషణలు</item>
+        <item>నేరు సందేశాలు</item>
+        <item>పోకడలు</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>వ్రాయండి</item>
+        <item>ఫొటో తీసుకోండి</item>
+        <item>మాధ్యమాలు చేర్చండి</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>సంభాషణలు</item>
+        <item>నేరు సందేశాలు</item>
+        <item>పోకడలు</item>
+        <item>భద్రపరచిన వెతుకులాటలు</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>కేమెరా</item>
+        <item>గ్యాలరీ</item>
+        <item>క్లిప్‌బోర్డు</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>వై-ఫై</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>కత్తిరించు</item>
+        <item>నిండా పరుచు</item>
+        <item>అసలు పరిమాణం</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>ముంగిలి</item>
+        <item>సంభాషణలు</item>
+        <item>నేరు సందేశాలు</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>గుండ్రం</item>
+        <item>చదరం</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>రివర్స్ ప్రాక్సీ</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>వాడుకరి</item>
+        <item>వాడుకరి కాలరేఖ</item>
+        <item>వాడుకరి ఇష్టాలు</item>
+        <item>జాబితా</item>
+        <item>జాబితా కాలరేఖ</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 నిమిషాలు</item>
+        <item>5 నిమిషాలు</item>
+        <item>10 నిమిషాలు</item>
+        <item>15 నిమిషాలు</item>
+        <item>30 నిమిషాలు</item>
+        <item>1 గంట</item>
+        <item>2 గంటలు</item>
+        <item>4 గంటలు</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>సన్నని</item>
+        <item>సాధారణం</item>
+        <item>వెడల్పయిన</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>ప్రతీకం</item>
+        <item>పేరు</item>
+        <item>ప్రతీకమూ పేరూ</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>లేత</item>
+        <item>చీకటి</item>
+        <item>స్వయన్నిర్ణాయకం</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>అప్రమేయం</item>
+        <item>నిండు తెలుపు/నలుపు</item>
+        <item>పారదర్శకం</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>స్పందనలు</item>
+        <item>రీట్వీట్లు</item>
+    </string-array>
+</resources>

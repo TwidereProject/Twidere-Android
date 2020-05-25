@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="account_options">Kontoinnstillinger</string>
+    <!-- [verb] Accept a friend request (follow request) -->
+    <string name="action_accept_friend_request">Godta</string>
+    <!-- [verb] Accept a permission request like allow to use camera etc. -->
+    <string name="action_accept_permission_request">Godta</string>
+    <!-- [verb] Add an item to a list/collection -->
+    <string name="action_add">Legg til</string>
+    <!-- [verb] Add a member to a message conversation -->
+    <string name="action_add_conversation_participant">Legg til medlem</string>
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">Legg til regel</string>
+    <string name="action_add_member">Legg til medlem</string>
+    <string name="action_add_tab">Legg til fane</string>
+    <string name="action_add_to_filter">Legg til filter</string>
+    <string name="action_add_to_list">Legg til listen</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">Blokker</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_cancel_retweet">Avbryt retweet</string>
+    <string name="action_center">Senter</string>
+    <string name="action_clear">Tøm</string>
+    <string name="action_compose">Skriv</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">Slett</string>
+    <string name="action_dont_restart">Ikke start på nytt</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_edit">Rediger</string>
+    <string name="action_favorite">Favorittmarker</string>
+    <string name="action_finish">Ferdig</string>
+    <string name="action_follow">Følg</string>
+    <!-- [verb] Perform import action -->
+    <string name="action_import_from">Importer fra&#8230;</string>
+    <!-- Used for decide something later, like permission request -->
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_like">Liker</string>
+    <string name="action_mute">Skjul</string>
+    <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, lagret <xliff:g id="time">%2$s</xliff:g></string>
+    <string name="action_open_in_browser">Åpne i nettleser</string>
+    <string name="action_pick_color">Velg farge</string>
+    <string name="action_quote">Siter</string>
+    <string name="action_refresh">Oppdater</string>
+    <string name="action_reply">Svar</string>
+    <string name="action_report_spam">Rapporter spam</string>
+    <!-- [verb] Restore purchase -->
+    <string name="action_retry">Prøv igjen</string>
+    <!-- [verb] Action for performing retweet -->
+    <string name="action_retweet">Retweet</string>
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">Lagre</string>
+    <string name="action_search">Søk</string>
+    <string name="action_select_user">Velg bruker</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">Send</string>
+    <string name="action_set_color">Velg farge</string>
+    <string name="action_set_nickname">Velg kallenavn</string>
+    <string name="action_share">Del</string>
+    <!-- [verb] Used for skip some settings -->
+    <string name="action_subscribe">Abonner</string>
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_settings">Innstillinger</string>
+    <string name="action_take_photo">Ta bilde</string>
+    <string name="action_toggle">Veksle</string>
+    <string name="action_translate">Oversett</string>
+    <string name="action_twitter_mute_user">Skjul bruker</string>
+    <string name="action_twitter_muted_users">Skjulte brukere</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_unblock">Opphev blokkering</string>
+    <string name="action_undo_like">Liker ikke</string>
+    <string name="action_unfavorite">Fjern favorittmarkering</string>
+    <string name="action_unfollow">Avfølg</string>
+    <string name="action_unmute">Vis</string>
+    <string name="action_unsubscribe">Avslutt abonnement</string>
+    <string name="action_view_map">Kart</string>
+    <string name="activated_accounts">Aktiverte kontoer</string>
+    <string name="activities_about_me">Aktivitet om meg</string>
+    <string name="add_account">Legg til konto</string>
+    <string name="add_host_mapping">Legg til vertskobling</string>
+    <string name="add_image">Legg til bilde</string>
+    <string name="and_N_more">og <xliff:g id="count">%d</xliff:g> flere</string>
+    <string name="api_url_format">API-URL-format</string>
+    <string name="app_description">Din egen Twitter-app</string>
+    <!-- App name, normally you don't need to translate this. -->
+    <string name="app_name">Twidere</string>
+    <string name="app_restart_confirm">Twidere må starte på nytt for å bruke innstillingene.</string>
+    <string name="appearance">Utseende</string>
+    <string name="auth_type_basic">Basic</string>
+    <string name="auth_type_oauth">OAuth</string>
+    <string name="auth_type_twip_o">twip O-modus</string>
+    <string name="auth_type_xauth">xAuth</string>
+    <string name="auto_refresh">Oppdater automatisk</string>
+    <string name="background">Bakgrunn</string>
+    <string name="belongs_to">Hører til</string>
+    <string name="block_user_confirm_message">Blokkere <xliff:g id="name">%s</xliff:g>? Denne brukeren vil ikke kunne følge deg, omtale deg eller sende deg direktemeldinger.</string>
+    <string name="bug_reports">Feilrapporter</string>
+    <string name="cache_size_limit">Hurtiglager størrelsesgrense</string>
+    <string name="cant_load_all_replies_explanation">Grunnet Twitters begrensninger for tredjeparts-apper, har ikke Twidere adgang til svarene til en tweet. Det derfor ikke sikkert at Twidere kan laste inn disse.</string>
+    <string name="cant_load_all_replies_message">Kan ikke laste inn alle svar. &lt;a href=\"#dialog\";&gt;Hvorfor?&lt;/a&gt;</string>
+    <string name="cards">Kort</string>
+    <string name="clear_cache">Tøm hurtiglager</string>
+    <string name="clear_databases">Tøm databaser</string>
+    <string name="clear_databases_summary">Fjern alle tweets, profiler og meldinger. Innloggingsdetaljer tas vare på.</string>
+    <string name="clear_search_history">Tøm søkehistorikken</string>
+    <string name="color">Farge</string>
+    <string name="combined_notifications">Kombinerte varsler</string>
+    <string name="combined_notifications_summary_off">Varsler vises separat</string>
+    <string name="combined_notifications_summary_on">Varsler grupperes</string>
+    <string name="comment_hint">Kommenter&#8230;</string>
+    <string name="compact_cards">Kompakte kort</string>
+    <string name="compact_cards_summary">Vis flere kort på skjermen</string>
+    <string name="compose_now">Skriv Nå</string>
+    <string name="compose_now_action">«Skriv Nå»-handling</string>
+    <string name="compose_now_summary">Erstatter «Google Nå»-snarvei med «Skriv»-skjermen</string>
+    <string name="conflicts_with_name">Konflikter med <xliff:g id="name">%s</xliff:g></string>
+    <string name="connection_timeout">Tilkobling ble tidsavbrutt</string>
+    <string name="consumer_key">Brukernøkkel</string>
+    <string name="consumer_secret">Brukerpassord</string>
+    <string name="content">Innhold</string>
+    <string name="content_and_storage">Innhold &amp; lagring</string>
+    <string name="content_to_notify">Varselinnhold</string>
+    <string name="content_to_refresh">Innhold å oppdatere</string>
+    <string name="contributors_list_summary">Hvis du ikke finner navnet ditt, si fra til prosjektkontoen vår.</string>
+    <string name="copy_link">Kopier lenke</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="count_label_retweets">Retweets</string>
+    <string name="created_by">Opprettet av <xliff:g id="created_by">%s</xliff:g></string>
+    <string name="created_list">Opprettet listen «<xliff:g id="list">%s</xliff:g>».</string>
+    <string name="current_status">Gjeldende tweet</string>
+    <string name="custom_host_mapping">Tilpasset vertskobling</string>
+    <string name="custom_host_mapping_summary">Vertskobling som /etc/hosts, men krever ingen ekstra tillatelser.</string>
+    <string name="dark_theme">Mørkt tema</string>
+    <string name="default_account">Standardkonto</string>
+    <string name="default_api_settings">Standard API-innstillinger</string>
+    <string name="default_api_settings_summary">Disse innstillingene gjelder kun for nyinnloggede kontoer</string>
+    <string name="default_ringtone">Standardringetone</string>
+    <string name="delete_conversation">Slett samtale</string>
+    <string name="delete_conversation_confirm_message">Slette alle meldinger i denne samtalen?</string>
+    <string name="delete_drafts_confirm">Slette valgte utkast?</string>
+    <string name="delete_user">Slett bruker <xliff:g id="name">%s</xliff:g></string>
+    <string name="delete_user_confirm_message">Slette <xliff:g id="name">%s</xliff:g>? Dette kan ikke angres.</string>
+    <string name="delete_user_from_list_confirm">Slette <xliff:g id="user">%1$s</xliff:g> fra listen «<xliff:g id="list">%2$s</xliff:g>»?</string>
+    <string name="delete_user_list">Slette listen <xliff:g id="name">%s</xliff:g></string>
+    <string name="delete_user_list_confirm_message">Slette listen <xliff:g id="name">%s</xliff:g>? Dette kan ikke angres.</string>
+    <string name="delete_users">Slett brukere</string>
+    <string name="deleted_list">Slettet listen «<xliff:g id="list">%s</xliff:g>».</string>
+    <string name="deleted_user_from_list">Slettet <xliff:g id="user">%1$s</xliff:g> fra listen «<xliff:g id="list">%2$s</xliff:g>».</string>
+    <string name="denied_users_follow_request">Avslo følgeforespørselen til <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="deny">Avslå</string>
+    <string name="destroy_saved_search">Slett lagret søk «<xliff:g id="name">%s</xliff:g>»</string>
+    <string name="destroy_saved_search_confirm_message">Slette lagret søk «<xliff:g id="name">%s</xliff:g>»? Du kan lagre søket på nytt senere.</string>
+    <string name="destroy_status">Slett tweet</string>
+    <string name="destroy_status_confirm_message">Slette denne tweeten?</string>
+    <string name="developed_by">Utviklet av</string>
+    <string name="discard">Forkast</string>
+    <string name="display_sensitive_contents">Vis sensitivt innhold</string>
+    <string name="display_sensitive_contents_summary">Vis sensitivt innhold i tidslinjen uten forvarsel</string>
+    <string name="dns_server">DNS-server</string>
+    <string name="draft_saved">Utkast lagret</string>
+    <string name="drafts_hint_messages">Dine usendte tweets lagres her</string>
+    <string name="edit_api">Endre API</string>
+    <string name="edit_draft">Rediger utkast</string>
+    <string name="edit_media">Rediger media</string>
+    <string name="edit_tab">Rediger fane</string>
+    <string name="edit_tabs">Rediger faner</string>
+    <string name="ellipsis">&#8230;</string>
+    <string name="empty_content">Tomt innhold</string>
+    <string name="error_message">Feil: <xliff:g id="message">%s</xliff:g></string>
+    <string name="error_message_message_too_long">Melding for lang.</string>
+    <string name="error_message_no_content">Ingen innhold</string>
+    <string name="error_message_rate_limit">Twitters oppdateringsrate overskredet, prøv igjen <xliff:g id="time">%s</xliff:g></string>
+    <string name="error_message_status_too_long">Tweet for lang.</string>
+    <string name="error_message_tweet_shorten_failed">Tweetforkortelse feilet.</string>
+    <string name="error_message_tweet_shortener_not_found">Tweetforkorter ikke funnet, sjekk at den er installert.</string>
+    <string name="error_unknown_error">Feil: Ukjent feil, dette er sannsynligvis en bug.</string>
+    <string name="exclude_this_host">Ekskluder denne verten</string>
+    <string name="excluded">Ekskludert</string>
+    <string name="export_settings">Eksporter innstillinger</string>
+    <string name="export_settings_type_dialog_title">Eksporter innstillinger&#8230;</string>
+    <string name="extensions">Utvidelser</string>
+    <string name="extra_configurations">Ekstra innstillinger</string>
+    <!-- Enhanced (paid) features description -->
+    <!-- Enhanced (paid) features title -->
+    <string name="fast_image_loading">Hurtig bildelasting</string>
+    <string name="fast_image_loading_summary">Aktiver for å laste bilder raskere, deaktiver hvis noen bilder ikke vises.</string>
+    <string name="filter_type_keywords">Stikkord</string>
+    <string name="filter_type_links">Lenker</string>
+    <string name="filter_type_sources">Kilder</string>
+    <string name="filter_type_users">Brukere</string>
+    <string name="follow_request_sent">Følgeforespørsel sendt</string>
+    <string name="followed_user">Følger <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="following_only">Bare mine følgere</string>
+    <string name="following_only_summary">Vis varsler bare fra brukere du følger.</string>
+    <string name="following_you">Følger deg</string>
+    <string name="follows">Følger</string>
+    <string name="font">Skrift</string>
+    <string name="font_family">Skrifttype</string>
+    <string name="from_camera">Fra kamera</string>
+    <string name="from_gallery">Fra galleri</string>
+    <string name="from_name">Fra <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="from_name_and_N_others">Fra <xliff:g id="name">%1$s</xliff:g> og <xliff:g id="name">%2$d</xliff:g> andre</string>
+    <string name="from_name_and_name">Fra <xliff:g id="name">%1$s</xliff:g> og <xliff:g id="name">%2$s</xliff:g></string>
+    <string name="function">Funksjon</string>
+    <string name="general">Generelt</string>
+    <string name="getting_location">Henter posisjon</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="hashtag">Hashtag</string>
+    <string name="hidden_settings">Skjulte innstillinger</string>
+    <string name="hidden_settings_warning_message">ALDRI forandre disse innstillingene hvis du ikke vet hva du gjør, ellers vil de:\n* Ta livet av katten din\n* Sende atomvåpen mot Nord-Korea\n* Øke skattene og avgiftene ytterligere\n* Ødelegge universet</string>
+    <string name="hidden_settings_warning_title">ADVARSEL: Disse innstillingene kan være skadelige!</string>
+    <string name="hide_card_actions">Skjul korthandlinger</string>
+    <string name="highlight">Markering</string>
+    <string name="highlight_and_underline">Markering og understrek</string>
+    <string name="hint_error_message_no_content">Ingen innhold</string>
+    <string name="hint_no_account">Ingen konto</string>
+    <string name="hints">Tips</string>
+    <string name="home_refresh">Oppdater på tidslinje</string>
+    <string name="host_mapping_address">Adresse (kan være annen vert)</string>
+    <string name="host_mapping_host">Vert</string>
+    <string name="icon">Ikon</string>
+    <string name="icon_restored_message">Ikon gjenopprettet!</string>
+    <string name="import_export_settings">Importer/eksporter innstillinger</string>
+    <string name="import_settings">Importer innstillinger</string>
+    <string name="import_settings_type_dialog_title">Importer innstillinger&#8230;</string>
+    <string name="in_reply_to_name">Som svar til <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="inbox">Innboks</string>
+    <string name="incoming_friendships">Avventer følgeforespørsel</string>
+    <string name="input_text">Skriv inn tekst</string>
+    <string name="invalid_consumer_key">Ugyldig forbrukernøkkel</string>
+    <string name="invalid_consumer_secret">Ugyldig brukerpassord</string>
+    <string name="invalid_list_name">Må begynne på en bokstav og kan bare inneholde bokstaver, tall, «-» (bindestrek) eller «_» (understrek).</string>
+    <string name="invalid_tab">Ugyldig fane</string>
+    <string name="jump_to_top">Gå til toppen</string>
+    <string name="just_now">Akkurat nå</string>
+    <string name="keyboard_shortcut_back">Tilbake</string>
+    <string name="keyboard_shortcut_hint">Trykk på tastene</string>
+    <string name="keyboard_shortcuts">Hurtigtaster</string>
+    <string name="keyword_filter_name">Stikkord: <xliff:g id="name">%s</xliff:g></string>
+    <string name="label_auth_type">Autentiseringstype</string>
+    <string name="label_background_operation_service">Bakgrunnstjeneste</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_data_provider">Twidere database leverandør</string>
+    <string name="label_media">Media</string>
+    <string name="label_original_status">Opprinnelig tweet</string>
+    <string name="label_photo">Bilde</string>
+    <string name="label_refresh_service">Oppdateringstjeneste</string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <!-- Mastodon feature, post to followers only -->
+    <!-- Mastodon feature, post to public timelines -->
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="label_your_profile_image">Ditt profilbilde</string>
+    <string name="large">Stor</string>
+    <string name="leftside_compose_button">Ny-tweet-knappen på venstre side</string>
+    <string name="leftside_compose_button_summary">Plasser ny-tweet-knappen til venstre.</string>
+    <string name="link_highlight_option">Lenkemarkering</string>
+    <string name="link_to_quoted_status">Lenke til sitert tweet</string>
+    <string name="list_members">List medlemmer</string>
+    <string name="list_subscribers">List abonnenter</string>
+    <string name="list_timeline">List tidslinje</string>
+    <string name="listed">Listet</string>
+    <string name="lists">Lister</string>
+    <string name="lists_following_user">Lister som følger denne brukeren</string>
+    <string name="lists_following_user_with_name">Lister som følger <xliff:g id="name">%s</xliff:g></string>
+    <string name="load_item_limit">Lastegrense</string>
+    <string name="load_item_limit_summary">Sett elementgrensen per innlasting.</string>
+    <string name="load_media">Last inn media</string>
+    <string name="load_more">Last inn mer</string>
+    <string name="load_more_from_top">Last inn mer fra toppen</string>
+    <string name="load_more_from_top_summary">Nyttig hvis du foretrekker å lese fra bunn til topp</string>
+    <string name="long_click_to_open_menu">Langt trykk åpner menyen</string>
+    <string name="mark_as_sensitive">Marker som sensitiv</string>
+    <string name="media">Media</string>
+    <string name="media_preload">Forhåndslasting av media</string>
+    <string name="media_preview">Forhåndsvisning av media</string>
+    <string name="media_preview_style">Forhåndsvisning av media</string>
+    <string name="media_uploader">Mediaopplaster</string>
+    <string name="media_uploader_default">Standard (Twitter)</string>
+    <string name="members">Medlemmer</string>
+    <string name="mention_this_user">Omtal denne brukeren</string>
+    <string name="mention_user">Omtal <xliff:g id="user">%s</xliff:g></string>
+    <string name="mention_user_name">Omtal <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="message_api_data_corrupted">API-data er skadet.</string>
+    <string name="message_api_url_format_help">[DOMAIN]: Twitter API-domene.\nEksempel: https://[DOMAIN].twitter.com/ erstattes med https://api.twitter.com/.</string>
+    <string name="message_blocked_user">Blokkerte <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="message_direct_message_deleted">Direktemelding slettet.</string>
+    <string name="message_direct_message_sent">Direktemelding sendt.</string>
+    <string name="message_please_wait">Vennligst vent.</string>
+    <!--
+      ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
+      ~ periods should be omitted
+    -->
+    <string name="message_toast_already_logged_in">Du er allerede logget inn.</string>
+    <string name="message_toast_cannot_get_location">Kan ikke finne din posisjon.</string>
+    <string name="message_toast_error_occurred">Det oppstod en feil, prøv igjen.</string>
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <string name="message_toast_livewp_daydream_enabled_message">Her er en liten gave til deg, finn den i systeminnstillingene :)</string>
+    <!-- Toast message for network errors -->
+    <string name="message_toast_no_account">Ingen konto</string>
+    <string name="message_toast_no_account_selected">Ingen konto valgt.</string>
+    <string name="message_toast_press_again_to_close">Trykk igjen for å lukke</string>
+    <string name="message_toast_profile_banner_image_updated">Toppbilde oppdatert.</string>
+    <string name="message_toast_save_media_no_storage_permission">Lagringstillatelse er nødvendig for å lagre media.</string>
+    <string name="message_toast_saved_to_gallery">Lagret i galleriet.</string>
+    <string name="message_toast_select_file_no_storage_permission">Lagringstillatelse er nødvendig for å velge fil.</string>
+    <string name="message_toast_status_saved_to_draft">Tweet lagret til utkast.</string>
+    <string name="message_toast_status_updated">Tweet sendt.</string>
+    <string name="message_toast_wrong_api_key">Feil API-URL eller brukernøkkel/passord. Sjekk at de er riktig skrevet.</string>
+    <string name="multi_select">Flervalg</string>
+    <string name="mute_user">Skjul <xliff:g id="name">%s</xliff:g></string>
+    <string name="mute_user_confirm_message">Skjule <xliff:g id="name">%s</xliff:g>? Du vil ikke lenger se tweets fra denne brukeren men du fortsetter å følge den.</string>
+    <string name="muted_user">Skjuler <xliff:g id="name">%s</xliff:g></string>
+    <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> og en annen retweetet</string>
+    <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre retweetet</string>
+    <string name="name_first">Viser navnet først</string>
+    <string name="name_first_summary_off">Viser \@brukernavn først</string>
+    <string name="name_first_summary_on">Vis navnet først</string>
+    <string name="name_not_set"><xliff:g id="name">%s</xliff:g> ikke valgt</string>
+    <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweetet</string>
+    <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
+    <string name="navigation">Navigasjon</string>
+    <string name="network">Nettverk</string>
+    <string name="new_direct_message">Ny direktemelding</string>
+    <string name="new_user_list">Ny liste</string>
+    <!-- Next item (tweet, user etc.) -->
+    <string name="next_item">Neste</string>
+    <string name="next_step">Neste</string>
+    <string name="next_tab">Neste fane</string>
+    <string name="no_close_after_status_updated">Behold «Skriv»-vinduet etter sendte tweets</string>
+    <string name="no_close_after_status_updated_summary">En liten gave for Chatterbox</string>
+    <string name="no_location">Ingen posisjon</string>
+    <string name="no_rule">Ingen regler</string>
+    <string name="no_status_content_text">Ingen innhold</string>
+    <string name="no_tab">Ingen faner</string>
+    <string name="no_tab_hint">Ingen faner</string>
+    <string name="no_user_found">Fant ingen bruker</string>
+    <string name="no_version_suffix">Ingen versjonssuffiks</string>
+    <string name="none">Ingen</string>
+    <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> sendte deg en direktemelding.</string>
+    <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> sendte deg <xliff:g id="messages_count">%2$d</xliff:g> direktemeldinger.</string>
+    <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> og <xliff:g id="users_count">%2$d</xliff:g> andre sendte deg <xliff:g id="messages_count">%3$d</xliff:g> direktemeldinger.</string>
+    <string name="notification_light_color">Lysfarge</string>
+    <string name="notification_mention"><xliff:g id="user">%s</xliff:g> omtalte deg.</string>
+    <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre omtalte deg.</string>
+    <!-- Notification method, flashing LED light -->
+    <!-- Notification method, ringtone -->
+    <!-- Notification method, device vibration -->
+    <string name="notification_status">Ny tweet av <xliff:g id="user">%s</xliff:g></string>
+    <string name="notification_status_multiple">Ny tweet av <xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre</string>
+    <string name="notification_type_home">Hjem</string>
+    <string name="notification_type_messages">Meldinger</string>
+    <string name="notifications">Varsler</string>
+    <string name="notifications_type">Varslingstyper</string>
+    <string name="open_accounts_dashboard">Åpne kontooversikt</string>
+    <string name="open_twitter_links">Åpne Twitter-lenker</string>
+    <string name="open_with_account">Åpne med konto</string>
+    <string name="other_settings">Andre innstillinger</string>
+    <string name="overwrite">Overskriv</string>
+    <string name="page_down">Side ned</string>
+    <string name="page_up">Side opp</string>
+    <string name="pause">Pause</string>
+    <string name="pebble_notifications">Pebble-varsler</string>
+    <string name="pebble_notifications_summary">Send varsler til din Pebble</string>
+    <string name="permission_description_accounts">Les kontoinformasjon</string>
+    <string name="permission_description_direct_messages">Les, skriv eller send direktemeldinger</string>
+    <string name="permission_description_none">Ingen tillatelser trengs</string>
+    <string name="permission_description_preferences">Les innstillinger</string>
+    <string name="permission_description_read">Les tweets and noe hurtiglagret innhold</string>
+    <string name="permission_description_refresh">Oppdater tidslinje (inkludert direktemeldinger)</string>
+    <string name="permission_description_shorten_status">Applikasjonen kan forkorte tweets for Twidere, så den har tilgang til tweets du sender.</string>
+    <string name="permission_description_sync_timeline">Applikasjonen kan synkronisere leseposisjonen for Twidere, så den har tilgang til leseposisjonen din.</string>
+    <string name="permission_description_upload_media">Applikasjonen kan laste opp media for Twidere, så den har tilgang til media i tweets du sender.</string>
+    <string name="permission_description_write">Skrive til database, oppdatere status</string>
+    <string name="permission_label_shorten_status">Forkort tweet</string>
+    <string name="permission_label_sync_timeline">Synkroniser tidslinjen</string>
+    <string name="permission_label_upload_media">Last opp media</string>
+    <string name="permissions_request">Tilgangsforespørsel</string>
+    <string name="permissions_request_message">Applikasjonen ber om følgende tillatelser</string>
+    <string name="phishing_link_warning">Advarsel om nettfiske</string>
+    <string name="phishing_link_warning_message_1">Du åpner en lenke fra en direktemelding, som kan være et forsøk på nettfisking.\n\nSjekk sidens adresse før du gir fra deg personlige opplysninger.</string>
+    <string name="phishing_link_warning_message_2">Er du sikker på at du vil fortsette?</string>
+    <string name="phishing_link_warning_summary">Advarer deg om lenker i direktemeldinger som kan være forsøk på nettfisking.</string>
+    <string name="photo">Bilde</string>
+    <string name="pick_file">Velg fil</string>
+    <string name="play">Spill av</string>
+    <string name="preference_summary_auto_refresh_power_saving">Stopp automatisk oppdatering når batterinivået er lavt</string>
+    <string name="preference_summary_database_item_limit">Øvre grense for elementer som lagres i databaser for hver konto. Velg en lavere verdi for å spare plass og øke lastingshastigheten.</string>
+    <string name="preference_title_accounts">Kontoer</string>
+    <string name="preference_title_advanced">Avansert</string>
+    <string name="preference_title_database_item_limit">Database størrelsesgrense</string>
+    <string name="preference_title_landscape">Landskap</string>
+    <string name="preference_title_portrait">Portrett</string>
+    <string name="preference_title_storage">Lagring</string>
+    <string name="preference_title_text_size">Tekststørrelse</string>
+    <string name="preference_title_translate">Oversett</string>
+    <string name="preference_title_trends_location">Posisjon for trender</string>
+    <string name="preload_wifi_only">Forhåndslast bare med Wi-Fi</string>
+    <string name="preview">Forhåndsvisning</string>
+    <string name="preview_images">Forhåndsvis bilder</string>
+    <!-- Media will be cropped to fit preview -->
+    <string name="preview_style_crop">Beskjær</string>
+    <!-- Actual size, media preview will be scaled respectively -->
+    <!-- Media will be scaled to fit preview -->
+    <string name="preview_style_scale">Skaler</string>
+    <!-- Previous item (tweet, user etc.) -->
+    <string name="previous_item">Forrige</string>
+    <string name="previous_tab">Forrige fane</string>
+    <string name="profile">Profil</string>
+    <string name="profile_background_color">Bakgrunnsfarge</string>
+    <string name="profile_banner">Toppbilde</string>
+    <string name="profile_image">Profilbilde</string>
+    <string name="profile_image_style">Profilbildestil</string>
+    <string name="profile_images">Profilbilder</string>
+    <string name="profile_link_color_main_color">Lenkefarge (hovedfarge)</string>
+    <string name="profile_text_color">Tekstfarge</string>
+    <string name="profile_updated">Profil oppdatert.</string>
+    <string name="progress">Fremdrift</string>
+    <string name="project_account">Prosjektkonto</string>
+    <string name="projects_we_took_part">Prosjekter vi tok del i</string>
+    <!-- Normally you don't need to translate this -->
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
+    <string name="proxy">Proxy</string>
+    <string name="proxy_host">Proxy-tjener</string>
+    <string name="proxy_port">Proxy-port</string>
+    <string name="query">Spørring</string>
+    <string name="quick_send">Trykk «Enter» for å sende</string>
+    <string name="quick_send_summary">Send tweet når du trykker «Enter».</string>
+    <string name="quote_format">Siteringsformat</string>
+    <string name="quote_format_summary">\"[TEXT]\" = Tweet-tekst\n\"[NAME]\" = Twitter-brukernavn</string>
+    <string name="quote_original_status">Siter opprinnelig tweet</string>
+    <string name="quote_protected_status_warning_message">Denne tweeten er beskyttet.\n\nBeskyttede brukere vil vanligvis ikke at tweetene deres skal deles offentlig.</string>
+    <string name="quote_user">Sitat <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="rate_limit">Oppdateringsrate</string>
+    <string name="read_from_bottom">Les fra bunnen</string>
+    <string name="read_from_bottom_summary_off">Gå til nyeste tweet etter oppdatering</string>
+    <string name="read_from_bottom_summary_on">Behold leseposisjonen etter oppdatering</string>
+    <string name="refresh_after_status_updated">Oppdater etter sending av tweet</string>
+    <string name="refresh_after_status_updated_summary">Oppdater tidslinje og omtalelser etter sending av tweets.</string>
+    <string name="refresh_interval">Oppdateringsintervall</string>
+    <string name="refresh_on_start">Oppdater ved oppstart</string>
+    <string name="refresh_on_start_summary">Oppdater tidslinje og omtalelser ved oppstart.</string>
+    <string name="refresh_type_home">Hjem</string>
+    <string name="refresh_type_messages">Meldinger</string>
+    <string name="refresh_type_trends">Trender</string>
+    <string name="remember_position">Husk posisjon</string>
+    <string name="remember_position_summary">Husk liste- og faneplasseringen før Twidere lukkes</string>
+    <string name="remove">Fjern</string>
+    <string name="remove_from_filter">Fjern fra filter</string>
+    <string name="remove_sensitive_mark">Fjern sensitivmarkering</string>
+    <string name="replies">Svar</string>
+    <string name="report_for_spam">Rapporter spam</string>
+    <string name="report_usage_statistics_now">Rapporter bruksstatistikk nå</string>
+    <string name="report_user">Rapporter <xliff:g id="name">%s</xliff:g></string>
+    <string name="report_user_confirm_message">Rapportere <xliff:g id="name">%s</xliff:g> for spam? Brukeren vil også bli blokkert.</string>
+    <string name="reported_user_for_spam">Rapporterte denne brukeren for spam.</string>
+    <string name="reported_users_for_spam">Rapporterte disse brukerne for spam.</string>
+    <string name="requested">Forespurt</string>
+    <string name="reset_keyboard_shortcuts_confirm">Tilbakestill hurtigtaster til standard?</string>
+    <string name="reset_to_default">Tilbakestill til standard</string>
+    <string name="retweeted_by_count">Retweetet av <xliff:g id="retweet_count">%d</xliff:g> brukere</string>
+    <string name="retweeted_by_name">Retweetet av <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="retweeted_by_name_with_count">Retweetet av <xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre</string>
+    <string name="retweets_of_me">Retweets av meg</string>
+    <string name="revoke_permissions">Tilbakekall tillatelser</string>
+    <string name="round">Rund</string>
+    <string name="safety">Sikkerhet</string>
+    <string name="same_oauth_signing_url">Bruk samme URL til OAuth-signering</string>
+    <string name="save_to_gallery">Lagre til galleri</string>
+    <string name="saved_searches">Lagrede søk</string>
+    <string name="scheduled_statuses">Planlagte tweets</string>
+    <string name="scrapyard">Diverse</string>
+    <string name="search_hint">Søk tweets eller brukere</string>
+    <string name="search_statuses">Søk tweets</string>
+    <string name="search_type_statuses">Tweets</string>
+    <string name="search_type_users">Brukere</string>
+    <string name="security_key">Sikkerhetsnøkkel</string>
+    <string name="select_account">Velg konto</string>
+    <string name="select_accounts">Velg kontoer</string>
+    <string name="select_user">Velg bruker</string>
+    <string name="select_user_list">Velg brukerliste</string>
+    <string name="send_anyway">Send likevel</string>
+    <string name="send_at">Send den</string>
+    <string name="send_crash_report">Send feilrapport til Twidere</string>
+    <string name="send_direct_message">Send direktemelding</string>
+    <string name="send_follow_request">Send følgeforespørsel</string>
+    <string name="sending_direct_message">Sender direktemelding</string>
+    <string name="sensitive_content_warning">Denne tweeten kan ha sensitivt innhold. Fortsette?</string>
+    <string name="sent_follow_request_to_user">Sendte følgeforespørsel til <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="server_address">Tjeneradresse</string>
+    <string name="set_consumer_key_secret_message">Twidere er i ferd med å nå token-grensen. Opprett en app på https://apps.twitter.com/ and lime inn nøkkelen and passordet under.\nHvis du fortsetter å bruke standardnøkkelen, kan det hende du ikke får logget inn.</string>
+    <string name="settings_interface">Grensesnitt</string>
+    <string name="settings_notifications">Varsler</string>
+    <string name="settings_refresh">Oppdater</string>
+    <string name="share_format">Delingsformat</string>
+    <string name="share_format_summary">\"[TITLE]\" = Innholdstittel\n\"[TEXT]\" = Innholdstekst</string>
+    <string name="share_status">Del tweet</string>
+    <string name="show_absolute_time">Vis absolutt tid</string>
+    <string name="show_absolute_time_summary">Vis absolutt tid i tweets</string>
+    <string name="show_in_timeline">Vis på tidslinjen</string>
+    <string name="sign_up">Registrer deg</string>
+    <string name="signing_in_error_browser_sign_in_hint">Feil ved innlogging. Du må kanskje bruke nettleseren. (Dette tar ikke hensyn til tilpassede API-innstillinger under innlogging)</string>
+    <string name="size">Størrelse</string>
+    <string name="small">Liten</string>
+    <string name="sound">Lyd</string>
+    <string name="source"><xliff:g id="source">%s</xliff:g></string>
+    <string name="source_camera">Kamera</string>
+    <string name="source_clipboard">Utklippstavle</string>
+    <string name="source_filter_name">Kilde: <xliff:g id="name">%s</xliff:g></string>
+    <string name="source_gallery">Galleri</string>
+    <string name="special_thanks_to">Spesielt takk til</string>
+    <string name="sponsored_by">Sponset av</string>
+    <string name="square">Firkantet</string>
+    <string name="state_blocking">Blokkerer</string>
+    <string name="status_is_duplicate">Tweeten din er et duplikat.</string>
+    <string name="status_not_updated">Tweet ikke sendt.</string>
+    <string name="status_not_updated_summary">Tweet ikke sendt, og lagret i utkast.</string>
+    <string name="status_share_subject_format_with_time">Tweet fra <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), <xliff:g id="time">%3$s</xliff:g></string>
+    <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
+    <string name="status_shortener">Tweetforkorter</string>
+    <string name="status_shortener_default">Ingen (avbryt sending)</string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <string name="status_type_retweet">Retweet</string>
+    <string name="style">Stil</string>
+    <string name="subscribed_to_list">Abonnerer på listen «<xliff:g id="list">%s</xliff:g>».</string>
+    <string name="swipe_down_to_refresh">Sveip ned for å oppdatere</string>
+    <string name="tab_display_option">Fanevisningsvalg</string>
+    <string name="tab_display_option_icon">Ikon</string>
+    <string name="tab_display_option_icon_and_label">Ikon og etikett</string>
+    <string name="tab_display_option_label">Etikett</string>
+    <string name="tab_editor_hint_name">Navn</string>
+    <string name="tabs">Faner</string>
+    <string name="tcp_dns_query">TCP DNS-spørring</string>
+    <string name="text_copied">Tekst kopiert til utklippstavlen.</string>
+    <string name="text_size">Tekststørrelse</string>
+    <string name="text_size_summary">Tekststørrelse for tweets.</string>
+    <string name="theme">Tema</string>
+    <string name="theme_background_default">Standard</string>
+    <string name="theme_background_solid">Ren hvit eller svart</string>
+    <string name="theme_background_transparent">Gjennomsiktig</string>
+    <string name="theme_color">Temafarge</string>
+    <!-- Dark theme -->
+    <string name="theme_dark">Mørkt</string>
+    <string name="theme_dark_actionbar">Mørk ActionBar</string>
+    <string name="theme_font_family">Temaets skrifftype</string>
+    <!-- Light theme -->
+    <string name="theme_light">Varsel-LED</string>
+    <string name="thumbor_integration">Thumbor-integrasjon</string>
+    <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, via <xliff:g id="source">%2$s</xliff:g></string>
+    <string name="timeline_sync_service">Synkroniseringstjeneste for tidslinjen</string>
+    <string name="title_about">Om</string>
+    <string name="title_accounts">Kontoer</string>
+    <string name="title_block_user">Blokker <xliff:g id="name">%s</xliff:g></string>
+    <string name="title_blocked_users">Blokkerte brukere</string>
+    <string name="title_browser_sign_in">Pålogging via nettleser</string>
+    <string name="title_compose">Skriv</string>
+    <string name="title_direct_messages">Meldinger</string>
+    <string name="title_drafts">Utkast</string>
+    <string name="title_edit_details">Rediger detaljer</string>
+    <string name="title_edit_profile">Rediger profil</string>
+    <!-- Enhanced (paid) features title -->
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_favorites">Favoritter</string>
+    <string name="title_filters">Filtre</string>
+    <string name="title_filters_subscription_url">Nettadresse</string>
+    <string name="title_followers">Følgere</string>
+    <string name="title_following">Følger</string>
+    <string name="title_home">Hjem</string>
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_likes">Liker</string>
+    <string name="title_mentions">Omtalelser</string>
+    <string name="title_nicknames">Kallenavn</string>
+    <string name="title_open_source_license">Åpen kildekode-lisens</string>
+    <string name="title_search">Søk</string>
+    <string name="title_set_nickname">Velg kallenavn</string>
+    <string name="title_status">Tweet</string>
+    <string name="title_statuses">Tweets</string>
+    <string name="title_subscription_name">Navn</string>
+    <string name="title_subscription_url">Nettadresse</string>
+    <string name="title_user">Bruker</string>
+    <string name="title_user_colors">Brukerfarger</string>
+    <string name="title_user_list_memberships">Hører til</string>
+    <string name="title_users_favorited_this">Brukere favorittmarkerte dette</string>
+    <string name="title_users_liked_this">Brukere likte dette</string>
+    <string name="title_users_retweeted_this">Brukere retweetet dette</string>
+    <string name="translation_destination">Språk</string>
+    <string name="translators">Oversettere</string>
+    <string name="trends">Trender</string>
+    <string name="trends_location">Posisjon for trender</string>
+    <string name="trends_location_summary">Velg posisjon for lokale trender.</string>
+    <!-- 'Tweet' here is a verb -->
+    <string name="tweet_from_name">Tweet fra <xliff:g id="text">%1$s</xliff:g></string>
+    <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
+    <string name="twidere_test">Twidere-test</string>
+    <string name="type_name_to_search">Skriv inn navn for å søke</string>
+    <string name="type_to_compose">Skriv for å komponere</string>
+    <string name="unblocked_user">Opphevet blokkering av <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="underline">Understrek</string>
+    <string name="unfollow_user">Avfølg <xliff:g id="name">%s</xliff:g></string>
+    <string name="unfollow_user_confirm_message">Avfølge <xliff:g id="name">%s</xliff:g>? Du vil ikke lenger se tweets fra denne brukeren.</string>
+    <string name="unfollowed_user">Avfulgte <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="uninstall">Avinstaller</string>
+    <string name="unknown_location">Ukjent posisjon</string>
+    <string name="unmute_user">Vis <xliff:g id="name">%s</xliff:g></string>
+    <string name="unmuted_user">Viser <xliff:g id="name">%s</xliff:g></string>
+    <string name="unread_count">Ulest-teller</string>
+    <string name="unsubscribe_from_user_list">Avslutt abonnement på listen <xliff:g id="name">%s</xliff:g></string>
+    <string name="unsubscribe_from_user_list_confirm_message">Avslutt abonnement på listen <xliff:g id="name">%s</xliff:g>? Du kan gjenoppta abonnementet senere.</string>
+    <string name="unsubscribed_from_list">Avsluttet abonnement fra listen «<xliff:g id="list">%s</xliff:g>».</string>
+    <string name="update_status">Send tweet</string>
+    <string name="updated_list_details">Oppdaterte detaljer for listen «<xliff:g id="list">%s</xliff:g>».</string>
+    <string name="updating_status_notification">Sender tweet&#8230;</string>
+    <string name="usage_statistics">Bruksstatistikk</string>
+    <string name="usage_statistics_header_summary">Twidere tok del i noen forskningsprosjekter. Ved å bidra til disse prosjektene gjør du Twidere og fremtidige apper bedre.</string>
+    <string name="usage_statistics_notification_summary">Hjelp oss å forbedre Twidere!</string>
+    <string name="user_blocked">Blokkerte denne brukeren.</string>
+    <string name="user_filter_name">Bruker: <xliff:g id="name">%s</xliff:g></string>
+    <string name="user_list_details">Listedetaljer</string>
+    <!-- User list description -->
+    <string name="user_list_details_description">Beskrivelse</string>
+    <!-- User list is public -->
+    <string name="user_list_details_is_public">Offentlig</string>
+    <!-- User list name -->
+    <string name="user_list_details_name">Navn</string>
+    <string name="user_lists">Lister</string>
+    <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> omtalte deg</string>
+    <string name="user_mentions">Brukeromtalelser</string>
+    <string name="user_profile_description">Beskrivelse</string>
+    <string name="user_profile_location">Posisjon</string>
+    <string name="user_profile_name">Navn</string>
+    <string name="user_profile_url">Nettadresse</string>
+    <string name="user_protected_summary">Du må sende en følgeforespørsel til denne beskyttede brukeren for å se tweets</string>
+    <string name="user_type_protected">Beskyttet</string>
+    <string name="user_type_verified">Bekreftet</string>
+    <string name="user_unblocked">Opphevet blokkering av denne brukeren.</string>
+    <string name="users_blocked">Blokkerte disse brukerne.</string>
+    <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g> sine lister</string>
+</resources>

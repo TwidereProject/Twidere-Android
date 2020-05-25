@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Home</item>
+        <item>Mga pakikipag-ugnayan</item>
+        <item>Mga DM/PM</item>
+        <item>Trends</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>Magsulat</item>
+        <item>Kumuha ng larawan</item>
+        <item>Maglagay ng media</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Mga pakikipag-ugnayan</item>
+        <item>Mga DM/PM</item>
+        <item>Trends</item>
+        <item>Saved searches</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Kamera</item>
+        <item>Gallery</item>
+        <item>Clipboard</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Crop</item>
+        <item>Scale</item>
+        <item>Tunay na sukat</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Home</item>
+        <item>Mga pakikipag-ugnayan</item>
+        <item>Mga DM/PM</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Bilog</item>
+        <item>Parisukat</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>Reverse proxy</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>User</item>
+        <item>User timeline</item>
+        <item>User Favorites</item>
+        <item>Listahan</item>
+        <item>Timeline ng listahan</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 minuto</item>
+        <item>5 minuto</item>
+        <item>10 minuto</item>
+        <item>15 minuto</item>
+        <item>30 minuto</item>
+        <item>1 oras</item>
+        <item>2 oras</item>
+        <item>4 na oras</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>Manipis</item>
+        <item>Normál</item>
+        <item>Malapad</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>Icon</item>
+        <item>Label</item>
+        <item>Icon at label</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Auto</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>Default</item>
+        <item>Purong white/black</item>
+        <item>Transparent</item>
+    </string-array>
+</resources>

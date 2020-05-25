@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Лента</item>
+        <item>Взаимодействия</item>
+        <item>Личные сообщения</item>
+        <item>Тренды</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>Написать</item>
+        <item>Сделать фото</item>
+        <item>Добавить медиафайл</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Взаимодействия</item>
+        <item>Личные сообщения</item>
+        <item>Тренды</item>
+        <item>Сохраненные поиски</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Камера</item>
+        <item>Галерея</item>
+        <item>Буфер обмена</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Обрезать</item>
+        <item>Масштабировать</item>
+        <item>Реальный размер</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Лента</item>
+        <item>Взаимодействия</item>
+        <item>Личные сообщения</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Круглые</item>
+        <item>Квадратные</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>Обратный прокси</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>Пользователь</item>
+        <item>Лента</item>
+        <item>Избранное</item>
+        <item>Список</item>
+        <item>Список</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 минуты</item>
+        <item>5 минут</item>
+        <item>10 минут</item>
+        <item>15 минут</item>
+        <item>30 минут</item>
+        <item>1 час</item>
+        <item>2 часа</item>
+        <item>4 часа</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>Узкие</item>
+        <item>Обычные</item>
+        <item>Широкие</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>Иконка</item>
+        <item>Подпись</item>
+        <item>Иконка и подпись</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>Светлая</item>
+        <item>Тёмная</item>
+        <item>Авто</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>По умолчанию</item>
+        <item>Чисто белый/чёрный</item>
+        <item>Прозрачный</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>Ответы</item>
+        <item>Ретвиты</item>
+    </string-array>
+</resources>

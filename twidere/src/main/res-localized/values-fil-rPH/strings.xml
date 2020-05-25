@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="account_options">Mga opsyon ng Account</string>
+    <string name="account_type_fanfou">Fanfou</string>
+    <string name="account_type_mastodon">Mastodon</string>
+    <string name="account_type_statusnet">StatusNet</string>
+    <string name="account_type_twitter">Twitter</string>
+    <!-- [verb] Accept a friend request (follow request) -->
+    <string name="action_accept_friend_request">Tanggapin</string>
+    <!-- [verb] Accept a permission request like allow to use camera etc. -->
+    <string name="action_accept_permission_request">Tanggapin</string>
+    <!-- [verb] Add an item to a list/collection -->
+    <string name="action_add">Magdagdag</string>
+    <string name="action_add_content_warning">Maglagay ng babala sa nilalaman</string>
+    <!-- [verb] Add a member to a message conversation -->
+    <string name="action_add_conversation_participant">Karagdagang kausap</string>
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">Bagong rule</string>
+    <string name="action_add_filters_subscription">Bagong subscription</string>
+    <string name="action_add_gif">Lagyan ng GIF</string>
+    <string name="action_add_media">Lagyan ng media</string>
+    <string name="action_add_member">Karagdagang miyembro</string>
+    <string name="action_add_name_to_home_screen">Ilagay ang <xliff:g example="Name" id="name">%1$s</xliff:g> sa home screen</string>
+    <string name="action_add_tab">Bagong tab</string>
+    <string name="action_add_tab_to_home_screen">Ilagay ang tab sa home screen</string>
+    <string name="action_add_to_filter">Ilagay sa filter</string>
+    <string name="action_add_to_home_screen">Ilagay sa home screen</string>
+    <string name="action_add_to_home_screen_more">Ilagay sa home screen&#8230;</string>
+    <string name="action_add_to_list">Ilagay sa listahan</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">Block</string>
+    <string name="action_buffer_disconnect">I-disconnect sa Buffer</string>
+    <string name="action_buffer_settings">Settings</string>
+    <string name="action_buffer_update_now">Ilathala na</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_cancel_retweet">Itigil ang retweet</string>
+    <string name="action_center">I-gitna</string>
+    <string name="action_change_language">Palitan ang wika</string>
+    <string name="action_clear">Burahin</string>
+    <string name="action_clear_messages">Burahin ang mga mensahe</string>
+    <string name="action_clear_messages_and_delete_conversation">Burahin ang talastasan</string>
+    <string name="action_comment">Magkomento</string>
+    <string name="action_compose">Magsulat</string>
+    <string name="action_compose_message_convert_to_status">Gawing tweet</string>
+    <string name="action_connect_to_buffer">I-konekta</string>
+    <string name="action_conversation_info">Detalye ng talastasan</string>
+    <string name="action_create_conversation">Gumawa ng talastasan</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">Burahin</string>
+    <string name="action_delete_messages">Burahin ang mga mensahe</string>
+    <string name="action_disable_promotions">Disable promotions</string>
+    <string name="action_dont_restart">Huwag i-restart</string>
+    <string name="action_dont_terminate">Huwag mag-quit</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_edit">Baguhin</string>
+    <string name="action_edit_conversation_avatar">Baguhin ang icon</string>
+    <string name="action_edit_conversation_name">Baguhin ang pangalan</string>
+    <string name="action_edit_filter_rule">Baguhin ang rule</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_enable_promotions">Enable promotions</string>
+    <string name="action_enable_retweets">Enable retweets</string>
+    <string name="action_favorite">Paborito</string>
+    <string name="action_finish">Tapos na</string>
+    <string name="action_follow">Sundan</string>
+    <string name="action_format_search_update_status">Tweet <xliff:g id="text">%1$s</xliff:g></string>
+    <!-- [verb] Perform import action -->
+    <string name="action_import">Import</string>
+    <string name="action_import_from">I-import mula sa&#8230;</string>
+    <string name="action_invert_selection">Baligtarin ang mpa napili</string>
+    <!-- Used for decide something later, like permission request -->
+    <string name="action_later">Mamaya na</string>
+    <string name="action_leave_conversation">Lumiban sa talastasan</string>
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_like">Gusto</string>
+    <string name="action_list_creator">Gumawa ng listahan</string>
+    <string name="action_location">Lokasyon</string>
+    <string name="action_manage_in_buffer">I-manage sa Buffer</string>
+    <string name="action_mark_as_read">Nabasa na</string>
+    <string name="action_mute">Mute</string>
+    <string name="action_next_step">Susunod</string>
+    <string name="action_no_thanks">Salamat pero hindi</string>
+    <string name="action_open_in_browser">Buksan sa browser</string>
+    <string name="action_pick_color">Pumili ng kulay</string>
+    <string name="action_purchase">Bumili</string>
+    <string name="action_purchase_features_pack">Bilhin ang features pack</string>
+    <string name="action_qr_code">QR code</string>
+    <string name="action_quote">Quote</string>
+    <string name="action_record_video">Record video</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_register">Magrehistro</string>
+    <string name="action_remove_conversation_avatar">Alisin ang icon</string>
+    <string name="action_reply">Sumagot</string>
+    <string name="action_report_spam">Report spam</string>
+    <!-- [verb] Restore purchase -->
+    <string name="action_restore_purchase">Restore</string>
+    <string name="action_retry">Ulitin</string>
+    <!-- [verb] Action for performing retweet -->
+    <string name="action_retweet">Retweet</string>
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">Save</string>
+    <string name="action_save_to">I-save sa&#8230;</string>
+    <string name="action_search">Maghanap</string>
+    <string name="action_select_all">Piliin lahat</string>
+    <string name="action_select_none">Alisin ang mga pinili</string>
+    <string name="action_select_user">Piliin ang user</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">Ipadala</string>
+    <string name="action_set_color">Palitan ang kulay</string>
+    <string name="action_set_nickname">Palitan ang palayaw</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_share">Ibahagi</string>
+    <string name="action_sign_in">Sign in</string>
+    <!-- [verb] Used for skip some settings -->
+    <string name="action_skip">Lagpasan</string>
+    <string name="action_start">Simulan</string>
+    <string name="action_status_attachment">Tweet attachment</string>
+    <string name="action_status_block_users">Block users&#8230;</string>
+    <string name="action_status_mute_users">Mute users&#8230;</string>
+    <string name="action_status_pin">Pin tweet</string>
+    <string name="action_status_schedule">Tweet schedule</string>
+    <string name="action_status_unpin">Unpin tweet</string>
+    <string name="action_subscribe">Subscribe</string>
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <string name="action_sync_connect_to_storage">I-konekta</string>
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_disconnect">I-disconnect</string>
+    <string name="action_sync_settings">Settings</string>
+    <string name="action_sync_sync_now">I-sync</string>
+    <string name="action_take_photo">Kumuha ng larawan</string>
+    <string name="action_toggle">Toggle</string>
+    <string name="action_translate">Isalin</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_undo_like">Bawiin ang like</string>
+    <string name="action_unfavorite">Unfavorite</string>
+    <string name="action_unfollow">Huwag ng sundan</string>
+    <string name="action_view_map">Mapa</string>
+    <string name="activated_accounts">Mga aktibong account</string>
+    <string name="activities_about_me">Mga-aktibidad tungkol sa akin</string>
+    <string name="activity_about_me_favorited_media_tagged_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay pinapaboran ang isang tweet na kung saan ikaw ay na-tag</string>
+    <string name="activity_about_me_favorited_mention_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay pinapaboran ang isang tweet na kung saan ikaw ay nabanggit</string>
+    <string name="activity_about_me_liked_media_tagged_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay nagustuhan ang isang tweet na kung saan ikaw ay na-tag</string>
+    <string name="activity_about_me_liked_mention_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay nagustuhan ang isang tweet na kung saan ikaw ay nabanggit</string>
+    <string name="activity_about_me_retweeted_media_tagged_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay nag-retweet ng isang tweet na kung saan ikaw ay na-tag</string>
+    <string name="activity_about_me_retweeted_mention_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay nag-retweet ng isang tweet na kung saan ay nabanggit ka</string>
+    <string name="activity_about_me_retweeted_retweet">Si <xliff:g id="user">%s</xliff:g> ay ni-retweet ang iyong retweet</string>
+    <string name="activity_about_me_retweeted_retweet_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay ni-retweet ang iyong retweet</string>
+    <string name="activity_joined_twitter">Si <xliff:g id="user">%s</xliff:g> ay sumali sa Twitter</string>
+    <string name="activity_joined_twitter_multi">Sina <xliff:g id="user">%1$s</xliff:g> at <xliff:g id="other">%2$s</xliff:g> ay sumali sa Twitter</string>
+    <string name="add_account">Magdagdag ng account</string>
+    <string name="add_host_mapping">Maglagay ng host mapping</string>
+    <string name="add_image">Maglagay ng larawan</string>
+    <string name="and_N_more">at <xliff:g id="count">%d</xliff:g> pa</string>
+    <string name="api_url_format">API URL Format</string>
+    <string name="app_description">Ang sarili mong Twitter app</string>
+    <!-- App name, normally you don't need to translate this. -->
+    <string name="app_name">Twidere</string>
+    <string name="app_restart_confirm">Mag-restart ang Twidere upang ma-apply ang mga setting.</string>
+    <string name="app_terminate_confirm">Mag-quit ang Twidere upang i-apply ang mga setting.</string>
+    <string name="appearance">Itsura</string>
+    <string name="auth_type_basic">Basic</string>
+    <string name="auth_type_oauth">OAuth</string>
+    <string name="auth_type_oauth2">OAuth 2</string>
+    <string name="auth_type_twip_o">twip O Mode</string>
+    <string name="auth_type_xauth">xAuth</string>
+    <string name="auto_refresh">Auto refresh</string>
+    <string name="background">Background</string>
+    <string name="bandwidth_saving_mode">Magtipid ng bandwidth</string>
+    <string name="bandwidth_saving_mode_summary">Walang media preview sa metered network</string>
+    <string name="block_user_confirm_message">Harangan si <xliff:g example="Username" id="name">%s</xliff:g>? Ang user na ito ay hindi na maaaring masubaybayan ka, banggitin ka o ang magpadala sa iyo ng mga direktang mensahe.</string>
+    <string name="bug_reports">Bug reports</string>
+    <string name="bug_reports_summary">Powered by Fabric</string>
+    <string name="builtin_dns_resolver">Built-in DNS resolver</string>
+    <string name="cache_size_limit">Cache size limit</string>
+    <string name="cant_load_all_replies_explanation">Dahil sa limitasyon ng Twitter sa pangatlong partido ng mga app ng twitter, ang Twidere ay walang access sa mga tugon sa isang tweet, walang garantiya na ang Twidere ay maaaring makakarga sa lahat ng mga tugon sa isang tweet.</string>
+    <string name="cant_load_all_replies_message">Hindi ma-load ang mga kasagutan. &lt;a href=\"#dialog\";&gt;Bakit?&lt;/a&gt;</string>
+    <string name="cards">Mga baraha</string>
+    <string name="clear_cache">Linisin ang cache</string>
+    <string name="clear_databases">Linisin ang mga database</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="error_message_device_incompatible">Ang aparato na ito ay hindi magkaugma sa Twidere, ang pag-upgrade nito sa pinakabagong OS ng Android ay inirekomenda.\nMaaari kang magpadala ng impormasyon sa ibaba upang matulungan ako na i-ulat ang isyu na ito sa tagagawa ng aparato.</string>
+    <!-- Enhanced (paid) features description -->
+    <!-- Enhanced (paid) features title -->
+    <string name="filter_everywhere_description">Ang mga ito sasalain sa Twidere: \n  ·Ang mga tweet ng user\n  ·Ang mga tweet na nagbanggit sa user na ito\n  ·Ang mga Retweet/mga Sipi ng user na ito</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="hidden_settings_warning_message">HUWAG KAILANMAN baguhin ang mga pagkakatakdang mga ito kung hindi mo alam kung ano ito, o ito\'y:\n *Kikitil sa iyong pusa\n *Ilunsad ang mga armas na nuklear sa Hilagang Korea\n * Gawin ang Majo ang LAHAT ng Mahou Shoujo\n * Sirain ang daigdig</string>
+    <string name="hint_status_reply_to_user_removed">Ipapadala bilang isang sipi dahil ang pagkabanggit ng may-akda ng tweet ay naalis. &lt;a href=\"#dialog\";&gt;Bakit?&lt;/a&gt;</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> sa pamamagitan ng <xliff:g example="api" id="source">%2$s</xliff:g></string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <!-- Mastodon feature, post to followers only -->
+    <!-- Mastodon feature, post to public timelines -->
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="message_api_url_format_help">[DOMAIN]: Domain ng API ng Twitter.\nHalimbawa: Ang https://[DOMAIN].twitter.com/ ay papalitan ng https://api.twitter.com/.</string>
+    <string name="message_format_compose_message_convert_to_status">Ang tweet na ito ay ipapadala bilang isang mensahe ka <xliff:g id="name">%1$s</xliff:g>, magpatuloy? Ang pagpapalit sa isang normal na tweet ay gumagamit ng karagdagang karakter.</string>
+    <string name="message_format_conversation_name_update_by_user">Binago ni <xliff:g example="User" id="by_user">%1$s</xliff:g> ang pangalan ng pagpapanayam na <xliff:g example="New name" id="name">%2$s</xliff:g></string>
+    <string name="message_format_participants_join_added">Si <xliff:g example="Sender" id="sender">%1$s</xliff:g> ay idinagdag si <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
+    <string name="message_status_reply_to_user_removed_explanation">Ang Twitter ay ginagawa ang laging pagbanggit sa may-akda ng tweet sa isang tugon. Kapag ang may-akda ng tweet ay naalis. Ang Twidere ay magpapadala nitong tugon bilang isang sipi upang pangalagaan ang konteksto.</string>
+    <!--
+      ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
+      ~ periods should be omitted
+    -->
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <!-- Toast message for network errors -->
+    <string name="mute_user_confirm_message">Patahimikin si <xliff:g id="name">%s</xliff:g>? Hindi mo na makikita ang mga tweet mula sa user na ito bagaman ikaw ay patuloy parin sa pagsubaybay sa user na ito.</string>
+    <!-- Next item (tweet, user etc.) -->
+    <string name="notification_direct_message_multiple_messages">Si <xliff:g id="user">%1$s</xliff:g> ay nagpadala sayo ng <xliff:g id="messages_count">%2$d</xliff:g> na mga direktang mensahe.</string>
+    <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> at <xliff:g id="users_count">%2$d</xliff:g> ang iba ay pinadalhan ka ng <xliff:g id="messages_count">%3$d</xliff:g> na direktang mga mensahe.</string>
+    <!-- Notification method, flashing LED light -->
+    <!-- Notification method, ringtone -->
+    <!-- Notification method, device vibration -->
+    <string name="phishing_link_warning_message_1">Ikaw ay nagbubukas ng isang link na nasa isang direktang mensahe, na kung saan ikaw ay maaaring mapunta sa isang phising site.\n\nSuriin ang adres ng site nang dawalang beses bago magbigay ng anumang mga personal na impormasyon.</string>
+    <string name="preference_summary_database_item_limit">Ang dakong itaas sa limitasyon ng mga aytem na nasa mga database para sa bawat account, itakda sa magmababang halaga upang matipid ang ispasyo at madagdagan ang bilis sa pagkarga.</string>
+    <!-- Media will be cropped to fit preview -->
+    <!-- Actual size, media preview will be scaled respectively -->
+    <!-- Media will be scaled to fit preview -->
+    <!-- Previous item (tweet, user etc.) -->
+    <!-- Normally you don't need to translate this -->
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
+    <string name="retweeted_by_name_with_count">Ni-retweet nina <xliff:g id="user_name">%1$s</xliff:g> at <xliff:g id="retweet_count">%2$d</xliff:g> iba pa</string>
+    <string name="set_consumer_key_secret_message">Ang Twidere ay umaabot na sa limitasyon ng token, kailangan mong lumikha ng app na https://apps.twitter.com/ at i-paste ang susi ng kustomer at ang sekreto sa ibaba.\nKung magpapatuloy ka sa paggamit sa naka-default na susi, maaaring hindi kana makapag-sign in.</string>
+    <string name="signing_in_error_browser_sign_in_hint">May pagkakamali sa pag-sign in, maaaring kailangan mong gumamit ng paraang pag-sign in gamit ang browser. (Hindi nito papansinin ang mga pagsadyang pagkakatakda ng API habang nagsa-sign in)</string>
+    <string name="status_share_subject_format_with_time">Tweet mula kay <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), sa <xliff:g id="time">%3$s</xliff:g></string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <!-- Dark theme -->
+    <!-- Light theme -->
+    <!-- Enhanced (paid) features title -->
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <!-- 'Tweet' here is a verb -->
+    <string name="unsupported_login_verification_type_name">Hindi suportadong uri ng beripikasyon sa pag-login <xliff:g id="name">%1$s</xliff:g>, mangyaring i-ulat sa suporta ng account.</string>
+    <string name="usage_statistics_header_summary">Ang Twidere ay bahagi ng iilang proyekto ng pagsasaliksik, ang pagsali sa mga proyektong ito ay ang magpapahusay sa Twidere at sa iba pang aplikasyon.</string>
+    <!-- User list description -->
+    <!-- User list is public -->
+    <!-- User list name -->
+</resources>

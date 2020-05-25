@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="account_options">ఖాతా ఎంపికలు</string>
+    <string name="account_type_mastodon">మాస్టడాన్</string>
+    <string name="account_type_statusnet">స్టేటస్‌నెట్</string>
+    <string name="account_type_twitter">ట్విట్టర్</string>
+    <!-- [verb] Accept a friend request (follow request) -->
+    <string name="action_accept_friend_request">అంగీకరించు</string>
+    <!-- [verb] Accept a permission request like allow to use camera etc. -->
+    <string name="action_accept_permission_request">అంగీకరించు</string>
+    <!-- [verb] Add an item to a list/collection -->
+    <string name="action_add">చేర్చు</string>
+    <!-- [verb] Add a member to a message conversation -->
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_name_to_home_screen"><xliff:g example="Name" id="name">%1$s</xliff:g>‌ని ముంగిలి తెరకు చేర్చు</string>
+    <string name="action_add_tab">ట్యాబును చేర్చు</string>
+    <string name="action_add_to_list">జాబితాకు చేర్చు</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">నిరోధించు</string>
+    <string name="action_buffer_settings">అమరికలు</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_cancel_retweet">రీట్వీటుని రద్దుచేయి</string>
+    <string name="action_change_language">భాషను మార్చు</string>
+    <string name="action_clear">తుడిచివేయి</string>
+    <string name="action_comment">వ్యాఖ్యానించండి</string>
+    <string name="action_compose">వ్రాయండి</string>
+    <string name="action_compose_message_convert_to_status">ట్వీటుగా మార్చు</string>
+    <string name="action_conversation_info">సంభాషణ సమాచారం</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">తొలగించు</string>
+    <string name="action_delete_messages">సందేశాలను తొలగించు</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_enable">చేతనించు</string>
+    <string name="action_enable_retweets">రీట్వీట్లు చేతనించు</string>
+    <string name="action_finish">ముగించు</string>
+    <string name="action_follow">అనుసరించు</string>
+    <!-- [verb] Perform import action -->
+    <!-- Used for decide something later, like permission request -->
+    <string name="action_later">మరెప్పుడైనా</string>
+    <string name="action_leave_conversation">సంభాషణను వదిలివెళ్ళు</string>
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_like">మెచ్చుకోండి</string>
+    <string name="action_location">ప్రాంతం</string>
+    <string name="action_mark_as_read">చదివినట్టు గుర్తుపెట్టు</string>
+    <string name="action_next_step">తదుపరి</string>
+    <string name="action_no_thanks">వద్దు, పర్లేదు</string>
+    <string name="action_open_in_browser">విహారిణిలో తెరువు</string>
+    <string name="action_pick_color">రంగును ఎంచుకోండి</string>
+    <string name="action_purchase">కొనండి</string>
+    <string name="action_qr_code">QR కోడు</string>
+    <string name="action_reply">స్పందించండి</string>
+    <!-- [verb] Restore purchase -->
+    <string name="action_retry">మళ్ళీ ప్రయత్నించు</string>
+    <!-- [verb] Action for performing retweet -->
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">భద్రపరచు</string>
+    <string name="action_search">వెతుకు</string>
+    <string name="action_select_all">అన్నీ ఎంచుకో</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">పంపించు</string>
+    <string name="action_set_color">రంగు అమర్చు</string>
+    <string name="action_settings">అమరికలు</string>
+    <string name="action_share">పంచుకో</string>
+    <string name="action_sign_in">ప్రవేశించండి</string>
+    <!-- [verb] Used for skip some settings -->
+    <string name="action_skip">దాటవేయి</string>
+    <string name="action_start">మొదలుపెట్టు</string>
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_settings">అమరికలు</string>
+    <string name="action_translate">అనువదించండి</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_view_map">పటం</string>
+    <string name="activated_accounts">చేతనమైన ఖాతాలు</string>
+    <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> మిమ్మల్ని అనుసరిస్తున్నారు</string>
+    <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g>, <xliff:g id="other">%2$s</xliff:g> మిమ్మల్ని అనుసరిస్తున్నారు</string>
+    <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> మెచ్చుకున్నారు</string>
+    <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g>, <xliff:g id="other">%2$s</xliff:g> మెచ్చుకున్నారు</string>
+    <string name="add_account">ఖాతా చేర్చు</string>
+    <!-- App name, normally you don't need to translate this. -->
+    <string name="app_name">ట్విడర్</string>
+    <string name="appearance">రూపురేఖలు</string>
+    <string name="auth_type_basic">ప్రాథమికం</string>
+    <string name="background">వెనుతలం</string>
+    <string name="cards">కార్డులు</string>
+    <string name="color">రంగు</string>
+    <string name="comment_hint">వ్యాఖ్య&#8230;</string>
+    <string name="copy_link">లంకెను కాపీచెయ్యి</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="count_label_retweets">రీట్వీట్లు</string>
+    <string name="default_account">అప్రమేయ ఖాతా</string>
+    <string name="deny">తిరస్కరించు</string>
+    <string name="destroy_status">ట్వీటును తొలగించు</string>
+    <string name="destroy_status_confirm_message">ఈ ట్వీటును తొలగించాలా?</string>
+    <string name="discard">విస్మరించు</string>
+    <string name="draft_saved">ప్రతి భద్రమయ్యింది</string>
+    <string name="ellipsis">&#8230;</string>
+    <string name="error_message_no_content">విషయం లేదు</string>
+    <string name="error_message_status_too_long">ట్వీటు చాలా పెద్దగా ఉంది.</string>
+    <!-- Enhanced (paid) features description -->
+    <!-- Enhanced (paid) features title -->
+    <string name="filter_type_keywords">కీపదాలు</string>
+    <string name="filter_type_links">లంకెలు</string>
+    <string name="filter_type_sources">మూలాలు</string>
+    <string name="filter_type_users">వాడుకరులు</string>
+    <string name="following_you">మిమ్మల్ని అనుసరిస్తున్నారు</string>
+    <string name="font">ఫాంటు</string>
+    <string name="general">సాధారణం</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="hint_error_field_required">తప్పనిసరి</string>
+    <string name="just_now">ఇప్పుడే</string>
+    <string name="keyboard_shortcut_back">వెనుకకు</string>
+    <string name="label_account">ఖాతా</string>
+    <string name="label_account_type">ఖాతా రకం</string>
+    <string name="label_advanced">ఉన్నతం</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_feedback_title">శీర్షిక</string>
+    <string name="label_filter_scope_home">ముంగిలి</string>
+    <string name="label_filter_scope_messages">సందేశాలు</string>
+    <string name="label_filter_target_description">వివరణ</string>
+    <string name="label_filter_target_name">పేరు</string>
+    <string name="label_filter_target_text">పాఠ్యం</string>
+    <string name="label_filters_subscription">చందా</string>
+    <string name="label_location_no_location">ఏమీలేదు</string>
+    <string name="label_original_status">అసలు ట్వీటు</string>
+    <string name="label_password">సంకేతపదం</string>
+    <string name="label_photo">ఫొటో</string>
+    <string name="label_photos">ఫొటోలు</string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <!-- Mastodon feature, post to followers only -->
+    <string name="label_status_visibility_private">అంతరంగికం</string>
+    <!-- Mastodon feature, post to public timelines -->
+    <string name="label_status_visibility_public">బహిరంగం</string>
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="label_statuses">ట్వీట్లు</string>
+    <string name="label_translation">అనువాదం</string>
+    <string name="label_username">వాడుకరి పేరు</string>
+    <string name="label_video">వీడియో</string>
+    <string name="lists">జాబితాలు</string>
+    <string name="login_type_default">అప్రమేయం</string>
+    <string name="login_type_user_settings">వాడుకరి అమరికలు</string>
+    <string name="media_uploader_default">అప్రమేయం (ట్విట్టర్)</string>
+    <string name="members">సభ్యులు</string>
+    <string name="message_please_wait">దయచేసి వేచివుండండి.</string>
+    <!--
+      ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
+      ~ periods should be omitted
+    -->
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <!-- Toast message for network errors -->
+    <string name="message_toast_no_account">ఖాతా లేదు</string>
+    <string name="network">నెట్‌వర్క్</string>
+    <!-- Next item (tweet, user etc.) -->
+    <string name="next_item">తదుపరి</string>
+    <string name="next_step">తదుపరి</string>
+    <string name="no_location">ప్రాంతం లేదు</string>
+    <string name="none">ఏమీలేదు</string>
+    <string name="notification_channel_name_content_messages">సందేశాలు</string>
+    <string name="notification_channel_name_content_subscriptions">చందాలు</string>
+    <string name="notification_channel_name_content_updates">తాజాకరణలు</string>
+    <!-- Notification method, flashing LED light -->
+    <!-- Notification method, ringtone -->
+    <!-- Notification method, device vibration -->
+    <string name="notification_type_home">ముంగిలి</string>
+    <string name="notification_type_messages">సందేశాలు</string>
+    <string name="notifications">గమనింపులు</string>
+    <string name="other_settings">ఇతర అమరికలు</string>
+    <string name="photo">ఫొటో</string>
+    <string name="preference_title_accounts">ఖాతాలు</string>
+    <string name="preference_title_advanced">ఉన్నతం</string>
+    <string name="preference_title_text_size">పాఠ్య పరిమాణం</string>
+    <string name="preview">మునుజూపు</string>
+    <!-- Media will be cropped to fit preview -->
+    <!-- Actual size, media preview will be scaled respectively -->
+    <!-- Media will be scaled to fit preview -->
+    <!-- Previous item (tweet, user etc.) -->
+    <string name="profile_background_color">వెనుతలపు రంగు</string>
+    <string name="profile_link_color_main_color">లంకె రంగు (ముఖ్య రంగు)</string>
+    <string name="profile_text_color">పాఠ్యపు రంగు</string>
+    <string name="progress">పురోగతి</string>
+    <!-- Normally you don't need to translate this -->
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
+    <string name="proxy">ప్రాక్సీ</string>
+    <string name="refresh_type_home">ముంగిలి</string>
+    <string name="refresh_type_messages">సందేశాలు</string>
+    <string name="refresh_type_trends">పోకడలు</string>
+    <string name="replies">స్పందనలు</string>
+    <string name="search_type_local">స్థానికం</string>
+    <string name="search_type_statuses">ట్వీట్లు</string>
+    <string name="search_type_users">వాడుకరులు</string>
+    <string name="server_address">సర్వరు చిరునామా</string>
+    <string name="settings_notifications">గమనింపులు</string>
+    <string name="sign_in_service_email">ఈమెయిలు</string>
+    <string name="sign_in_service_google_id">గూగుల్ ఐడీ</string>
+    <string name="sign_in_service_twitter">ట్విట్టర్</string>
+    <string name="size">పరిమాణం</string>
+    <string name="small">చిన్న</string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <string name="sync_provider_name_dropbox">డ్రాప్‌బాక్స్</string>
+    <string name="tab_editor_hint_name">పేరు</string>
+    <string name="tabs">ట్యాబులు</string>
+    <string name="text_size">పాఠ్య పరిమాణం</string>
+    <string name="theme">అలంకారం</string>
+    <string name="theme_background_default">అప్రమేయం</string>
+    <string name="theme_background_transparent">పారదర్శకం</string>
+    <string name="theme_color">అలంకారపు రంగు</string>
+    <!-- Dark theme -->
+    <!-- Light theme -->
+    <string name="title_about">గురించి</string>
+    <string name="title_accounts">ఖాతాలు</string>
+    <string name="title_blocked_users">నిరోధిత వాడుకరులు</string>
+    <string name="title_conversation">సంభాషణ</string>
+    <string name="title_direct_messages">సందేశాలు</string>
+    <string name="title_drafts">ప్రతులు</string>
+    <string name="title_error_invalid_account">చెల్లని ఖాతా</string>
+    <!-- Enhanced (paid) features title -->
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_followers">అనుచరులు</string>
+    <string name="title_home">ముంగిలి</string>
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_mentions">ప్రస్తావనలు</string>
+    <string name="title_search">వెతుకు</string>
+    <string name="title_statuses">ట్వీట్లు</string>
+    <string name="title_subscription_name">పేరు</string>
+    <string name="title_user">వాడుకరి</string>
+    <string name="title_user_colors">వాడుకరి రంగులు</string>
+    <string name="title_user_feedback">ప్రతిస్పందన</string>
+    <string name="title_user_list">జాబితా</string>
+    <string name="title_user_list_subscriptions">చందాలు</string>
+    <string name="title_userlist_subscribers">చందాదార్లు</string>
+    <string name="title_users_liked_this">దీన్ని మెచ్చుకున్న వాడుకరులు</string>
+    <string name="title_users_retweeted_this">దీన్ని రీట్వీటు చేసిన వాడుకరులు</string>
+    <string name="translators">అనువాదకులు</string>
+    <string name="trends">పోకడలు</string>
+    <!-- 'Tweet' here is a verb -->
+    <string name="unknown_language">గుర్తుతెలియని భాష</string>
+    <string name="usage_statistics">వాడుక గణాంకాలు</string>
+    <string name="user_list_details">జాబితా వివరాలు</string>
+    <!-- User list description -->
+    <string name="user_list_details_description">వివరణ</string>
+    <!-- User list is public -->
+    <string name="user_list_details_is_public">బహిరంగం</string>
+    <!-- User list name -->
+    <string name="user_list_details_name">పేరు</string>
+    <string name="user_lists">జాబితాలు</string>
+    <string name="user_profile_description">వివరణ</string>
+    <string name="user_profile_location">ప్రాంతం</string>
+    <string name="user_profile_name">పేరు</string>
+    <string name="label_drafts_statuses">ట్వీట్లు</string>
+    <string name="label_drafts_others">ఇతరాలు</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_compose_now_action">
+        <item>Soạn</item>
+        <item>Chụp ảnh</item>
+        <item>Add media</item>
+    </string-array>
+</resources>
