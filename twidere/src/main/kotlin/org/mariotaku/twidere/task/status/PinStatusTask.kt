@@ -29,6 +29,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusPinEvent
@@ -46,7 +47,10 @@ class PinStatusTask(context: Context, accountKey: UserKey, val id: String) : Abs
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                return mastodon.pinStatus(id)
+                val status = mastodon.pinStatus(id)
+                val result = PinTweetResult()
+                result[PinTweetResult::class.java.getDeclaredField("pinnedTweets")] = status.id
+                return result
             }
             AccountType.TWITTER -> {
                 val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
@@ -55,6 +59,7 @@ class PinStatusTask(context: Context, accountKey: UserKey, val id: String) : Abs
             else -> {
                 throw APINotSupportedException(account.type)
             }
+        }
     }
 
     override fun onSucceed(callback: Any?, result: PinTweetResult) {

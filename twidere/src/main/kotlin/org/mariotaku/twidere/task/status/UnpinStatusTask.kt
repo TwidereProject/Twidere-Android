@@ -26,13 +26,14 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.PinTweetResult
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.exception.APINotSupportedException
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.StatusPinEvent
 import org.mariotaku.twidere.task.AbsAccountRequestTask
-import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.exception.APINotSupportedException
 
 /**
  * Created by mariotaku on 2017/4/28.
@@ -46,7 +47,10 @@ class UnpinStatusTask(context: Context, accountKey: UserKey, val id: String) : A
         when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                return mastodon.unpinStatus(id)
+                val status = mastodon.unpinStatus(id)
+                val result = PinTweetResult()
+                result[PinTweetResult::class.java.getDeclaredField("pinnedTweets")] = status.id
+                return result
             }
             AccountType.TWITTER -> {
                 val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
@@ -55,8 +59,8 @@ class UnpinStatusTask(context: Context, accountKey: UserKey, val id: String) : A
             else -> {
                 throw APINotSupportedException(account.type)
             }
+        }
     }
-
     override fun onSucceed(callback: Any?, result: PinTweetResult) {
         super.onSucceed(callback, result)
         Toast.makeText(context, R.string.message_toast_status_unpinned, Toast.LENGTH_SHORT).show()
