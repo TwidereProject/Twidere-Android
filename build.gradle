@@ -23,7 +23,7 @@ allprojects {
         globalCompileSdkVersion = 29
         globalBuildToolsVersion = "29.0.3"
 
-        globalMinSdkVersion = 19
+        globalMinSdkVersion = 16
         globalTargetSdkVersion = 29
     }
 

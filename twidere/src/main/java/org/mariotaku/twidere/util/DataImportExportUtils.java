@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -292,7 +293,15 @@ public class DataImportExportUtils implements Constants {
             @NonNull final String preferencesName, @NonNull final String entryName,
             @NonNull final SharedPreferencesProcessStrategy strategy,
             @NonNull final String data) throws IOException {
-        if (!Objects.equals(entry.getName(), entryName)) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (!Objects.equals(entry.getName(), entryName)) {
+                return;
+            }
+        } else {
+            if (entry.getName().equals(entryName)) {
+                return;
+            }
+        }
         final JsonParser jsonParser = LoganSquare.JSON_FACTORY.createParser(data);
         if (jsonParser.getCurrentToken() == null) {
             jsonParser.nextToken();
@@ -327,7 +336,15 @@ public class DataImportExportUtils implements Constants {
             @NonNull final String data,
             @NonNull final ContentResolverProcessStrategy<List<T>> strategy)
             throws IOException {
-        if (!Objects.equals(entry.getName(), entryName)) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (!Objects.equals(entry.getName(), entryName)) {
+                return;
+            }
+        } else {
+            if (entry.getName().equals(entryName)) {
+                return;
+            }
+        }
         List<T> itemsList = JsonSerializer.parseList(data, itemCls);
         strategy.importItem(context.getContentResolver(), itemsList);
     }
@@ -352,7 +369,15 @@ public class DataImportExportUtils implements Constants {
             @NonNull final String data,
             @NonNull final ContentResolverProcessStrategy<T> strategy)
             throws IOException {
-        if (!Objects.equals(entry.getName(), entryName)) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (!Objects.equals(entry.getName(), entryName)) {
+                return;
+            }
+        } else {
+            if (entry.getName().equals(entryName)) {
+                return;
+            }
+        }
         T item = JsonSerializer.parse(data, itemCls);
         strategy.importItem(context.getContentResolver(), item);
     }

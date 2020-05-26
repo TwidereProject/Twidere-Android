@@ -19,8 +19,12 @@
 
 package androidx.core.view
 
-fun createWindowInsetsCompat(obj: Any) = WindowInsetsCompat(obj)
+import android.annotation.TargetApi
+import android.os.Build
+import android.view.WindowInsets
+
+@TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
+fun createWindowInsetsCompat(obj: Any) = WindowInsetsCompat.toWindowInsetsCompat(obj as WindowInsets)
 
 val WindowInsetsCompat.unwrapped: Any?
-    @Suppress("RestrictedApi")
     get() = this.toWindowInsets()
