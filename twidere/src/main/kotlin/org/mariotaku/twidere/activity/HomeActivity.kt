@@ -422,8 +422,13 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (!ViewCompat.getFitsSystemWindows(homeMenu)) {
             homeContent.setPadding(0, insets.systemWindowInsetTop, 0, 0)
         }
+        (toolbar.layoutParams as? MarginLayoutParams)?.bottomMargin = insets.systemWindowInsetBottom
         (actionsButton.layoutParams as? MarginLayoutParams)?.bottomMargin =
-                actionsButtonBottomMargin + insets.systemWindowInsetBottom
+                actionsButtonBottomMargin + if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
+                    insets.systemWindowInsetBottom
+                } else {
+                    0
+                }
         return insets
     }
 
@@ -623,16 +628,22 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 }
                 notifyControlBarOffsetChanged()
             } else {
+                val layoutparams = toolbar.layoutParams
+                val toolbarMarginBottom = if (layoutparams is MarginLayoutParams) {
+                    layoutparams.bottomMargin
+                } else {
+                    0
+                }
                 val translationY = if (mainTabs.columns > 1 || !toolbar.isVisible) {
                     0
                 } else {
-                    (toolbar.height * (offset - 1)).toInt()
+                    ((toolbar.height + toolbarMarginBottom) * (offset - 1)).toInt()
                 }
                 toolbar.translationY = -translationY.toFloat()
                 windowOverlay.translationY = -translationY.toFloat()
                 val lp = actionsButton.layoutParams
                 if (lp is MarginLayoutParams) {
-                    actionsButton.translationY = (lp.bottomMargin + toolbar.height + actionsButton.height) * (1 - offset)
+                    actionsButton.translationY = (lp.bottomMargin + toolbar.height + actionsButton.height + toolbarMarginBottom) * (1 - offset)
                 } else {
                     actionsButton.translationY = actionsButton.height * (1 - offset)
                 }
