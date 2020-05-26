@@ -27,22 +27,22 @@ import android.graphics.Rect
 import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.StyleRes
-import androidx.fragment.app.Fragment
-import androidx.core.graphics.ColorUtils
-import androidx.core.view.OnApplyWindowInsetsListener
-import androidx.core.view.WindowInsetsCompat
-import androidx.appcompat.app.TwilightManagerAccessor
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
-import androidx.appcompat.view.menu.ActionMenuItemView
-import androidx.appcompat.widget.TwidereActionMenuView
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.StyleRes
+import androidx.appcompat.app.TwilightManagerAccessor
+import androidx.appcompat.view.menu.ActionMenuItemView
+import androidx.appcompat.widget.TwidereActionMenuView
+import androidx.core.graphics.ColorUtils
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Bus
@@ -363,7 +363,11 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
             super.attachBaseContext(newBase)
             return
         }
-        super.attachBaseContext(newBase.overriding(locale))
+        val newContext = newBase.overriding(locale)
+        super.attachBaseContext(newContext)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            applyOverrideConfiguration(newContext.resources.configuration)
+        }
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseActivity) -> Unit): Promise<Unit, Exception> {
