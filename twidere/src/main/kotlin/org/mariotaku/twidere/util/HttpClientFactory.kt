@@ -7,7 +7,6 @@ import android.os.Build
 import android.util.Base64
 import android.util.Log
 import okhttp3.*
-import okhttp3.internal.platform.Platform
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.restfu.http.RestHttpClient
@@ -15,7 +14,6 @@ import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.constant.cacheSizeLimitKey
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.util.net.TLSSocketFactory
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Proxy
@@ -31,7 +29,6 @@ import javax.net.ssl.X509TrustManager
  * Created by mariotaku on 16/1/27.
  */
 object HttpClientFactory {
-
     fun createRestHttpClient(conf: HttpClientConfiguration, dns: Dns, connectionPool: ConnectionPool,
             cache: Cache): RestHttpClient {
         val builder = OkHttpClient.Builder()
@@ -42,24 +39,13 @@ object HttpClientFactory {
     fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder, dns: Dns,
             connectionPool: ConnectionPool, cache: Cache) {
         updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
-        if (Build.VERSION.SDK_INT in Build.VERSION_CODES.JELLY_BEAN until Build.VERSION_CODES.LOLLIPOP) {
-            val tlsContext = SSLContext.getInstance("TLS")
-            val trustManager = getPlatformTrustManager()
-            val tlsSocketFactory = tlsContext.apply {
-                init(null, arrayOf(trustManager), null)
-              }.socketFactory
-            builder.sslSocketFactory(tlsSocketFactory, trustManager)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            val tlsTocketFactory = TLSSocketFactory()
+            builder.sslSocketFactory(tlsTocketFactory, tlsTocketFactory.trustManager);
         }
         updateTLSConnectionSpecs(builder)
         DebugModeUtils.initForOkHttpClient(builder)
     }
-
-    fun getPlatformTrustManager(): X509TrustManager {
-        val factory = TrustManagerFactory.getInstance(
-            TrustManagerFactory.getDefaultAlgorithm())
-        factory.init(null as KeyStore?)
-        return factory.trustManagers!![0] as X509TrustManager
-      }
 
     fun reloadConnectivitySettings(context: Context) {
         val holder = DependencyHolder.get(context)
