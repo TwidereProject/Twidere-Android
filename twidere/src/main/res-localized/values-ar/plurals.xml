@@ -17,4 +17,36 @@
         <item quantity="many"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
         <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
     </plurals>
+    <plurals name="N_others">
+        <item quantity="zero"><xliff:g id="count">%d</xliff:g> آخرين</item>
+        <item quantity="one">واحد آخر</item>
+        <item quantity="two">آخَريْن</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> آخرون</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> آخرون</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> آخرون</item>
+    </plurals>
+    <plurals name="N_statuses">
+        <item quantity="zero"><xliff:g id="count">%d</xliff:g> تغريدات</item>
+        <item quantity="one">تغريدة واحدة</item>
+        <item quantity="two">تغريدتَيْن</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> تغريدات</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> تغريدات</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> تغريدات</item>
+    </plurals>
+    <plurals name="N_favorites">
+        <item quantity="zero"><xliff:g id="count">%d</xliff:g> مفضلة</item>
+        <item quantity="one">مفضلة واحدة</item>
+        <item quantity="two">مفضلتَيْن</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> مفضلات</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> مفضلات</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> مفضلات</item>
+    </plurals>
+    <plurals name="N_votes">
+        <item quantity="zero"><xliff:g id="count">%d</xliff:g> تصويت</item>
+        <item quantity="one">تصويت واحد</item>
+        <item quantity="two">تصويتَيْن</item>
+        <item quantity="few"><xliff:g id="count">%d</xliff:g> أصوات</item>
+        <item quantity="many"><xliff:g id="count">%d</xliff:g> أصوات</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> أصوات</item>
+    </plurals>
 </resources>

@@ -30,6 +30,15 @@
         <item>拡大縮小</item>
         <item>実際のサイズ</item>
     </string-array>
+    <string-array name="entries_navbar_style">
+        <item>デフォルト</item>
+        <item>透明</item>
+        <item>色付き</item>
+    </string-array>
+    <string-array name="entries_tab_position">
+        <item>上部</item>
+        <item>下部</item>
+    </string-array>
     <string-array name="entries_notification_content">
         <item>ホーム</item>
         <item>つながり</item>

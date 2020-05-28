@@ -30,6 +30,15 @@
         <item>مقياس</item>
         <item>الحجم الحقيقي</item>
     </string-array>
+    <string-array name="entries_navbar_style">
+        <item>إفتراضي</item>
+        <item>شفاف</item>
+        <item>مُلوَّن</item>
+    </string-array>
+    <string-array name="entries_tab_position">
+        <item>في الأعلى</item>
+        <item>في الأسفل</item>
+    </string-array>
     <string-array name="entries_notification_content">
         <item>الرئيسية</item>
         <item>التفاعلات</item>
