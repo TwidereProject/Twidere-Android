@@ -11,11 +11,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.Constants.*
@@ -36,6 +38,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
+import org.mariotaku.twidere.task.LinkPreviewTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.text.TwidereClickableSpan
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
@@ -61,6 +64,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     private val itemContent by lazy { itemView.itemContent }
     private val mediaPreview by lazy { itemView.mediaPreview }
+    private val linkPreview by lazy { itemView.linkPreview }
     private val statusContentUpperSpace by lazy { itemView.statusContentUpperSpace }
     private val summaryView by lazy { itemView.summary }
     private val textView by lazy { itemView.text }
@@ -146,6 +150,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         val context = itemView.context
         val requestManager = adapter.requestManager
+
         val twitter = adapter.twitterWrapper
         val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
@@ -342,6 +347,27 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             // No media, hide media preview
             mediaLabel.setVisible(hasMediaLabel)
             mediaPreview.visibility = View.GONE
+        }
+
+        val url = status.extras?.external_url
+        linkPreview.isVisible = url != null
+        if (url != null) {
+            if (!LinkPreviewTask.isInLoading(url)) {
+                val linkPreviewData = LinkPreviewTask.getCached(url)
+                if (linkPreviewData != null) {
+                    linkPreview.displayData(url, linkPreviewData)
+                } else {
+                    LinkPreviewTask(context).let {
+                        it.params = url
+                        TaskStarter.execute(it)
+                    }
+                    linkPreview.reset()
+                }
+            } else {
+                linkPreview.reset()
+            }
+        } else {
+            linkPreview.reset()
         }
 
         summaryView.spannable = status.extras?.summary_text

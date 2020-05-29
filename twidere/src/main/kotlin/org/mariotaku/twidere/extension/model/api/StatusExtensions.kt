@@ -367,7 +367,7 @@ private inline val Status.inferredExternalUrl
         noticeUriRegex.matchEntire(uri)?.let { result: MatchResult ->
             "https://${result.groups[1]?.value}/notice/${result.groups[3]?.value}"
         }
-    }
+    } ?: entities?.urls?.firstOrNull()?.expandedUrl
 
 private val Status.parcelableLocation: ParcelableLocation?
     get() {
