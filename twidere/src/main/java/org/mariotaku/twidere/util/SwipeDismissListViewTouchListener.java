@@ -325,7 +325,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         return false;
     }
 
-    class PendingDismissData implements Comparable<PendingDismissData> {
+    static class PendingDismissData implements Comparable<PendingDismissData> {
         public int position;
         public View view;
 
