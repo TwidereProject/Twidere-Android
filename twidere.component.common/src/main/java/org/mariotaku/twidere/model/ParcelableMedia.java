@@ -40,7 +40,6 @@ import java.util.Arrays;
 @JsonObject
 @ParcelablePlease
 public class ParcelableMedia implements Parcelable {
-    @SuppressWarnings("NullableProblems")
     @NonNull
     @JsonField(name = "url")
     @ParcelableThisPlease

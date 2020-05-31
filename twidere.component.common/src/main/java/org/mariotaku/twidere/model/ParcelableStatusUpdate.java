@@ -41,7 +41,6 @@ import java.util.Arrays;
 @JsonObject
 public class ParcelableStatusUpdate implements Parcelable {
 
-    @SuppressWarnings("NullableProblems")
     @JsonField(name = "accounts")
     @NonNull
     @ParcelableThisPlease

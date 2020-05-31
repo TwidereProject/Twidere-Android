@@ -68,7 +68,6 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
         return new ObjectCursor<>(cursor, indices, mUseCache);
     }
 
-    @SuppressWarnings("TryWithIdenticalCatches")
     @NonNull
     private ObjectCursor.CursorIndices<T> createIndices(final Cursor cursor) {
         return ObjectCursor.indicesFrom(cursor, mObjectClass);

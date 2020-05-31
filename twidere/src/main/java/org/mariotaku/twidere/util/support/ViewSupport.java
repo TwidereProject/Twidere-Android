@@ -136,10 +136,8 @@ public final class ViewSupport {
 
         static void setForeground(final View view, final Drawable foreground) {
             if (view instanceof FrameLayout) {
-                //noinspection RedundantCast
                 ((FrameLayout) view).setForeground(foreground);
             } else if (view instanceof IForegroundView) {
-                //noinspection RedundantCast
                 ((IForegroundView) view).setForeground(foreground);
             }
         }

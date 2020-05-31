@@ -75,13 +75,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(value = Statuses._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
     public long _id;
 
-    @SuppressWarnings("NullableProblems")
     @JsonField(name = "id")
     @CursorField(Statuses.ID)
     @NonNull
     public String id;
 
-    @SuppressWarnings("NullableProblems")
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
     @NonNull
@@ -98,7 +96,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "timestamp")
     @CursorField(Statuses.TIMESTAMP)
     public long timestamp;
-    @SuppressWarnings("NullableProblems")
 
     @JsonField(name = "user_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.USER_KEY, converter = UserKeyCursorFieldConverter.class)

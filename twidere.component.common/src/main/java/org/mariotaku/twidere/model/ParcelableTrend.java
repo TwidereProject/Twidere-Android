@@ -45,7 +45,6 @@ public class ParcelableTrend implements Parcelable {
 
     @CursorField(value = CachedTrends._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
     long _id;
-    @SuppressWarnings("NullableProblems")
     @ParcelableThisPlease
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = CachedTrends.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)

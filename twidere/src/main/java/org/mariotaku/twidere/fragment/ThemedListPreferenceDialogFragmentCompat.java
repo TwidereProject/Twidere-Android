@@ -64,7 +64,6 @@ public class ThemedListPreferenceDialogFragmentCompat extends ThemedPreferenceDi
          * click-on-an-item dismiss the dialog instead of the user having to
          * press 'Ok'.
          */
-        //noinspection ConstantConditions
         builder.setPositiveButton(null, null);
     }
 
