@@ -46,6 +46,7 @@ abstract class AbsShortcutCreatorActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode != Activity.RESULT_OK || data == null) {

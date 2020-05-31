@@ -433,6 +433,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
         val tabPosition = handleIntent(intent, false)
         if (tabPosition >= 0) {
             mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)

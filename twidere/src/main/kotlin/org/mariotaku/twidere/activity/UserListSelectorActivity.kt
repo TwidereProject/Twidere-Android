@@ -135,6 +135,7 @@ class UserListSelectorActivity : BaseActivity(),
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_SELECT_USER -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
