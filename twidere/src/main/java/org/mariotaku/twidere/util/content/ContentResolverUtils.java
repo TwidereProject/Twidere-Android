@@ -81,7 +81,7 @@ public class ContentResolverUtils {
 
     public static int bulkInsert(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
             @NonNull final Collection<ContentValues> values) {
-        return bulkInsert(resolver, uri, values.toArray(new ContentValues[values.size()]));
+        return bulkInsert(resolver, uri, values.toArray(new ContentValues[0]));
     }
 
     public static int bulkInsert(@NonNull final ContentResolver resolver, @NonNull final Uri uri,

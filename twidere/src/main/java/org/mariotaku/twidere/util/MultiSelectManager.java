@@ -133,7 +133,7 @@ public class MultiSelectManager {
                 userKeys.add(((ParcelableStatus) item).user_key);
             }
         }
-        return userKeys.toArray(new UserKey[userKeys.size()]);
+        return userKeys.toArray(new UserKey[0]);
     }
 
     public interface Callback {

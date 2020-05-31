@@ -250,7 +250,7 @@ public class UniversalSearchResult {
                                 index.end = jsonParser.nextIntValue(-1);
                                 list.add(index);
                             }
-                            return list.toArray(new Index[list.size()]);
+                            return list.toArray(new Index[0]);
                         }
 
                         @Override
