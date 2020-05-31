@@ -92,11 +92,7 @@ public abstract class DrawableHolder {
     }
 
     public static DrawableHolder parse(String str) {
-        DrawableHolder icon = builtin(str);
-        if (icon != null) {
-            return icon;
-        }
-        return null;
+        return builtin(str);
     }
 
     public static List<DrawableHolder> builtins() {
