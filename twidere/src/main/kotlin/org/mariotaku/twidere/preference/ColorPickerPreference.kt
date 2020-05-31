@@ -122,7 +122,7 @@ class ColorPickerPreference(context: Context, attrs: AttributeSet? = null) :
             val preference = preference as ColorPickerPreference
             val alertDialog = dialog as AlertDialog
             alertDialog.applyTheme()
-            val windowView = alertDialog.window!!.decorView ?: return
+            val windowView = alertDialog.window!!.decorView
             controller = ColorPickerDialog.Controller(context, windowView)
             controller.setAlphaEnabled(preference.isAlphaSliderEnabled)
             for (presetColor in PRESET_COLORS) {

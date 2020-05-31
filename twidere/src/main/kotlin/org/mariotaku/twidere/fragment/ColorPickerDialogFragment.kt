@@ -100,7 +100,7 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
 
     override fun onSaveInstanceState(outState: Bundle) {
         if (controller != null) {
-            outState!!.putInt(EXTRA_COLOR, controller!!.color)
+            outState.putInt(EXTRA_COLOR, controller!!.color)
         }
         super.onSaveInstanceState(outState)
     }

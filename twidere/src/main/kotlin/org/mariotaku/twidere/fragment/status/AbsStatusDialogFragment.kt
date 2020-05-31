@@ -80,7 +80,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
 
         val dialog = builder.create()
         dialog.onShow {
-            val context = it.context ?: return@onShow
+            val context = it.context
             it.applyTheme()
 
             val am = AccountManager.get(context)

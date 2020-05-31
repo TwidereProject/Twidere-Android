@@ -241,7 +241,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         })
         adapter = StatusDetailsAdapter(this)
         layoutManager = StatusListLinearLayoutManager(context, recyclerView)
-        mItemDecoration = StatusDividerItemDecoration(context, adapter, layoutManager.orientation)?.apply {
+        mItemDecoration = StatusDividerItemDecoration(context, adapter, layoutManager.orientation).apply {
             recyclerView.addItemDecoration(this)
         }
         layoutManager.recycleChildrenOnDetach = true

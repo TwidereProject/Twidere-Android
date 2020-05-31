@@ -117,7 +117,7 @@ class StatusDetailsAdapter(
         inflater = LayoutInflater.from(context)
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context!!,
                 preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
-        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context!!, preferences)
+        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
         listener.setAdapter(this)
         twidereLinkify = TwidereLinkify(listener)
     }

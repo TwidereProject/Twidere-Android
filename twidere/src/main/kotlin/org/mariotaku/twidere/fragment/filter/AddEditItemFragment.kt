@@ -253,7 +253,7 @@ class AddEditItemFragment : BaseDialogFragment() {
                         Toast.LENGTH_SHORT).show()
             } else {
                 val idWhere = Expression.equals(Filters._ID, rowId).sql
-                resolver?.update(uri, values, idWhere, null)
+                resolver.update(uri, values, idWhere, null)
             }
         } else {
             resolver?.insert(uri, values)

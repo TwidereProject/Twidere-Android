@@ -34,7 +34,7 @@ class RecyclerViewScrollHandler<A>(contentListSupport: ContentListSupport<A>, vi
     }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        val scrollState = recyclerView!!.scrollState
+        val scrollState = recyclerView.scrollState
         scrollHandler.handleScroll(dy, scrollState, oldState, RecyclerView.SCROLL_STATE_IDLE)
         oldState = scrollState
     }

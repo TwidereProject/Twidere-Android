@@ -238,7 +238,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     }
 
     private fun createOrOpenConversation() {
-        val account = this.account ?: return
+        val account = this.account
         val context = context ?: return
         val activity = activity ?: return
         val selected = this.selectedRecipients

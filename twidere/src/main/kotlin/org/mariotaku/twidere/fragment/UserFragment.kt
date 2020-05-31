@@ -667,7 +667,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         actionBarShadowColor = 0xA0000000.toInt()
         val args = arguments
         val accountKey = args?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: run {
-            activity?.finish()
+            activity.finish()
             return
         }
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
