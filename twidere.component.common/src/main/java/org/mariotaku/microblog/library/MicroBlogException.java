@@ -206,7 +206,7 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
             try {
                 final String retryAfterStr = httpResponse.getHeader("Retry-After");
                 if (retryAfterStr != null) {
-                    retryAfter = Integer.valueOf(retryAfterStr);
+                    retryAfter = Integer.parseInt(retryAfterStr);
                 }
             } catch (final NumberFormatException ignore) {
             }
