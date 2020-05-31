@@ -66,12 +66,10 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.reset: {
-                final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
-                f.show(getFragmentManager(), "reset_keyboard_shortcut_confirm");
-                return true;
-            }
+        if (item.getItemId() == R.id.reset) {
+            final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
+            f.show(getFragmentManager(), "reset_keyboard_shortcut_confirm");
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -132,11 +130,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             implements OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE: {
-                    keyboardShortcutsHandler.reset();
-                    break;
-                }
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                keyboardShortcutsHandler.reset();
             }
         }
 
