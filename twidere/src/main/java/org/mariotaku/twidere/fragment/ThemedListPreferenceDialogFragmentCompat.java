@@ -47,17 +47,15 @@ public class ThemedListPreferenceDialogFragmentCompat extends ThemedPreferenceDi
         }
         mClickedDialogEntryIndex = preference.findIndexOfValue(preference.getValue());
         builder.setSingleChoiceItems(entries, mClickedDialogEntryIndex,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        mClickedDialogEntryIndex = which;
-                        /*
-                         * Clicking on an item simulates the positive button
-                         * click, and dismisses the dialog.
-                         */
-                        ThemedListPreferenceDialogFragmentCompat.this.onClick(dialog,
-                                DialogInterface.BUTTON_POSITIVE);
-                        dialog.dismiss();
-                    }
+                (dialog, which) -> {
+                    mClickedDialogEntryIndex = which;
+                    /*
+                     * Clicking on an item simulates the positive button
+                     * click, and dismisses the dialog.
+                     */
+                    ThemedListPreferenceDialogFragmentCompat.this.onClick(dialog,
+                            DialogInterface.BUTTON_POSITIVE);
+                    dialog.dismiss();
                 });
         /*
          * The typical interaction for list-based dialogs is to have

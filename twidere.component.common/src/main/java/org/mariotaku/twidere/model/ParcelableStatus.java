@@ -20,7 +20,6 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.IntDef;
 import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,13 +51,7 @@ import java.util.Comparator;
 @ParcelablePlease
 public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus>, Cloneable {
 
-    public static final Comparator<ParcelableStatus> REVERSE_COMPARATOR = new Comparator<ParcelableStatus>() {
-
-        @Override
-        public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
-            return object2.compareTo(object1);
-        }
-    };
+    public static final Comparator<ParcelableStatus> REVERSE_COMPARATOR = (object1, object2) -> object2.compareTo(object1);
     public static final Creator<ParcelableStatus> CREATOR = new Creator<ParcelableStatus>() {
         @Override
         public ParcelableStatus createFromParcel(Parcel source) {
