@@ -92,8 +92,8 @@ public final class ViewSupport {
         if (cls.isAssignableFrom(view.getClass())) return (T) view;
         if (view instanceof ViewGroup) {
             for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
-                final View found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
-                if (found != null) return (T) found;
+                final T found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
+                if (found != null) return found;
             }
         }
         return null;
