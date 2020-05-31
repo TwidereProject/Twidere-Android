@@ -372,7 +372,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val fragmentArgs = arguments
         val accountKey = fragmentArgs!!.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val statusId = fragmentArgs.getString(EXTRA_STATUS_ID)
-        return ParcelableStatusLoader(activity!!, false, fragmentArgs, accountKey, statusId)
+        return ParcelableStatusLoader(requireActivity(), false, fragmentArgs, accountKey, statusId)
     }
 
 
@@ -640,7 +640,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val weakThis = WeakReference(this)
         (showProgressDialog("get_language_settings") and task {
             val fragment = weakThis.get() ?: throw InterruptedException()
-            val microBlog = account.newMicroBlogInstance(fragment.context!!, MicroBlog::class.java)
+            val microBlog = account.newMicroBlogInstance(fragment.requireContext(), MicroBlog::class.java)
             return@task Pair(microBlog.accountSettings.language,
                     microBlog.languages.map { TranslationDestinationDialogFragment.DisplayLanguage(it.name, it.code) })
         }).successUi { (_, settings) ->
@@ -648,7 +648,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val fragment = weakThis.get() ?: return@successUi
             val df = TranslationDestinationDialogFragment.create(languages, accountLanguage)
             df.setTargetFragment(fragment, 0)
-            df.show(fragment.fragmentManager!!, "translation_destination_settings")
+            df.show(fragment.requireFragmentManager(), "translation_destination_settings")
         }.alwaysUi {
             val fragment = weakThis.get() ?: return@alwaysUi
             fragment.dismissProgressDialog("get_language_settings")
@@ -672,7 +672,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(android.R.string.dialog_alert_title)
             builder.setMessage(R.string.sensitive_content_warning)
             builder.setPositiveButton(android.R.string.ok, this)
@@ -684,7 +684,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     internal class LoadTranslationTask(fragment: StatusFragment, val status: ParcelableStatus) :
-            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.context!!, status.account_key) {
+            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.requireContext(), status.account_key) {
 
         private val weakFragment = WeakReference(fragment)
 

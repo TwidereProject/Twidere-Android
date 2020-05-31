@@ -185,7 +185,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableActivity>> {
         val fromUser = args?.getBoolean(EXTRA_FROM_USER)
         args?.remove(EXTRA_FROM_USER)
-        return onCreateActivitiesLoader(activity!!, args!!, fromUser!!)
+        return onCreateActivitiesLoader(requireActivity(), args!!, fromUser!!)
     }
 
     protected fun saveReadPosition() {

@@ -97,7 +97,7 @@ class ColorPickerPreference(context: Context, attrs: AttributeSet? = null) :
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val preference = preference as ColorPickerPreference
             val context = context
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(preference.dialogTitle)
             builder.setView(R.layout.cp__dialog_color_picker)
             builder.setPositiveButton(android.R.string.ok, this)

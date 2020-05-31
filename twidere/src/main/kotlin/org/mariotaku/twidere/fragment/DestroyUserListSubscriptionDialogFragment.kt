@@ -47,7 +47,7 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val userList = userList
         if (userList != null) {
             builder.setTitle(getString(R.string.unsubscribe_from_user_list, userList.name))

@@ -47,7 +47,7 @@ class PhishingLinkWarningDialogFragment : BaseDialogFragment(), OnClickListener 
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(android.R.string.dialog_alert_title)
         builder.setView(R.layout.dialog_phishing_link_warning)
         builder.setPositiveButton(android.R.string.ok, this)

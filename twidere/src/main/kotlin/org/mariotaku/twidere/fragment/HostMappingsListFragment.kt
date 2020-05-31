@@ -57,7 +57,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        hostMapping = activity!!.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        hostMapping = requireActivity().getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
         hostMapping.registerOnSharedPreferenceChangeListener(this)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
@@ -65,7 +65,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): HostMappingAdapter {
-        return HostMappingAdapter(activity!!)
+        return HostMappingAdapter(requireActivity())
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -179,7 +179,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_add_host_mapping)
             builder.setTitle(R.string.add_host_mapping)
             builder.positive(android.R.string.ok, this::onPositiveClick)

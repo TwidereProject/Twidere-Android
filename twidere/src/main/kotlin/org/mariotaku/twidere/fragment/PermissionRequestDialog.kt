@@ -18,10 +18,10 @@ import org.mariotaku.twidere.extension.onShow
 class PermissionRequestDialog : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
-        val permissions = arguments!!.getStringArray(EXTRA_PERMISSIONS).orEmpty()
-        val requestCode = arguments!!.getInt(EXTRA_REQUEST_CODE)
-        builder.setMessage(arguments!!.getString(EXTRA_MESSAGE))
+        val builder = AlertDialog.Builder(requireContext())
+        val permissions = requireArguments().getStringArray(EXTRA_PERMISSIONS).orEmpty()
+        val requestCode = requireArguments().getInt(EXTRA_REQUEST_CODE)
+        builder.setMessage(requireArguments().getString(EXTRA_MESSAGE))
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
             activity?.let { ActivityCompat.requestPermissions(it, permissions, requestCode) }
         }

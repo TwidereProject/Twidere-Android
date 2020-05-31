@@ -182,13 +182,13 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         super.onActivityCreated(savedInstanceState)
         drawerCallback = SimpleDrawerCallback(recyclerView)
 
-        val backgroundColor = ThemeUtils.getColorBackground(context!!)
+        val backgroundColor = ThemeUtils.getColorBackground(requireContext())
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
-        adapter = onCreateAdapter(context!!, requestManager)
-        layoutManager = onCreateLayoutManager(context!!)
+        adapter = onCreateAdapter(requireContext(), requestManager)
+        layoutManager = onCreateLayoutManager(requireContext())
         scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
 
         recyclerView.layoutManager = layoutManager
@@ -216,7 +216,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         } else {
             recyclerView.setOnTouchListener(scrollListener.touchListener)
         }
-        setupRecyclerView(context!!, recyclerView)
+        setupRecyclerView(requireContext(), recyclerView)
         recyclerView.adapter = adapter
 
         scrollListener.touchSlop = ViewConfiguration.get(context).scaledTouchSlop

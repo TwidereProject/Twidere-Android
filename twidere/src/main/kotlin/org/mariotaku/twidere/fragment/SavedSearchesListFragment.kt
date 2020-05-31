@@ -75,7 +75,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ResponseList<SavedSearch>?> {
-        return SavedSearchesLoader(activity!!, accountKey)
+        return SavedSearchesLoader(requireActivity(), accountKey)
     }
 
     override fun onItemLongClick(view: AdapterView<*>, child: View, position: Int, id: Long): Boolean {

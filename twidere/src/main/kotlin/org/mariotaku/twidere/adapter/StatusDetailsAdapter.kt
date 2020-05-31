@@ -51,7 +51,7 @@ import org.mariotaku.twidere.view.holder.status.DetailStatusViewHolder
 
 class StatusDetailsAdapter(
         val fragment: StatusFragment
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.context!!, fragment.requestManager),
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.requireContext(), fragment.requestManager),
         IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
 
     override val twidereLinkify: TwidereLinkify

@@ -132,7 +132,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableGroup>?> {
         val fromUser = args?.getBoolean(EXTRA_FROM_USER)
         args?.remove(EXTRA_FROM_USER)
-        return onCreateUserListsLoader(activity!!, args!!, fromUser!!)
+        return onCreateUserListsLoader(requireActivity(), args!!, fromUser!!)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableGroup>?>) {

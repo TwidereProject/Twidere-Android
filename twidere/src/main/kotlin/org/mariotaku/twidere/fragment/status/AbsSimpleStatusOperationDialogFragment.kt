@@ -46,7 +46,7 @@ abstract class AbsSimpleStatusOperationDialogFragment : BaseDialogFragment(), Di
     }
 
     final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton(android.R.string.ok, this)

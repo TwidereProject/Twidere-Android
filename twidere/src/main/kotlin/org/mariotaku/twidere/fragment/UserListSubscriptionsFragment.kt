@@ -33,7 +33,7 @@ class UserListSubscriptionsFragment : ParcelableUserListsFragment() {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserListSubscriptionsLoader(activity!!, accountKey, userKey, screenName, data).apply {
+        return UserListSubscriptionsLoader(requireActivity(), accountKey, userKey, screenName, data).apply {
             pagination = args.getParcelable(EXTRA_PAGINATION)
         }
     }

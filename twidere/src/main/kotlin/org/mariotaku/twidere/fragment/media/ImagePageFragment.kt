@@ -50,7 +50,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         get() = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy {
-        return@lazy SizedResultCreator(context!!)
+        return@lazy SizedResultCreator(requireContext())
     }
 
     private var mediaLoadState: Int = 0

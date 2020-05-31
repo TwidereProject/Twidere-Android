@@ -68,12 +68,12 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     private lateinit var adapter: DummyItemAdapter
 
     final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = Builder(context!!)
+        val builder = Builder(requireContext())
         val accountKey = this.accountKey
 
         builder.setupAlertDialog()
 
-        adapter = DummyItemAdapter(context!!, requestManager = requestManager)
+        adapter = DummyItemAdapter(requireContext(), requestManager = requestManager)
         adapter.showCardActions = false
         adapter.showCardNumbers = false
         adapter.showAccountsColor = true

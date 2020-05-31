@@ -48,7 +48,7 @@ abstract class AbsUserMuteBlockDialogFragment : BaseDialogFragment(), DialogInte
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(getTitle(user))
         builder.setView(R.layout.dialog_block_mute_filter_user_confirm)
         builder.setPositiveButton(getPositiveButtonTitle(user), this)

@@ -132,7 +132,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUser>> {
         progressContainer.visibility = View.VISIBLE
         editProfileContent.visibility = View.GONE
-        return ParcelableUserLoader(activity!!, accountKey, accountKey, null, arguments, false, false)
+        return ParcelableUserLoader(requireActivity(), accountKey, accountKey, null, arguments, false, false)
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
@@ -175,7 +175,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        if (!Utils.isMyAccount(activity!!, accountKey)) {
+        if (!Utils.isMyAccount(requireActivity(), accountKey)) {
             activity?.finish()
             return
         }
@@ -379,7 +379,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             private val linkColor: Int,
             private val backgroundColor: Int
     ) : AbsAccountRequestTask<Any?, Pair<ParcelableUser, AccountDetails>,
-            UserProfileEditorFragment>(fragment.context!!, accountKey) {
+            UserProfileEditorFragment>(fragment.requireContext(), accountKey) {
 
         init {
             this.callback = fragment
@@ -490,7 +490,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             accountKey: UserKey,
             imageUri: Uri,
             deleteImage: Boolean
-    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
+    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.requireContext(), accountKey, imageUri, deleteImage) {
 
         init {
             callback = fragment
@@ -513,7 +513,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             imageUri: Uri,
             tile: Boolean,
             deleteImage: Boolean
-    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri,
+    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.requireContext(), accountKey, imageUri,
             tile, deleteImage) {
 
         init {
@@ -538,7 +538,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             accountKey: UserKey,
             imageUri: Uri,
             deleteImage: Boolean
-    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
+    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.requireContext(), accountKey, imageUri, deleteImage) {
 
         init {
             callback = fragment

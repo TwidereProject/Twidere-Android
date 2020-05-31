@@ -48,7 +48,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
     private var filterItems: Array<FilterItemInfo>? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
         val nameFirst = preferences[nameFirstKey]

@@ -388,7 +388,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     class RestartConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(activity!!)
+            val builder = AlertDialog.Builder(requireActivity())
             if (arguments?.getBoolean(EXTRA_SHOULD_TERMINATE) == true) {
                 builder.setMessage(R.string.app_terminate_confirm)
                 builder.setNegativeButton(R.string.action_dont_terminate, this)

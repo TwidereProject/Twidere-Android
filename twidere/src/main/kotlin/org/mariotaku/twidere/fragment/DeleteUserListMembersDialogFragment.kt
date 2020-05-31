@@ -50,7 +50,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val users = users
         val userList = userList
         if (users == null || userList == null) throw NullPointerException()

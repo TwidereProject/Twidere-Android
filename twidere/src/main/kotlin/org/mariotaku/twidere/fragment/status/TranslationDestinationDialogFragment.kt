@@ -45,7 +45,7 @@ class TranslationDestinationDialogFragment : BaseDialogFragment() {
     private val currentIndex = AtomicInteger(-1)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val languages = arguments?.getTypedArray<DisplayLanguage>(EXTRA_LANGUAGES)?.sortedArrayWith(LanguageComparator()) ?: emptyArray()
         val selectedLanguage = preferences[translationDestinationKey] ?: arguments?.getString(EXTRA_SELECTED_LANGUAGE)
         val selectedIndex = languages.indexOfFirst { selectedLanguage == it.code }

@@ -30,7 +30,7 @@ class InvalidAccountAlertActivity : FragmentActivity() {
 
     class InvalidAccountAlertDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.title_error_invalid_account)
             builder.setMessage(R.string.message_error_invalid_account)
             builder.setPositiveButton(android.R.string.ok) { _, _ ->

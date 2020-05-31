@@ -57,7 +57,7 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val nick = arguments?.getString(EXTRA_NAME)
         val context = activity
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(R.string.title_set_nickname)
         builder.setPositiveButton(android.R.string.ok, this)
         if (!nick.isNullOrEmpty()) {

@@ -48,7 +48,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val nameFirst = preferences[nameFirstKey]
         val displayName = userColorNameManager.getDisplayName(user, nameFirst)
         builder.setTitle(getString(R.string.unfollow_user, displayName))

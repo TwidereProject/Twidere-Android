@@ -59,7 +59,7 @@ import org.mariotaku.twidere.util.Utils
 abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
+        get() = Utils.getAccountKeys(requireContext(), arguments) ?: DataStoreUtils.getActivatedAccountKeys(requireContext())
 
     abstract val contentUri: Uri
 

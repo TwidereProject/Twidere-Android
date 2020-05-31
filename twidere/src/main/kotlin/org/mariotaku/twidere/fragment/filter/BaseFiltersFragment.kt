@@ -179,7 +179,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val selection = Expression.isNull(Columns.Column(Filters.USER_KEY))
-        return CursorLoader(activity!!, contentUri, contentColumns, selection.sql, null, sortOrder)
+        return CursorLoader(requireActivity(), contentUri, contentColumns, selection.sql, null, sortOrder)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
