@@ -31,7 +31,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
-import java.lang.Exception
 
 class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener, View.OnClickListener {
 

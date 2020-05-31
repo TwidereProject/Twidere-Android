@@ -306,7 +306,7 @@ class StatusDetailsAdapter(
         when (holder.itemViewType) {
             VIEW_TYPE_DETAIL_STATUS -> {
                 holder as DetailStatusViewHolder
-                payloads.forEach { it ->
+                payloads.forEach {
                     when (it) {
                         is StatusFragment.StatusActivity -> {
                             holder.updateStatusActivity(it)

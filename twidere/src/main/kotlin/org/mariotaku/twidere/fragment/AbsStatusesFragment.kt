@@ -272,7 +272,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val firstLoad = adapterData.isNullOrEmpty()
 
         var lastReadId: Long = -1
-        var lastReadViewTop: Int = 0
+        var lastReadViewTop = 0
         var loadMore = false
         var wasAtTop = false
         // 1. Save current read position if not first load

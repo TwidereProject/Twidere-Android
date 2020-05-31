@@ -24,7 +24,6 @@ import android.os.Bundle
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.Loader
-import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*

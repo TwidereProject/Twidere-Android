@@ -38,10 +38,9 @@ abstract class AbsFriendshipOperationTask(
         val event = FriendshipTaskEvent(action, params.accountKey, params.userKey)
         event.isFinished = true
         if (result != null) {
-            val user = result
-            showSucceededMessage(params, user)
+            showSucceededMessage(params, result)
             event.isSucceeded = true
-            event.user = user
+            event.user = result
         } else if (exception != null) {
             showErrorMessage(params, exception)
         }

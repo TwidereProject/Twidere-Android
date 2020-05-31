@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.bumptech.glide.Glide
 import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayAdapter

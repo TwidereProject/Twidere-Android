@@ -57,8 +57,7 @@ class VariousItemsAdapter(
             }
             VIEW_TYPE_HASHTAG -> {
                 val view = inflater.inflate(R.layout.list_item_two_line_small, parent, false)
-                val holder = HashtagViewHolder(view, hashtagClickListener)
-                return holder
+                return HashtagViewHolder(view, hashtagClickListener)
             }
         }
         throw UnsupportedOperationException()

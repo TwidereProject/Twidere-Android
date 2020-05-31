@@ -8,14 +8,12 @@ import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import okio.ByteString
 import okio.ByteString.Companion.decodeBase64
 import okio.ByteString.Companion.encodeUtf8
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.twidere.TwidereConstants.AUTHORITY_TWIDERE_CACHE
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
 import org.mariotaku.twidere.annotation.CacheFileType
-import org.mariotaku.twidere.extension.get
 import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.JsonSerializer

@@ -46,7 +46,6 @@ import androidx.appcompat.view.SupportMenuInflater
 import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
-import androidx.core.view.isVisible
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader

@@ -232,7 +232,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
     private fun updateRetweetedStatuses(status: ParcelableStatus?) {
         val data = adapterData
-        if (status == null || status.retweet_id == null || data == null) return
+        if (status?.retweet_id == null || data == null) return
         data.forEach { orig ->
             if (orig.account_key == status.account_key && TextUtils.equals(orig.id, status.retweet_id)) {
                 orig.my_retweet_id = status.my_retweet_id

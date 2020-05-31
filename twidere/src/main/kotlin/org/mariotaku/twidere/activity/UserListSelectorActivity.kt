@@ -28,7 +28,6 @@ import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
 import androidx.loader.app.hasRunningLoadersSafe
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.contains

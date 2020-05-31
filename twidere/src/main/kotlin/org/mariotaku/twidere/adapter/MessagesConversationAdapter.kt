@@ -120,8 +120,7 @@ class MessagesConversationAdapter(
             }
             ITEM_LOAD_OLDER_INDICATOR -> {
                 val view = inflater.inflate(LoadIndicatorViewHolder.layoutResource, parent, false)
-                val holder = LoadIndicatorViewHolder(view)
-                return holder
+                return LoadIndicatorViewHolder(view)
             }
         }
         throw UnsupportedOperationException()

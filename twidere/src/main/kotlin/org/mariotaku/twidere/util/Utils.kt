@@ -513,7 +513,7 @@ object Utils {
     }
 
     internal fun isExtensionUseJSON(info: ResolveInfo?): Boolean {
-        if (info == null || info.activityInfo == null) return false
+        if (info?.activityInfo == null) return false
         val activityInfo = info.activityInfo
         if (activityInfo.metaData != null && activityInfo.metaData.containsKey(METADATA_KEY_EXTENSION_USE_JSON))
             return activityInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON)
@@ -606,7 +606,7 @@ object Utils {
 
     fun copyStream(input: InputStream, output: OutputStream, length: Int) {
         val buffer = ByteArray(1024)
-        var bytesRead: Int = 0
+        var bytesRead = 0
         do {
             val read = input.read(buffer)
             if (read == -1) {

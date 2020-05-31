@@ -23,7 +23,6 @@ import android.content.Context
 import android.os.Bundle
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.Loader
-import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
 import androidx.loader.app.hasRunningLoadersSafe
 import com.bumptech.glide.RequestManager

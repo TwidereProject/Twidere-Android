@@ -38,7 +38,7 @@ fun Account.getCredentials(am: AccountManager): Credentials {
             if (token != null) return@run token
         }
         return@run null
-    } ?: throw NullPointerException("AuthToken is null for ${this}")
+    } ?: throw NullPointerException("AuthToken is null for $this")
     return parseCredentials(authToken, getCredentialsType(am))
 }
 

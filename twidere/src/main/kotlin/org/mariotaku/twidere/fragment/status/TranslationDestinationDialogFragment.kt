@@ -21,7 +21,6 @@ package org.mariotaku.twidere.fragment.status
 
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.parcel.Parcelize

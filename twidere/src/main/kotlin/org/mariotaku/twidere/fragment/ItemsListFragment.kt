@@ -3,7 +3,6 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader

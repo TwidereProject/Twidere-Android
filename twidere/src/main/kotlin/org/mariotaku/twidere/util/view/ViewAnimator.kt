@@ -62,8 +62,7 @@ class ViewAnimator {
                 animator.end()
             }
         }
-        val newView = view
-        currentInAnimator = managedViews[newView]?.inAnimator?.also { animator ->
+        currentInAnimator = managedViews[view]?.inAnimator?.also { animator ->
             animator.addListener(object : SimpleAnimatorListener() {
                 override fun onAnimationEnd(animation: Animator) {
                     animator.removeListener(this)
@@ -74,7 +73,7 @@ class ViewAnimator {
                 }
 
                 override fun onAnimationStart(animation: Animator) {
-                    newView?.visibility = View.VISIBLE
+                    view?.visibility = View.VISIBLE
                 }
             })
             if (animate) {

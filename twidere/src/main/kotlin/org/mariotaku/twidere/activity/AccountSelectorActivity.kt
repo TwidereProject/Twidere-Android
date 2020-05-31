@@ -34,7 +34,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.extension.model.isOAuth
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils

@@ -19,6 +19,4 @@
 
 package androidx.recyclerview.widget
 
-import androidx.recyclerview.widget.RecyclerView
-
 val RecyclerView.LayoutManager.recyclerView: RecyclerView? get() = mRecyclerView
