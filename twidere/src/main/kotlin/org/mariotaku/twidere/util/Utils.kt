@@ -118,11 +118,7 @@ object Utils {
         // events. Jelly Bean (SDK 16) added support for speaking text verbatim
         // using the ANNOUNCEMENT event type.
         val eventType: Int
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            eventType = AccessibilityEvent.TYPE_VIEW_FOCUSED
-        } else {
-            eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
-        }
+        eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
 
         // Construct an accessibility event with the minimum recommended
         // attributes. An event without a class name or package may be dropped.
@@ -213,7 +209,6 @@ object Utils {
     }
 
     fun isComposeNowSupported(context: Context): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return false
         return hasNavBar(context)
     }
 

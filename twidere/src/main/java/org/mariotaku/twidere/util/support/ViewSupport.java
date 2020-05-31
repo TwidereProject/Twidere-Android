@@ -47,13 +47,8 @@ public final class ViewSupport {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static void setBackground(final View view, final Drawable background) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackgroundDrawable(background);
-        } else {
-            ViewAccessorJB.setBackground(view, background);
-        }
+        ViewAccessorJB.setBackground(view, background);
     }
 
     public static void setButtonTintList(CompoundButton view, ColorStateList list) {
@@ -130,7 +125,6 @@ public final class ViewSupport {
         }
 
         static void setBackground(final View view, final Drawable background) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
             view.setBackground(background);
         }
     }
