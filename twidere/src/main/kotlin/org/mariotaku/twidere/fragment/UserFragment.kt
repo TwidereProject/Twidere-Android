@@ -96,6 +96,7 @@ import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -1130,7 +1131,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             return
         }
         val spec = pagerAdapter.get(viewPager.currentItem)
-        assert(spec.type != null)
+        if (BuildConfig.DEBUG && spec.type == null) { error("Assertion failed") }
         when (spec.type) {
             TAB_TYPE_STATUSES, TAB_TYPE_STATUSES_WITH_REPLIES -> {
                 actionBar.subtitle = resources.getQuantityString(R.plurals.N_statuses,

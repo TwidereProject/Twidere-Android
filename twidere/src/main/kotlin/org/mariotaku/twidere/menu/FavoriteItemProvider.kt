@@ -29,6 +29,7 @@ import androidx.appcompat.widget.ActionMenuView
 import android.view.MenuItem
 import android.view.View
 import org.mariotaku.ktextension.weak
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.extension.view.findItemView
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable.Style
@@ -52,7 +53,7 @@ class FavoriteItemProvider(context: Context) : ActionProvider(context) {
     }
 
     fun init(menuBar: ActionMenuView, item: MenuItem) {
-        assert(MenuItemCompat.getActionProvider(item) === this)
+        if (BuildConfig.DEBUG && MenuItemCompat.getActionProvider(item) !== this) { error("Assertion failed") }
         val icon = ContextCompat.getDrawable(context, this.icon)
         val drawable = LikeAnimationDrawable(icon, defaultColor, activatedColor,
                 if (useStar) Style.FAVORITE else Style.LIKE)

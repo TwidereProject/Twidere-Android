@@ -31,6 +31,7 @@ import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
 import org.mariotaku.ktextension.nextPowerOf2
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -96,7 +97,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
     }
 
     override fun getImageSource(data: CacheDownloadLoader.Result): ImageSource {
-        assert(data.cacheUri != null)
+        if (BuildConfig.DEBUG && data.cacheUri == null) { error("Assertion failed") }
         if (data !is SizedResult) {
             return super.getImageSource(data)
         }
@@ -108,7 +109,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     override fun getPreviewImageSource(data: CacheDownloadLoader.Result): ImageSource? {
         if (data !is SizedResult) return null
-        assert(data.cacheUri != null)
+        if (BuildConfig.DEBUG && data.cacheUri == null) { error("Assertion failed") }
         return ImageSource.uri(UriUtils.appendQueryParameters(data.cacheUri, QUERY_PARAM_PREVIEW, true))
     }
 
