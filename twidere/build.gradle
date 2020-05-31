@@ -174,12 +174,12 @@ ext {
     libVersions = [
             Kovenant          : '3.3.0',
             Mime4J            : '0.7.2',
-            Dagger            : '2.11',
+            Dagger            : '2.28',
             Exoplayer         : '2.11.4',
             Glide             : '4.11.0',
             MediaViewerLibrary: '0.9.23',
             PlayServices      : '17.0.0',
-            Stetho            : '1.5.0',
+            Stetho            : '1.5.1',
     ]
 }
 
@@ -202,11 +202,11 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.core:core:1.2.0'
     implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha01'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.0-rc01'
+    implementation 'androidx.exifinterface:exifinterface:1.2.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
@@ -217,12 +217,12 @@ dependencies {
     implementation 'com.twitter:twitter-text:1.14.7'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     implementation 'com.squareup:otto:1.3.8'
-    implementation 'dnsjava:dnsjava:2.1.8'
-    implementation 'com.commonsware.cwac:layouts:0.4.3'
+    implementation 'dnsjava:dnsjava:2.1.9'
+    implementation 'com.commonsware.cwac:layouts:0.4.5'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     implementation 'com.pnikosis:materialish-progress:1.7'
     implementation 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     implementation 'com.sprylab.android.texturevideoview:texturevideoview:1.2.1'
     implementation 'com.squareup:pollexor:2.0.4'
     implementation "org.apache.james:apache-mime4j-core:${libVersions['Mime4J']}"
@@ -232,14 +232,14 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-core:${sharedVersions['Jackson']}"
     implementation "com.hannesdorfmann.parcelableplease:annotation:${sharedVersions['ParcelablePlease']}"
     kapt "com.hannesdorfmann.parcelableplease:processor:${sharedVersions['ParcelablePlease']}"
-    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
-    implementation 'com.squareup.okio:okio:2.4.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.12'
+    implementation 'com.squareup.okio:okio:2.6.0'
     implementation 'com.lnikkila:extendedtouchview:0.1.1'
     implementation "com.google.dagger:dagger:${libVersions['Dagger']}"
     kapt "com.google.dagger:dagger-compiler:${libVersions['Dagger']}"
-    implementation 'org.attoparser:attoparser:2.0.4.RELEASE'
-    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
-    implementation 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
+    implementation 'org.attoparser:attoparser:2.0.5.RELEASE'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
+    implementation 'net.ypresto.androidtranscoder:android-transcoder:0.3.0'
     implementation "com.google.android.exoplayer:exoplayer-core:${libVersions['Exoplayer']}"
     implementation "com.google.android.exoplayer:exoplayer-ui:${libVersions['Exoplayer']}"
     implementation "com.google.android.exoplayer:extension-okhttp:${libVersions['Exoplayer']}"
@@ -247,7 +247,7 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:${libVersions['Glide']}@aar"
     kapt "com.github.bumptech.glide:compiler:${libVersions['Glide']}"
     implementation 'jp.wasabeef:glide-transformations:4.1.0'
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.6'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
 
 /** Custom dependencies **/
@@ -263,7 +263,7 @@ dependencies {
     implementation "com.github.mariotaku.CommonsLibrary:parcel:${sharedVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text:${sharedVersions['MariotakuCommons']}"
     implementation "com.github.mariotaku.CommonsLibrary:text-kotlin:${sharedVersions['MariotakuCommons']}"
-    implementation 'com.github.mariotaku:KPreferences:0.9.7'
+    implementation 'com.github.mariotaku:KPreferences:0.9.8'
     implementation "com.github.mariotaku.MediaViewerLibrary:base:${libVersions['MediaViewerLibrary']}"
     implementation "com.github.mariotaku.MediaViewerLibrary:subsample-image-view:${libVersions['MediaViewerLibrary']}"
     implementation 'com.github.mariotaku:MessageBubbleView:3.5'
@@ -282,7 +282,7 @@ dependencies {
 
 /** Flavor dependencies **/
     fdroidImplementation 'org.osmdroid:osmdroid-android:5.6.5'
-    fdroidImplementation 'ch.acra:acra:4.9.2'
+    fdroidImplementation 'ch.acra:acra:4.11'
 
     if (enableGoogleVariant) {
         // START Non-FOSS component
@@ -292,7 +292,7 @@ dependencies {
         googleImplementation 'com.google.maps.android:android-maps-utils:0.6.2'
         googleImplementation 'com.anjlab.android.iab.v3:library:1.1.0'
         googleImplementation 'com.dropbox.core:dropbox-core-sdk:3.1.3'
-        googleImplementation('com.google.apis:google-api-services-drive:v3-rev193-1.25.0') {
+        googleImplementation('com.google.apis:google-api-services-drive:v3-rev195-1.25.0') {
             exclude group: 'org.apache.httpcomponents'
         }
         implementation 'com.google.guava:guava:28.2-android'
@@ -301,9 +301,9 @@ dependencies {
 
     debugImplementation "com.facebook.stetho:stetho:${libVersions['Stetho']}"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
-    debugImplementation 'com.github.mariotaku:StethoBeanShellREPL:0.1'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
-    debugImplementation('com.jayway.jsonpath:json-path:2.2.0') {
+    debugImplementation 'com.github.mariotaku:StethoBeanShellREPL:0.5'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.3'
+    debugImplementation('com.jayway.jsonpath:json-path:2.4.0') {
         exclude group: 'net.minidev', module: 'json-smart'
     }
     // Stetho dependency, see https://g.co/androidstudio/app-test-app-conflict
