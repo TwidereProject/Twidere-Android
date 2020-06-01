@@ -42,7 +42,7 @@ class BlockStatusUsersDialogFragment : BaseDialogFragment() {
     private val status: ParcelableStatus get() = arguments?.getParcelable(EXTRA_STATUS)!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val referencedUsers = status.referencedUsers
         val nameFirst = preferences[nameFirstKey]
         val displayNames = referencedUsers.map {
@@ -50,7 +50,7 @@ class BlockStatusUsersDialogFragment : BaseDialogFragment() {
         }.toTypedArray()
         builder.setTitle(R.string.action_status_block_users)
         builder.setItems(displayNames) { _, which ->
-            CreateUserBlockDialogFragment.show(fragmentManager!!, referencedUsers[which])
+            CreateUserBlockDialogFragment.show(requireFragmentManager(), referencedUsers[which])
         }
         val dialog = builder.create()
         dialog.applyOnShow { applyTheme() }

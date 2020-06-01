@@ -2,8 +2,6 @@ package org.mariotaku.twidere.preference;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 
@@ -160,42 +157,33 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             final SharedPreferences preferences = preference.getSharedPreferences();
             preference.setValue(preference.getPersistedString(null));
             builder.setTitle(preference.getDialogTitle());
-            builder.setSingleChoiceItems(preference.mBackgroundEntries, preference.getValueIndex(), new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    preference.setSelectedOption(which);
-                    updateAlphaVisibility();
-                }
+            builder.setSingleChoiceItems(preference.mBackgroundEntries, preference.getValueIndex(), (dialog, which) -> {
+                preference.setSelectedOption(which);
+                updateAlphaVisibility();
             });
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
             final Dialog dialog = builder.create();
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialog) {
-                    final AlertDialog alertDialog = (AlertDialog) dialog;
-                    DialogExtensionsKt.applyTheme(alertDialog);
-                    if (preferences != null) {
-                        final LayoutInflater inflater = alertDialog.getLayoutInflater();
-                        final ListView listView = alertDialog.getListView();
-                        assert listView != null;
-                        final ViewGroup listViewParent = (ViewGroup) listView.getParent();
-                        listViewParent.removeView(listView);
-                        final View view = inflater.inflate(R.layout.dialog_theme_background_preference, listViewParent);
-                        ((ViewGroup) view.findViewById(R.id.list_container)).addView(listView);
-                        mAlphaContainer = view.findViewById(R.id.alpha_container);
-                        mAlphaSlider = view.findViewById(R.id.alpha_slider);
-                        mAlphaSlider.setMax(MAX_ALPHA - MIN_ALPHA);
-                        mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA) - MIN_ALPHA);
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                preference.setSelectedOption(position);
-                                updateAlphaVisibility();
-                            }
-                        });
+            dialog.setOnShowListener(dialog1 -> {
+                final AlertDialog alertDialog = (AlertDialog) dialog1;
+                DialogExtensionsKt.applyTheme(alertDialog);
+                if (preferences != null) {
+                    final LayoutInflater inflater = alertDialog.getLayoutInflater();
+                    final ListView listView = alertDialog.getListView();
+                    assert listView != null;
+                    final ViewGroup listViewParent = (ViewGroup) listView.getParent();
+                    listViewParent.removeView(listView);
+                    final View view = inflater.inflate(R.layout.dialog_theme_background_preference, listViewParent);
+                    ((ViewGroup) view.findViewById(R.id.list_container)).addView(listView);
+                    mAlphaContainer = view.findViewById(R.id.alpha_container);
+                    mAlphaSlider = view.findViewById(R.id.alpha_slider);
+                    mAlphaSlider.setMax(MAX_ALPHA - MIN_ALPHA);
+                    mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA) - MIN_ALPHA);
+                    listView.setOnItemClickListener((parent, view1, position, id) -> {
+                        preference.setSelectedOption(position);
                         updateAlphaVisibility();
-                    }
+                    });
+                    updateAlphaVisibility();
                 }
             });
             return dialog;

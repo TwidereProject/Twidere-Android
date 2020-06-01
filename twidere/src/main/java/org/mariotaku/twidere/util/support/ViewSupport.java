@@ -47,13 +47,8 @@ public final class ViewSupport {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static void setBackground(final View view, final Drawable background) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackgroundDrawable(background);
-        } else {
-            ViewAccessorJB.setBackground(view, background);
-        }
+        ViewAccessorJB.setBackground(view, background);
     }
 
     public static void setButtonTintList(CompoundButton view, ColorStateList list) {
@@ -97,8 +92,8 @@ public final class ViewSupport {
         if (cls.isAssignableFrom(view.getClass())) return (T) view;
         if (view instanceof ViewGroup) {
             for (int i = 0, j = ((ViewGroup) view).getChildCount(); i < j; i++) {
-                final View found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
-                if (found != null) return (T) found;
+                final T found = findViewByType(((ViewGroup) view).getChildAt(i), cls);
+                if (found != null) return found;
             }
         }
         return null;
@@ -130,7 +125,6 @@ public final class ViewSupport {
         }
 
         static void setBackground(final View view, final Drawable background) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
             view.setBackground(background);
         }
     }
@@ -142,10 +136,8 @@ public final class ViewSupport {
 
         static void setForeground(final View view, final Drawable foreground) {
             if (view instanceof FrameLayout) {
-                //noinspection RedundantCast
                 ((FrameLayout) view).setForeground(foreground);
             } else if (view instanceof IForegroundView) {
-                //noinspection RedundantCast
                 ((IForegroundView) view).setForeground(foreground);
             }
         }

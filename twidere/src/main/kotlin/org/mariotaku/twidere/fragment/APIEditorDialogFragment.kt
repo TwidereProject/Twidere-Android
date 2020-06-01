@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.bumptech.glide.Glide
 import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayAdapter
@@ -43,7 +42,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
     private lateinit var apiConfig: CustomAPIConfig
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setView(R.layout.dialog_api_editor)
         builder.setPositiveButton(R.string.action_save) { _, _ ->
             val targetFragment = this.targetFragment
@@ -76,8 +75,8 @@ class APIEditorDialogFragment : BaseDialogFragment() {
 
             accountTypeSpinner.adapter = AccountTypeSpinnerAdapter(this)
 
-            editConsumerKey.addValidator(ConsumerKeySecretValidator(context!!.getString(R.string.invalid_consumer_key)))
-            editConsumerSecret.addValidator(ConsumerKeySecretValidator(context!!.getString(R.string.invalid_consumer_secret)))
+            editConsumerKey.addValidator(ConsumerKeySecretValidator(requireContext().getString(R.string.invalid_consumer_key)))
+            editConsumerSecret.addValidator(ConsumerKeySecretValidator(requireContext().getString(R.string.invalid_consumer_secret)))
 
             editNoVersionSuffix.setOnCheckedChangeListener { _, _ -> editNoVersionSuffixChanged = true }
             editAuthType.setOnCheckedChangeListener { _, checkedId ->
@@ -145,8 +144,8 @@ class APIEditorDialogFragment : BaseDialogFragment() {
         private lateinit var adapter: ArrayAdapter<CustomAPIConfig>
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            adapter = CustomAPIConfigArrayAdapter(context!!)
-            val builder = AlertDialog.Builder(context!!)
+            adapter = CustomAPIConfigArrayAdapter(requireContext())
+            val builder = AlertDialog.Builder(requireContext())
             builder.setAdapter(adapter, this)
             loaderManager.initLoader(0, null, this)
             val dialog = builder.create()
@@ -162,7 +161,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
         }
 
         override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CustomAPIConfig>> {
-            return DefaultAPIConfigLoader(context!!)
+            return DefaultAPIConfigLoader(requireContext())
         }
 
         override fun onLoadFinished(loader: Loader<List<CustomAPIConfig>>, data: List<CustomAPIConfig>) {
@@ -189,7 +188,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
 
     private class AccountTypeSpinnerAdapter(
             fragment: APIEditorDialogFragment
-    ) : BaseArrayAdapter<String>(fragment.context!!, R.layout.support_simple_spinner_dropdown_item,
+    ) : BaseArrayAdapter<String>(fragment.requireContext(), R.layout.support_simple_spinner_dropdown_item,
             requestManager = fragment.requestManager) {
         init {
             add(AccountType.TWITTER)

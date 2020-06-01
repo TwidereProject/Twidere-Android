@@ -68,7 +68,7 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
         }
 
         val activity = activity
-        val builder = AlertDialog.Builder(activity!!)
+        val builder = AlertDialog.Builder(requireActivity())
         builder.setView(me.uucky.colorpicker.R.layout.cp__dialog_color_picker)
         builder.setPositiveButton(android.R.string.ok, this)
         if (args!!.getBoolean(EXTRA_CLEAR_BUTTON, false)) {
@@ -82,7 +82,7 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
 
             val showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true)
             for (presetColor in PRESET_COLORS) {
-                controller!!.addColor(ContextCompat.getColor(context!!, presetColor))
+                controller!!.addColor(ContextCompat.getColor(requireContext(), presetColor))
             }
             controller!!.setAlphaEnabled(showAlphaSlider)
             controller!!.setInitialColor(color)
@@ -100,7 +100,7 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
 
     override fun onSaveInstanceState(outState: Bundle) {
         if (controller != null) {
-            outState!!.putInt(EXTRA_COLOR, controller!!.color)
+            outState.putInt(EXTRA_COLOR, controller!!.color)
         }
         super.onSaveInstanceState(outState)
     }

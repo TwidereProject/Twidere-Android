@@ -113,7 +113,7 @@ public class NotificationManagerWrapper {
 
     }
 
-    private class PostedNotification {
+    private static class PostedNotification {
         private final String tag;
         private final int id;
 

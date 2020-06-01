@@ -278,7 +278,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
-        return ConversationLoader(context!!, accountKey, conversationId)
+        return ConversationLoader(requireContext(), accountKey, conversationId)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableMessage>?>, data: List<ParcelableMessage>?) {
@@ -558,7 +558,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             types: IntArray?,
             copySrc: Boolean,
             deleteSrc: Boolean
-    ) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(fragment.context!!, sources, types, copySrc, deleteSrc) {
+    ) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(fragment.requireContext(), sources, types, copySrc, deleteSrc) {
 
         private val fragmentRef = WeakReference(fragment)
 
@@ -581,7 +581,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     internal class DeleteMediaTask(
             fragment: MessagesConversationFragment,
             val media: Array<ParcelableMediaUpdate>
-    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.context!!,
+    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.requireContext(),
             media.mapToArray { Uri.parse(it.uri) }) {
 
         init {

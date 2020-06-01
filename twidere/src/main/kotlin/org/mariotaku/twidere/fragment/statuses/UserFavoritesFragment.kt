@@ -90,7 +90,7 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
     override fun notifyFavoriteTask(event: FavoriteTaskEvent) {
         if (event.action == FavoriteTaskEvent.Action.DESTROY && event.isSucceeded) {
             event.status?.let { status ->
-                val args = arguments!!
+                val args = requireArguments()
                 val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
                 if (status.account_key == userKey) {
                     removeStatus(event.statusId)

@@ -24,7 +24,6 @@ import android.net.Uri
 import androidx.collection.ArrayMap
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.then
-import okio.ByteString
 import okio.ByteString.Companion.encodeUtf8
 import org.mariotaku.twidere.TwidereConstants.TIMELINE_SYNC_CACHE_PREFERENCES_NAME
 import org.mariotaku.twidere.annotation.ReadPositionTag

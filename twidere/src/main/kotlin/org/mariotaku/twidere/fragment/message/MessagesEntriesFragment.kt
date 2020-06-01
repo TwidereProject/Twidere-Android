@@ -74,7 +74,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         IFloatingActionButtonFragment {
 
     private val accountKeys: Array<UserKey> by lazy {
-        Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
+        Utils.getAccountKeys(requireContext(), arguments) ?: DataStoreUtils.getActivatedAccountKeys(requireContext())
     }
 
     private val errorInfoKey: String = ErrorInfoStore.KEY_DIRECT_MESSAGES
@@ -157,7 +157,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewTaskParam(context!!) {
+        twitterWrapper.getMessagesAsync(object : GetMessagesTask.RefreshNewTaskParam(requireContext()) {
             override val accountKeys: Array<UserKey> = this@MessagesEntriesFragment.accountKeys
         })
         return true

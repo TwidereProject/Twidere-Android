@@ -40,7 +40,7 @@ class EditUserListDialogFragment : BaseDialogFragment() {
     private val listId: String by lazy { arguments?.getString(EXTRA_LIST_ID)!! }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setView(R.layout.dialog_user_list_detail_editor)
         builder.setTitle(R.string.title_user_list)
         builder.positive(android.R.string.ok, this::onPositiveClick)

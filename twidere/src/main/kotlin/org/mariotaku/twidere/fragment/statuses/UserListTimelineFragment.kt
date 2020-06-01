@@ -103,7 +103,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserListTimelineLoader(activity!!, accountKey, listId, userKey, screenName, listName,
+        return UserListTimelineLoader(requireActivity(), accountKey, listId, userKey, screenName, listName,
                 adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore, extras)
     }
 

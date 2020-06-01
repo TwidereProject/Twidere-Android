@@ -20,7 +20,6 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.IntDef;
 import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,13 +51,7 @@ import java.util.Comparator;
 @ParcelablePlease
 public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus>, Cloneable {
 
-    public static final Comparator<ParcelableStatus> REVERSE_COMPARATOR = new Comparator<ParcelableStatus>() {
-
-        @Override
-        public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
-            return object2.compareTo(object1);
-        }
-    };
+    public static final Comparator<ParcelableStatus> REVERSE_COMPARATOR = (object1, object2) -> object2.compareTo(object1);
     public static final Creator<ParcelableStatus> CREATOR = new Creator<ParcelableStatus>() {
         @Override
         public ParcelableStatus createFromParcel(Parcel source) {
@@ -75,13 +68,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(value = Statuses._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
     public long _id;
 
-    @SuppressWarnings("NullableProblems")
     @JsonField(name = "id")
     @CursorField(Statuses.ID)
     @NonNull
     public String id;
 
-    @SuppressWarnings("NullableProblems")
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
     @NonNull
@@ -98,7 +89,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "timestamp")
     @CursorField(Statuses.TIMESTAMP)
     public long timestamp;
-    @SuppressWarnings("NullableProblems")
 
     @JsonField(name = "user_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.USER_KEY, converter = UserKeyCursorFieldConverter.class)

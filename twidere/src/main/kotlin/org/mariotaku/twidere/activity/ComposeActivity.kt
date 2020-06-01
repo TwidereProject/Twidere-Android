@@ -389,6 +389,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
@@ -1839,8 +1840,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity!!
-            val builder = AlertDialog.Builder(context!!)
+            val context = requireActivity()
+            val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.quote_protected_status_warning_message)
             builder.setPositiveButton(R.string.send_anyway, this)
             builder.setNegativeButton(android.R.string.cancel, null)
@@ -1873,8 +1874,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = activity!!
-            val builder = AlertDialog.Builder(context!!)
+            val context = requireActivity()
+            val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(getString(R.string.message_format_compose_message_convert_to_status,
                     "@$screenName"))
             builder.setPositiveButton(R.string.action_send, this)

@@ -37,7 +37,6 @@ import java.util.List;
 @Keep
 public class IDs$$JsonObjectMapper extends JsonMapper<IDs> {
 
-    @SuppressWarnings("TryWithIdenticalCatches")
     @Override
     public IDs parse(JsonParser jsonParser) throws IOException {
         IDs instance = new IDs();

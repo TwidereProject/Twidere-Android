@@ -51,7 +51,7 @@ import org.mariotaku.twidere.view.holder.status.DetailStatusViewHolder
 
 class StatusDetailsAdapter(
         val fragment: StatusFragment
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.context!!, fragment.requestManager),
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(fragment.requireContext(), fragment.requestManager),
         IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
 
     override val twidereLinkify: TwidereLinkify
@@ -117,7 +117,7 @@ class StatusDetailsAdapter(
         inflater = LayoutInflater.from(context)
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context!!,
                 preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
-        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context!!, preferences)
+        val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
         listener.setAdapter(this)
         twidereLinkify = TwidereLinkify(listener)
     }
@@ -306,7 +306,7 @@ class StatusDetailsAdapter(
         when (holder.itemViewType) {
             VIEW_TYPE_DETAIL_STATUS -> {
                 holder as DetailStatusViewHolder
-                payloads.forEach { it ->
+                payloads.forEach {
                     when (it) {
                         is StatusFragment.StatusActivity -> {
                             holder.updateStatusActivity(it)

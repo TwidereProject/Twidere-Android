@@ -239,7 +239,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableStatus>?> {
         val fromUser = args?.getBoolean(EXTRA_FROM_USER)
         args?.remove(EXTRA_FROM_USER)
-        return onCreateStatusesLoader(activity!!, args!!, fromUser!!)
+        return onCreateStatusesLoader(requireActivity(), args!!, fromUser!!)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -272,7 +272,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val firstLoad = adapterData.isNullOrEmpty()
 
         var lastReadId: Long = -1
-        var lastReadViewTop: Int = 0
+        var lastReadViewTop = 0
         var loadMore = false
         var wasAtTop = false
         // 1. Save current read position if not first load
@@ -562,7 +562,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 resolver?.update(contentUri, values, where, null)
                 return true
             }
-            else -> return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
+            else -> return MenuUtils.handleStatusClick(requireActivity(), this, requireFragmentManager(),
                     preferences, userColorNameManager, twitterWrapper, status, item)
         }
     }

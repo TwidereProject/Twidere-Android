@@ -130,7 +130,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUser>?> {
         val fromUser = args!!.getBoolean(EXTRA_FROM_USER)
         args.remove(EXTRA_FROM_USER)
-        return onCreateUsersLoader(context!!, args, fromUser)
+        return onCreateUsersLoader(requireContext(), args, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
@@ -189,7 +189,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val adapter = SelectableUsersAdapter(context, this.requestManager)
         adapter.itemCheckedListener = listener@ { _, _ ->
             if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                ExtraFeaturesIntroductionDialogFragment.show(fragmentManager!!,
+                ExtraFeaturesIntroductionDialogFragment.show(requireFragmentManager(),
                         feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                         requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                 return@listener false
@@ -246,7 +246,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.action_add_to_filter)
             builder.setView(R.layout.dialog_block_mute_filter_user_confirm)
             builder.setPositiveButton(android.R.string.ok, this)

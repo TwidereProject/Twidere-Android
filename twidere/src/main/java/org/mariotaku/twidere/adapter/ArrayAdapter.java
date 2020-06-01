@@ -101,7 +101,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
      *                 instantiating views.
      */
     public ArrayAdapter(Context context, int resource) {
-        init(context, resource, new ArrayList<T>());
+        init(context, resource, new ArrayList<>());
     }
 
     /**

@@ -52,7 +52,7 @@ abstract class TwitterCardViewFactory {
 
         private fun createCardFragment(status: ParcelableStatus): ContainerView.ViewController? {
             val card = status.card
-            if (card == null || card.name == null) return null
+            if (card?.name == null) return null
             if (TwitterCardUtils.CARD_NAME_PLAYER == card.name) {
                 return createGenericPlayerFragment(card)
             } else if (TwitterCardUtils.CARD_NAME_AUDIO == card.name) {

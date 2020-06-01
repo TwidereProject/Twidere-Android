@@ -31,7 +31,6 @@ import androidx.annotation.Nullable;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.util.ServiceUtils.ServiceToken;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -73,12 +72,7 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
         final Intent intent = new Intent(IntentConstants.INTENT_ACTION_EXTENSION_SHORTEN_STATUS);
         final ComponentName component = ComponentName.unflattenFromString(mShortenerName);
         intent.setComponent(component);
-        final FutureTask<Boolean> futureTask = new FutureTask<>(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return mIInterface != null;
-            }
-        });
+        final FutureTask<Boolean> futureTask = new FutureTask<>(() -> mIInterface != null);
         mToken = ServiceUtils.bindToService(mContext, intent, new ServiceConnection() {
             @Override
             public void onServiceConnected(final ComponentName name, final IBinder obj) {
@@ -112,7 +106,6 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
     }
 
     public interface CheckServiceAction {
-        @SuppressWarnings("RedundantThrows")
         void check(@Nullable Bundle metaData) throws CheckServiceException;
     }
 

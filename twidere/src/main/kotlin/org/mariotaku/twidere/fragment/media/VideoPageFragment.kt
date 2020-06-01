@@ -85,7 +85,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
 
         var handler: Handler? = videoViewProgress.handler
         if (handler == null) {
-            handler = Handler(activity!!.mainLooper)
+            handler = Handler(requireActivity().mainLooper)
         }
 
 
@@ -371,7 +371,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         override fun getHeight(): Int {
             var height = media?.height ?: 0
             if (height <= 0) {
-                height = fragment.view!!.measuredHeight
+                height = fragment.requireView().measuredHeight
             }
             if (height <= 0) {
                 height = 100
@@ -382,7 +382,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         override fun getWidth(): Int {
             var width = media?.width ?: 0
             if (width <= 0) {
-                width = fragment.view!!.measuredWidth
+                width = fragment.requireView().measuredWidth
             }
             if (width <= 0) {
                 width = 100

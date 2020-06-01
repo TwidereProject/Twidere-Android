@@ -13,7 +13,6 @@ import org.mariotaku.twidere.service.JobTaskService
 import org.mariotaku.twidere.service.JobTaskService.Companion.JOB_ID_REFRESH_FILTERS_SUBSCRIPTIONS
 import org.mariotaku.twidere.service.JobTaskService.Companion.JOB_ID_REFRESH_LAUNCH_PRESENTATIONS
 import java.util.concurrent.TimeUnit
-import android.Manifest.permission as AndroidPermissions
 
 /**
  * Created by mariotaku on 2016/12/17.

@@ -61,11 +61,8 @@ public final class ResponseList$$JsonObjectMapper<T> extends JsonMapper<Response
 
     @Override
     public void parseField(ResponseList<T> instance, String fieldName, JsonParser jsonParser) throws IOException {
-        switch (fieldName) {
-            case "results": {
-                instance.addAll(m84ClassJsonMapper.parseList(jsonParser));
-                break;
-            }
+        if ("results".equals(fieldName)) {
+            instance.addAll(m84ClassJsonMapper.parseList(jsonParser));
         }
     }
 

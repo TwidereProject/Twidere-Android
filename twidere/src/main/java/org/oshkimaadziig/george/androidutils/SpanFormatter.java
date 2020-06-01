@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
  *
  * @author George T. Steel
  */
-@SuppressWarnings("IfCanBeSwitch")
 public class SpanFormatter {
     public static final Pattern FORMAT_SEQUENCE = Pattern.compile("%([0-9]+\\$|<?)([^a-zA-z%]*)([[a-zA-Z%]&&[^tT]]|[tT][a-zA-Z])");
 
@@ -91,7 +90,7 @@ public class SpanFormatter {
             } else if (typeTerm.equals("%")) {
                 cookedArg = "\n";
             } else {
-                int argIdx = 0;
+                int argIdx;
                 if (argTerm.equals("")) argIdx = ++argAt;
                 else if (argTerm.equals("<")) argIdx = argAt;
                 else argIdx = Integer.parseInt(argTerm.substring(0, argTerm.length() - 1)) - 1;

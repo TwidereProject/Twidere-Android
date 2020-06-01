@@ -60,7 +60,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         val am = AccountManager.get(context)
-        adapter = AccountDetailsAdapter(context!!, requestManager).apply {
+        adapter = AccountDetailsAdapter(requireContext(), requestManager).apply {
             sortEnabled = true
             switchEnabled = true
             accountToggleListener = { pos, checked ->
@@ -158,7 +158,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {
-        return AccountDetailsLoader(context!!)
+        return AccountDetailsLoader(requireContext())
     }
 
     override fun onLoaderReset(loader: Loader<List<AccountDetails>>) {
@@ -227,7 +227,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = context
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setTitle(R.string.title_account_delete_confirm)

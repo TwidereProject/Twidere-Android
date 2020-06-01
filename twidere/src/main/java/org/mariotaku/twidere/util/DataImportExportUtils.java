@@ -170,7 +170,7 @@ public class DataImportExportUtils implements Constants {
              ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
             int flags = 0;
             List<String> entryNames = new ArrayList<>();
-            ZipEntry entry = null;
+            ZipEntry entry;
             while ((entry = zipInputStream.getNextEntry()) != null) {
                 entryNames.add(entry.getName());
             }
@@ -204,11 +204,11 @@ public class DataImportExportUtils implements Constants {
         try (InputStream inputStream = context.getContentResolver().openInputStream(src.getUri());
              ZipInputStream zipInputStream = new ZipInputStream(inputStream)
         ) {
-            ZipEntry entry = null;
+            ZipEntry entry;
             while ((entry = zipInputStream.getNextEntry()) != null) {
                 StringBuilder stringBuilder = new StringBuilder();
                 byte[] buffer = new byte[1024];
-                int read = 0;
+                int read;
                 while ((read = zipInputStream.read(buffer, 0, 1024)) >= 0) {
                     stringBuilder.append(new String(buffer, 0, read));
                 }

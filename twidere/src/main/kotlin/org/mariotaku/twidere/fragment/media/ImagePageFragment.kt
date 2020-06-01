@@ -24,13 +24,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Bundle
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
 import org.mariotaku.ktextension.nextPowerOf2
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -50,7 +50,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         get() = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy {
-        return@lazy SizedResultCreator(context!!)
+        return@lazy SizedResultCreator(requireContext())
     }
 
     private var mediaLoadState: Int = 0
@@ -96,7 +96,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
     }
 
     override fun getImageSource(data: CacheDownloadLoader.Result): ImageSource {
-        assert(data.cacheUri != null)
+        if (BuildConfig.DEBUG && data.cacheUri == null) { error("Assertion failed") }
         if (data !is SizedResult) {
             return super.getImageSource(data)
         }
@@ -108,7 +108,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     override fun getPreviewImageSource(data: CacheDownloadLoader.Result): ImageSource? {
         if (data !is SizedResult) return null
-        assert(data.cacheUri != null)
+        if (BuildConfig.DEBUG && data.cacheUri == null) { error("Assertion failed") }
         return ImageSource.uri(UriUtils.appendQueryParameters(data.cacheUri, QUERY_PARAM_PREVIEW, true))
     }
 

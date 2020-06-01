@@ -97,7 +97,7 @@ class ColorPickerPreference(context: Context, attrs: AttributeSet? = null) :
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val preference = preference as ColorPickerPreference
             val context = context
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(preference.dialogTitle)
             builder.setView(R.layout.cp__dialog_color_picker)
             builder.setPositiveButton(android.R.string.ok, this)
@@ -122,7 +122,7 @@ class ColorPickerPreference(context: Context, attrs: AttributeSet? = null) :
             val preference = preference as ColorPickerPreference
             val alertDialog = dialog as AlertDialog
             alertDialog.applyTheme()
-            val windowView = alertDialog.window!!.decorView ?: return
+            val windowView = alertDialog.window!!.decorView
             controller = ColorPickerDialog.Controller(context, windowView)
             controller.setAlphaEnabled(preference.isAlphaSliderEnabled)
             for (presetColor in PRESET_COLORS) {

@@ -66,12 +66,9 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
 
     @Override
     public final void onClick(final DialogInterface dialog, final int which) {
-        switch (which) {
-            case DialogInterface.BUTTON_POSITIVE: {
-                final int flags = getCheckedFlags();
-                onPositiveButtonClicked(flags);
-                break;
-            }
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            final int flags = getCheckedFlags();
+            onPositiveButtonClicked(flags);
         }
     }
 

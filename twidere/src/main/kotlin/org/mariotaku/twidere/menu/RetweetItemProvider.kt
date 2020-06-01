@@ -24,6 +24,7 @@ import androidx.core.view.ActionProvider
 import androidx.core.view.MenuItemCompat
 import androidx.appcompat.widget.ActionMenuView
 import android.view.MenuItem
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.extension.view.findItemView
 
 /**
@@ -35,7 +36,7 @@ class RetweetItemProvider(context: Context) : ActionProvider(context) {
     override fun onCreateActionView() = null
 
     fun init(menuBar: ActionMenuView, item: MenuItem) {
-        assert(MenuItemCompat.getActionProvider(item) === this)
+        if (BuildConfig.DEBUG && MenuItemCompat.getActionProvider(item) !== this) { error("Assertion failed") }
         val menuView = menuBar.findItemView(item)
         menuView?.setOnLongClickListener { longClickListener?.invoke() == true }
     }

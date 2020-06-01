@@ -36,11 +36,11 @@ import org.mariotaku.twidere.extension.applyTheme
 
 class EditAltTextDialogFragment : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(R.string.edit_description)
         builder.setView(R.layout.dialog_compose_edit_alt_text)
         builder.setNegativeButton(android.R.string.cancel, null)
-        val position = arguments!!.getInt(EXTRA_POSITION)
+        val position = requireArguments().getInt(EXTRA_POSITION)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val altText = (dialog as Dialog).editText.string
             callback?.onSetAltText(position, altText)
@@ -51,7 +51,7 @@ class EditAltTextDialogFragment : BaseDialogFragment() {
         val dialog = builder.create()
         dialog.applyOnShow {
             applyTheme()
-            editText.setText(arguments!!.getString(EXTRA_TEXT))
+            editText.setText(requireArguments().getString(EXTRA_TEXT))
         }
         return dialog
     }

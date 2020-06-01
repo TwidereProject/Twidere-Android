@@ -25,6 +25,7 @@ package org.mariotaku.twidere.util.collection;
 
 import androidx.annotation.NonNull;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -253,8 +254,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
     @Override
     public void clear() {
         elements = 0;
-        for (int ix = 0; ix < objects.length; ix++)
-            objects[ix] = null;
+        Arrays.fill(objects, null);
         freecells = objects.length;
         modCount++;
     }

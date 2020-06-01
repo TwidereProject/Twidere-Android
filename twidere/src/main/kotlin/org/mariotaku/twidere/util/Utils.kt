@@ -118,11 +118,7 @@ object Utils {
         // events. Jelly Bean (SDK 16) added support for speaking text verbatim
         // using the ANNOUNCEMENT event type.
         val eventType: Int
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            eventType = AccessibilityEvent.TYPE_VIEW_FOCUSED
-        } else {
-            eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
-        }
+        eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
 
         // Construct an accessibility event with the minimum recommended
         // attributes. An event without a class name or package may be dropped.
@@ -213,7 +209,6 @@ object Utils {
     }
 
     fun isComposeNowSupported(context: Context): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return false
         return hasNavBar(context)
     }
 
@@ -518,7 +513,7 @@ object Utils {
     }
 
     internal fun isExtensionUseJSON(info: ResolveInfo?): Boolean {
-        if (info == null || info.activityInfo == null) return false
+        if (info?.activityInfo == null) return false
         val activityInfo = info.activityInfo
         if (activityInfo.metaData != null && activityInfo.metaData.containsKey(METADATA_KEY_EXTENSION_USE_JSON))
             return activityInfo.metaData.getBoolean(METADATA_KEY_EXTENSION_USE_JSON)
@@ -611,7 +606,7 @@ object Utils {
 
     fun copyStream(input: InputStream, output: OutputStream, length: Int) {
         val buffer = ByteArray(1024)
-        var bytesRead: Int = 0
+        var bytesRead = 0
         do {
             val read = input.read(buffer)
             if (read == -1) {

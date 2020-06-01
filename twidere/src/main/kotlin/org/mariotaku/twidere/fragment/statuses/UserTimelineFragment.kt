@@ -149,7 +149,7 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
     class UserTimelineFilterDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             val values = resources.getStringArray(R.array.values_user_timeline_filter)
             val checkedItems = BooleanArray(values.size) {
                 val filter = preferences[userTimelineFilterKey]

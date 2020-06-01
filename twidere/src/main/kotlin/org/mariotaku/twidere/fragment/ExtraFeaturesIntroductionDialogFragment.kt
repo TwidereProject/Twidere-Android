@@ -32,7 +32,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
     val requestCode: Int get() = arguments?.getInt(EXTRA_REQUEST_CODE, 0) ?: 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(R.string.title_extra_features)
         builder.setView(R.layout.dialog_extra_features_introduction)
         builder.setPositiveButton(R.string.action_purchase) { _, _ ->
@@ -42,7 +42,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         builder.setNegativeButton(R.string.action_later) { _, _ ->
             onDialogCancelled()
         }
-        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context!!, feature)
+        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(requireContext(), feature)
         if (restorePurchaseIntent != null) {
             builder.setNeutralButton(R.string.action_restore_purchase) { _, _ ->
                 startActivityForResultOnTarget(restorePurchaseIntent)
@@ -56,7 +56,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             } else {
                 View.GONE
             }
-            val description = ExtraFeaturesService.getIntroduction(context!!, feature)
+            val description = ExtraFeaturesService.getIntroduction(requireContext(), feature)
             val featureIcon = it.featureIcon
             val featureDescription = it.featureDescription
             featureIcon.setImageResource(description.icon)

@@ -26,7 +26,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
-import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -181,6 +180,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_SHARE_MEDIA -> {
                 ShareProvider.clearTempFiles(this)
@@ -450,11 +450,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     private fun instantiateMediaViewerFragment(args: Bundle): MediaViewerFragment {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            Fragment.instantiate(this, VideoPageFragment::class.java.name, args) as MediaViewerFragment
-        } else {
-            Fragment.instantiate(this, ExoPlayerPageFragment::class.java.name, args) as MediaViewerFragment
-        }
+        return Fragment.instantiate(this, ExoPlayerPageFragment::class.java.name, args) as MediaViewerFragment
     }
 
     private fun processShareIntent(intent: Intent) {

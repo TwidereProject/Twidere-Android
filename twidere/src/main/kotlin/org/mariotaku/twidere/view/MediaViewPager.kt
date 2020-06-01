@@ -21,8 +21,5 @@ package org.mariotaku.twidere.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 
-class MediaViewPager(context: Context, attrs: AttributeSet? = null) : ExtendedViewPager(context, attrs) {
-
-}
+class MediaViewPager(context: Context, attrs: AttributeSet? = null) : ExtendedViewPager(context, attrs)

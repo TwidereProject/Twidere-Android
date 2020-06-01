@@ -408,8 +408,7 @@ object ThemeUtils {
             if (icon != null && item.groupId !in excludedGroups) {
                 icon.mutate()
                 if (info is TwidereMenuInfo) {
-                    val sInfo = info
-                    val stateColor = if (sInfo.isHighlight) sInfo.getHighlightColor(highlightColor) else color
+                    val stateColor = if (info.isHighlight) info.getHighlightColor(highlightColor) else color
                     if (stateColor != 0) {
                         icon.setColorFilter(stateColor, mode)
                     }

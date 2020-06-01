@@ -1,8 +1,5 @@
 package androidx.loader.app
 
-import androidx.loader.app.LoaderManager
-import androidx.loader.app.LoaderManagerImpl
-
 /**
  * Created by mariotaku on 2016/11/26.
  */

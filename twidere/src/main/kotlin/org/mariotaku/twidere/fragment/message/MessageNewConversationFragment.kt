@@ -207,7 +207,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val query = args!!.getString(EXTRA_QUERY)!!
         val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        return CacheUserSearchLoader(context!!, accountKey, query, !fromCache, true, fromUser)
+        return CacheUserSearchLoader(requireContext(), accountKey, query, !fromCache, true, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
@@ -238,7 +238,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     }
 
     private fun createOrOpenConversation() {
-        val account = this.account ?: return
+        val account = this.account
         val context = context ?: return
         val activity = activity ?: return
         val selected = this.selectedRecipients

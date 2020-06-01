@@ -73,7 +73,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): TrendsAdapter {
-        return TrendsAdapter(activity!!)
+        return TrendsAdapter(requireActivity())
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
@@ -81,7 +81,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         val loaderWhere = Expression.and(Expression.equalsArgs(CachedTrends.ACCOUNT_KEY),
                 Expression.equalsArgs(CachedTrends.WOEID)).sql
         val loaderWhereArgs = arrayOf(accountKey?.toString().orEmpty(), woeId.toString())
-        return CursorLoader(activity!!, uri, CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, CachedTrends.TREND_ORDER)
+        return CursorLoader(requireActivity(), uri, CachedTrends.COLUMNS, loaderWhere, loaderWhereArgs, CachedTrends.TREND_ORDER)
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {

@@ -204,9 +204,8 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         playerView.useController = !isControlDisabled
         playerView.controllerShowTimeoutMs = 0
         playerView.setOnSystemUiVisibilityChangeListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return@setOnSystemUiVisibilityChangeListener
             val visible = MediaViewerActivity.FLAG_SYSTEM_UI_HIDE_BARS !in
-                    activity!!.window.decorView.systemUiVisibility
+                    requireActivity().window.decorView.systemUiVisibility
             if (visible) {
                 playerView.showController()
             } else {
@@ -327,8 +326,8 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         if (playerView.player != null) return
         playerView.player = run {
             val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory()
-            val trackSelector = DefaultTrackSelector(context!!, videoTrackSelectionFactory)
-            val player = SimpleExoPlayer.Builder(context!!)
+            val trackSelector = DefaultTrackSelector(requireContext(), videoTrackSelectionFactory)
+            val player = SimpleExoPlayer.Builder(requireContext())
               .setTrackSelector(trackSelector)
               .build()
             if (positionBackup >= 0) {

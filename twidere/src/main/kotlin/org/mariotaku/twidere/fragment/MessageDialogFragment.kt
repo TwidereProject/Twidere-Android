@@ -36,9 +36,9 @@ import org.mariotaku.twidere.extension.onShow
 class MessageDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val activity = activity!!
+        val activity = requireActivity()
         val builder = AlertDialog.Builder(activity)
-        val args = arguments!!
+        val args = requireArguments()
         builder.setTitle(args.getString(EXTRA_TITLE))
         builder.setMessage(args.getString(EXTRA_MESSAGE))
         builder.setPositiveButton(android.R.string.ok, null)

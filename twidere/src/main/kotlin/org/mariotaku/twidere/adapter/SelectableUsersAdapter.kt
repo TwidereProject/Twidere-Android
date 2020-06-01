@@ -70,8 +70,7 @@ class SelectableUsersAdapter(
         when (viewType) {
             ITEM_VIEW_TYPE_USER -> {
                 val view = inflater.inflate(R.layout.list_item_simple_user, parent, false)
-                val holder = SelectableUserViewHolder(view, this)
-                return holder
+                return SelectableUserViewHolder(view, this)
             }
             ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)

@@ -118,14 +118,11 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
             builder.setPositiveButton(android.R.string.ok, this);
         }
         final AlertDialog dialog = builder.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(final DialogInterface dialog) {
-                final AlertDialog alertDialog = (AlertDialog) dialog;
-                DialogExtensionsKt.applyTheme(alertDialog);
-                final ListView listView = alertDialog.getListView();
-                listView.setOnItemClickListener(FileSelectorDialogFragment.this);
-            }
+        dialog.setOnShowListener(dialog1 -> {
+            final AlertDialog alertDialog = (AlertDialog) dialog1;
+            DialogExtensionsKt.applyTheme(alertDialog);
+            final ListView listView = alertDialog.getListView();
+            listView.setOnItemClickListener(FileSelectorDialogFragment.this);
         });
         return dialog;
     }
@@ -268,12 +265,9 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
         private final String[] extensions;
         private final Pattern extensions_regex;
 
-        private static final Comparator<File> NAME_COMPARATOR = new Comparator<File>() {
-            @Override
-            public int compare(final File file1, final File file2) {
-                final Locale loc = Locale.getDefault();
-                return file1.getName().toLowerCase(loc).compareTo(file2.getName().toLowerCase(loc));
-            }
+        private static final Comparator<File> NAME_COMPARATOR = (file1, file2) -> {
+            final Locale loc = Locale.getDefault();
+            return file1.getName().toLowerCase(loc).compareTo(file2.getName().toLowerCase(loc));
         };
 
         public FilesLoader(final Context context, final File path, final String[] extensions) {

@@ -250,7 +250,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ParcelableMessageConversation?> {
-        return ConversationInfoLoader(context!!, accountKey, conversationId)
+        return ConversationInfoLoader(requireContext(), accountKey, conversationId)
     }
 
     override fun onLoaderReset(loader: Loader<ParcelableMessageConversation?>) {
@@ -299,7 +299,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performDestroyConversation() {
         ProgressDialogFragment.show(childFragmentManager, "leave_conversation_progress")
         val weakThis = WeakReference(this)
-        val task = DestroyConversationTask(context!!, accountKey, conversationId)
+        val task = DestroyConversationTask(requireContext(), accountKey, conversationId)
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("leave_conversation_progress") {
@@ -315,7 +315,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performClearMessages() {
         ProgressDialogFragment.show(childFragmentManager, "clear_messages_progress")
         val weakThis = WeakReference(this)
-        val task = ClearMessagesTask(context!!, accountKey, conversationId)
+        val task = ClearMessagesTask(requireContext(), accountKey, conversationId)
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("clear_messages_progress") {
@@ -330,7 +330,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performAddParticipant(user: ParcelableUser) {
         ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
         val weakThis = WeakReference(this)
-        val task = AddParticipantsTask(context!!, accountKey, conversationId, listOf(user))
+        val task = AddParticipantsTask(requireContext(), accountKey, conversationId, listOf(user))
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("add_participant_progress") {
@@ -343,7 +343,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performSetNotificationDisabled(disabled: Boolean) {
         ProgressDialogFragment.show(childFragmentManager, "set_notifications_disabled_progress")
         val weakThis = WeakReference(this)
-        val task = SetConversationNotificationDisabledTask(context!!, accountKey, conversationId, disabled)
+        val task = SetConversationNotificationDisabledTask(requireContext(), accountKey, conversationId, disabled)
         task.callback = callback@ { _ ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("set_notifications_disabled_progress") {
@@ -457,7 +457,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val fragment = weakThis.get() ?: throw InterruptedException()
             val account = AccountUtils.getAccountDetails(AccountManager.get(fragment.context),
                     accountKey, true) ?: throw MicroBlogException("No account")
-            val microBlog = account.newMicroBlogInstance(fragment.context!!, cls = MicroBlog::class.java)
+            val microBlog = account.newMicroBlogInstance(fragment.requireContext(), cls = MicroBlog::class.java)
             return@task updateAction(fragment, account, microBlog)
         }.then { result ->
             val fragment = weakThis.get() ?: throw InterruptedException()
@@ -736,7 +736,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val actions = arrayOf(Action(getString(R.string.action_edit_conversation_name), "name"),
                     Action(getString(R.string.action_edit_conversation_avatar), "avatar"))
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setItems(actions.mapToArray(Action::title)) { _, which ->
                 val action = actions[which]
                 (parentFragment as MessageConversationInfoFragment).openEditAction(action.type)
@@ -752,7 +752,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     class EditNameDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_edit_conversation_name)
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
@@ -768,7 +768,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     class DestroyConversationConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.message_destroy_conversation_confirm)
             builder.setPositiveButton(R.string.action_leave_conversation) { _, _ ->
                 (parentFragment as MessageConversationInfoFragment).performDestroyConversation()
@@ -783,7 +783,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     class ClearMessagesConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.message_clear_messages_confirm)
             builder.setPositiveButton(R.string.action_clear_messages) { _, _ ->
                 (parentFragment as MessageConversationInfoFragment).performClearMessages()

@@ -111,7 +111,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): DraftsAdapter {
-        return DraftsAdapter(activity!!, requestManager).apply {
+        return DraftsAdapter(requireActivity(), requestManager).apply {
             textSize = preferences[textSizeKey].toFloat()
         }
     }
@@ -125,7 +125,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
             Pair(Expression.inArgs(Drafts.ACTION_TYPE, actions.size).sql, actions)
         } else Pair(null, null)
         val orderBy = OrderBy(Drafts.TIMESTAMP, false).sql
-        return CursorLoader(activity!!, uri, cols, selection, selectionArgs, orderBy)
+        return CursorLoader(requireActivity(), uri, cols, selection, selectionArgs, orderBy)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
@@ -289,7 +289,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.delete_drafts_confirm)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)

@@ -46,7 +46,6 @@ class RoundedRectTransformation(
         val height = source.height
 
         val bitmap = bitmapPool.get(width, height, Bitmap.Config.ARGB_8888)
-                ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(bitmap)
         val paint = Paint()

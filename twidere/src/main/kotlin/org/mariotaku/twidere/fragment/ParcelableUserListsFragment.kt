@@ -24,7 +24,6 @@ import android.os.Bundle
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.Loader
-import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
@@ -137,7 +136,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUserList>> {
         val fromUser = args?.getBoolean(EXTRA_FROM_USER)
         args?.remove(EXTRA_FROM_USER)
-        return onCreateUserListsLoader(activity!!, args!!, fromUser!!)
+        return onCreateUserListsLoader(requireActivity(), args!!, fromUser!!)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>) {

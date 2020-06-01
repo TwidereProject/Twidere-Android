@@ -433,6 +433,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
         val tabPosition = handleIntent(intent, false)
         if (tabPosition >= 0) {
             mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
@@ -1070,7 +1071,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     class AutoRefreshConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.auto_refresh)
             builder.setMessage(R.string.message_auto_refresh_confirm)
             builder.setPositiveButton(android.R.string.ok) { _, _ ->

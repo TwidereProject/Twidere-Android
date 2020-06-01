@@ -35,7 +35,7 @@ class PinStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
         get() = getString(R.string.message_pin_status_confirm)
 
     override fun onPerformAction(status: ParcelableStatus) {
-        val task = PinStatusTask(context!!, status.account_key, status.id)
+        val task = PinStatusTask(requireContext(), status.account_key, status.id)
         TaskStarter.execute(task)
     }
 

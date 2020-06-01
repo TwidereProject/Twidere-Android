@@ -120,17 +120,17 @@ class UserQrDialogFragment : BaseDialogFragment() {
         }
         val profileImageSize = getString(R.string.profile_image_size)
         val context = context?.applicationContext
-        val requestManager = Glide.with(context!!)
+        val requestManager = Glide.with(requireContext())
         val user = this.user
         return task {
             try {
-                return@task requestManager.loadOriginalProfileImage(context!!, user, 0)
+                return@task requestManager.loadOriginalProfileImage(requireContext(), user, 0)
                         .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
             } catch (e: ExecutionException) {
                 // Ignore
             }
             // Return fallback profile image
-            return@task requestManager.loadProfileImage(context!!, user, 0, size = profileImageSize)
+            return@task requestManager.loadProfileImage(requireContext(), user, 0, size = profileImageSize)
                     .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
         }
     }

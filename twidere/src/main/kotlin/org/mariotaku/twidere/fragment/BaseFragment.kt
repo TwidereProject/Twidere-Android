@@ -102,7 +102,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestManager = Glide.with(context!!)// TODO: Upgrade Glide usage
+        requestManager = Glide.with(requireContext())// TODO: Upgrade Glide usage
     }
 
     override fun onStart() {

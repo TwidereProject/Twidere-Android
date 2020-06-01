@@ -48,7 +48,7 @@ class DestroySavedSearchDialogFragment : BaseDialogFragment(), DialogInterface.O
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val name = searchName
         builder.setTitle(getString(R.string.destroy_saved_search, name))
         builder.setMessage(getString(R.string.destroy_saved_search_confirm_message, name))

@@ -146,9 +146,8 @@ class GetMessagesTask(
         val sincePagination = param.pagination?.elementAtOrNull(accountsCount + index) as? SinceMaxPagination
 
         val firstFetch by lazy {
-            val noConversationsBefore = context.contentResolver.queryCount(Conversations.CONTENT_URI,
+            return@lazy context.contentResolver.queryCount(Conversations.CONTENT_URI,
                     Expression.equalsArgs(Conversations.ACCOUNT_KEY).sql, arrayOf(accountKey.toString())) <= 0
-            return@lazy noConversationsBefore
         }
 
         val updateLastRead = param.hasMaxIds || firstFetch

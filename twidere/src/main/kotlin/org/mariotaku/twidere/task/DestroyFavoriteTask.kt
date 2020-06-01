@@ -72,8 +72,7 @@ class DestroyFavoriteTask(
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY, accountKey, statusId)
         taskEvent.isFinished = true
         if (result != null) {
-            val status = result
-            taskEvent.status = status
+            taskEvent.status = result
             taskEvent.isSucceeded = true
             Toast.makeText(context, R.string.message_toast_status_unfavorited, Toast.LENGTH_SHORT).show()
         } else {

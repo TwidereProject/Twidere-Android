@@ -107,7 +107,7 @@ public final class DatabaseUpgradeHelper {
                 newInsertColsList.add(newCol);
             }
         }
-        final String[] newInsertCols = newInsertColsList.toArray(new String[newInsertColsList.size()]);
+        final String[] newInsertCols = newInsertColsList.toArray(new String[0]);
         if (!TwidereArrayUtils.contains(newInsertCols, notNullCols)) return null;
         qb.columns(newInsertCols);
         final Columns.Column[] oldDataCols = new Columns.Column[newInsertCols.length];

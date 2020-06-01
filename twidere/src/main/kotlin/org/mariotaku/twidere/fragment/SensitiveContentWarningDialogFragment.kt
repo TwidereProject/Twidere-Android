@@ -55,7 +55,7 @@ class SensitiveContentWarningDialogFragment : BaseDialogFragment(), DialogInterf
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(android.R.string.dialog_alert_title)
         builder.setMessage(R.string.sensitive_content_warning)
         builder.setPositiveButton(android.R.string.ok, this)

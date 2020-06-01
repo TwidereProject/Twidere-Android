@@ -38,7 +38,7 @@ import org.mariotaku.twidere.util.ParseUtils
 class CreateUserListDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setView(R.layout.dialog_user_list_detail_editor)
 
         builder.setTitle(R.string.new_user_list)

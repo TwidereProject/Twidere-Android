@@ -46,7 +46,6 @@ import androidx.appcompat.view.SupportMenuInflater
 import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
-import androidx.core.view.isVisible
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader
@@ -259,7 +258,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
-        return AccountsInfoLoader(activity!!, accountsAdapter.accounts == null)
+        return AccountsInfoLoader(requireActivity(), accountsAdapter.accounts == null)
     }
 
 
@@ -538,10 +537,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         } else if (user.account_color != 0) {
             ColorDrawable(user.account_color)
         } else {
-            ColorDrawable(Chameleon.getOverrideTheme(activity!!, activity).colorPrimary)
+            ColorDrawable(Chameleon.getOverrideTheme(requireActivity(), activity).colorPrimary)
         }
 
-        requestManager.loadProfileBanner(context!!, account.user, width).fallback(fallbackBanner)
+        requestManager.loadProfileBanner(requireContext(), account.user, width).fallback(fallbackBanner)
                 .into(bannerView)
     }
 
@@ -557,7 +556,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         } else {
             "${if (showType) account.type else ""}@${account.user.screen_name}"
         }
-        requestManager.loadProfileImage(context!!, account, preferences[profileImageStyleKey],
+        requestManager.loadProfileImage(requireContext(), account, preferences[profileImageStyleKey],
                 accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
                 ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)
         //TODO complete border color

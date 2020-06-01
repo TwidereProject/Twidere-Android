@@ -31,7 +31,6 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 @ParcelablePlease
 public class ParcelableMediaUpdate implements Parcelable {
 
-    @SuppressWarnings("NullableProblems")
     @NonNull
     @JsonField(name = "uri")
     public String uri;

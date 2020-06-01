@@ -96,6 +96,7 @@ import org.mariotaku.microblog.library.mastodon.Mastodon
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -666,7 +667,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         actionBarShadowColor = 0xA0000000.toInt()
         val args = arguments
         val accountKey = args?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: run {
-            activity?.finish()
+            activity.finish()
             return
         }
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
@@ -687,7 +688,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             if (profileBannerSpace.toolbarHeight == 0) {
                 var toolbarHeight = toolbar.measuredHeight
                 if (toolbarHeight == 0) {
-                    toolbarHeight = ThemeUtils.getActionBarHeight(context!!)
+                    toolbarHeight = ThemeUtils.getActionBarHeight(requireContext())
                 }
                 profileBannerSpace.toolbarHeight = toolbarHeight
             }
@@ -813,7 +814,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         menu.setItemAvailability(R.id.block, !isMyself)
 
         menu.setItemAvailability(R.id.add_to_home_screen_submenu,
-                ShortcutManagerCompat.isRequestPinShortcutSupported(context!!))
+                ShortcutManagerCompat.isRequestPinShortcutSupported(requireContext()))
 
         var canAddToList = false
         var canMute = false
@@ -1130,7 +1131,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             return
         }
         val spec = pagerAdapter.get(viewPager.currentItem)
-        assert(spec.type != null)
+        if (BuildConfig.DEBUG && spec.type == null) { error("Assertion failed") }
         when (spec.type) {
             TAB_TYPE_STATUSES, TAB_TYPE_STATUSES_WITH_REPLIES -> {
                 actionBar.subtitle = resources.getQuantityString(R.plurals.N_statuses,
@@ -1634,7 +1635,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return result
             }
 
-            val microBlog = MicroBlogAPIFactory.getInstance(fragment.context!!, accountKey)
+            val microBlog = MicroBlogAPIFactory.getInstance(fragment.requireContext(), accountKey)
             val ownedLists = ArrayList<ParcelableUserList>()
             val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
             val paging = Paging()
@@ -1669,7 +1670,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
         }.failUi {
             val fragment = weakThis.get() ?: return@failUi
-            Toast.makeText(fragment.context, it.getErrorMessage(fragment.context!!),
+            Toast.makeText(fragment.context, it.getErrorMessage(fragment.requireContext()),
                     Toast.LENGTH_SHORT).show()
         }
     }
@@ -1803,10 +1804,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     class AddRemoveUserListDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val lists = arguments!!.getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
-            val userKey = arguments!!.getParcelable<UserKey>(EXTRA_USER_KEY)!!
-            val accountKey = arguments!!.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
-            val builder = AlertDialog.Builder(context!!)
+            val lists = requireArguments().getTypedArray<ParcelableUserList>(EXTRA_USER_LISTS)
+            val userKey = requireArguments().getParcelable<UserKey>(EXTRA_USER_KEY)!!
+            val accountKey = requireArguments().getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.title_add_or_remove_from_list)
             val entries = Array(lists.size) { idx ->
                 lists[idx].name
@@ -1866,7 +1867,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                                 states[pos] = checked
                             }
                         }
-                        Toast.makeText(context, e.getErrorMessage(context!!), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, e.getErrorMessage(requireContext()), Toast.LENGTH_SHORT).show()
                     }
                 }
                 d.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
@@ -1874,7 +1875,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     df.arguments = Bundle {
                         this[EXTRA_ACCOUNT_KEY] = accountKey
                     }
-                    df.show(fragmentManager!!, "create_user_list")
+                    df.show(requireFragmentManager(), "create_user_list")
                 }
             }
             return dialog
