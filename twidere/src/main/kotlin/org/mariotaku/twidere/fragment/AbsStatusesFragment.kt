@@ -25,6 +25,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
@@ -463,6 +464,12 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 status.user_screen_name, status.extras?.user_statusnet_profile_url)
         IntentUtils.applyNewDocument(intent, preferences[newDocumentApiKey])
         startActivity(intent)
+    }
+
+    override fun onLinkClick(holder: IStatusViewHolder, position: Int) {
+        val status = adapter.getStatus(position)
+        val url = status.extras?.entities_url?.firstOrNull()
+        OnLinkClickHandler.openLink(requireContext(), preferences, Uri.parse(url))
     }
 
     override fun scrollToStart(): Boolean {

@@ -241,6 +241,7 @@ dependencies {
     implementation 'org.attoparser:attoparser:2.0.5.RELEASE'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
     implementation 'net.ypresto.androidtranscoder:android-transcoder:0.3.0'
+    implementation 'org.jsoup:jsoup:1.13.1'
     implementation "com.google.android.exoplayer:exoplayer-core:${libVersions['Exoplayer']}"
     implementation "com.google.android.exoplayer:exoplayer-ui:${libVersions['Exoplayer']}"
     implementation "com.google.android.exoplayer:extension-okhttp:${libVersions['Exoplayer']}"

@@ -20,10 +20,11 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
 import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -516,6 +517,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
         @JsonField(name = "external_url")
         public String external_url;
+
+        @JsonField(name = "entities_url")
+        public String[] entities_url;
 
         @JsonField(name = "quoted_external_url")
         public String quoted_external_url;

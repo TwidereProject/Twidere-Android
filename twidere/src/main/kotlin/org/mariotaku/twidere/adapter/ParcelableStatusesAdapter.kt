@@ -21,11 +21,11 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.database.CursorIndexOutOfBoundsException
-import androidx.legacy.widget.Space
-import androidx.recyclerview.widget.RecyclerView
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.legacy.widget.Space
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
@@ -80,6 +80,7 @@ abstract class ParcelableStatusesAdapter(
     final override val sensitiveContentEnabled: Boolean = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
     private val showCardActions: Boolean = !preferences[hideCardActionsKey]
     private val showCardNumbers: Boolean = !preferences[hideCardNumbersKey]
+    private val showLinkPreview: Boolean = preferences[showLinkPreviewKey]
 
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
 
@@ -265,6 +266,10 @@ abstract class ParcelableStatusesAdapter(
     override fun isCardNumbersShown(position: Int): Boolean {
         if (position == RecyclerView.NO_POSITION) return showCardNumbers
         return showCardNumbers || showingActionCardId == getItemId(position)
+    }
+
+    override fun isLinkPreviewShown(position: Int): Boolean {
+        return showLinkPreview
     }
 
     override fun isCardActionsShown(position: Int): Boolean {

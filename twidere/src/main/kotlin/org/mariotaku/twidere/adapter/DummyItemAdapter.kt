@@ -65,6 +65,8 @@ class DummyItemAdapter(
 
     var showCardNumbers: Boolean = false
 
+    var showLinkPreview: Boolean = false
+
     private var showingActionCardPosition = RecyclerView.NO_POSITION
     private val showingFullTextStates = SparseBooleanArray()
 
@@ -108,6 +110,10 @@ class DummyItemAdapter(
     override fun isCardActionsShown(position: Int): Boolean {
         if (position == RecyclerView.NO_POSITION) return showCardActions
         return showCardActions || showingActionCardPosition == position
+    }
+
+    override fun isLinkPreviewShown(position: Int): Boolean {
+        return showLinkPreview
     }
 
     override fun showCardActions(position: Int) {
@@ -189,6 +195,7 @@ class DummyItemAdapter(
         sensitiveContentEnabled = preferences[displaySensitiveContentsKey]
         showCardActions = !preferences[hideCardActionsKey]
         showCardNumbers = !preferences[hideCardNumbersKey]
+        showLinkPreview = preferences[showLinkPreviewKey]
         linkHighlightingStyle = preferences[linkHighlightOptionKey]
         lightFont = preferences[lightFontKey]
         useStarsForLikes = preferences[iWantMyStarsBackKey]

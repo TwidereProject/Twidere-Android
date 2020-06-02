@@ -290,11 +290,18 @@
 
     </FrameLayout>
 
+    <org.mariotaku.twidere.view.LinkPreviewView
+        android:id="@+id/linkPreview"
+        android:layout_margin="@dimen/element_spacing_normal"
+        android:layout_below="@+id/mediaPreviewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <org.mariotaku.twidere.view.TwitterCardContainer
         android:id="@+id/twitterCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mediaPreviewContainer"
+        android:layout_below="@+id/linkPreview"
         android:visibility="gone"/>
 
     <org.mariotaku.twidere.view.ColorLabelLinearLayout

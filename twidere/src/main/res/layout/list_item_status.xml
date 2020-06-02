@@ -209,11 +209,19 @@
 
         </org.mariotaku.twidere.view.CardMediaContainer>
 
+
+        <org.mariotaku.twidere.view.LinkPreviewView
+            android:id="@+id/linkPreview"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:layout_below="@+id/mediaPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <org.mariotaku.twidere.view.ColorLabelRelativeLayout
             android:id="@+id/quotedView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mediaPreview"
+            android:layout_below="@+id/linkPreview"
             android:layout_marginTop="@dimen/element_spacing_small"
             android:background="?selectableItemBackground"
             android:clickable="true"
@@ -307,6 +315,7 @@
                 <include layout="@layout/layout_card_media_preview"/>
 
             </org.mariotaku.twidere.view.CardMediaContainer>
+
         </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
     </RelativeLayout>

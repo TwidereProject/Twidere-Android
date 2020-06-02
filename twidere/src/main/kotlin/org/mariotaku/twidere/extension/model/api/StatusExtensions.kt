@@ -46,6 +46,7 @@ import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getMediaUrl
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getStartEndForEntity
+import kotlin.math.max
 
 fun Status.toParcelable(details: AccountDetails, profileImageSize: String = "normal",
         updateFilterInfoAction: (Status, ParcelableStatus) -> Unit = ::updateFilterInfoDefault): ParcelableStatus {
@@ -71,6 +72,13 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
     result.timestamp = createdAt?.time ?: 0
 
     extras.external_url = inferredExternalUrl
+    extras.entities_url = entities?.urls?.map { it.expandedUrl }?.let {
+        if (isQuoteStatus) {
+            it.take(max(0, it.count() - 1))
+        } else {
+            it
+        }
+    }?.toTypedArray()
     extras.support_entities = entities != null
     extras.statusnet_conversation_id = statusnetConversationId
     extras.conversation_id = conversationId
