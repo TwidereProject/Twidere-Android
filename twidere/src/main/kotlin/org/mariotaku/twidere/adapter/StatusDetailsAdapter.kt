@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.util.SparseBooleanArray
@@ -28,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Space
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.contains
 import org.mariotaku.microblog.library.twitter.model.TranslationResult
@@ -72,6 +72,7 @@ class StatusDetailsAdapter(
     private val cardBackgroundColor: Int
     private val showCardActions = !preferences[hideCardActionsKey]
     private val showCardNumbers = !preferences[hideCardNumbersKey]
+    private val showLinkPreview = preferences[showLinkPreviewKey]
     private var recyclerView: RecyclerView? = null
     private var detailMediaExpanded: Boolean = false
 
@@ -177,6 +178,10 @@ class StatusDetailsAdapter(
     override fun isCardNumbersShown(position: Int): Boolean {
         if (position == RecyclerView.NO_POSITION) return showCardNumbers
         return showCardNumbers || showingActionCardPosition == position
+    }
+
+    override fun isLinkPreviewShown(position: Int): Boolean {
+        return showLinkPreview
     }
 
     override fun isCardActionsShown(position: Int): Boolean {

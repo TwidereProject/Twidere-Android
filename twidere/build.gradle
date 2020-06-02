@@ -230,6 +230,7 @@ dependencies {
     implementation "com.google.dagger:dagger:${libVersions['Dagger']}"
     kapt "com.google.dagger:dagger-compiler:${libVersions['Dagger']}"
     implementation 'org.attoparser:attoparser:2.0.4.RELEASE'
+    implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     implementation 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
     implementation "com.google.android.exoplayer:exoplayer-core:${libVersions['Exoplayer']}"

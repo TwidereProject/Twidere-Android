@@ -47,6 +47,7 @@ import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UnitConvertUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
+import org.mariotaku.twidere.view.LinkPreviewData
 import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.lang.ref.WeakReference
@@ -143,6 +144,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         quotedMediaPreview.visibility = View.GONE
         quotedMediaLabel.visibility = View.GONE
         mediaPreview.displayMedia(R.drawable.featured_graphics)
+        linkPreview.isVisible = isLinkPreviewShown
+        linkPreview.displayData(TWIDERE_PREVIEW_LINK_URI, LinkPreviewData(title = TWIDERE_PREVIEW_NAME, imgRes = R.drawable.featured_graphics), adapter.requestManager)
     }
 
     override fun display(status: ParcelableStatus, displayInReplyTo: Boolean,
@@ -349,13 +352,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             mediaPreview.visibility = View.GONE
         }
 
-        val url = status.extras?.external_url
-        linkPreview.isVisible = url != null
-        if (url != null) {
+        val url = status.extras?.entities_url?.firstOrNull()
+        linkPreview.isVisible = url != null && isLinkPreviewShown
+        if (url != null && linkPreview.isVisible) {
             if (!LinkPreviewTask.isInLoading(url)) {
                 val linkPreviewData = LinkPreviewTask.getCached(url)
                 if (linkPreviewData != null) {
-                    linkPreview.displayData(url, linkPreviewData)
+                    linkPreview.displayData(url, linkPreviewData, requestManager)
                 } else {
                     LinkPreviewTask(context).let {
                         it.params = url
@@ -510,6 +513,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         itemContent.setOnClickListener(eventListener)
         itemContent.setOnLongClickListener(eventListener)
 
+        linkPreview.setOnClickListener(eventListener)
         itemMenu.setOnClickListener(eventListener)
         profileImageView.setOnClickListener(eventListener)
         replyButton.setOnClickListener(eventListener)
@@ -601,6 +605,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             listener.onLiked()
         }
     }
+    private val isLinkPreviewShown: Boolean
+        get() = adapter.isLinkPreviewShown(layoutPosition)
 
     private val isCardNumbersShown: Boolean
         get() = adapter.isCardNumbersShown(layoutPosition)
@@ -723,6 +729,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     } else {
                         listener.onStatusClick(holder, position)
                     }
+                }
+                holder.linkPreview -> {
+                    listener.onLinkClick(holder, position)
                 }
             }
         }

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder.status
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
+import android.net.Uri
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -36,10 +37,12 @@ import androidx.annotation.UiThread
 import androidx.appcompat.widget.ActionMenuView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
@@ -54,6 +57,7 @@ import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.hideCardNumbersKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.constant.showLinkPreviewKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsStatusesFragment
@@ -63,6 +67,7 @@ import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.task.LinkPreviewTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
@@ -366,6 +371,28 @@ class DetailStatusViewHolder(
 
         textView.movementMethod = LinkMovementMethod.getInstance()
         itemView.quotedText.movementMethod = null
+
+
+        val url = status.extras?.entities_url?.firstOrNull()
+        itemView.linkPreview.isVisible = url != null && fragment.preferences[showLinkPreviewKey]
+        if (url != null && itemView.linkPreview.isVisible) {
+            if (!LinkPreviewTask.isInLoading(url)) {
+                val linkPreviewData = LinkPreviewTask.getCached(url)
+                if (linkPreviewData != null) {
+                    itemView.linkPreview.displayData(url, linkPreviewData, adapter.requestManager)
+                } else {
+                    LinkPreviewTask(context).let {
+                        it.params = url
+                        TaskStarter.execute(it)
+                    }
+                    itemView.linkPreview.reset()
+                }
+            } else {
+                itemView.linkPreview.reset()
+            }
+        } else {
+            itemView.linkPreview.reset()
+        }
     }
 
     override fun onClick(v: View) {
@@ -373,6 +400,10 @@ class DetailStatusViewHolder(
         val fragment = adapter.fragment
         val preferences = fragment.preferences
         when (v) {
+            itemView.linkPreview -> {
+                val url = status.extras?.entities_url?.firstOrNull()
+                OnLinkClickHandler.openLink(fragment.requireContext(), preferences, Uri.parse(url))
+            }
             itemView.mediaPreviewLoad -> {
                 if (adapter.sensitiveContentEnabled || !status.is_possibly_sensitive) {
                     adapter.isDetailMediaExpanded = true
@@ -472,6 +503,7 @@ class DetailStatusViewHolder(
         ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = *intArrayOf(Constants.MENU_GROUP_STATUS_SHARE))
         itemView.mediaPreviewLoad.setOnClickListener(this)
         itemView.profileContainer.setOnClickListener(this)
+        itemView.linkPreview.setOnClickListener(this)
         retweetedByView.setOnClickListener(this)
         locationView.setOnClickListener(this)
         itemView.quotedView.setOnClickListener(this)

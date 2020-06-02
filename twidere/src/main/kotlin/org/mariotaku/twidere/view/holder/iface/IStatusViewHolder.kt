@@ -65,6 +65,8 @@ interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
         fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {}
 
         fun onFilterClick(holder: TimelineFilterHeaderViewHolder) {}
+
+        fun onLinkClick(holder: IStatusViewHolder, position: Int) {}
     }
 
 }
