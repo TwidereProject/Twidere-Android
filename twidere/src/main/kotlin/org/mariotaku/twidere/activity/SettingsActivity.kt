@@ -349,8 +349,8 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
         companion object {
 
-            val VIEW_TYPE_PREFERENCE_ENTRY = 0
-            val VIEW_TYPE_HEADER_ENTRY = 1
+            const val VIEW_TYPE_PREFERENCE_ENTRY = 0
+            const val VIEW_TYPE_HEADER_ENTRY = 1
         }
     }
 
@@ -424,7 +424,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     companion object {
 
-        private val RESULT_SETTINGS_CHANGED = 10
+        private const val RESULT_SETTINGS_CHANGED = 10
 
         fun setShouldRecreate(activity: Activity) {
             if (activity !is SettingsActivity) return

@@ -955,12 +955,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     companion object {
 
         // Constants
-        private val LOADER_ID_DETAIL_STATUS = 1
-        private val LOADER_ID_STATUS_CONVERSATIONS = 2
-        private val LOADER_ID_STATUS_ACTIVITY = 3
-        private val STATE_LOADED = 1
-        private val STATE_LOADING = 2
-        private val STATE_ERROR = 3
+        private const val LOADER_ID_DETAIL_STATUS = 1
+        private const val LOADER_ID_STATUS_CONVERSATIONS = 2
+        private const val LOADER_ID_STATUS_ACTIVITY = 3
+        private const val STATE_LOADED = 1
+        private const val STATE_LOADING = 2
+        private const val STATE_ERROR = 3
 
         fun Bundle.toPagination(): Pagination {
             val maxId = getString(EXTRA_MAX_ID)

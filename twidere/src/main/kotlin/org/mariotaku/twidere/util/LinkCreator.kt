@@ -34,8 +34,8 @@ import org.mariotaku.twidere.model.UserKey
  */
 object LinkCreator {
 
-    private val AUTHORITY_TWITTER = "twitter.com"
-    private val AUTHORITY_FANFOU = "fanfou.com"
+    private const val AUTHORITY_TWITTER = "twitter.com"
+    private const val AUTHORITY_FANFOU = "fanfou.com"
 
     fun getTwidereStatusLink(accountKey: UserKey?, statusId: String): Uri {
         val builder = Uri.Builder()

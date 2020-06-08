@@ -218,7 +218,7 @@ class MultiSelectEventHandler(
 
     companion object {
 
-        val MENU_GROUP = 201
+        const val MENU_GROUP = 201
     }
 
 }

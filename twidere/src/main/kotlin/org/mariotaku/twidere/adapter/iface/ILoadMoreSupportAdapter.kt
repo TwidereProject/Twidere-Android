@@ -36,7 +36,7 @@ interface ILoadMoreSupportAdapter {
     annotation class IndicatorPosition
 
     companion object {
-        val ITEM_VIEW_TYPE_LOAD_INDICATOR = 0
+        const val ITEM_VIEW_TYPE_LOAD_INDICATOR = 0
 
         const val NONE: Long = 0
         const val START: Long = 1

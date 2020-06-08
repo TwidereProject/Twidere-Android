@@ -761,12 +761,12 @@ class DetailStatusViewHolder(
         internal class LabeledCount(var type: Int, var count: Long)
 
         companion object {
-            private val ITEM_VIEW_TYPE_USER = 1
-            private val ITEM_VIEW_TYPE_COUNT = 2
+            private const val ITEM_VIEW_TYPE_USER = 1
+            private const val ITEM_VIEW_TYPE_COUNT = 2
 
-            private val KEY_REPLY_COUNT = 1
-            private val KEY_RETWEET_COUNT = 2
-            private val KEY_FAVORITE_COUNT = 3
+            private const val KEY_REPLY_COUNT = 1
+            private const val KEY_RETWEET_COUNT = 2
+            private const val KEY_FAVORITE_COUNT = 3
         }
     }
 

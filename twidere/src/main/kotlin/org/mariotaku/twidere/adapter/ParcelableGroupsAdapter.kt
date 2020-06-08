@@ -142,6 +142,6 @@ class ParcelableGroupsAdapter(
 
     companion object {
 
-        val ITEM_VIEW_TYPE_USER_LIST = 2
+        const val ITEM_VIEW_TYPE_USER_LIST = 2
     }
 }

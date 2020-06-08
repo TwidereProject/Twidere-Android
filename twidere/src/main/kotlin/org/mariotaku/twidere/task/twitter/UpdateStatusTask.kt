@@ -690,7 +690,7 @@ class UpdateStatusTask(
 
     companion object {
 
-        private val BULK_SIZE = 512 * 1024// 512 Kib
+        private const val BULK_SIZE = 512 * 1024// 512 Kib
 
         @Throws(UploadException::class)
         fun uploadMicroBlogMediaShared(context: Context, upload: TwitterUpload,

@@ -344,7 +344,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     companion object {
 
         private const val FRAGMENT_TAG = "retweet_quote"
-        private val showProtectedConfirm = false
+        private const val showProtectedConfirm = false
 
         fun show(fm: FragmentManager, accountKey: UserKey, statusId: String,
                  status: ParcelableStatus? = null, text: String? = null):

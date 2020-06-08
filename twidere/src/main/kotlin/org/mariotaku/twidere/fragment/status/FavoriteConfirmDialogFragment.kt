@@ -103,7 +103,7 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "favorite_confirm"
+        const val FRAGMENT_TAG = "favorite_confirm"
 
         fun show(fm: FragmentManager, accountKey: UserKey, statusId: String,
                  status: ParcelableStatus? = null): FavoriteConfirmDialogFragment {

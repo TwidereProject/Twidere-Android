@@ -90,7 +90,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
 
     companion object {
 
-        val FRAGMENT_TAG = "destroy_user_list_member"
+        const val FRAGMENT_TAG = "destroy_user_list_member"
 
         fun show(fm: FragmentManager, userList: ParcelableUserList,
                  vararg users: ParcelableUser): DeleteUserListMembersDialogFragment {

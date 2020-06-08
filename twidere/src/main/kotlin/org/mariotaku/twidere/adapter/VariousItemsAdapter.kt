@@ -112,9 +112,9 @@ class VariousItemsAdapter(
 
     companion object {
 
-        val VIEW_TYPE_STATUS = 1
-        val VIEW_TYPE_USER = 2
-        val VIEW_TYPE_USER_LIST = 3
-        val VIEW_TYPE_HASHTAG = 4
+        const val VIEW_TYPE_STATUS = 1
+        const val VIEW_TYPE_USER = 2
+        const val VIEW_TYPE_USER_LIST = 3
+        const val VIEW_TYPE_HASHTAG = 4
     }
 }

@@ -119,7 +119,7 @@ class KeyboardShortcutPreferenceCompatActivity : BaseActivity(), OnClickListener
 
     companion object {
 
-        val EXTRA_CONTEXT_TAG = "context_tag"
-        val EXTRA_KEY_ACTION = "key_action"
+        const val EXTRA_CONTEXT_TAG = "context_tag"
+        const val EXTRA_KEY_ACTION = "key_action"
     }
 }

@@ -257,10 +257,10 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
 
     companion object {
 
-        private val EXTRA_EDIT_MODE = "edit_mode"
-        private val EXTRA_HOST = "host"
-        private val EXTRA_ADDRESS = "address"
-        private val EXTRA_EXCLUDED = "excluded"
+        private const val EXTRA_EDIT_MODE = "edit_mode"
+        private const val EXTRA_HOST = "host"
+        private const val EXTRA_ADDRESS = "address"
+        private const val EXTRA_EXCLUDED = "excluded"
     }
 
 }

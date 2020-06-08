@@ -194,7 +194,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "add_status_filter"
+        const val FRAGMENT_TAG = "add_status_filter"
 
         private fun createFilteredUser(item: UserItem): ContentValues {
             val values = ContentValues()

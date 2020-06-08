@@ -337,7 +337,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
 
         companion object {
 
-            private val FRAGMENT_TAG_DELETING_DRAFTS = "deleting_drafts"
+            private const val FRAGMENT_TAG_DELETING_DRAFTS = "deleting_drafts"
         }
     }
 }

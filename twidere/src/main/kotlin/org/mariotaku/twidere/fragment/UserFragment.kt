@@ -1887,8 +1887,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     companion object {
 
         private val sArgbEvaluator = ArgbEvaluator()
-        private val LOADER_ID_USER = 1
-        private val LOADER_ID_FRIENDSHIP = 2
+        private const val LOADER_ID_USER = 1
+        private const val LOADER_ID_FRIENDSHIP = 2
 
         private const val TAB_POSITION_STATUSES = 0
         private const val TAB_POSITION_MEDIA = 1

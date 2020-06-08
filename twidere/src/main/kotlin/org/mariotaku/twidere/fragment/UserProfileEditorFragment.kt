@@ -455,7 +455,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
         companion object {
 
-            private val DIALOG_FRAGMENT_TAG = "updating_user_profile"
+            private const val DIALOG_FRAGMENT_TAG = "updating_user_profile"
         }
 
     }
@@ -558,16 +558,16 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     companion object {
 
-        private val LOADER_ID_USER = 1
+        private const val LOADER_ID_USER = 1
 
-        private val REQUEST_UPLOAD_PROFILE_IMAGE = 1
-        private val REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2
-        private val REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE = 3
-        private val REQUEST_PICK_LINK_COLOR = 11
-        private val REQUEST_PICK_BACKGROUND_COLOR = 12
+        private const val REQUEST_UPLOAD_PROFILE_IMAGE = 1
+        private const val REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2
+        private const val REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE = 3
+        private const val REQUEST_PICK_LINK_COLOR = 11
+        private const val REQUEST_PICK_BACKGROUND_COLOR = 12
 
-        private val RESULT_REMOVE_BANNER = 101
-        private val UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile"
+        private const val RESULT_REMOVE_BANNER = 101
+        private const val UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile"
 
     }
 }

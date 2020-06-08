@@ -1924,7 +1924,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         companion object {
-            val ALPHA_FULL = 1.0f
+            const val ALPHA_FULL = 1.0f
         }
     }
 

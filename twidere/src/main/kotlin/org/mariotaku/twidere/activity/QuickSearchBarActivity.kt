@@ -538,10 +538,10 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         companion object {
 
-            internal val VIEW_TYPE_SEARCH_HISTORY = 0
-            internal val VIEW_TYPE_SAVED_SEARCH = 1
-            internal val VIEW_TYPE_USER_SUGGESTION_ITEM = 2
-            internal val VIEW_TYPE_USER_SCREEN_NAME = 3
+            internal const val VIEW_TYPE_SEARCH_HISTORY = 0
+            internal const val VIEW_TYPE_SAVED_SEARCH = 1
+            internal const val VIEW_TYPE_USER_SUGGESTION_ITEM = 2
+            internal const val VIEW_TYPE_USER_SCREEN_NAME = 3
         }
     }
 

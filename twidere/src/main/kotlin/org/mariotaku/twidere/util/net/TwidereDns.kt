@@ -236,7 +236,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
     companion object {
 
-        private val RESOLVER_LOGTAG = "TwidereDns"
+        private const val RESOLVER_LOGTAG = "TwidereDns"
 
 
         private fun hostMatches(host: String?, rule: String?): Boolean {

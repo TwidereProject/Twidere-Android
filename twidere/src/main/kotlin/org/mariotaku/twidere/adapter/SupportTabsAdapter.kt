@@ -162,6 +162,6 @@ class SupportTabsAdapter(
 
     companion object {
 
-        private val EXTRA_ADAPTER_POSITION = "adapter_position"
+        private const val EXTRA_ADAPTER_POSITION = "adapter_position"
     }
 }

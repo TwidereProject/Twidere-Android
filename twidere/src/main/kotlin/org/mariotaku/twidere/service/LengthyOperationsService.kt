@@ -400,7 +400,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     }
 
     companion object {
-        private val BULK_SIZE = (128 * 1024).toLong() // 128KiB
+        private const val BULK_SIZE = (128 * 1024).toLong() // 128KiB
 
         private fun updateSendDirectMessageNotification(context: Context,
                 builder: NotificationCompat.Builder,

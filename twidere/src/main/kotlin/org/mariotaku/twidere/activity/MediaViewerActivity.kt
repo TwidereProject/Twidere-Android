@@ -635,10 +635,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     companion object {
 
-        private val REQUEST_SHARE_MEDIA = 201
-        private val REQUEST_PERMISSION_SAVE_MEDIA = 202
-        private val REQUEST_PERMISSION_SHARE_MEDIA = 203
-        private val REQUEST_SELECT_SAVE_MEDIA = 204
+        private const val REQUEST_SHARE_MEDIA = 201
+        private const val REQUEST_PERMISSION_SAVE_MEDIA = 202
+        private const val REQUEST_PERMISSION_SHARE_MEDIA = 203
+        private const val REQUEST_SELECT_SAVE_MEDIA = 204
 
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
         const val FLAG_SYSTEM_UI_HIDE_BARS = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or

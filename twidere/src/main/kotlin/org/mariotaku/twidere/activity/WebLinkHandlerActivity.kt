@@ -366,7 +366,7 @@ class WebLinkHandlerActivity : Activity() {
                 "photo", "album", "paipai", "q", "userview", "dialogue")
 
 
-        private val AUTHORITY_TWITTER_COM = "twitter.com"
+        private const val AUTHORITY_TWITTER_COM = "twitter.com"
 
 
         private fun regulateTwitterUri(data: Uri): Uri {

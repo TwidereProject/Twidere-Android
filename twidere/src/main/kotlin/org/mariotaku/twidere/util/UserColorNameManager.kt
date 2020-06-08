@@ -200,7 +200,7 @@ class UserColorNameManager(context: Context) {
 
     companion object {
 
-        private val NICKNAME_NULL = ".#NULL#"
+        private const val NICKNAME_NULL = ".#NULL#"
 
         fun decideDisplayName(nickname: String?, name: String, screenName: String,
                 nameFirst: Boolean) = nickname ?: if (nameFirst) name else "@$screenName"

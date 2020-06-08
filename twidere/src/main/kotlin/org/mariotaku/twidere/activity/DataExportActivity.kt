@@ -134,7 +134,7 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         companion object {
-            private val FRAGMENT_TAG = "import_settings_dialog"
+            private const val FRAGMENT_TAG = "import_settings_dialog"
         }
 
     }

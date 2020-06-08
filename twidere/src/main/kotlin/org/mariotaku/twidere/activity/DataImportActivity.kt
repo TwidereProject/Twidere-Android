@@ -140,7 +140,7 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         companion object {
-            private val FRAGMENT_TAG = "import_settings_dialog"
+            private const val FRAGMENT_TAG = "import_settings_dialog"
         }
 
     }
@@ -185,7 +185,7 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
 
         companion object {
 
-            private val FRAGMENT_TAG = "read_settings_data_dialog"
+            private const val FRAGMENT_TAG = "read_settings_data_dialog"
         }
 
     }

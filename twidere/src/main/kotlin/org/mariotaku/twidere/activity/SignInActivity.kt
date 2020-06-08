@@ -1189,8 +1189,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         const val REQUEST_BROWSER_TWITTER_SIGN_IN = 101
         const val REQUEST_BROWSER_MASTODON_SIGN_IN = 102
 
-        private val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
-        private val EXTRA_API_LAST_CHANGE = "api_last_change"
+        private const val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
+        private const val EXTRA_API_LAST_CHANGE = "api_last_change"
 
         @Throws(IOException::class)
         internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {
