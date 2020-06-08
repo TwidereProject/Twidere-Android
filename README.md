@@ -3,8 +3,9 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Twidere-brightgreen.svg?style=flat)](http://android-arsenal.com/details/3/2453)
 [![Travis status](https://img.shields.io/travis/TwidereProject/Twidere-Android.svg)](https://travis-ci.org/TwidereProject/Twidere-Android/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
+[<img a src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="100" herf="https://www.patreon.com/bePatron?u=36020799"/>](https://www.patreon.com/bePatron?u=36020799)
 
-Material Design ready and feature rich Twitter app for Android 4.4+
+Material Design ready and feature rich Twitter/Mastodon/StatusNet/Fanfou app for Android 4.4+. Enjoy Fediverse now!
 
 Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
 
@@ -36,6 +37,8 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 ## Credits ##
 ### Initiator ###
 * [@mariotaku](https://twitter.com/mariotaku)
+### Maintainor ###
+* [@MTlaster](https://twitter.com/MTlaster)
 ### Material re-design ###
 * [@Uucky_Lee](https://twitter.com/Uucky_Lee)
 ### Icon designers ###
@@ -63,9 +66,15 @@ I started a crowdin project, so anyone can do something for Twidere. Visit this 
 
 Enhanced features on Google Play
 
-PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
+Patreon: [<img a src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="100" herf="https://www.patreon.com/bePatron?u=36020799"/>](https://www.patreon.com/twidere)
+
+PayPal:  http://paypal.me/yisiliu2
+
+AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
 
 Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
+
+Ethereum & ERC20 Tokens: `0x6ff82FC45aff81D4081DA7B257fb8ee5F71A2CeC`
 
 **Sponsors**
 
