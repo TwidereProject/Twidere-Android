@@ -379,7 +379,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-        userProfileSwipeLayout.setEnabled(state == ViewPager.SCROLL_STATE_IDLE)
+        userProfileSwipeLayout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
     }
 
     override fun scrollBy(dy: Float) {
@@ -1298,7 +1298,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {
-                IntentUtils.openTweetSearch(activity, user.account_key, "#" + link)
+                IntentUtils.openTweetSearch(activity, user.account_key, "#$link")
                 return true
             }
             TwidereLinkify.LINK_TYPE_LINK_IN_TEXT, TwidereLinkify.LINK_TYPE_ENTITY_URL -> {

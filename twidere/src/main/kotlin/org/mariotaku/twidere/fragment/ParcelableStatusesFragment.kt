@@ -193,8 +193,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     fun removeStatus(statusId: String) {
         val list = adapterData ?: return
         val dataToRemove = HashSet<ParcelableStatus>()
-        for (i in 0 until list.size) {
-            val status = list[i]
+        for (element in list) {
+            val status = element
             if (status.id == statusId || status.retweet_id == statusId) {
                 dataToRemove.add(status)
             } else if (status.my_retweet_id == statusId) {

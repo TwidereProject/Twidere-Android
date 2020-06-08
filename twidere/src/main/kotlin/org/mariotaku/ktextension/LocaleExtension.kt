@@ -58,10 +58,10 @@ val Locale.bcp47Tag: String
         }
 
         val bcp47Tag = StringBuilder(language)
-        if (!country.isEmpty()) {
+        if (country.isNotEmpty()) {
             bcp47Tag.append(SEP).append(country)
         }
-        if (!variant.isEmpty()) {
+        if (variant.isNotEmpty()) {
             bcp47Tag.append(SEP).append(variant)
         }
 

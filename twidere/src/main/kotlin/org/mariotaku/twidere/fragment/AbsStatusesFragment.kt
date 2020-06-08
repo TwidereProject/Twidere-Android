@@ -296,7 +296,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 adapter.getStatusPositionKey(lastReadPosition)
             }
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
-            loadMore = statusRange.endInclusive in 0..lastVisibleItemPosition
+            loadMore = statusRange.last in 0..lastVisibleItemPosition
         } else if (rememberPosition) {
             val syncManager = timelineSyncManager
             val positionTag = this.readPositionTag

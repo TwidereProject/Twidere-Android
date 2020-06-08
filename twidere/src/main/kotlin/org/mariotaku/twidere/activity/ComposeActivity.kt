@@ -509,7 +509,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             replyLabel -> {
                 if (replyLabel.visibility != View.VISIBLE) return
-                replyLabel.setSingleLine(replyLabel.lineCount > 1)
+                replyLabel.isSingleLine = replyLabel.lineCount > 1
             }
         }
     }
@@ -1786,7 +1786,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         s.setSpan(MarkForDeleteSpan(), start, start + count,
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE)
                     }
-                    if (!imageSources.isEmpty()) {
+                    if (imageSources.isNotEmpty()) {
                         val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
                                 .getMedia(Uri.parse(imageSources[0]))
                                 .build()
@@ -1997,7 +1997,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             set(value) {
                 selection.clear()
                 for (accountKey in value) {
-                    selection.put(accountKey, true)
+                    selection[accountKey] = true
                 }
                 notifyDataSetChanged()
             }
@@ -2035,7 +2035,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         fun toggleSelection(position: Int) {
             if (accounts == null || position < 0) return
             val account = accounts!![position]
-            selection.put(account.key, true != selection[account.key])
+            selection[account.key] = true != selection[account.key]
             activity.updateAccountSelectionState()
             activity.updateVisibilityState()
             activity.updateSummaryTextState()
@@ -2047,7 +2047,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (accounts == null || position < 0) return
             val account = accounts!![position]
             selection.clear()
-            selection.put(account.key, true != selection[account.key])
+            selection[account.key] = true != selection[account.key]
             activity.updateAccountSelectionState()
             activity.updateVisibilityState()
             activity.updateSummaryTextState()

@@ -146,7 +146,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         val maxId = pagination?.maxId?.takeIf(String::isNotEmpty)
         val sinceId = pagination?.sinceId?.takeIf(String::isNotEmpty)
         if (sinceId == null && maxId != null) {
-            if (data != null && !data.isEmpty()) {
+            if (data != null && data.isNotEmpty()) {
                 return changed
             }
         }

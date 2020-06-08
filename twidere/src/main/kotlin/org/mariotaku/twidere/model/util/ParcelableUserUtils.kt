@@ -17,7 +17,7 @@ object ParcelableUserUtils {
         if (colorString == null) return 0
         var str: String = colorString
         if (!str.startsWith("#")) {
-            str = "#" + str
+            str = "#$str"
         }
         return ParseUtils.parseColor(str, 0)
     }

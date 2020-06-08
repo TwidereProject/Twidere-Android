@@ -607,7 +607,7 @@ class DetailStatusViewHolder(
                 ITEM_VIEW_TYPE_USER -> return ProfileImageViewHolder(this, inflater.inflate(R.layout.adapter_item_status_interact_user, parent, false))
                 ITEM_VIEW_TYPE_COUNT -> return CountViewHolder(this, inflater.inflate(R.layout.adapter_item_status_count_label, parent, false))
             }
-            throw UnsupportedOperationException("Unsupported viewType " + viewType)
+            throw UnsupportedOperationException("Unsupported viewType $viewType")
         }
 
         fun setUsers(users: List<ParcelableUser>?) {

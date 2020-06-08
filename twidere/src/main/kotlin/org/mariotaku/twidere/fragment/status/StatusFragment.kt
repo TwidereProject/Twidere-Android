@@ -149,7 +149,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             adapter.updateItemDecoration()
             val conversationLoader = loader as ConversationLoader
             var supportedPositions: Long = 0
-            if (data != null && !data.isEmpty()) {
+            if (data != null && data.isNotEmpty()) {
                 val sinceSortId = (conversationLoader.pagination as? SinceMaxPagination)?.sinceSortId ?: -1
                 if (sinceSortId < data[data.size - 1].sort_id) {
                     supportedPositions = supportedPositions or ILoadMoreSupportAdapter.END

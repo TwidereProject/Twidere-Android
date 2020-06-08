@@ -30,5 +30,5 @@ fun ListView.updateSelectionItems(menu: Menu) {
     val listCount = count
     menu.setItemAvailability(R.id.select_none, checkedCount > 0)
     menu.setItemAvailability(R.id.select_all, checkedCount < listCount)
-    menu.setItemAvailability(R.id.invert_selection, checkedCount > 0 && checkedCount < listCount)
+    menu.setItemAvailability(R.id.invert_selection, checkedCount in 1 until listCount)
 }

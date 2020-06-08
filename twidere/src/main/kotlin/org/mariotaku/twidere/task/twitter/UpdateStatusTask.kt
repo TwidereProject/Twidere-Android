@@ -204,7 +204,7 @@ class UpdateStatusTask(
                 pending.mediaUploadResults[i] = uploadResult
                 if (uploadResult.shared_owners != null) {
                     for (sharedOwner in uploadResult.shared_owners) {
-                        sharedMedia.put(sharedOwner, uploadResult)
+                        sharedMedia[sharedOwner] = uploadResult
                     }
                 }
             }
@@ -243,7 +243,7 @@ class UpdateStatusTask(
                 pending.statusShortenResults[i] = shortenResult
                 if (shortenResult.shared_owners != null) {
                     for (sharedOwner in shortenResult.shared_owners) {
-                        sharedShortened.put(sharedOwner, shortenResult)
+                        sharedShortened[sharedOwner] = shortenResult
                     }
                 }
             }

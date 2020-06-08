@@ -58,7 +58,7 @@ class HtmlBuilder(
 
     fun buildWithIndices(): Pair<String, Array<SpanItem>> {
         if (spanSpecs.isEmpty()) return Pair(escapeSource(), emptyArray())
-        Collections.sort(spanSpecs)
+        spanSpecs.sort()
         val sb = StringBuilder()
         val linksSize = spanSpecs.size
         val items = arrayOfNulls<SpanItem>(linksSize)

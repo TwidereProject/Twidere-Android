@@ -41,7 +41,7 @@ fun <E> Collection<E>.contentEquals(other: Collection<E>): Boolean {
 
 inline fun <reified T> List<T>.subArray(range: IntRange): Array<T> {
     return Array(range.count()) {
-        this[range.start + it]
+        this[range.first + it]
     }
 }
 

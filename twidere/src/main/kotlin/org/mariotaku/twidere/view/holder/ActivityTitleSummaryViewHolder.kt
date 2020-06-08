@@ -129,7 +129,7 @@ class ActivityTitleSummaryViewHolder(
             return
         }
         val length = Math.min(profileImageViews.size, users.size)
-        for (i in 0 until profileImageViews.size) {
+        for (i in profileImageViews.indices) {
             val view = profileImageViews[i]
             view.setImageDrawable(null)
             if (i < length) {

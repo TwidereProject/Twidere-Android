@@ -108,7 +108,7 @@ class ParcelableGroupsAdapter(
                 return LoadIndicatorViewHolder(view)
             }
         }
-        throw IllegalStateException("Unknown view type " + viewType)
+        throw IllegalStateException("Unknown view type $viewType")
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

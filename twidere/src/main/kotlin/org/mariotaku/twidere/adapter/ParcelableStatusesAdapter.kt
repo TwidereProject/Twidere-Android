@@ -324,7 +324,7 @@ abstract class ParcelableStatusesAdapter(
                 return TimelineFilterHeaderViewHolder(this, view)
             }
         }
-        throw IllegalStateException("Unknown view type " + viewType)
+        throw IllegalStateException("Unknown view type $viewType")
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -410,7 +410,7 @@ abstract class ParcelableStatusesAdapter(
         // lesser equals than read position
         if (positionKey <= 0) return RecyclerView.NO_POSITION
         val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
-        if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
+        if (range.isEmpty() || range.first < 0) return RecyclerView.NO_POSITION
         if (positionKey < getStatusPositionKey(range.last, raw)) {
             return range.last
         }
@@ -422,7 +422,7 @@ abstract class ParcelableStatusesAdapter(
         // lesser equals than read position
         if (sortId <= 0) return RecyclerView.NO_POSITION
         val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
-        if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
+        if (range.isEmpty() || range.first < 0) return RecyclerView.NO_POSITION
         if (sortId < getStatusSortId(range.last, raw)) {
             return range.last
         }

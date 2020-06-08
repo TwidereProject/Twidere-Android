@@ -402,7 +402,7 @@ class StatusDetailsAdapter(
             if (position in typeStart until typeEnd) return type
             typeStart = typeEnd
         }
-        throw IllegalStateException("Unknown position " + position)
+        throw IllegalStateException("Unknown position $position")
     }
 
     fun getItemTypeStart(position: Int): Int {

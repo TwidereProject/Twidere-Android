@@ -237,7 +237,7 @@ abstract class AbsActivitiesFragment protected constructor() :
                 adapter.getTimestamp(lastReadPosition)
             }
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
-            loadMore = activityRange.endInclusive in 0..lastVisibleItemPosition
+            loadMore = activityRange.last in 0..lastVisibleItemPosition
         } else if (rememberPosition && readPositionTag != null) {
             val syncManager = timelineSyncManager
             val positionTag = this.readPositionTag

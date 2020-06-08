@@ -130,7 +130,7 @@ abstract class GetActivitiesTask(
         val valuesList = ArrayList<ContentValues>()
         var minIdx = -1
         var minPositionKey: Long = -1
-        if (!activities.isEmpty()) {
+        if (activities.isNotEmpty()) {
             val firstSortId = activities.first().timestamp
             val lastSortId = activities.last().timestamp
             // Get id diff of first and last item
@@ -177,7 +177,7 @@ abstract class GetActivitiesTask(
             val rowsDeleted = cr.delete(writeUri, where.sql, whereArgs) - localDeleted
             // Why loadItemLimit / 2? because it will not acting strange in most cases
             val insertGap = !noItemsBefore && olderCount > 0 && rowsDeleted <= 0 && activities.size > loadItemLimit / 2
-            if (insertGap && !valuesList.isEmpty()) {
+            if (insertGap && valuesList.isNotEmpty()) {
                 valuesList[valuesList.size - 1].put(Activities.IS_GAP, true)
             }
         }

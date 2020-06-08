@@ -48,7 +48,7 @@ fun Number.toLocalizedString(locale: Locale = Locale.getDefault()): String {
 val Int.nextPowerOf2: Int
     get() {
         var n = this
-        if (n <= 0 || n > 1 shl 30) throw IllegalArgumentException("n is invalid: " + n)
+        if (n <= 0 || n > 1 shl 30) throw IllegalArgumentException("n is invalid: $n")
         n -= 1
         n = n or (n shr 16)
         n = n or (n shr 8)

@@ -171,7 +171,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     override fun onDismiss(listView: ListView, reverseSortedPositions: IntArray) {
         val adapter = suggestionsList.adapter as SuggestionsAdapter
         val ids = LongArray(reverseSortedPositions.size)
-        for (i in 0 until reverseSortedPositions.size) {
+        for (i in reverseSortedPositions.indices) {
             val position = reverseSortedPositions[i]
             val item = adapter.getSuggestionItem(position) ?: return
             ids[i] = item._id
@@ -505,7 +505,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         private fun getActualPosition(position: Int): Int {
             var skipped = 0
             for (i in 0 until removedPositions.size) {
-                if (position + skipped >= removedPositions.get(i)) {
+                if (position + skipped >= removedPositions[i]) {
                     skipped++
                 }
             }

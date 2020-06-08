@@ -137,7 +137,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
     private fun dumpLog(logger: TimingLogger, addresses: List<InetAddress>) {
         if (BuildConfig.DEBUG) return
-        Log.v(RESOLVER_LOGTAG, "Resolved " + addresses)
+        Log.v(RESOLVER_LOGTAG, "Resolved $addresses")
         logger.dumpToLog()
     }
 

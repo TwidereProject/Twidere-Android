@@ -52,7 +52,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
         val nameFirst = preferences[nameFirstKey]
-        for (i in 0 until entries.size) {
+        for (i in entries.indices) {
             val info = filterItems!![i]
             when (info.type) {
                 FilterItemInfo.FILTER_TYPE_USER -> {

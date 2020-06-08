@@ -216,7 +216,7 @@ class ParcelableActivitiesAdapter(
                 return EmptyViewHolder(Space(context))
             }
         }
-        throw UnsupportedOperationException("Unsupported viewType " + viewType)
+        throw UnsupportedOperationException("Unsupported viewType $viewType")
     }
 
 
@@ -428,7 +428,7 @@ class ParcelableActivitiesAdapter(
         internal val text2 = itemView.findViewById<TextView>(android.R.id.text2)
 
         init {
-            text2.setSingleLine(false)
+            text2.isSingleLine = false
         }
 
         @SuppressLint("SetTextI18n")

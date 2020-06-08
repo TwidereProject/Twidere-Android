@@ -319,7 +319,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     override fun onLoadMoreContents(position: Long) {
         if (ILoadMoreSupportAdapter.START !in position) return
         val context = context ?: return
-        val message = adapter.getMessage(adapter.messageRange.endInclusive)
+        val message = adapter.getMessage(adapter.messageRange.last)
         setLoadMoreIndicatorPosition(position)
         val param = GetMessagesTask.LoadMoreMessageTaskParam(context, accountKey, conversationId,
                 message.id)

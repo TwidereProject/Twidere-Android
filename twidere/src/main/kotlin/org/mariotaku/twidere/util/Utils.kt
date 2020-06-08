@@ -116,8 +116,7 @@ object Utils {
         // Prior to SDK 16, announcements could only be made through FOCUSED
         // events. Jelly Bean (SDK 16) added support for speaking text verbatim
         // using the ANNOUNCEMENT event type.
-        val eventType: Int
-        eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
+        val eventType: Int = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
 
         // Construct an accessibility event with the minimum recommended
         // attributes. An event without a class name or package may be dropped.

@@ -270,7 +270,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     protected fun hasMoreData(data: List<ParcelableUser>?): Boolean {
-        return data == null || !data.isEmpty()
+        return data == null || data.isNotEmpty()
     }
 
     protected fun createMessageBusCallback(): Any {

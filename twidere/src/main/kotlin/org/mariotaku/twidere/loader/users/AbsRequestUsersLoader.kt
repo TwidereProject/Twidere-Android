@@ -93,7 +93,7 @@ abstract class AbsRequestUsersLoader(
     }
 
     protected open fun processUsersData(details: AccountDetails, list: MutableList<ParcelableUser>) {
-        Collections.sort(data)
+        data.sort()
     }
 
     protected open fun processPaging(paging: Paging, details: AccountDetails, loadItemLimit: Int) {

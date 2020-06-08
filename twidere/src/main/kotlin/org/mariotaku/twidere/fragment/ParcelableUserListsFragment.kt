@@ -73,7 +73,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     }
 
     protected fun hasMoreData(data: List<ParcelableUserList>?): Boolean {
-        return data == null || !data.isEmpty()
+        return data == null || data.isNotEmpty()
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>, data: List<ParcelableUserList>) {

@@ -180,7 +180,7 @@ class CacheProvider : ContentProvider() {
             } else if ("rwt" == mode) {
                 modeBits = ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
             } else {
-                throw IllegalArgumentException("Invalid mode: " + mode)
+                throw IllegalArgumentException("Invalid mode: $mode")
             }
             return modeBits
         }

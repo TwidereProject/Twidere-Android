@@ -146,7 +146,7 @@ abstract class GetStatusesTask(
         var minIdx = -1
         var minPositionKey: Long = -1
         var hasIntersection = false
-        if (!statuses.isEmpty()) {
+        if (statuses.isNotEmpty()) {
             val firstSortId = statuses.first().sort_id
             val lastSortId = statuses.last().sort_id
             // Get id diff of first and last item

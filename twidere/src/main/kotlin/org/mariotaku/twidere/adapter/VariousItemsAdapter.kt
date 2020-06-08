@@ -92,7 +92,7 @@ class VariousItemsAdapter(
             is ParcelableUser -> return VIEW_TYPE_USER
             is ParcelableUserList -> return VIEW_TYPE_USER_LIST
             is ParcelableHashtag -> return VIEW_TYPE_HASHTAG
-            else -> throw UnsupportedOperationException("Unsupported object " + obj)
+            else -> throw UnsupportedOperationException("Unsupported object $obj")
         }
     }
 
