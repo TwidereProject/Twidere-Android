@@ -133,10 +133,10 @@ object Utils {
     }
 
     fun deleteMedia(context: Context, uri: Uri): Boolean {
-        try {
-            return PNCUtils.deleteMedia(context, uri)
+        return try {
+            PNCUtils.deleteMedia(context, uri)
         } catch (e: SecurityException) {
-            return false
+            false
         }
 
     }
@@ -343,11 +343,11 @@ object Utils {
     fun hasNavBar(context: Context): Boolean {
         val resources = context.resources ?: return false
         val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
-        if (id > 0) {
-            return resources.getBoolean(id)
+        return if (id > 0) {
+            resources.getBoolean(id)
         } else {
             // Check for keys
-            return !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)
+            !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)
         }
     }
 
@@ -457,10 +457,10 @@ object Utils {
 
     fun getInsetsTopWithoutActionBarHeight(context: Context, top: Int): Int {
         val actionBarHeight: Int
-        if (context is AppCompatActivity) {
-            actionBarHeight = getActionBarHeight(context.supportActionBar)
+        actionBarHeight = if (context is AppCompatActivity) {
+            getActionBarHeight(context.supportActionBar)
         } else if (context is Activity) {
-            actionBarHeight = getActionBarHeight(context.actionBar)
+            getActionBarHeight(context.actionBar)
         } else {
             return top
         }
@@ -578,10 +578,10 @@ object Utils {
     fun sendPebbleNotification(context: Context, title: String?, message: String) {
         val appName: String
 
-        if (title == null) {
-            appName = context.getString(R.string.app_name)
+        appName = if (title == null) {
+            context.getString(R.string.app_name)
         } else {
-            appName = "${context.getString(R.string.app_name)} - $title"
+            "${context.getString(R.string.app_name)} - $title"
         }
 
         if (TextUtils.isEmpty(message)) return

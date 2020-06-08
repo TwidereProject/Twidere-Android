@@ -152,12 +152,12 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        when (val countIndex = itemCounts.getItemCountIndex(position)) {
+        return when (val countIndex = itemCounts.getItemCountIndex(position)) {
             ITEM_INDEX_ACTIVITY -> {
-                return getRowId(position, false)
+                getRowId(position, false)
             }
             else -> {
-                return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
+                (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
             }
         }
     }
@@ -347,12 +347,12 @@ class ParcelableActivitiesAdapter(
             throw IndexOutOfBoundsException("index: $position, valid range is $validRange")
         }
         val data = this.data!!
-        if (reuse && data is ObjectCursor) {
+        return if (reuse && data is ObjectCursor) {
             val activity = data.setInto(dataPosition, reuseActivity)
             activity.after_filtered_sources = null
-            return activity
+            activity
         } else {
-            return data[dataPosition]
+            data[dataPosition]
         }
     }
 

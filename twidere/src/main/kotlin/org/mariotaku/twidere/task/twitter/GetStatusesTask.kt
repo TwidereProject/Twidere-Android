@@ -229,12 +229,12 @@ abstract class GetStatusesTask(
                 position: Int, count: Int): Long {
             if (sortDiff == 0L) return timestamp
             val extraValue: Int
-            if (sortDiff > 0) {
+            extraValue = if (sortDiff > 0) {
                 // descent sorted by time
-                extraValue = count - 1 - position
+                count - 1 - position
             } else {
                 // ascent sorted by time
-                extraValue = position
+                position
             }
             return timestamp + (sortId - lastSortId) * (499 - count) / sortDiff + extraValue.toLong()
         }

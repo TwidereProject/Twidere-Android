@@ -45,15 +45,15 @@ class ExternalThemeManager(private val context: Context, private val preferences
 
     fun reloadEmojiPreferences() {
         val emojiComponentName = preferences.getString(KEY_EMOJI_SUPPORT, null)
-        if (emojiComponentName != null) {
+        emojiPackageName = if (emojiComponentName != null) {
             val componentName = ComponentName.unflattenFromString(emojiComponentName)
             if (componentName != null) {
-                emojiPackageName = componentName.packageName
+                componentName.packageName
             } else {
-                emojiPackageName = null
+                null
             }
         } else {
-            emojiPackageName = null
+            null
         }
         initEmojiSupport()
     }

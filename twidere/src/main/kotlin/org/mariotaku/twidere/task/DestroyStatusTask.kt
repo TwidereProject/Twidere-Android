@@ -31,16 +31,16 @@ class DestroyStatusTask(
 ) : AbsAccountRequestTask<Any?, ParcelableStatus, Any?>(context, accountKey) {
 
     override fun onExecute(account: AccountDetails, params: Any?): ParcelableStatus {
-        when (account.type) {
+        return when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, cls = Mastodon::class.java)
                 val result = mastodon.fetchStatus(statusId)
                 mastodon.deleteStatus(statusId)
-                return result.toParcelable(account)
+                result.toParcelable(account)
             }
             else -> {
                 val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-                return microBlog.destroyStatus(statusId).toParcelable(account)
+                microBlog.destroyStatus(statusId).toParcelable(account)
             }
         }
     }

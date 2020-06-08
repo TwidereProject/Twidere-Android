@@ -44,10 +44,10 @@ class AccountPreferences(
     val defaultNotificationLightColor: Int
         get() {
             val a = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
-            if (a != null) {
-                return a.color
+            return if (a != null) {
+                a.color
             } else {
-                return ContextCompat.getColor(context, R.color.branding_color)
+                ContextCompat.getColor(context, R.color.branding_color)
             }
         }
 
@@ -70,10 +70,10 @@ class AccountPreferences(
     val notificationRingtone: Uri
         get() {
             val ringtone = accountPreferences.getString(KEY_NOTIFICATION_RINGTONE, null)
-            if (TextUtils.isEmpty(ringtone)) {
-                return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            return if (TextUtils.isEmpty(ringtone)) {
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             } else {
-                return Uri.parse(ringtone)
+                Uri.parse(ringtone)
             }
         }
 

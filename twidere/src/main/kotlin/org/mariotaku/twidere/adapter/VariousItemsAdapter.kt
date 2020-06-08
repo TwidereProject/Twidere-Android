@@ -87,11 +87,11 @@ class VariousItemsAdapter(
     }
 
     private fun getItemViewType(obj: Any): Int {
-        when (obj) {
-            is ParcelableStatus -> return VIEW_TYPE_STATUS
-            is ParcelableUser -> return VIEW_TYPE_USER
-            is ParcelableUserList -> return VIEW_TYPE_USER_LIST
-            is ParcelableHashtag -> return VIEW_TYPE_HASHTAG
+        return when (obj) {
+            is ParcelableStatus -> VIEW_TYPE_STATUS
+            is ParcelableUser -> VIEW_TYPE_USER
+            is ParcelableUserList -> VIEW_TYPE_USER_LIST
+            is ParcelableHashtag -> VIEW_TYPE_HASHTAG
             else -> throw UnsupportedOperationException("Unsupported object $obj")
         }
     }

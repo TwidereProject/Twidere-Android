@@ -111,12 +111,12 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
                 return false
             }
             if (!file.isFile) return false
-            try {
+            return try {
                 DataImportExportUtils.importData(activity, file, flags)
-                return true
+                true
             } catch (e: IOException) {
                 Log.w(LOGTAG, e)
-                return false
+                false
             }
 
         }
@@ -152,10 +152,10 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
                 return 0
             }
             if (!file.isFile) return 0
-            try {
-                return DataImportExportUtils.getImportedSettingsFlags(activity, file)
+            return try {
+                DataImportExportUtils.getImportedSettingsFlags(activity, file)
             } catch (e: IOException) {
-                return 0
+                0
             }
 
         }

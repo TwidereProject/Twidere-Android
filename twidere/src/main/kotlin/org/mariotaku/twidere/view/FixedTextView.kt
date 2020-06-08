@@ -16,11 +16,11 @@ open class FixedTextView(context: Context, attrs: AttributeSet? = null) : Chamel
     }
 
     override fun onTextContextMenuItem(id: Int): Boolean {
-        try {
-            return super.onTextContextMenuItem(id)
+        return try {
+            super.onTextContextMenuItem(id)
         } catch (e: AbstractMethodError) {
             // http://crashes.to/s/69acd0ea0de
-            return true
+            true
         }
     }
 

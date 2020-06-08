@@ -367,10 +367,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             ParcelableMedia.Type.IMAGE -> {
                 val mediaUrl = media.media_url ?: return Fragment.instantiate(this, ExternalBrowserPageFragment::class.java.name, args) as MediaViewerFragment
                 args.putParcelable(EXTRA_MEDIA_URI, Uri.parse(mediaUrl))
-                if (mediaUrl.endsWith(".gif")) {
-                    return Fragment.instantiate(this, GifPageFragment::class.java.name, args) as MediaViewerFragment
+                return if (mediaUrl.endsWith(".gif")) {
+                    Fragment.instantiate(this, GifPageFragment::class.java.name, args) as MediaViewerFragment
                 } else {
-                    return Fragment.instantiate(this, ImagePageFragment::class.java.name, args) as MediaViewerFragment
+                    Fragment.instantiate(this, ImagePageFragment::class.java.name, args) as MediaViewerFragment
                 }
             }
             ParcelableMedia.Type.ANIMATED_GIF, ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
@@ -465,10 +465,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             saveToStorage()
         } else {
             val permissions: Array<String>
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE, AndroidPermissions.READ_EXTERNAL_STORAGE)
+            permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE, AndroidPermissions.READ_EXTERNAL_STORAGE)
             } else {
-                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
+                arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
             }
             PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_save_media),
                     permissions, REQUEST_PERMISSION_SAVE_MEDIA)

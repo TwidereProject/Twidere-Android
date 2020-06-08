@@ -115,10 +115,10 @@ val Array<AccountDetails>.textLimit: Int
         forEach { details ->
             val currentLimit = details.textLimit
             if (currentLimit != 0) {
-                if (limit <= 0) {
-                    limit = currentLimit
+                limit = if (limit <= 0) {
+                    currentLimit
                 } else {
-                    limit = Math.min(limit, currentLimit)
+                    Math.min(limit, currentLimit)
                 }
             }
         }

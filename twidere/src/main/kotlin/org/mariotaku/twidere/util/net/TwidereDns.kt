@@ -155,10 +155,10 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
     }
 
     private fun fromSystemHosts(host: String): List<InetAddress>? {
-        try {
-            return systemHosts.resolve(host)
+        return try {
+            systemHosts.resolve(host)
         } catch (e: IOException) {
-            return null
+            null
         }
 
     }
@@ -304,10 +304,10 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
         @Throws(UnknownHostException::class)
         private fun addrFromRecord(name: String, r: Record): InetAddress {
             val addr: InetAddress
-            if (r is ARecord) {
-                addr = r.address
+            addr = if (r is ARecord) {
+                r.address
             } else {
-                addr = (r as AAAARecord).address
+                (r as AAAARecord).address
             }
             return InetAddress.getByAddress(name, addr.address)
         }

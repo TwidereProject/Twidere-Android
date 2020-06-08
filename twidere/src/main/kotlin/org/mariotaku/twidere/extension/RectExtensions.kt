@@ -62,17 +62,17 @@ fun Rect.offsetEndTo(x: Int, layoutDirection: Int) {
 }
 
 fun Rect.getStart(layoutDirection: Int): Int {
-    if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-        return this.right
+    return if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
+        this.right
     } else {
-        return this.left
+        this.left
     }
 }
 
 fun Rect.getEnd(layoutDirection: Int): Int {
-    if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-        return this.left
+    return if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
+        this.left
     } else {
-        return this.right
+        this.right
     }
 }

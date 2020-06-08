@@ -469,20 +469,20 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     }
 
     private fun newInstance(name: String, context: Context, attrs: AttributeSet): View? {
-        try {
+        return try {
             val cls = findClass(name) ?: throw ClassNotFoundException(name)
             val constructor = cls.getConstructor(Context::class.java, AttributeSet::class.java)
-            return constructor.newInstance(context, attrs) as View
+            constructor.newInstance(context, attrs) as View
         } catch (e: InstantiationException) {
-            return null
+            null
         } catch (e: IllegalAccessException) {
-            return null
+            null
         } catch (e: InvocationTargetException) {
-            return null
+            null
         } catch (e: NoSuchMethodException) {
-            return null
+            null
         } catch (e: ClassNotFoundException) {
-            return null
+            null
         }
 
     }

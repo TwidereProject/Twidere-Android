@@ -583,24 +583,24 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         override fun getItemViewType(position: Int): Int {
-            when (val countIndex = itemCounts.getItemCountIndex(position)) {
-                ITEM_INDEX_TOP_SPACE -> return VIEW_TYPE_TOP_SPACE
-                ITEM_INDEX_HEADER -> return VIEW_TYPE_HEADER
-                ITEM_INDEX_ITEM -> return VIEW_TYPE_USER
-                ITEM_INDEX_ADD_USER -> return VIEW_TYPE_ADD_USER
-                ITEM_INDEX_SPACE -> return VIEW_TYPE_BOTTOM_SPACE
+            return when (val countIndex = itemCounts.getItemCountIndex(position)) {
+                ITEM_INDEX_TOP_SPACE -> VIEW_TYPE_TOP_SPACE
+                ITEM_INDEX_HEADER -> VIEW_TYPE_HEADER
+                ITEM_INDEX_ITEM -> VIEW_TYPE_USER
+                ITEM_INDEX_ADD_USER -> VIEW_TYPE_ADD_USER
+                ITEM_INDEX_SPACE -> VIEW_TYPE_BOTTOM_SPACE
                 else -> throw UnsupportedCountIndexException(countIndex, position)
             }
         }
 
         override fun getItemId(position: Int): Long {
-            when (val countIndex = itemCounts.getItemCountIndex(position)) {
+            return when (val countIndex = itemCounts.getItemCountIndex(position)) {
                 ITEM_INDEX_ITEM -> {
                     val user = getUser(position)!!
-                    return (countIndex.toLong() shl 32) or user.hashCode().toLong()
+                    (countIndex.toLong() shl 32) or user.hashCode().toLong()
                 }
                 else -> {
-                    return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
+                    (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
                 }
             }
         }

@@ -36,10 +36,10 @@ class SimpleParcelableUsersAdapter(
 
     override fun getItemId(position: Int): Long {
         val item = getItem(position)
-        if (item != null) {
-            return item.hashCode().toLong()
+        return if (item != null) {
+            item.hashCode().toLong()
         } else {
-            return -1
+            -1
         }
     }
 

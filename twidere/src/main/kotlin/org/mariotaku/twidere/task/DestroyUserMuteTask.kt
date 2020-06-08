@@ -25,16 +25,16 @@ class DestroyUserMuteTask(context: Context) : AbsFriendshipOperationTask(context
 
     @Throws(MicroBlogException::class)
     override fun perform(details: AccountDetails, args: Arguments): ParcelableUser {
-        when (details.type) {
+        return when (details.type) {
             AccountType.TWITTER -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.destroyMute(args.userKey.id).toParcelable(details,
-                        profileImageSize = profileImageSize)
+                twitter.destroyMute(args.userKey.id).toParcelable(details,
+                    profileImageSize = profileImageSize)
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
                 mastodon.unmuteUser(args.userKey.id)
-                return mastodon.getAccount(args.userKey.id).toParcelable(details)
+                mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
             else -> throw APINotSupportedException(details.type)
         }

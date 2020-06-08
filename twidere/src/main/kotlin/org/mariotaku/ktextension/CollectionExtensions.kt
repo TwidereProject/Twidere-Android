@@ -13,10 +13,10 @@ fun Collection<*>?.isNullOrEmpty(): Boolean {
 }
 
 fun <T> MutableCollection<T>.addAllEnhanced(collection: Collection<T>, ignoreDuplicates: Boolean): Boolean {
-    if (ignoreDuplicates) {
-        return addAll(collection.filter { it !in this })
+    return if (ignoreDuplicates) {
+        addAll(collection.filter { it !in this })
     } else {
-        return addAll(collection)
+        addAll(collection)
     }
 }
 

@@ -809,10 +809,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val oauth = newMicroBlogInstance(context, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = TwitterOAuth::class.java)
             val accessToken: OAuthToken
-            if (oauthVerifier != null) {
-                accessToken = oauth.getAccessToken(requestToken, oauthVerifier)
+            accessToken = if (oauthVerifier != null) {
+                oauth.getAccessToken(requestToken, oauthVerifier)
             } else {
-                accessToken = oauth.getAccessToken(requestToken)
+                oauth.getAccessToken(requestToken)
             }
             auth = apiConfig.getOAuthAuthorization(accessToken) ?:
                     throw MicroBlogException("Invalid OAuth credential")
@@ -1087,10 +1087,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         protected val profileImageSize: String = activity.getString(R.string.profile_image_size)
 
         final override fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
-            try {
-                return SingleResponse.getInstance(performLogin())
+            return try {
+                SingleResponse.getInstance(performLogin())
             } catch (e: Exception) {
-                return SingleResponse.getInstance(e)
+                SingleResponse.getInstance(e)
             }
         }
 

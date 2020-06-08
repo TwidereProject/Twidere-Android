@@ -46,7 +46,7 @@ class AccountSelectorAdapter(
         set(value) {
             if (value != null) {
                 val previousAccounts = accounts
-                if (previousAccounts != null) {
+                field = if (previousAccounts != null) {
                     val tmpList = arrayListOf(*value)
                     val tmpResult = ArrayList<AccountDetails>()
                     previousAccounts.forEach { previousAccount ->
@@ -56,9 +56,9 @@ class AccountSelectorAdapter(
                         }
                     }
                     tmpResult.addAll(tmpList)
-                    field = tmpResult.toTypedArray()
+                    tmpResult.toTypedArray()
                 } else {
-                    field = value
+                    value
                 }
             } else {
                 field = null

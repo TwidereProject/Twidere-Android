@@ -42,10 +42,10 @@ class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(ALIGN_BOTT
         val intrinsicWidth = drawable.intrinsicWidth.toFloat()
         val intrinsicHeight = drawable.intrinsicHeight.toFloat()
         val scaledWidth: Int
-        if (intrinsicWidth > intrinsicHeight) {
-            scaledWidth = Math.round(textHeightPx * (intrinsicWidth / intrinsicHeight))
+        scaledWidth = if (intrinsicWidth > intrinsicHeight) {
+            Math.round(textHeightPx * (intrinsicWidth / intrinsicHeight))
         } else {
-            scaledWidth = Math.round(intrinsicWidth * (textHeightPx / intrinsicHeight))
+            Math.round(intrinsicWidth * (textHeightPx / intrinsicHeight))
         }
         val top = Math.round(fontMetrics.bottom) - textHeightPx
         val left = 0

@@ -123,16 +123,16 @@ class ContentNotificationManager(
             val displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
                     userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
                     nameFirst)
-            if (usersCount == 1) {
-                notificationContent = context.getString(R.string.from_name, displayName)
+            notificationContent = if (usersCount == 1) {
+                context.getString(R.string.from_name, displayName)
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1)
                 val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
-                        userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
-                        nameFirst)
-                notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName)
+                    userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
+                    nameFirst)
+                resources.getString(R.string.from_name_and_name, displayName, othersName)
             } else {
-                notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1)
+                resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1)
             }
 
             // Setup notification
@@ -414,10 +414,10 @@ class ContentNotificationManager(
             notificationDefaults = notificationDefaults or NotificationCompat.DEFAULT_LIGHTS
         }
         if (isNotificationAudible()) {
-            if (AccountPreferences.isNotificationHasVibration(defaultFlags)) {
-                notificationDefaults = notificationDefaults or NotificationCompat.DEFAULT_VIBRATE
+            notificationDefaults = if (AccountPreferences.isNotificationHasVibration(defaultFlags)) {
+                notificationDefaults or NotificationCompat.DEFAULT_VIBRATE
             } else {
-                notificationDefaults = notificationDefaults and NotificationCompat.DEFAULT_VIBRATE.inv()
+                notificationDefaults and NotificationCompat.DEFAULT_VIBRATE.inv()
             }
             if (AccountPreferences.isNotificationHasRingtone(defaultFlags)) {
                 builder.setSound(pref.notificationRingtone, AudioManager.STREAM_NOTIFICATION)

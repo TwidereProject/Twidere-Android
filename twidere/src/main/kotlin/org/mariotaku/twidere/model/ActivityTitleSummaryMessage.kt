@@ -119,17 +119,17 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                 Activity.Action.LIST_MEMBER_ADDED -> {
                     val title: CharSequence
                     val icon = R.drawable.ic_activity_action_list_added
-                    if (sources.size == 1 && activity.summary_line?.size == 1) {
+                    title = if (sources.size == 1 && activity.summary_line?.size == 1) {
                         val firstDisplayName = SpannableString(manager.getDisplayName(
-                                sources[0], nameFirst))
+                            sources[0], nameFirst))
                         val listName = SpannableString(activity.summary_line[0].content)
                         firstDisplayName.setSpan(StyleSpan(Typeface.BOLD), 0, firstDisplayName.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                         listName.setSpan(StyleSpan(Typeface.BOLD), 0, listName.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                         val format = context.getString(R.string.activity_about_me_list_member_added_with_name)
-                        title = SpanFormatter.format(format, firstDisplayName, listName)
+                        SpanFormatter.format(format, firstDisplayName, listName)
                     } else {
-                        title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_list_member_added,
-                                R.string.activity_about_me_list_member_added_multi, sources, nameFirst)
+                        getTitleStringAboutMe(resources, manager, R.string.activity_about_me_list_member_added,
+                            R.string.activity_about_me_list_member_added_multi, sources, nameFirst)
                     }
                     return ActivityTitleSummaryMessage(icon, defaultColor, title, null)
                 }

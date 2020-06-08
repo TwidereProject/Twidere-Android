@@ -218,10 +218,10 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         val statusParcelables = intent.getNullableTypedArrayExtra<ParcelableStatusUpdate>(EXTRA_STATUSES)
         val scheduleInfo = intent.getParcelableExtra<ScheduleInfo>(EXTRA_SCHEDULE_INFO)
         val statuses: Array<ParcelableStatusUpdate>
-        if (statusParcelables != null) {
-            statuses = statusParcelables
+        statuses = if (statusParcelables != null) {
+            statusParcelables
         } else if (status != null) {
-            statuses = arrayOf(status)
+            arrayOf(status)
         } else
             return
         @Draft.Action
@@ -375,9 +375,9 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     }
 
     private fun shouldWaitForProcess(info: ProcessingInfo): Boolean {
-        when (info.state) {
-            ProcessingInfo.State.PENDING, ProcessingInfo.State.IN_PROGRESS -> return true
-            else -> return false
+        return when (info.state) {
+            ProcessingInfo.State.PENDING, ProcessingInfo.State.IN_PROGRESS -> true
+            else -> false
         }
     }
 

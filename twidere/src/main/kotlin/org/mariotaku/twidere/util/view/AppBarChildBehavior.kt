@@ -212,50 +212,50 @@ class AppBarChildBehavior(
 
     private fun absoluteMarginLeft(layoutDirection: Int): Int {
         if (marginStart == 0 && marginEnd == 0) return marginLeft
-        if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            return marginEnd
+        return if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
+            marginEnd
         } else {
-            return marginStart
+            marginStart
         }
     }
 
     private fun absoluteMarginRight(layoutDirection: Int): Int {
         if (marginStart == 0 && marginEnd == 0) return marginRight
-        if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            return marginStart
+        return if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
+            marginStart
         } else {
-            return marginEnd
+            marginEnd
         }
     }
 
     private fun relativeMarginStart(layoutDirection: Int): Int {
-        if (marginStart != 0) {
+        return if (marginStart != 0) {
             if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                return -marginStart
+                -marginStart
             } else {
-                return marginStart
+                marginStart
             }
         } else {
             if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                return marginRight
+                marginRight
             } else {
-                return marginLeft
+                marginLeft
             }
         }
     }
 
     private fun relativeMarginEnd(layoutDirection: Int): Int {
-        if (marginEnd != 0) {
+        return if (marginEnd != 0) {
             if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                return -marginEnd
+                -marginEnd
             } else {
-                return marginEnd
+                marginEnd
             }
         } else {
             if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                return marginLeft
+                marginLeft
             } else {
-                return marginRight
+                marginRight
             }
         }
     }

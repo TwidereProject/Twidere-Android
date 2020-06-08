@@ -71,9 +71,9 @@ fun ParcelableCardEntity.getAsLong(key: String, def: Long): Long {
 
 fun ParcelableCardEntity.getAsDate(key: String, def: Date): Date {
     val value = getValue(key) ?: return def
-    try {
-        return ParcelableCardEntityUtils.sISOFormat.parse(value.value)
+    return try {
+        ParcelableCardEntityUtils.sISOFormat.parse(value.value)
     } catch (e: ParseException) {
-        return def
+        def
     }
 }

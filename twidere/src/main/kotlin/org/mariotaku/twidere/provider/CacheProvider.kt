@@ -168,16 +168,16 @@ class CacheProvider : ContentProvider() {
          */
         private fun modeToMode(mode: String): Int {
             val modeBits: Int
-            if ("r" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_READ_ONLY
+            modeBits = if ("r" == mode) {
+                ParcelFileDescriptor.MODE_READ_ONLY
             } else if ("w" == mode || "wt" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
+                ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
             } else if ("wa" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_APPEND
+                ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_APPEND
             } else if ("rw" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE
+                ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE
             } else if ("rwt" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
+                ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
             } else {
                 throw IllegalArgumentException("Invalid mode: $mode")
             }

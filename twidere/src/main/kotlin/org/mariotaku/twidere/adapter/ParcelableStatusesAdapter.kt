@@ -488,11 +488,11 @@ abstract class ParcelableStatusesAdapter(
                 } else {
                     dataPosition
                 }
-                if (reuse && data is ObjectCursor) {
+                return if (reuse && data is ObjectCursor) {
                     reuseStatus.is_filtered = false
-                    return data.setInto(listPosition, reuseStatus)
+                    data.setInto(listPosition, reuseStatus)
                 } else {
-                    return data[listPosition]
+                    data[listPosition]
                 }
             }
         }

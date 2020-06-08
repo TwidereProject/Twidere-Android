@@ -310,10 +310,10 @@ object DataStoreUtils {
 
     fun getAccountDisplayName(context: Context, accountKey: UserKey, nameFirst: Boolean): String? {
         val name: String?
-        if (nameFirst) {
-            name = getAccountName(context, accountKey)
+        name = if (nameFirst) {
+            getAccountName(context, accountKey)
         } else {
-            name = "@${getAccountScreenName(context, accountKey)}"
+            "@${getAccountScreenName(context, accountKey)}"
         }
         return name
     }
@@ -751,10 +751,10 @@ object DataStoreUtils {
         val tableName = getTableNameByUri(uri) ?: throw NullPointerException()
         val having = Expression.inArgs(keyField, nonNullKeys.size)
         val bindingArgs: Array<String>
-        if (extraWhereArgs != null) {
-            bindingArgs = extraWhereArgs + nonNullKeys
+        bindingArgs = if (extraWhereArgs != null) {
+            extraWhereArgs + nonNullKeys
         } else {
-            bindingArgs = nonNullKeys
+            nonNullKeys
         }
         val builder = SQLQueryBuilder.select(Columns(keyField, *valueFields))
         builder.from(Table(tableName))

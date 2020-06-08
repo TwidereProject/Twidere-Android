@@ -80,10 +80,10 @@ class StatusDetailsAdapter(
         internal set
     var translationResult: TranslationResult? = null
         internal set(translation) {
-            if (translation == null || status?.originalId != translation.id) {
-                field = null
+            field = if (translation == null || status?.originalId != translation.id) {
+                null
             } else {
-                field = translation
+                translation
             }
             notifyDataSetChanged()
         }
@@ -502,10 +502,10 @@ class StatusDetailsAdapter(
     var isConversationsLoading: Boolean
         get() = ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition
         set(loading) {
-            if (loading) {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition or ILoadMoreSupportAdapter.START
+            loadMoreIndicatorPosition = if (loading) {
+                loadMoreIndicatorPosition or ILoadMoreSupportAdapter.START
             } else {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START.inv()
+                loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START.inv()
             }
             updateItemDecoration()
         }
@@ -513,10 +513,10 @@ class StatusDetailsAdapter(
     var isRepliesLoading: Boolean
         get() = ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition
         set(loading) {
-            if (loading) {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition or ILoadMoreSupportAdapter.END
+            loadMoreIndicatorPosition = if (loading) {
+                loadMoreIndicatorPosition or ILoadMoreSupportAdapter.END
             } else {
-                loadMoreIndicatorPosition = loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END.inv()
+                loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END.inv()
             }
             updateItemDecoration()
         }

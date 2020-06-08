@@ -1304,10 +1304,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             TwidereLinkify.LINK_TYPE_LINK_IN_TEXT, TwidereLinkify.LINK_TYPE_ENTITY_URL -> {
                 val uri = Uri.parse(link)
                 val intent: Intent
-                if (uri.scheme != null) {
-                    intent = Intent(Intent.ACTION_VIEW, uri)
+                intent = if (uri.scheme != null) {
+                    Intent(Intent.ACTION_VIEW, uri)
                 } else {
-                    intent = Intent(Intent.ACTION_VIEW, uri.buildUpon().scheme("http").build())
+                    Intent(Intent.ACTION_VIEW, uri.buildUpon().scheme("http").build())
                 }
                 startActivity(intent)
                 return true
@@ -1405,18 +1405,18 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         previousActionBarItemIsDark = 0
         previousTabItemIsDark = 0
         setupBaseActionBar()
-        if (theme.isToolbarColored) {
-            primaryColor = color
+        primaryColor = if (theme.isToolbarColored) {
+            color
         } else {
-            primaryColor = theme.colorToolbar
+            theme.colorToolbar
         }
         primaryColorDark = ChameleonUtils.darkenColor(primaryColor)
         actionBarBackground.color = primaryColor
         val taskColor: Int
-        if (theme.isToolbarColored) {
-            taskColor = ColorUtils.setAlphaComponent(color, 0xFF)
+        taskColor = if (theme.isToolbarColored) {
+            ColorUtils.setAlphaComponent(color, 0xFF)
         } else {
-            taskColor = ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
+            ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
         }
         val user = this.user
         if (user != null) {
@@ -1525,10 +1525,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         val profileContentHeight = (profileNameContainer!!.height + profileDetailsContainer.height).toFloat()
         val tabOutlineAlphaFactor: Float
-        if (offset - spaceHeight > 0) {
-            tabOutlineAlphaFactor = 1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
+        tabOutlineAlphaFactor = if (offset - spaceHeight > 0) {
+            1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
         } else {
-            tabOutlineAlphaFactor = 1f
+            1f
         }
 
         actionBarBackground.apply {

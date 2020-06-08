@@ -124,12 +124,12 @@ object MenuUtils {
         val favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite)
         val likeHighlight = ContextCompat.getColor(context, R.color.highlight_like)
         val isMyRetweet: Boolean
-        if (RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)) {
-            isMyRetweet = true
+        isMyRetweet = if (RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)) {
+            true
         } else if (twitter.isDestroyingStatus(status.account_key, status.id)) {
-            isMyRetweet = false
+            false
         } else {
-            isMyRetweet = status.retweeted || Utils.isMyRetweet(status)
+            status.retweeted || Utils.isMyRetweet(status)
         }
         val isMyStatus = Utils.isMyStatus(status)
         menu.setItemAvailability(R.id.delete, isMyStatus)
@@ -164,12 +164,12 @@ object MenuUtils {
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
             val isFavorite: Boolean
-            if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
-                isFavorite = true
+            isFavorite = if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
+                true
             } else if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
-                isFavorite = false
+                false
             } else {
-                isFavorite = status.is_favorite
+                status.is_favorite
             }
             val provider = MenuItemCompat.getActionProvider(favorite)
             val useStar = preferences[iWantMyStarsBackKey]

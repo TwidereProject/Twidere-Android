@@ -98,12 +98,12 @@ class ActionIconThemedTextView(
             if (d == null) continue
             d.mutate()
             val color: Int
-            if (isActivated) {
-                color = activatedColor
+            color = if (isActivated) {
+                activatedColor
             } else if (isEnabled) {
-                color = defaultColor
+                defaultColor
             } else {
-                color = disabledColor
+                disabledColor
             }
 
             if (iconWidth > 0 && iconHeight > 0) {

@@ -10,23 +10,23 @@ import android.os.Handler
 
 fun AccountManager.addOnAccountsUpdatedListenerSafe(listener: OnAccountsUpdateListener,
         handler: Handler? = null, updateImmediately: Boolean = false): Boolean {
-    try {
+    return try {
         this.addOnAccountsUpdatedListener(listener, handler, updateImmediately)
-        return true
+        true
     } catch (e: IllegalStateException) {
-        return false
+        false
     } catch (e: IllegalArgumentException) {
-        return false
+        false
     }
 }
 
 fun AccountManager.removeOnAccountsUpdatedListenerSafe(listener: OnAccountsUpdateListener): Boolean {
-    try {
+    return try {
         this.removeOnAccountsUpdatedListener(listener)
-        return true
+        true
     } catch (e: IllegalStateException) {
-        return false
+        false
     } catch (e: IllegalArgumentException) {
-        return false
+        false
     }
 }

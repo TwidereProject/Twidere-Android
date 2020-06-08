@@ -37,23 +37,23 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         preferenceManager.sharedPreferencesName = SHARED_PREFERENCES_NAME
         val defaultScreen = preferenceScreen
         val preferenceScreen: PreferenceScreen
-        if (defaultScreen != null) {
+        preferenceScreen = if (defaultScreen != null) {
             defaultScreen.removeAll()
-            preferenceScreen = defaultScreen
+            defaultScreen
         } else {
-            preferenceScreen = preferenceManager.createPreferenceScreen(activity)
+            preferenceManager.createPreferenceScreen(activity)
         }
         setPreferenceScreen(preferenceScreen)
 
         val args = arguments
         val rawResId = args?.get(EXTRA_RESID)
         val resId: Int
-        if (rawResId is Int) {
-            resId = rawResId
+        resId = if (rawResId is Int) {
+            rawResId
         } else if (rawResId is String) {
-            resId = Utils.getResId(activity, rawResId)
+            Utils.getResId(activity, rawResId)
         } else {
-            resId = 0
+            0
         }
         if (resId != 0) {
             addPreferencesFromResource(resId)

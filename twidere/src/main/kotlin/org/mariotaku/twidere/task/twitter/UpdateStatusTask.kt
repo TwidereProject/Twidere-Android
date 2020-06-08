@@ -74,12 +74,12 @@ class UpdateStatusTask(
             applyUpdateStatus(update)
         }
         microBlogWrapper.addSendingDraftId(draftId)
-        try {
+        return try {
             val result = doUpdateStatus(update, info, draftId)
             deleteOrUpdateDraft(update, result, draftId)
-            return result
+            result
         } catch (e: UpdateStatusException) {
-            return UpdateStatusResult(e, draftId)
+            UpdateStatusResult(e, draftId)
         } finally {
             microBlogWrapper.removeSendingDraftId(draftId)
         }
@@ -117,10 +117,10 @@ class UpdateStatusTask(
             uploadMedia(uploader, update, info, pendingUpdate)
             shortenStatus(shortener, update, pendingUpdate)
 
-            if (info != null) {
-                result = requestScheduleStatus(update, pendingUpdate, info, draftId)
+            result = if (info != null) {
+                requestScheduleStatus(update, pendingUpdate, info, draftId)
             } else {
-                result = requestUpdateStatus(update, pendingUpdate, draftId)
+                requestUpdateStatus(update, pendingUpdate, draftId)
             }
 
             mediaUploadCallback(uploader, pendingUpdate, result)
@@ -880,9 +880,9 @@ class UpdateStatusTask(
         }
 
         private fun shouldWaitForProcess(info: MediaUploadResponse.ProcessingInfo): Boolean {
-            when (info.state) {
-                MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> return true
-                else -> return false
+            return when (info.state) {
+                MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> true
+                else -> false
             }
         }
 

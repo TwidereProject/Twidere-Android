@@ -700,15 +700,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             } else {
                 dest = prefDest
             }
-            if (account.isOfficial(context)) {
-                return twitter.showTranslation(status.originalId, dest)
+            return if (account.isOfficial(context)) {
+                twitter.showTranslation(status.originalId, dest)
             } else {
                 val holder = DependencyHolder.get(context)
                 val api = YandexAPIFactory(preferences[yandexKeyKey], "https://translate.yandex.net/")
-                        .setHttpClient(holder.restHttpClient)
-                        .build()
+                    .setHttpClient(holder.restHttpClient)
+                    .build()
                 val result = api.search(status.text_plain, "${status.lang}-${dest.split('-').firstOrNull()}")
-                return TranslationResult().also {
+                TranslationResult().also {
                     it[TranslationResult::class.java.getDeclaredField("text")] = result.text?.firstOrNull()
                     it[TranslationResult::class.java.getDeclaredField("id")] = status.originalId
                     it[TranslationResult::class.java.getDeclaredField("translatedLang")] = result.lang?.split('-')?.lastOrNull()

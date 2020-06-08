@@ -180,16 +180,16 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val childCount = rebuildChildInfo()
         var heightSum = 0
         if (childCount > 0) {
-            if (childCount == 1) {
-                heightSum = measure1Media(contentWidth, childIndices, ratioMultiplier)
+            heightSum = if (childCount == 1) {
+                measure1Media(contentWidth, childIndices, ratioMultiplier)
             } else if (childCount == 2) {
-                heightSum = measureGridMedia(childCount, 2, contentWidth, ratioMultiplier, horizontalSpacing,
-                        verticalSpacing, childIndices)
+                measureGridMedia(childCount, 2, contentWidth, ratioMultiplier, horizontalSpacing,
+                    verticalSpacing, childIndices)
             } else if (childCount == 3) {
-                heightSum = measure3Media(contentWidth, horizontalSpacing, childIndices, ratioMultiplier)
+                measure3Media(contentWidth, horizontalSpacing, childIndices, ratioMultiplier)
             } else {
-                heightSum = measureGridMedia(childCount, 2, contentWidth,
-                        WIDTH_HEIGHT_RATIO * ratioMultiplier, horizontalSpacing, verticalSpacing, childIndices)
+                measureGridMedia(childCount, 2, contentWidth,
+                    WIDTH_HEIGHT_RATIO * ratioMultiplier, horizontalSpacing, verticalSpacing, childIndices)
             }
             if (contentHeight > 0) {
                 heightSum = contentHeight

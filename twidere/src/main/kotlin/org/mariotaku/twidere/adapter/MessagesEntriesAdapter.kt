@@ -77,9 +77,9 @@ class MessagesEntriesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        when (val countIndex = itemCounts.getItemCountIndex(position)) {
-            0 -> return ITEM_TYPE_MESSAGE_ENTRY
-            1 -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
+        return when (val countIndex = itemCounts.getItemCountIndex(position)) {
+            0 -> ITEM_TYPE_MESSAGE_ENTRY
+            1 -> ITEM_VIEW_TYPE_LOAD_INDICATOR
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
     }

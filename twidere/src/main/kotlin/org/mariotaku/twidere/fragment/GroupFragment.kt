@@ -113,10 +113,10 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
                 val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
                         throw MicroBlogException("No account")
                 val group: Group
-                if (groupId != null) {
-                    group = twitter.showGroup(groupId)
+                group = if (groupId != null) {
+                    twitter.showGroup(groupId)
                 } else if (groupName != null) {
-                    group = twitter.showGroupByName(groupName)
+                    twitter.showGroupByName(groupName)
                 } else {
                     return SingleResponse()
                 }

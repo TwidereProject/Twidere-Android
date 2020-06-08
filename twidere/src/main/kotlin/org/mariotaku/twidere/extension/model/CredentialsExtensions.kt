@@ -65,10 +65,10 @@ fun Credentials.getAuthorization(cls: Class<*>?): Authorization {
 fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
     val apiUrlFormat: String
     val noVersionSuffix = this.no_version_suffix
-    if (!TextUtils.isEmpty(this.api_url_format)) {
-        apiUrlFormat = this.api_url_format
+    apiUrlFormat = if (!TextUtils.isEmpty(this.api_url_format)) {
+        this.api_url_format
     } else {
-        apiUrlFormat = DEFAULT_TWITTER_API_URL_FORMAT
+        DEFAULT_TWITTER_API_URL_FORMAT
     }
     val domain: String?
     val versionSuffix: String?
@@ -114,10 +114,10 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
     val endpointUrl = MicroBlogAPIFactory.getApiUrl(apiUrlFormat, domain, versionSuffix)
     if (this is OAuthCredentials) {
         val signEndpointUrl: String
-        if (same_oauth_signing_url) {
-            signEndpointUrl = endpointUrl
+        signEndpointUrl = if (same_oauth_signing_url) {
+            endpointUrl
         } else {
-            signEndpointUrl = MicroBlogAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix)
+            MicroBlogAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix)
         }
         return OAuthEndpoint(endpointUrl, signEndpointUrl)
     }
@@ -180,11 +180,11 @@ internal fun Credentials.authorizationHeader(
 ): String {
     val auth = getAuthorization(cls)
     val endpoint: Endpoint
-    if (auth is OAuthAuthorization) {
-        endpoint = OAuthEndpoint(TwidereMediaDownloader.getEndpoint(modifiedUri),
-                TwidereMediaDownloader.getEndpoint(uri))
+    endpoint = if (auth is OAuthAuthorization) {
+        OAuthEndpoint(TwidereMediaDownloader.getEndpoint(modifiedUri),
+            TwidereMediaDownloader.getEndpoint(uri))
     } else {
-        endpoint = Endpoint(TwidereMediaDownloader.getEndpoint(modifiedUri))
+        Endpoint(TwidereMediaDownloader.getEndpoint(modifiedUri))
     }
     val queries = MultiValueMap<String>()
     for (name in uri.queryParameterNames) {

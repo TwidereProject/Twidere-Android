@@ -23,10 +23,10 @@ class ErrorInfoStore(application: Context) {
 
     operator fun get(key: String, extraId: UserKey): Int {
         val host = extraId.host
-        if (host == null) {
-            return get(key, extraId.id)
+        return if (host == null) {
+            get(key, extraId.id)
         } else {
-            return get(key + "_" + extraId.id + "_" + host)
+            get(key + "_" + extraId.id + "_" + host)
         }
     }
 

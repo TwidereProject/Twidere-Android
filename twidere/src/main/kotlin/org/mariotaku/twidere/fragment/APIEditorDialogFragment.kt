@@ -94,10 +94,10 @@ class APIEditorDialogFragment : BaseDialogFragment() {
                         tag = "api_url_format_help")
             }
 
-            if (savedInstanceState != null) {
-                apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)!!
+            apiConfig = if (savedInstanceState != null) {
+                savedInstanceState.getParcelable(EXTRA_API_CONFIG)!!
             } else {
-                apiConfig = arguments?.getParcelable(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
+                arguments?.getParcelable(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
             }
             displayCustomApiConfig()
         }

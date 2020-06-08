@@ -61,10 +61,10 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val color: Int
         val args = arguments
-        if (savedInstanceState != null) {
-            color = savedInstanceState.getInt(EXTRA_COLOR, Color.WHITE)
+        color = if (savedInstanceState != null) {
+            savedInstanceState.getInt(EXTRA_COLOR, Color.WHITE)
         } else {
-            color = args!!.getInt(EXTRA_COLOR, Color.WHITE)
+            args!!.getInt(EXTRA_COLOR, Color.WHITE)
         }
 
         val activity = activity

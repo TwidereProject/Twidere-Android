@@ -204,10 +204,10 @@ class DetailStatusViewHolder(
 
         val timestamp: Long
 
-        if (status.is_retweet) {
-            timestamp = status.retweet_timestamp
+        timestamp = if (status.is_retweet) {
+            status.retweet_timestamp
         } else {
-            timestamp = status.timestamp
+            status.timestamp
         }
 
         nameView.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
@@ -737,15 +737,15 @@ class DetailStatusViewHolder(
 
             fun displayCount(count: LabeledCount, hideNumbers: Boolean) {
                 val label: String
-                when (count.type) {
+                label = when (count.type) {
                     KEY_REPLY_COUNT -> {
-                        label = adapter.context.getString(R.string.replies)
+                        adapter.context.getString(R.string.replies)
                     }
                     KEY_RETWEET_COUNT -> {
-                        label = adapter.context.getString(R.string.count_label_retweets)
+                        adapter.context.getString(R.string.count_label_retweets)
                     }
                     KEY_FAVORITE_COUNT -> {
-                        label = adapter.context.getString(R.string.title_favorites)
+                        adapter.context.getString(R.string.title_favorites)
                     }
                     else -> {
                         throw UnsupportedOperationException("Unsupported type " + count.type)

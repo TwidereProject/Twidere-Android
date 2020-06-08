@@ -89,9 +89,9 @@ class SelectableUsersAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        when (val countIndex = itemCounts.getItemCountIndex(position)) {
-            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
-            ITEM_TYPE_USER -> return ITEM_VIEW_TYPE_USER
+        return when (val countIndex = itemCounts.getItemCountIndex(position)) {
+            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> ITEM_VIEW_TYPE_LOAD_INDICATOR
+            ITEM_TYPE_USER -> ITEM_VIEW_TYPE_USER
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
 

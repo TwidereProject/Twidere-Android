@@ -74,12 +74,12 @@ class ParcelableStatusLoader(
             }
         }
         if (details == null) return SingleResponse(MicroBlogException("No account"))
-        try {
+        return try {
             val status = DataStoreUtils.findStatus(context, accountKey, statusId)
             status.updateExtraInformation(details)
             val response = SingleResponse(status)
             response.extras[EXTRA_ACCOUNT] = details
-            return response
+            response
         } catch (e: MicroBlogException) {
             if (e.errorCode == ErrorInfo.STATUS_NOT_FOUND) {
                 // Delete all deleted status
@@ -87,7 +87,7 @@ class ParcelableStatusLoader(
                 DataStoreUtils.deleteStatus(cr, accountKey, statusId, null)
                 cr.deleteActivityStatus(accountKey, statusId, null)
             }
-            return SingleResponse(e)
+            SingleResponse(e)
         }
 
     }

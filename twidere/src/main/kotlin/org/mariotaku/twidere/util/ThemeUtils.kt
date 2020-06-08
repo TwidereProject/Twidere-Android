@@ -116,12 +116,12 @@ object ThemeUtils {
 
     fun getCardBackgroundColor(context: Context, backgroundOption: String, themeAlpha: Int): Int {
         val color = getColorFromAttribute(context, R.attr.cardItemBackgroundColor)
-        if (isTransparentBackground(backgroundOption)) {
-            return ColorUtils.setAlphaComponent(color, themeAlpha)
+        return if (isTransparentBackground(backgroundOption)) {
+            ColorUtils.setAlphaComponent(color, themeAlpha)
         } else if (isSolidBackground(backgroundOption)) {
-            return TwidereColorUtils.getContrastYIQ(color, Color.WHITE, Color.BLACK)
+            TwidereColorUtils.getContrastYIQ(color, Color.WHITE, Color.BLACK)
         } else {
-            return color
+            color
         }
     }
 
@@ -151,14 +151,14 @@ object ThemeUtils {
     }
 
     fun getColorBackground(context: Context, backgroundOption: String, alpha: Int): Int {
-        if (isWindowFloating(context)) {
-            return getColorBackground(context)
+        return if (isWindowFloating(context)) {
+            getColorBackground(context)
         } else if (backgroundOption == VALUE_THEME_BACKGROUND_TRANSPARENT) {
-            return ColorUtils.setAlphaComponent(getColorBackground(context), alpha)
+            ColorUtils.setAlphaComponent(getColorBackground(context), alpha)
         } else if (backgroundOption == VALUE_THEME_BACKGROUND_SOLID) {
-            return if (isLightTheme(context)) Color.WHITE else Color.BLACK
+            if (isLightTheme(context)) Color.WHITE else Color.BLACK
         } else {
-            return getColorBackground(context)
+            getColorBackground(context)
         }
     }
 
@@ -273,10 +273,10 @@ object ThemeUtils {
     fun getWindowBackgroundFromThemeApplyAlpha(context: Context, alpha: Int): Drawable {
         var backgroundColor: Int
         val d = getWindowBackground(context)
-        if (d is ColorDrawable) {
-            backgroundColor = d.color
+        backgroundColor = if (d is ColorDrawable) {
+            d.color
         } else {
-            backgroundColor = getColorBackground(context)
+            getColorBackground(context)
         }
         backgroundColor = ColorUtils.setAlphaComponent(backgroundColor,
                 alpha.coerceIn(MIN_ALPHA..MAX_ALPHA))
@@ -430,10 +430,10 @@ object ThemeUtils {
         toolbar.setSubtitleTextColor(contrastForegroundColor)
         val popupItemColor: Int
         val popupTheme = toolbar.popupTheme
-        if (popupTheme != 0) {
-            popupItemColor = getThemeForegroundColor(context, popupTheme)
+        popupItemColor = if (popupTheme != 0) {
+            getThemeForegroundColor(context, popupTheme)
         } else {
-            popupItemColor = getThemeForegroundColor(context)
+            getThemeForegroundColor(context)
         }
         val navigationIcon = toolbar.navigationIcon
         if (navigationIcon != null) {

@@ -60,11 +60,11 @@ class MediaTimelineLoader(
     private val isMyTimeline: Boolean
         get() {
             val accountKey = accountKey ?: return false
-            if (userKey != null) {
-                return userKey.maybeEquals(accountKey)
+            return if (userKey != null) {
+                userKey.maybeEquals(accountKey)
             } else {
                 val accountScreenName = DataStoreUtils.getAccountScreenName(context, accountKey)
-                return accountScreenName != null && accountScreenName.equals(screenName, ignoreCase = true)
+                accountScreenName != null && accountScreenName.equals(screenName, ignoreCase = true)
             }
         }
 

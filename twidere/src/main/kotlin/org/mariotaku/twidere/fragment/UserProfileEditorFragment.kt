@@ -231,11 +231,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             REQUEST_UPLOAD_PROFILE_BANNER_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
-                if (resultCode == RESULT_REMOVE_BANNER) {
-                    currentTask = context?.let { RemoveProfileBannerTaskInternal(it, accountKey) }
+                currentTask = if (resultCode == RESULT_REMOVE_BANNER) {
+                    context?.let { RemoveProfileBannerTaskInternal(it, accountKey) }
                 } else {
-                    currentTask = UpdateProfileBannerImageTaskInternal(this, accountKey,
-                            data.data!!, true)
+                    UpdateProfileBannerImageTaskInternal(this, accountKey,
+                        data.data!!, true)
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {

@@ -289,12 +289,12 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
                 updateVolume()
             }
             R.id.playPauseButton -> {
-                if (videoView.isPlaying) {
+                pausedByUser = if (videoView.isPlaying) {
                     videoView.pause()
-                    pausedByUser = true
+                    true
                 } else {
                     videoView.start()
-                    pausedByUser = false
+                    false
                 }
                 updatePlayerState()
             }

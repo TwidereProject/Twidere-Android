@@ -1146,16 +1146,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             INTENT_ACTION_EDIT_DRAFT -> {
                 val draft: Draft? = intent.getParcelableExtra(EXTRA_DRAFT)
-                when (draft?.action_type) {
+                return when (draft?.action_type) {
                     Draft.Action.REPLY -> {
-                        return showReplyLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
+                        showReplyLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
                     }
                     Draft.Action.QUOTE -> {
-                        return showQuoteLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
+                        showQuoteLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
                     }
                     else -> {
                         showDefaultLabelAndHint()
-                        return false
+                        false
                     }
                 }
             }
@@ -2096,12 +2096,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private class DisplayPlaceNameTask : AbstractTask<ParcelableLocation, List<Address>, ComposeActivity>() {
 
         override fun doLongOperation(location: ParcelableLocation): List<Address>? {
-            try {
+            return try {
                 val activity = callback ?: throw IOException("Interrupted")
                 val gcd = Geocoder(activity, Locale.getDefault())
-                return gcd.getFromLocation(location.latitude, location.longitude, 1)
+                gcd.getFromLocation(location.latitude, location.longitude, 1)
             } catch (e: IOException) {
-                return null
+                null
             }
 
         }

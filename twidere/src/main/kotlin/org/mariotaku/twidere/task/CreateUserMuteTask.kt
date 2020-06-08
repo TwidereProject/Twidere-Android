@@ -32,16 +32,16 @@ class CreateUserMuteTask(
 
     @Throws(MicroBlogException::class)
     override fun perform(details: AccountDetails, args: Arguments): ParcelableUser {
-        when (details.type) {
+        return when (details.type) {
             AccountType.TWITTER -> {
                 val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return twitter.createMute(args.userKey.id).toParcelable(details,
-                        profileImageSize = profileImageSize)
+                twitter.createMute(args.userKey.id).toParcelable(details,
+                    profileImageSize = profileImageSize)
             }
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
                 mastodon.muteUser(args.userKey.id)
-                return mastodon.getAccount(args.userKey.id).toParcelable(details)
+                mastodon.getAccount(args.userKey.id).toParcelable(details)
             }
             else -> throw APINotSupportedException(details.type)
         }
