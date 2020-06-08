@@ -78,7 +78,7 @@ class GetMessagesTask(
 
     override fun doLongOperation(param: RefreshMessagesTaskParam) {
         val accountKeys = param.accountKeys
-        val am = android.accounts.AccountManager.get(context)
+        val am = AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
             val details = try {
                 getAccountDetails(am, accountKey, true) ?: return@forEachIndexed

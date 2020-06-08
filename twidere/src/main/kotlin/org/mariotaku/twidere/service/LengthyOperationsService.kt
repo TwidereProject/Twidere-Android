@@ -337,7 +337,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                     val currentBulkSize = Math.min(BULK_SIZE, length - streamReadLength).toInt()
                     val output = ByteArrayOutputStream()
                     Utils.copyStream(stream, output, currentBulkSize)
-                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
+                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT)
                     upload.appendUploadMedia(response.id, segmentIndex, data)
                     output.close()
                     segmentIndex++

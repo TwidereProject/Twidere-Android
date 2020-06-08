@@ -60,7 +60,7 @@ class InteractionsTabConfiguration : TabConfiguration() {
             MentionsOnlyExtraConfiguration(EXTRA_MENTIONS_ONLY).mutable(true)
     )
 
-    override fun applyExtraConfigurationTo(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun applyExtraConfigurationTo(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val extras = tab.extras as InteractionsTabExtras
         when (extraConf.key) {
             EXTRA_MY_FOLLOWING_ONLY -> {
@@ -73,7 +73,7 @@ class InteractionsTabConfiguration : TabConfiguration() {
         return true
     }
 
-    override fun readExtraConfigurationFrom(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun readExtraConfigurationFrom(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val extras = tab.extras as? InteractionsTabExtras ?: return false
         when (extraConf.key) {
             EXTRA_MY_FOLLOWING_ONLY -> {
@@ -88,7 +88,7 @@ class InteractionsTabConfiguration : TabConfiguration() {
 
     private class MentionsOnlyExtraConfiguration(key: String) : BooleanExtraConfiguration(key,
             StringHolder.resource(R.string.mentions_only),
-            MentionsOnlyExtraConfiguration.InteractionsAvailableBooleanHolder()) {
+            InteractionsAvailableBooleanHolder()) {
 
         private var valueBackup: Boolean = false
 

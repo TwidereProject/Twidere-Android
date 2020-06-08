@@ -65,7 +65,7 @@ import java.util.concurrent.TimeUnit
  */
 class UpdateStatusTask(
         context: Context,
-        internal val stateCallback: UpdateStatusTask.StateCallback
+        internal val stateCallback: StateCallback
 ) : BaseAbstractTask<Pair<ParcelableStatusUpdate, ScheduleInfo?>, UpdateStatusTask.UpdateStatusResult, Any?>(context) {
 
     override fun doLongOperation(params: Pair<ParcelableStatusUpdate, ScheduleInfo?>): UpdateStatusResult {
@@ -845,7 +845,7 @@ class UpdateStatusTask(
                     val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - streamReadLength).toInt()
                     val output = ByteArrayOutputStream()
                     Utils.copyStream(stream, output, currentBulkSize)
-                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
+                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT)
                     upload.appendUploadMedia(response.id, segmentIndex, data)
                     output.close()
                     segmentIndex++

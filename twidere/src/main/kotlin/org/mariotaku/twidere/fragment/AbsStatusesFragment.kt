@@ -653,7 +653,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
 
         fun handleActionActivityResult(fragment: BaseFragment, requestCode: Int, resultCode: Int, data: Intent?) {
             when (requestCode) {
-                AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT -> {
+                REQUEST_FAVORITE_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)!!
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)!!
@@ -667,7 +667,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                         fragment.twitterWrapper.createFavoriteAsync(accountKey, status)
                     }
                 }
-                AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                REQUEST_RETWEET_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)!!
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)!!

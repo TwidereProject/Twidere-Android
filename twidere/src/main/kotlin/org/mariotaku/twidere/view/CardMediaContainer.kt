@@ -172,7 +172,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val contentWidth = measuredWidth - paddingLeft - paddingRight
         var ratioMultiplier = 1f
         var contentHeight = -1
-        if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+        if (layoutParams.height != LayoutParams.WRAP_CONTENT) {
             val measuredHeight = View.resolveSize(suggestedMinimumWidth, widthMeasureSpec)
             ratioMultiplier = if (contentWidth > 0) measuredHeight / (contentWidth * WIDTH_HEIGHT_RATIO) else 1f
             contentHeight = contentWidth
@@ -198,7 +198,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             heightSum = contentHeight
         }
         val height = heightSum + paddingTop + paddingBottom
-        setMeasuredDimension(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+        setMeasuredDimension(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
     }
 
     override fun checkLayoutParams(p: LayoutParams?): Boolean {
@@ -229,8 +229,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                 }
             }
         }
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(contentWidth, View.MeasureSpec.EXACTLY)
-        val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
+        val widthSpec = MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
         child.measure(widthSpec, heightSpec)
         findViewById<View>(videoViewIds[0])?.measure(widthSpec, heightSpec)
         return childHeight
@@ -251,8 +251,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             childIndices: IntArray): Int {
         val childWidth = (contentWidth - horizontalSpacing * (columnCount - 1)) / columnCount
         val childHeight = Math.round(childWidth * widthHeightRatio)
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.EXACTLY)
-        val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
+        val widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             getChildAt(childIndices[i]).measure(widthSpec, heightSpec)
             findViewById<View>(videoViewIds[i])?.measure(widthSpec, heightSpec)
@@ -290,12 +290,12 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val child1 = getChildAt(childIndices[1])
         val child2 = getChildAt(childIndices[2])
         val childWidth = (contentWidth - horizontalSpacing) / 2
-        val childLeftHeightSpec = View.MeasureSpec.makeMeasureSpec(Math.round(childWidth * ratioMultiplier), View.MeasureSpec.EXACTLY)
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.EXACTLY)
+        val childLeftHeightSpec = MeasureSpec.makeMeasureSpec(Math.round(childWidth * ratioMultiplier), MeasureSpec.EXACTLY)
+        val widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
         child0.measure(widthSpec, childLeftHeightSpec)
 
         val childRightHeight = Math.round((childWidth - horizontalSpacing) / 2 * ratioMultiplier)
-        val childRightHeightSpec = View.MeasureSpec.makeMeasureSpec(childRightHeight, View.MeasureSpec.EXACTLY)
+        val childRightHeightSpec = MeasureSpec.makeMeasureSpec(childRightHeight, MeasureSpec.EXACTLY)
         child1.measure(widthSpec, childRightHeightSpec)
         child2.measure(widthSpec, childRightHeightSpec)
 
@@ -346,7 +346,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         return indicesCount
     }
 
-    class MediaLayoutParams : ViewGroup.LayoutParams {
+    class MediaLayoutParams : LayoutParams {
 
         val isMediaItemView: Boolean
         val videoViewId: Int
@@ -373,7 +373,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             listener: OnMediaClickListener?,
             private val accountKey: UserKey?,
             private val extraId: Long
-    ) : View.OnClickListener {
+    ) : OnClickListener {
 
         private val weakListener = WeakReference<OnMediaClickListener>(listener)
 

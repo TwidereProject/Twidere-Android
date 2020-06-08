@@ -353,7 +353,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
         class ActivityCursor(
                 cursor: Cursor,
-                indies: ObjectCursor.CursorIndices<ParcelableActivity>,
+                indies: CursorIndices<ParcelableActivity>,
                 val filteredUserIds: Array<UserKey>,
                 val filteredUserNames: Array<String>,
                 val filteredUserDescriptions: Array<String>

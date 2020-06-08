@@ -139,7 +139,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
             override fun onAddUserClick(position: Int) {
                 val conversation = adapter.conversation ?: return
-                val intent = Intent(IntentConstants.INTENT_ACTION_SELECT_USER)
+                val intent = Intent(INTENT_ACTION_SELECT_USER)
                 intent.putExtra(EXTRA_ACCOUNT_KEY, conversation.account_key)
                 intent.setClass(context, UserSelectorActivity::class.java)
                 startActivityForResult(intent, REQUEST_CONVERSATION_ADD_USER)

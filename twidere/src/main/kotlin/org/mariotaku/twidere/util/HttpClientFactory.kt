@@ -41,7 +41,7 @@ object HttpClientFactory {
         updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             val tlsTocketFactory = TLSSocketFactory()
-            builder.sslSocketFactory(tlsTocketFactory, tlsTocketFactory.trustManager);
+            builder.sslSocketFactory(tlsTocketFactory, tlsTocketFactory.trustManager)
         }
         updateTLSConnectionSpecs(builder)
         DebugModeUtils.initForOkHttpClient(builder)

@@ -64,7 +64,7 @@ class TwidereGlideModule : AppGlideModule() {
     }
 
     override fun isManifestParsingEnabled(): Boolean {
-        return false;
+        return false
     }
 
     class ThumborModifier(val thumbor: ThumborWrapper) : ModifyRequestInterceptor.RequestModifier {

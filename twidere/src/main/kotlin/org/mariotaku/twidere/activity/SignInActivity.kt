@@ -823,7 +823,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
@@ -901,7 +901,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return authOAuth()
         }
 
-        @Throws(OAuthPasswordAuthenticator.AuthenticationException::class, MicroBlogException::class)
+        @Throws(AuthenticationException::class, MicroBlogException::class)
         private fun authOAuth(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
@@ -940,7 +940,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return getOAuthSignInResponse(activity, accessToken, Credentials.Type.XAUTH)
         }
 
-        @Throws(MicroBlogException::class, OAuthPasswordAuthenticator.AuthenticationException::class)
+        @Throws(MicroBlogException::class, AuthenticationException::class)
         private fun authBasic(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             val versionSuffix = if (apiConfig.isNoVersionSuffix) null else "1.1"
@@ -962,7 +962,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             }
 
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -991,7 +991,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -1018,7 +1018,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -1040,11 +1040,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return SignInResponse(account != null, authType, credentials, user, color, type, extras)
         }
 
-        internal class WrongBasicCredentialException : OAuthPasswordAuthenticator.AuthenticationException()
+        internal class WrongBasicCredentialException : AuthenticationException()
 
-        internal class WrongAPIURLFormatException : OAuthPasswordAuthenticator.AuthenticationException()
+        internal class WrongAPIURLFormatException : AuthenticationException()
 
-        internal inner class InputLoginVerificationCallback : OAuthPasswordAuthenticator.LoginVerificationCallback {
+        internal inner class InputLoginVerificationCallback : LoginVerificationCallback {
 
             override fun getLoginVerification(challengeType: String): String? {
                 // Dismiss current progress dialog

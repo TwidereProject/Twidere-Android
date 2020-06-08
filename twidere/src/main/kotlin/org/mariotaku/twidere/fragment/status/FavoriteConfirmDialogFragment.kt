@@ -113,7 +113,7 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
                 this[EXTRA_STATUS_ID] = statusId
                 this[EXTRA_STATUS] = status
             }
-            f.show(fm, FavoriteConfirmDialogFragment.FRAGMENT_TAG)
+            f.show(fm, FRAGMENT_TAG)
             return f
         }
     }

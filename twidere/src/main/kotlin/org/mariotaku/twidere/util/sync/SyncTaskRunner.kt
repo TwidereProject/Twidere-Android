@@ -36,7 +36,7 @@ abstract class SyncTaskRunner(val context: Context) {
     protected abstract fun onRunningTask(action: String, callback: ((Boolean) -> Unit)): Boolean
 
     fun runTask(action: String, callback: ((Boolean) -> Unit)? = null): Boolean {
-        val syncType = SyncTaskRunner.getSyncType(action) ?: return false
+        val syncType = getSyncType(action) ?: return false
         if (!syncPreferences.isSyncEnabled(syncType)) return false
         return onRunningTask(action) { success ->
             callback?.invoke(success)

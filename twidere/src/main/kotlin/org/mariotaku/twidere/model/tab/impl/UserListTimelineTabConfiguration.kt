@@ -62,7 +62,7 @@ class UserListTimelineTabConfiguration : TabConfiguration() {
 //            BooleanExtraConfiguration(EXTRA_HIDE_REPLIES, R.string.hide_replies, false).mutable(true)
     )
 
-    override fun applyExtraConfigurationTo(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun applyExtraConfigurationTo(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val arguments = tab.arguments as UserListArguments
         when (extraConf.key) {
             EXTRA_USER_LIST -> {
@@ -85,7 +85,7 @@ class UserListTimelineTabConfiguration : TabConfiguration() {
         return true
     }
 
-    override fun readExtraConfigurationFrom(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun readExtraConfigurationFrom(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val extras = tab.extras as? HomeTabExtras ?: return false
         when (extraConf.key) {
             EXTRA_HIDE_RETWEETS -> {

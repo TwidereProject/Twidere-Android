@@ -288,7 +288,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
 
-    override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
+    override fun onItemActionLongClick(holder: ViewHolder, id: Int, position: Int): Boolean {
         val status = adapter.getStatus(position)
         return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }

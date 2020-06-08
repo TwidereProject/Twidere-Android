@@ -46,7 +46,7 @@ class AcceptFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
         Utils.setLastSeen(context, user.key, System.currentTimeMillis())
     }
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         Toast.makeText(context, context.getString(R.string.message_toast_accepted_users_follow_request,
                 manager.getDisplayName(user, nameFirst)), Toast.LENGTH_SHORT).show()

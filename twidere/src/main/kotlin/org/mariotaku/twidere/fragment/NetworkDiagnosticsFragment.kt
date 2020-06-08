@@ -319,8 +319,8 @@ class NetworkDiagnosticsFragment : BaseFragment() {
         startDiagnostics.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
-            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Twidere Network Diagnostics")
-            intent.putExtra(android.content.Intent.EXTRA_TEXT, logText.text)
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Twidere Network Diagnostics")
+            intent.putExtra(Intent.EXTRA_TEXT, logText.text)
             startActivity(Intent.createChooser(intent, getString(R.string.action_send)))
         }
     }

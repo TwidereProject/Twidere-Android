@@ -27,7 +27,7 @@ import android.text.style.DynamicDrawableSpan
 /**
  * Created by mariotaku on 15/12/22.
  */
-class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(DynamicDrawableSpan.ALIGN_BOTTOM) {
+class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(ALIGN_BOTTOM) {
     private val fontMetrics: Paint.FontMetrics = Paint.FontMetrics()
 
     override fun getDrawable(): Drawable? {

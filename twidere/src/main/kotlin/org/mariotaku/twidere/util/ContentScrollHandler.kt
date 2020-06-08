@@ -31,8 +31,8 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
  * Created by mariotaku on 15/3/15.
  */
 open class ContentScrollHandler<A>(
-        private val contentListSupport: ContentScrollHandler.ContentListSupport<A>,
-        private val viewCallback: ContentScrollHandler.ViewCallback?
+        private val contentListSupport: ContentListSupport<A>,
+        private val viewCallback: ViewCallback?
 ) {
     val touchListener: View.OnTouchListener
     var touchSlop: Int = 0

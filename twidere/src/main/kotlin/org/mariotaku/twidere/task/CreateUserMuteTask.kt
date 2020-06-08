@@ -79,7 +79,7 @@ class CreateUserMuteTask(
         }
     }
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         val message = context.getString(R.string.muted_user, manager.getDisplayName(user,
                 nameFirst))

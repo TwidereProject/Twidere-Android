@@ -48,7 +48,7 @@ class CreateFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
         Utils.setLastSeen(context, user.key, System.currentTimeMillis())
     }
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         val message: String
         if (user.is_protected) {

@@ -34,7 +34,6 @@ import android.net.Uri
 import android.nfc.NfcAdapter
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.BatteryManager
-import android.os.Build
 import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

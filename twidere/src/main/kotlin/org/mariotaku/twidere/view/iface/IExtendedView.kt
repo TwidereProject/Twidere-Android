@@ -25,9 +25,9 @@ import android.view.View
 
 interface IExtendedView {
 
-    var touchInterceptor: IExtendedView.TouchInterceptor?
-    var onSizeChangedListener: IExtendedView.OnSizeChangedListener?
-    var onApplyWindowInsetsCompatListener: IExtendedView.OnApplyWindowInsetsCompatListener?
+    var touchInterceptor: TouchInterceptor?
+    var onSizeChangedListener: OnSizeChangedListener?
+    var onApplyWindowInsetsCompatListener: OnApplyWindowInsetsCompatListener?
 
     interface OnApplyWindowInsetsCompatListener {
         fun onApplyWindowInsets(insets: WindowInsetsCompat)

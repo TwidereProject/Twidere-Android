@@ -45,12 +45,12 @@ class TwitterCardContainer(context: Context, attrs: AttributeSet? = null) : Cont
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             return
         }
-        val measuredWidth = View.MeasureSpec.getSize(widthMeasureSpec)
+        val measuredWidth = MeasureSpec.getSize(widthMeasureSpec)
         val measuredHeight = Math.round(measuredWidth * (cardHeight / cardWidth.toFloat()))
-        val newWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY)
+        val newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY)
         val newHeightMeasureSpec: Int
         if (measuredHeight != 0) {
-            newHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(measuredHeight, View.MeasureSpec.EXACTLY)
+            newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
         } else {
             newHeightMeasureSpec = heightMeasureSpec
         }

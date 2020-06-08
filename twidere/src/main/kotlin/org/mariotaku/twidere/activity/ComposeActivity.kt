@@ -1887,7 +1887,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    class AttachedMediaItemTouchHelperCallback(adapter: SimpleItemTouchHelperCallback.ItemTouchHelperAdapter) : SimpleItemTouchHelperCallback(adapter) {
+    class AttachedMediaItemTouchHelperCallback(adapter: ItemTouchHelperAdapter) : SimpleItemTouchHelperCallback(adapter) {
 
         override fun isLongPressDragEnabled(): Boolean {
             return true

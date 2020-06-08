@@ -142,7 +142,7 @@ fun <T> ContentResolver.updateItems(uri: Uri, columns: Array<String>?, where: St
     }
 }
 
-fun ContentResolver.getUnreadMessagesEntriesCursorReference(projection: Array<Columns.Column>,
+fun ContentResolver.getUnreadMessagesEntriesCursorReference(projection: Array<Column>,
         accountKeys: Array<UserKey>, extraWhere: Expression? = null,
         extraWhereArgs: Array<String>? = null, extraHaving: Expression? = null,
         extraHavingArgs: Array<String>? = null): CursorReference<Cursor>? {
