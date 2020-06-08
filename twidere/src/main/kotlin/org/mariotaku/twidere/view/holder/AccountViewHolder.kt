@@ -63,7 +63,7 @@ class AccountViewHolder(
 
     fun display(details: AccountDetails) {
         name.spannable = details.user.name
-        screenName.spannable = if (details.type == AccountType.MASTODON) {
+        screenName.spannable = if (details.type == AccountType.MASTODON || details.type == AccountType.STATUSNET) {
             details.account.name
         } else {
             "${if (showType) details.type else ""}@${details.user.screen_name}"

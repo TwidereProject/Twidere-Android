@@ -551,7 +551,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val showType = accountsAdapter.accounts?.groupBy { it.type }?.count()?.let {
             it > 1
         } ?: false
-        accountProfileScreenNameView.spannable = if (account.type == AccountType.MASTODON) {
+        accountProfileScreenNameView.spannable = if (account.type == AccountType.MASTODON || account.type == AccountType.STATUSNET) {
             account.account.name
         } else {
             "${if (showType) account.type else ""}@${account.user.screen_name}"
