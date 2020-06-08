@@ -176,7 +176,7 @@ ext {
             Kovenant          : '3.3.0',
             Mime4J            : '0.7.2',
             Dagger            : '2.28',
-            Exoplayer         : '2.11.4',
+            Exoplayer         : '2.11.5',
             Glide             : '4.11.0',
             MediaViewerLibrary: '0.9.23',
             PlayServices      : '17.0.0',
