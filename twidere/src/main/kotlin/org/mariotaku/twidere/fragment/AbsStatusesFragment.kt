@@ -147,8 +147,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         adapter.statusClickListener = this
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter, this)
-        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, false,
-                requestManager)
+        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(
+            pauseOnScroll = false, pauseOnFling = false,
+            requestManager = requestManager
+        )
 
         if (shouldInitLoader) {
             initLoaderIfNeeded()

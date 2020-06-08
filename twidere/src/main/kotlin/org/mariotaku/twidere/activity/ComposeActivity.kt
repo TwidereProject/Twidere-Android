@@ -395,7 +395,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val src = MediaPickerActivity.getMediaUris(data)
-                    TaskStarter.execute(AddMediaTask(this, src, null, false, false))
+                    TaskStarter.execute(AddMediaTask(this, src, null,
+                        copySrc = false,
+                        deleteSrc = false
+                    ))
                     val extras = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)
                     if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) == true) {
                         possiblySensitive = true

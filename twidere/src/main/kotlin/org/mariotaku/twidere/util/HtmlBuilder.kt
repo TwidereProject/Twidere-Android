@@ -157,7 +157,7 @@ class HtmlBuilder(
             if (display != null) {
                 sb.append(display, false, displayIsHtml)
             } else {
-                sb.append(link, false, false)
+                sb.append(link, escapeText = false, textEscaped = false)
             }
         }
 

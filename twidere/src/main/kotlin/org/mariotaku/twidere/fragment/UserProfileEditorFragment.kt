@@ -131,7 +131,10 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUser>> {
         progressContainer.visibility = View.VISIBLE
         editProfileContent.visibility = View.GONE
-        return ParcelableUserLoader(requireActivity(), accountKey, accountKey, null, arguments, false, false)
+        return ParcelableUserLoader(requireActivity(), accountKey, accountKey, null, arguments,
+            omitIntentExtra = false,
+            loadFromCache = false
+        )
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
@@ -242,7 +245,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 currentTask = UpdateProfileBackgroundImageTaskInternal(this, accountKey,
-                        data.data!!, false, true)
+                        data.data!!, tile = false, deleteImage = true
+                )
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
                 val task = currentTask

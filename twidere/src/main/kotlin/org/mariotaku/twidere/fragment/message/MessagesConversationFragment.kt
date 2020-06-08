@@ -231,7 +231,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                     Activity.RESULT_OK -> if (data != null) {
                         val mediaUris = MediaPickerActivity.getMediaUris(data)
                         val types = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)?.getIntArray(EXTRA_TYPES)
-                        TaskStarter.execute(AddMediaTask(this, mediaUris, types, false, false))
+                        TaskStarter.execute(AddMediaTask(this, mediaUris, types,
+                            copySrc = false,
+                            deleteSrc = false
+                        ))
                     }
                     RESULT_SEARCH_GIF -> {
                         val provider = gifShareProvider ?: return
@@ -543,8 +546,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             } else {
                 ParcelableMedia.Type.IMAGE
             }
-            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), intArrayOf(type), true,
-                    false)
+            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), intArrayOf(type),
+                copySrc = true,
+                deleteSrc = false
+            )
             task.callback = {
                 contentInfo.releasePermission()
             }

@@ -220,7 +220,11 @@ fun Status.applyTo(accountKey: UserKey, accountType: String, profileImageSize: S
 
 fun Status.formattedTextWithIndices(): StatusTextWithIndices {
     val source = CodePointArray(this.fullText ?: this.text!!)
-    val builder = HtmlBuilder(source, false, true, false)
+    val builder = HtmlBuilder(source,
+        throwExceptions = false,
+        sourceIsEscaped = true,
+        shouldReEscape = false
+    )
     builder.addEntities(this)
     val textWithIndices = StatusTextWithIndices()
     val (text, spans) = builder.buildWithIndices()
