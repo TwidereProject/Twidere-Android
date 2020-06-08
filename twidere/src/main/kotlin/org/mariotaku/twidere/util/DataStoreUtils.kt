@@ -58,7 +58,6 @@ import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.model.tab.extra.TabExtras
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.content.ContentResolverUtils
@@ -309,12 +308,11 @@ object DataStoreUtils {
     }
 
     fun getAccountDisplayName(context: Context, accountKey: UserKey, nameFirst: Boolean): String? {
-        val name: String? = if (nameFirst) {
+        return if (nameFirst) {
             getAccountName(context, accountKey)
         } else {
             "@${getAccountScreenName(context, accountKey)}"
         }
-        return name
     }
 
     fun getAccountName(context: Context, accountKey: UserKey): String? {
