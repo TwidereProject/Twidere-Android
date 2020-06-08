@@ -276,6 +276,7 @@
     <string name="display_sensitive_contents_summary">Amosa contidos sensibles na liña de tempo sen advertencia</string>
     <string name="dns_server">Servidor DNS</string>
     <string name="dns_server_summary">Introduce o Servidor DNS para peticións de rede.</string>
+    <string name="yandex_key">Clave Api de Yandex</string>
     <string name="draft_saved">Borrador gardado</string>
     <string name="drafts_hint_messages">Aquí gárdanse os teus chíos non enviados</string>
     <string name="drawer_toggle">Conmutar caixón</string>
@@ -363,6 +364,7 @@
     <string name="hidden_settings_warning_message">NUNCA cambies estes axustes se non sabes o que son ou:\n * Vai deixar de chover en Santiago\n * Desaparecerán as tapas en Lugo\n * Van mudar A Coruña en LaCoruNeno\n * Destruirán o universo</string>
     <string name="hidden_settings_warning_title">AVISO: Estes axustes poden producir danos!</string>
     <string name="hide_card_actions">Agochar accións nos cartóns</string>
+    <string name="hide_card_numbers">Agochar número da tarxeta</string>
     <string name="hide_quotes">Agochar citas</string>
     <string name="hide_replies">Agochar respostas</string>
     <string name="hide_retweets">Agochar rechouchíos</string>
@@ -744,6 +746,7 @@
     <string name="preference_summary_media_preload_non_metered_network">Pre-carga multimedia só en redes sen custo, como wifi</string>
     <string name="preference_summary_sync_timeline_positions">Cando está activo \"Lembrar posición\"</string>
     <string name="preference_summary_trends_location">Agora podes seleccionar a localización de xeito independente na lapela de axustes.</string>
+    <string name="preference_summary_auto_hide_tabs">Agochar Tab cando só hai un</string>
     <string name="preference_title_accounts">Contas</string>
     <string name="preference_title_advanced">Avanzado</string>
     <string name="preference_title_auto_refresh_compatibility_mode">Modo de compatibilidade</string>
@@ -761,6 +764,8 @@
     <string name="preference_title_multi_column_tab_width">Largo das lapelas en varias columnas</string>
     <string name="preference_title_multi_column_tabs">Lapelas en varias columnas</string>
     <string name="preference_title_navbar_style">Estilo da barra de navegación</string>
+    <string name="preference_title_tab_position">Posición do Tab</string>
+    <string name="preference_title_auto_hide_tab">Auto agochar Tab</string>
     <string name="preference_title_notification_channels">Canais</string>
     <string name="preference_title_notification_ringtone">Son de aviso</string>
     <string name="preference_title_override_language">Idioma da aplicación</string>
@@ -800,7 +805,11 @@
     <string name="provider_default">Por omisión no App</string>
     <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
+    <string name="provider_gnusocial_de">GNU Social.de</string>
+    <string name="provider_gnusocial_net">GNU Social.net</string>
+    <string name="provider_loadaverage_org">LoadAverage.org</string>
     <string name="provider_mastodon">Mastodon</string>
+    <string name="provider_quitter_se">Quitter.se</string>
     <string name="proxy">Proxy</string>
     <string name="proxy_host">Host do proxy</string>
     <string name="proxy_password">Contrasinal do proxy</string>
@@ -1093,6 +1102,7 @@
     <string name="user_unblocked">Este usuario foi desbloqueado.</string>
     <string name="users_blocked">Bloqueados estes usuarios.</string>
     <string name="users_lists_with_name">Listas de <xliff:g id="name">%s</xliff:g></string>
+    <string name="users_statuses">Chíos do usuario</string>
     <string name="label_drafts_all">Todos</string>
     <string name="label_drafts_statuses">Chíos</string>
     <string name="label_drafts_others">Outros</string>

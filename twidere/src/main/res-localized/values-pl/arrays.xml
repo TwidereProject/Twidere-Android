@@ -30,6 +30,15 @@
         <item>Skaluj</item>
         <item>Rzeczywisty rozmiar</item>
     </string-array>
+    <string-array name="entries_navbar_style">
+        <item>Domyślne</item>
+        <item>Przezroczyste</item>
+        <item>Pokolorowane</item>
+    </string-array>
+    <string-array name="entries_tab_position">
+        <item>Góra</item>
+        <item>Dół</item>
+    </string-array>
     <string-array name="entries_notification_content">
         <item>Strona główna</item>
         <item>Interakcje</item>
@@ -83,6 +92,6 @@
     </string-array>
     <string-array name="entries_user_timeline_filter">
         <item>Odpowiedzi</item>
-        <item>Retweets</item>
+        <item>Retweety</item>
     </string-array>
 </resources>

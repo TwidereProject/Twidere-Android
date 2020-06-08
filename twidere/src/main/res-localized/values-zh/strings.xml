@@ -364,6 +364,7 @@
     <string name="hidden_settings_warning_title">警告：这些设置受结界保护！</string>
     <string name="hide_card_actions">隐藏卡片动作按钮</string>
     <string name="hide_card_numbers">隐藏卡片数字</string>
+    <string name="show_link_preview">显示链接预览</string>
     <string name="hide_quotes">隐藏引用</string>
     <string name="hide_replies">隐藏回复</string>
     <string name="hide_retweets">隐藏转推</string>

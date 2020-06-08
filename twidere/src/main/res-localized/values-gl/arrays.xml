@@ -30,6 +30,15 @@
         <item>Escalar</item>
         <item>Tamaño real</item>
     </string-array>
+    <string-array name="entries_navbar_style">
+        <item>Por defecto</item>
+        <item>Transparente</item>
+        <item>Cor</item>
+    </string-array>
+    <string-array name="entries_tab_position">
+        <item>Arriba</item>
+        <item>Abaixo</item>
+    </string-array>
     <string-array name="entries_notification_content">
         <item>Liña de tempo</item>
         <item>Interaccións</item>

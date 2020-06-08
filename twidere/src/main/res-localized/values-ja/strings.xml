@@ -364,6 +364,7 @@
     <string name="hidden_settings_warning_message">よくわからない場合この設定を変えないでください。もしかしたら\n * 藪から出てきた蛇に噛まれたり\n * 北朝鮮の核兵器が発射されたり\n * すべての魔法少女が魔女化したり\n * 宇宙が再構築されたり\nするかもしれません…</string>
     <string name="hidden_settings_warning_title">警告: これらの設定は危なっかしいかも！</string>
     <string name="hide_card_actions">アクションボタンを非表示</string>
+    <string name="hide_card_numbers">評価数を非表示</string>
     <string name="hide_quotes">引用を非表示</string>
     <string name="hide_replies">返信を非表示</string>
     <string name="hide_retweets">リツイートを非表示</string>
@@ -1105,6 +1106,7 @@
     <string name="user_unblocked">このユーザーのブロックを解除しました。</string>
     <string name="users_blocked">選択したユーザーをブロックしました。</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>が保存しているリスト</string>
+    <string name="users_statuses">ユーザーのツイート</string>
     <string name="label_drafts_all">すべて</string>
     <string name="label_drafts_statuses">ツイート</string>
     <string name="label_drafts_others">その他</string>

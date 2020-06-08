@@ -10,7 +10,7 @@
         <item>Interaiciones</item>
         <item>Mensaxes direutos</item>
         <item>Tendencies</item>
-        <item>Saved searches</item>
+        <item>Guetes guardaes</item>
     </string-array>
     <string-array name="entries_image_sources">
         <item>Cámara</item>
@@ -24,6 +24,15 @@
         <item>Crop</item>
         <item>Scale</item>
         <item>Tamañu real</item>
+    </string-array>
+    <string-array name="entries_navbar_style">
+        <item>La predeterminada</item>
+        <item>Tresparente</item>
+        <item>Pintada</item>
+    </string-array>
+    <string-array name="entries_tab_position">
+        <item>Arriba</item>
+        <item>Abaxo</item>
     </string-array>
     <string-array name="entries_notification_content">
         <item>Aniciu</item>
@@ -39,6 +48,13 @@
         <item>Reverse proxy</item>
         <!--<item>SOCKS</item>-->
     </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>Usuariu</item>
+        <item>User timeline</item>
+        <item>User Favorites</item>
+        <item>List</item>
+        <item>List timeline</item>
+    </string-array>
     <string-array name="entries_refresh_interval">
         <item>3 minutos</item>
         <item>5 minutos</item>
@@ -49,6 +65,11 @@
         <item>2 hores</item>
         <item>4 hores</item>
     </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>Iconu</item>
+        <item>Etiqueta</item>
+        <item>Iconu y etiqueta</item>
+    </string-array>
     <string-array name="entries_theme">
         <item>Claridá</item>
         <item>Escuridá</item>
@@ -58,5 +79,9 @@
         <item>Por defeutu</item>
         <item>Pure white/black</item>
         <item>Tresparente</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>Rempuestes</item>
+        <item>Retweets</item>
     </string-array>
 </resources>

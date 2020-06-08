@@ -12,12 +12,15 @@
     <string name="action_add">Amestar</string>
     <!-- [verb] Add a member to a message conversation -->
     <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">Amestar una regla</string>
     <string name="action_add_to_filter">Amestar a una peñera</string>
+    <string name="action_add_to_home_screen_more">Amestar a la pantalla d\'aniciu&#8230;</string>
     <string name="action_add_to_list">Amestar a una llista</string>
     <!-- [verb] Action for blocking user -->
     <string name="action_block">Bloquiar</string>
     <string name="action_buffer_settings">Axustes</string>
     <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_clear">Llimpiar</string>
     <!-- [verb] Action for deleting a file or a twitter object like tweet-->
     <string name="action_delete">Desaniciar</string>
     <string name="action_dont_restart">Nun reaniciar</string>
@@ -31,17 +34,21 @@
     <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
     <string name="action_like">Prestar</string>
     <string name="action_location">Allugamientu</string>
+    <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, guardóse a les <xliff:g id="time">%2$s</xliff:g></string>
     <string name="action_next_step">Siguiente</string>
     <string name="action_no_thanks">Non, gracies</string>
     <string name="action_open_in_browser">Abrir nun restolador</string>
     <string name="action_qr_code">Códigu QR</string>
+    <string name="action_quote">Cita</string>
     <string name="action_record_video">Grabar un videu</string>
+    <string name="action_refresh">Refrescu</string>
     <string name="action_register">Rexistrase</string>
     <!-- [verb] Restore purchase -->
     <string name="action_restore_purchase">Restaurar</string>
     <!-- [verb] Action for performing retweet -->
     <!-- [verb] Save settings/files etc. -->
     <string name="action_save">Guardar</string>
+    <string name="action_save_to">Guardar en&#8230;</string>
     <!-- [verb] Send tweet/message -->
     <string name="action_send">Unviar</string>
     <string name="action_set_color">Afitar un color</string>
@@ -57,9 +64,13 @@
     <!-- [verb] Disconnect from network storage -->
     <string name="action_sync_disconnect">Desconeutar</string>
     <string name="action_sync_settings">Axustes</string>
+    <string name="action_twitter_mute_user">Silenciar al usuariu</string>
+    <string name="action_twitter_muted_users">Usuarios silenciaos</string>
     <!-- [verb] Action for unblocking user -->
     <string name="action_unblock">Desbloquiar</string>
     <string name="action_view_map">Mapa</string>
+    <string name="activated_accounts">Cuentes activaes</string>
+    <string name="activities_about_me">Actividaes tocante a min</string>
     <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> ta siguiéndote</string>
     <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> tán siguiéndote</string>
     <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> amestóte a la llista</string>
@@ -69,6 +80,7 @@
     <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> etiquetáronte</string>
     <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> xunióse a Twitter</string>
     <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> xuniéronse a Twitter</string>
+    <string name="add_account">Amestar una cuenta</string>
     <string name="and_N_more">y <xliff:g id="count">%d</xliff:g> más</string>
     <string name="app_description">La to aplicación pa Twitter</string>
     <!-- App name, normally you don't need to translate this. -->
@@ -80,12 +92,15 @@
     <string name="auth_type_oauth2">OAuth 2</string>
     <string name="auth_type_xauth">xAuth</string>
     <string name="auto_refresh">Refrescu automáticu</string>
+    <string name="background">Fondu</string>
     <string name="bug_reports_summary">Cola potencia de Fabric</string>
     <string name="cards">Tarxetes</string>
     <string name="click_item_to_configure">Calca nun elementu pa configuralu</string>
     <string name="color">Color</string>
     <string name="combined_notifications">Avisos combinaos</string>
+    <string name="combined_notifications_summary_off">Los avisos van amosase per separtao</string>
     <string name="combined_notifications_summary_on">Los avisos van agrupase</string>
+    <string name="content">Conteníu</string>
     <string name="content_and_storage">Conteníu y almacenamientu</string>
     <string name="content_description_sticker">Pegadiella</string>
     <string name="copy_link">Copiar l\'enllaz</string>
@@ -99,6 +114,7 @@
     <string name="error_no_access_for_credentials">L\'aplicación nun pue acceder a esti recursu.</string>
     <string name="error_title_device_incompatible">Preséu incompatible</string>
     <string name="error_too_many_photos_fanfou">Milenta semeyes</string>
+    <string name="export_settings">Esportar los axustes</string>
     <string name="extensions">Estensiones</string>
     <!-- Enhanced (paid) features description -->
     <string name="extra_features_pack_description">O merca\'l paquete de carauterístiques pa consiguiles toes (incluyendo les de les versiones futures)</string>
@@ -108,16 +124,28 @@
     <string name="fast_image_loading">Carga rápida d\'imáxenes</string>
     <string name="filter_type_keywords">Pallabres clave</string>
     <string name="filter_type_links">Enllaces</string>
+    <string name="filter_type_users">Usarios</string>
     <string name="function">Funciones</string>
     <string name="general">Xeneral</string>
     <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="group">Grupu</string>
     <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="groups">Grupos</string>
     <string name="hashtag">Etiqueta</string>
     <string name="hidden_settings">Axustes anubríos</string>
+    <string name="hide_quotes">Anubrir les cites</string>
+    <string name="hide_replies">Anubrir les rempuestes</string>
     <string name="hint_accounts_dashboard_message">Esliza dende\'l berbesu esquierdu de la pantalla p\'abrilu.</string>
     <string name="hint_accounts_dashboard_title">Panel de cuentes</string>
+    <string name="i_want_my_stars_back">¡Devolvéime les estrelles!</string>
+    <string name="icon">Iconu</string>
+    <string name="import_export_settings">Importación/esportación d\'axustes</string>
+    <string name="import_settings">Importar unos axustes</string>
     <string name="interactions">Interaiciones</string>
+    <string name="jump_to_top">Dir a lo cimero</string>
     <string name="just_now">Puramente agora</string>
+    <string name="keyboard_shortcut_back">Atrás</string>
+    <string name="label_advanced">Avanzao</string>
     <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_g">A</string>
     <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
@@ -126,11 +154,15 @@
     <string name="label_content_rating_pg13">12</string>
     <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_r">16</string>
+    <string name="label_feedback_content">Conteníu</string>
+    <string name="label_filter_apply_to">Aplicar a&#8230;</string>
+    <string name="label_filter_for">Pa&#8230;</string>
     <string name="label_filter_scope_home">Aniciu</string>
     <string name="label_filter_scope_interactions">Interaiciones</string>
     <string name="label_filter_scope_messages">Mensaxes</string>
     <string name="label_filter_target_description">Descripción</string>
     <string name="label_filter_target_name">Nome</string>
+    <string name="label_filter_target_text">Testu</string>
     <string name="label_filters_subscription">Soscripción</string>
     <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> per <xliff:g example="api" id="source">%2$s</xliff:g></string>
     <string name="label_password">Contraseña</string>
@@ -143,6 +175,8 @@
     <!-- Mastodon feature, post to followers only -->
     <!-- Mastodon feature, post to public timelines -->
     <!-- Mastodon feature, do not show in public timelines -->
+    <string name="label_translation">Traducción</string>
+    <string name="label_video">Videu</string>
     <string name="load_defaults">Cargar lo predeterminao</string>
     <string name="load_item_limit">Llende de la carga d\'elementos</string>
     <string name="load_item_limit_summary">Afita la llende d\'elementos per carga.</string>
@@ -160,6 +194,9 @@
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_toast_filters_import_hint">Primi «+» pa importar</string>
     <!-- Toast message for network errors -->
+    <string name="message_toast_saved_to_gallery">Guardóse na galería</string>
+    <string name="message_toast_search_name_deleted">Desanicióse la gueta de «<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>»</string>
+    <string name="message_toast_search_name_saved">Guardóse la gueta de «<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>»</string>
     <string name="message_toast_wrong_username_password">El nome d\'usuariu/contraseña son incorreutos</string>
     <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
     <string name="navigation">Navegación</string>
@@ -170,6 +207,7 @@
     <string name="next_item">Siguiente</string>
     <string name="next_step">Siguiente</string>
     <string name="next_tab">Llingüeta siguiente</string>
+    <string name="no_extension_installed">Nun hai nenguna estensión instalada</string>
     <string name="no_rule">Nun hai regles</string>
     <string name="notification_channel_name_content_interactions">Interaiciones</string>
     <string name="notification_channel_name_content_messages">Mensaxes</string>
@@ -186,32 +224,52 @@
     <string name="notification_type_interactions">Interaiciones</string>
     <string name="notification_type_messages">Mensaxes</string>
     <string name="notifications">Avisos</string>
+    <string name="open_accounts_dashboard">Abrir el panel de cuentes</string>
+    <string name="open_with_account">Abrir con otra cuenta</string>
     <string name="other_settings">Otros axustes</string>
     <string name="phishing_link_warning_message_2">¿De xuru que quies siguir?</string>
     <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+    <string name="preference_multitasking">Multixera</string>
     <string name="preference_title_accounts">Cuentes</string>
+    <string name="preference_title_chrome_custom_tab">Restolador na aplicación</string>
+    <string name="preference_title_navbar_style">Barra de navegación</string>
+    <string name="preference_title_tab_position">Posición de les llingüetes</string>
     <string name="preference_title_notification_channels">Canales</string>
     <string name="preference_title_override_language">Llingua de l\'aplicación</string>
+    <string name="preference_title_storage">Almacenamientu</string>
     <string name="preference_title_tablet_mode">Mou tableta</string>
     <!-- Media will be cropped to fit preview -->
     <!-- Actual size, media preview will be scaled respectively -->
     <!-- Media will be scaled to fit preview -->
     <!-- Previous item (tweet, user etc.) -->
+    <string name="previous_item">Anterior</string>
+    <string name="previous_tab">Llingüeta anterior</string>
     <string name="profile_image_style">Estilu de les imáxenes de perfil</string>
     <!-- Normally you don't need to translate this -->
     <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
     <string name="provider_mastodon">Mastodon</string>
     <string name="proxy">Proxy</string>
+    <string name="proxy_password">Contraseña del proxy</string>
+    <string name="proxy_port">Puertu del proxy</string>
+    <string name="proxy_type">Triba del proxy</string>
     <string name="refresh_type_home">Aniciu</string>
     <string name="refresh_type_interactions">Interaiciones</string>
     <string name="refresh_type_messages">Mensaxes</string>
     <string name="refresh_type_trends">Tendencies</string>
+    <string name="replies">Rempuestes</string>
+    <string name="reset_to_default">Reafitar</string>
     <string name="round">Círculu</string>
     <string name="safety">Seguranza</string>
+    <string name="save_to_gallery">Guardar na galería</string>
+    <string name="saved_searches">Guetes guardaes</string>
+    <string name="scrapyard">Miscelánea</string>
+    <string name="search_type_users">Usarios</string>
+    <string name="sent_follow_request_to_user">Unviésti-y una solicitú de siguimientu a <xliff:g id="user">%s</xliff:g>.</string>
     <string name="settings_interface">Interfaz</string>
     <string name="settings_notifications">Avisos</string>
     <string name="settings_refresh">Refrescar</string>
+    <string name="show_absolute_time">Amosar la hora absoluta</string>
     <string name="sign_in_service_twitter">Twitter</string>
     <string name="size">Tamañu</string>
     <string name="sound">Soníu</string>
@@ -229,6 +287,9 @@
     <string name="style">Estilu</string>
     <string name="sync_provider_name_dropbox">Dropbox</string>
     <string name="sync_provider_name_google_drive">Google Drive</string>
+    <string name="tab_display_option_icon">Iconu</string>
+    <string name="tab_display_option_icon_and_label">Iconu y etiqueta</string>
+    <string name="tab_display_option_label">Etiqueta</string>
     <string name="tab_editor_hint_name">Nome</string>
     <string name="tabs">Llingüetes</string>
     <string name="theme">Estilu</string>
@@ -239,7 +300,9 @@
     <!-- Light theme -->
     <string name="thumbor_integration">Integración con Thumbor</string>
     <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+    <string name="title_about">Tocante a</string>
     <string name="title_accounts">Cuentes</string>
+    <string name="title_blocked_users">Usuarios bloquiaos</string>
     <string name="title_browser_sign_in">Aniciu de sesión col restolador</string>
     <string name="title_direct_messages">Mensaxes</string>
     <string name="title_direct_messages_conversation_new">Conversación nueva</string>
@@ -247,9 +310,11 @@
     <!-- Enhanced (paid) features title -->
     <string name="title_extra_features">Carauterístiques ameyoraes</string>
     <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_filters">Peñeres</string>
     <string name="title_filters_subscription_url">URL</string>
     <string name="title_home">Aniciu</string>
     <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_likes">Préstames</string>
     <string name="title_mentions">Menciones</string>
     <string name="title_nicknames">Nomatos</string>
     <string name="title_open_source_license">Llicencia</string>
@@ -258,6 +323,7 @@
     <string name="title_subscription_name">Nome</string>
     <string name="title_subscription_url">URL</string>
     <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+    <string name="title_user">Usuariu</string>
     <string name="title_user_list_subscriptions">Soscripciones</string>
     <string name="title_user_timeline_filter">Peñera de la llinia temporal</string>
     <string name="title_userlist_subscribers">Soscriptores</string>
@@ -270,7 +336,9 @@
     <!-- User list is public -->
     <!-- User list name -->
     <string name="user_list_details_name">Nome</string>
+    <string name="user_lists">Llistes</string>
     <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> mentóte</string>
+    <string name="user_mentions">Menciones del usuariu</string>
     <string name="user_profile_description">Descripción</string>
     <string name="user_profile_location">Allugamientu</string>
     <string name="user_profile_name">Nome</string>

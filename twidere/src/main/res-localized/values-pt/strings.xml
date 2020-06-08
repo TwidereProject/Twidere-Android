@@ -800,6 +800,7 @@
     <string name="provider_default">Padrão de App</string>
     <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
+    <string name="provider_gnusocial_de">GNU Social.de</string>
     <string name="provider_mastodon">Mastodon</string>
     <string name="proxy">Proxy</string>
     <string name="proxy_host">Proxy Host</string>
