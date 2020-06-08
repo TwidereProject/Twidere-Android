@@ -124,8 +124,8 @@ object MenuUtils {
         val retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet)
         val favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite)
         val likeHighlight = ContextCompat.getColor(context, R.color.highlight_like)
-        val isMyRetweet: Boolean
-        isMyRetweet = if (RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)) {
+        val isMyRetweet: Boolean =
+            if (RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)) {
             true
         } else if (twitter.isDestroyingStatus(status.account_key, status.id)) {
             false
@@ -164,8 +164,8 @@ object MenuUtils {
         }
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
-            val isFavorite: Boolean
-            isFavorite = if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
+            val isFavorite: Boolean =
+                if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
                 true
             } else if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
                 false

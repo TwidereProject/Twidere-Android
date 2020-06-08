@@ -303,8 +303,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
         @Throws(UnknownHostException::class)
         private fun addrFromRecord(name: String, r: Record): InetAddress {
-            val addr: InetAddress
-            addr = if (r is ARecord) {
+            val addr: InetAddress = if (r is ARecord) {
                 r.address
             } else {
                 (r as AAAARecord).address

@@ -44,11 +44,7 @@ class AccountPreferences(
     val defaultNotificationLightColor: Int
         get() {
             val a = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
-            return if (a != null) {
-                a.color
-            } else {
-                ContextCompat.getColor(context, R.color.branding_color)
-            }
+            return a?.color ?: ContextCompat.getColor(context, R.color.branding_color)
         }
 
     val directMessagesNotificationType: Int

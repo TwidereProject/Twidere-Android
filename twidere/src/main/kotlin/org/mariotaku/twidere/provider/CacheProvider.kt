@@ -167,8 +167,7 @@ class CacheProvider : ContentProvider() {
          * Copied from ContentResolver.java
          */
         private fun modeToMode(mode: String): Int {
-            val modeBits: Int
-            modeBits = if ("r" == mode) {
+            val modeBits: Int = if ("r" == mode) {
                 ParcelFileDescriptor.MODE_READ_ONLY
             } else if ("w" == mode || "wt" == mode) {
                 ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE

@@ -466,8 +466,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (checkAllSelfPermissionsGranted(AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
             saveToStorage()
         } else {
-            val permissions: Array<String>
-            permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            val permissions: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE, AndroidPermissions.READ_EXTERNAL_STORAGE)
             } else {
                 arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)

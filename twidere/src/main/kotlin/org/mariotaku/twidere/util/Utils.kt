@@ -456,8 +456,7 @@ object Utils {
     }
 
     fun getInsetsTopWithoutActionBarHeight(context: Context, top: Int): Int {
-        val actionBarHeight: Int
-        actionBarHeight = if (context is AppCompatActivity) {
+        val actionBarHeight: Int = if (context is AppCompatActivity) {
             getActionBarHeight(context.supportActionBar)
         } else if (context is Activity) {
             getActionBarHeight(context.actionBar)
@@ -576,9 +575,8 @@ object Utils {
      * @param message String
      */
     fun sendPebbleNotification(context: Context, title: String?, message: String) {
-        val appName: String
 
-        appName = if (title == null) {
+        val appName: String = if (title == null) {
             context.getString(R.string.app_name)
         } else {
             "${context.getString(R.string.app_name)} - $title"

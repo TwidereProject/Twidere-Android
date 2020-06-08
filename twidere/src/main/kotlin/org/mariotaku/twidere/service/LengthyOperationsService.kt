@@ -216,15 +216,13 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
 
     private fun handleUpdateStatusIntent(intent: Intent) {
         val status = intent.getParcelableExtra<ParcelableStatusUpdate>(EXTRA_STATUS)
-        val statusParcelables = intent.getNullableTypedArrayExtra<ParcelableStatusUpdate>(EXTRA_STATUSES)
         val scheduleInfo = intent.getParcelableExtra<ScheduleInfo>(EXTRA_SCHEDULE_INFO)
         val statuses: Array<ParcelableStatusUpdate>
-        statuses = if (statusParcelables != null) {
-            statusParcelables
-        } else if (status != null) {
-            arrayOf(status)
-        } else
-            return
+        statuses = intent.getNullableTypedArrayExtra(EXTRA_STATUSES)
+            ?: if (status != null) {
+                arrayOf(status)
+            } else
+                return
         @Draft.Action
         val actionType = intent.getStringExtra(EXTRA_ACTION)
         statuses.forEach { it.draft_action = actionType }

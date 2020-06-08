@@ -63,9 +63,8 @@ fun Credentials.getAuthorization(cls: Class<*>?): Authorization {
 }
 
 fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
-    val apiUrlFormat: String
     val noVersionSuffix = this.no_version_suffix
-    apiUrlFormat = if (!TextUtils.isEmpty(this.api_url_format)) {
+    val apiUrlFormat: String = if (!TextUtils.isEmpty(this.api_url_format)) {
         this.api_url_format
     } else {
         DEFAULT_TWITTER_API_URL_FORMAT
@@ -113,8 +112,7 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
     }
     val endpointUrl = MicroBlogAPIFactory.getApiUrl(apiUrlFormat, domain, versionSuffix)
     if (this is OAuthCredentials) {
-        val signEndpointUrl: String
-        signEndpointUrl = if (same_oauth_signing_url) {
+        val signEndpointUrl: String = if (same_oauth_signing_url) {
             endpointUrl
         } else {
             MicroBlogAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix)

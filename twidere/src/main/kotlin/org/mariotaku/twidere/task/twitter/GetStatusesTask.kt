@@ -228,8 +228,7 @@ abstract class GetStatusesTask(
         fun getPositionKey(timestamp: Long, sortId: Long, lastSortId: Long, sortDiff: Long,
                 position: Int, count: Int): Long {
             if (sortDiff == 0L) return timestamp
-            val extraValue: Int
-            extraValue = if (sortDiff > 0) {
+            val extraValue: Int = if (sortDiff > 0) {
                 // descent sorted by time
                 count - 1 - position
             } else {

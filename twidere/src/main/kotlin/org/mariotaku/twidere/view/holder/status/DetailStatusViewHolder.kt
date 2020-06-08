@@ -202,9 +202,7 @@ class DetailStatusViewHolder(
 
         itemView.profileContainer.drawStart(colorNameManager.getUserColor(status.user_key))
 
-        val timestamp: Long
-
-        timestamp = if (status.is_retweet) {
+        val timestamp: Long = if (status.is_retweet) {
             status.retweet_timestamp
         } else {
             status.timestamp
@@ -736,8 +734,7 @@ class DetailStatusViewHolder(
             }
 
             fun displayCount(count: LabeledCount, hideNumbers: Boolean) {
-                val label: String
-                label = when (count.type) {
+                val label: String = when (count.type) {
                     KEY_REPLY_COUNT -> {
                         adapter.context.getString(R.string.replies)
                     }

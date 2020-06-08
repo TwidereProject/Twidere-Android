@@ -309,8 +309,7 @@ object DataStoreUtils {
     }
 
     fun getAccountDisplayName(context: Context, accountKey: UserKey, nameFirst: Boolean): String? {
-        val name: String?
-        name = if (nameFirst) {
+        val name: String? = if (nameFirst) {
             getAccountName(context, accountKey)
         } else {
             "@${getAccountScreenName(context, accountKey)}"
