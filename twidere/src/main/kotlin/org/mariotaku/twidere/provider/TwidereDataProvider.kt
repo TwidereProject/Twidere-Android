@@ -343,8 +343,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     private fun deleteInternal(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        val tableId = DataStoreUtils.getTableId(uri)
-        when (tableId) {
+        when (val tableId = DataStoreUtils.getTableId(uri)) {
             VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS -> {
                 notificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS)
                 return 1

@@ -583,8 +583,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         override fun getItemViewType(position: Int): Int {
-            val countIndex = itemCounts.getItemCountIndex(position)
-            when (countIndex) {
+            when (val countIndex = itemCounts.getItemCountIndex(position)) {
                 ITEM_INDEX_TOP_SPACE -> return VIEW_TYPE_TOP_SPACE
                 ITEM_INDEX_HEADER -> return VIEW_TYPE_HEADER
                 ITEM_INDEX_ITEM -> return VIEW_TYPE_USER
@@ -595,8 +594,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         override fun getItemId(position: Int): Long {
-            val countIndex = itemCounts.getItemCountIndex(position)
-            when (countIndex) {
+            when (val countIndex = itemCounts.getItemCountIndex(position)) {
                 ITEM_INDEX_ITEM -> {
                     val user = getUser(position)!!
                     return (countIndex.toLong() shl 32) or user.hashCode().toLong()
@@ -805,8 +803,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val position = parent.getChildLayoutPosition(view)
             if (position < 0) return
             val itemCounts = adapter.itemCounts
-            val countIndex = itemCounts.getItemCountIndex(position)
-            when (countIndex) {
+            when (val countIndex = itemCounts.getItemCountIndex(position)) {
                 ConversationInfoAdapter.ITEM_INDEX_TOP_SPACE,
                 ConversationInfoAdapter.ITEM_INDEX_SPACE,
                 ConversationInfoAdapter.ITEM_INDEX_ADD_USER -> {

@@ -197,8 +197,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     protected open fun List<ParcelableStatus>.foundInPagination(): Boolean {
-        val pagination = this@AbsRequestStatusesLoader.pagination
-        return when (pagination) {
+        return when (val pagination = this@AbsRequestStatusesLoader.pagination) {
             is SinceMaxPagination -> return any { it.id == pagination.maxId }
             else -> false
         }

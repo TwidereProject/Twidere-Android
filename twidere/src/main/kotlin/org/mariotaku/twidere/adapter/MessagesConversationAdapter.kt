@@ -150,8 +150,7 @@ class MessagesConversationAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val countIndex = itemCounts.getItemCountIndex(position)
-        when (countIndex) {
+        when (val countIndex = itemCounts.getItemCountIndex(position)) {
             ITEM_START_MESSAGE -> when (getMessage(position, reuse = true).message_type) {
                 MessageType.STICKER -> {
                     return ITEM_TYPE_STICKER_MESSAGE

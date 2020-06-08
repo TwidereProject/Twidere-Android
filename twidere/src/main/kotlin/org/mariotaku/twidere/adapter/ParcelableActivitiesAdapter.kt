@@ -152,8 +152,7 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        val countIndex = itemCounts.getItemCountIndex(position)
-        when (countIndex) {
+        when (val countIndex = itemCounts.getItemCountIndex(position)) {
             ITEM_INDEX_ACTIVITY -> {
                 return getRowId(position, false)
             }
@@ -245,14 +244,12 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val countIndex = getItemCountIndex(position)
-        when (countIndex) {
+        when (val countIndex = getItemCountIndex(position)) {
             ITEM_INDEX_ACTIVITY -> {
                 if (isGapItem(position)) {
                     return ITEM_VIEW_TYPE_GAP
                 }
-                val action = getAction(position)
-                when (action) {
+                when (getAction(position)) {
                     Activity.Action.MENTION, Activity.Action.QUOTE, Activity.Action.REPLY -> {
                         return ITEM_VIEW_TYPE_STATUS
                     }

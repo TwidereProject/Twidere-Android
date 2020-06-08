@@ -92,8 +92,7 @@ abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConvers
     }
 
     open fun setMessageContentGravity(view: View, outgoing: Boolean) {
-        val lp = view.layoutParams
-        when (lp) {
+        when (val lp = view.layoutParams) {
             is FrameLayout.LayoutParams -> {
                 lp.gravity = if (outgoing) GravityCompat.END else GravityCompat.START
             }

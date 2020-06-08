@@ -46,8 +46,7 @@ class CacheProvider : ContentProvider() {
         if (metadata != null) {
             return metadata.contentType
         }
-        val type = uri.getQueryParameter(QUERY_PARAM_TYPE)
-        when (type) {
+        when (uri.getQueryParameter(QUERY_PARAM_TYPE)) {
             CacheFileType.IMAGE -> {
                 val file = fileCache.get(getCacheKey(uri)) ?: return null
                 return BitmapFactory.Options().apply {

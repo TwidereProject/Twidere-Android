@@ -807,8 +807,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun extensionIntentItemSelected(item: MenuItem) {
         val intent = item.intent ?: return
         try {
-            val action = intent.action
-            when (action) {
+            when (intent.action) {
                 INTENT_ACTION_EXTENSION_COMPOSE -> {
                     val accountKeys = accountsAdapter.selectedAccountKeys
                     intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(editText.text))

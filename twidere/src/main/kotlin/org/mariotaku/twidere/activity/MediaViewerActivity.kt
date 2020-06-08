@@ -499,8 +499,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     private fun saveToStorage() {
         val fileInfo = getCurrentCacheFileInfo(saveToStoragePosition) ?: return
-        val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
-        val pubDir = when (type) {
+        val pubDir = when ((fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType) {
             CacheFileType.VIDEO -> {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)

@@ -39,8 +39,7 @@ data class UpdateStatus(
             is UpdateStatusTask.UploaderNotFoundException ->
                 return "extension not found"
             else -> {
-                val cause = ex.cause
-                when (cause) {
+                when (val cause = ex.cause) {
                     is UpdateStatusTask.ExtensionVersionMismatchException ->
                         return "extension version mismatch"
                     is IOException ->

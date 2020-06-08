@@ -350,8 +350,7 @@ abstract class ParcelableStatusesAdapter(
         if (position == 0 && ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
-        val countIndex = getItemCountIndex(position)
-        when (countIndex) {
+        when (val countIndex = getItemCountIndex(position)) {
             ITEM_INDEX_LOAD_START_INDICATOR, ITEM_INDEX_LOAD_END_INDICATOR -> {
                 return ITEM_VIEW_TYPE_LOAD_INDICATOR
             }

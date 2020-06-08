@@ -943,8 +943,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun isDividerEnabled(childPos: Int): Boolean {
             if (childPos >= statusAdapter.itemCount || childPos < 0) return false
-            val itemType = statusAdapter.getItemType(childPos)
-            when (itemType) {
+            when (statusAdapter.getItemType(childPos)) {
                 StatusDetailsAdapter.ITEM_IDX_REPLY_LOAD_MORE, StatusDetailsAdapter.ITEM_IDX_REPLY_ERROR,
                 StatusDetailsAdapter.ITEM_IDX_SPACE -> return false
             }
