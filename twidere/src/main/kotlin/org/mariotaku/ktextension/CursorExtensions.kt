@@ -26,7 +26,7 @@ fun Cursor.safeGetInt(columnIndex: Int, def: Int = -1) = try {
     def
 }
 
-fun Cursor.safeGetString(columnIndex: Int, def: String = "") = try {
+fun Cursor.safeGetString(columnIndex: Int, def: String = ""): String = try {
     getString(columnIndex)
 } catch (e: IllegalStateException) {
     def

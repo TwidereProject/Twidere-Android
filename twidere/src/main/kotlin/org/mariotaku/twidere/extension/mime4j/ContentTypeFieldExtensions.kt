@@ -30,5 +30,5 @@ fun ContentTypeField.getIntParameter(name: String, def: Int): Int {
 }
 
 fun ContentTypeField.getBooleanParameter(name: String): Boolean {
-    return getParameter(name).toBoolean()
+    return this.getParameter(name)!!.toBoolean()
 }

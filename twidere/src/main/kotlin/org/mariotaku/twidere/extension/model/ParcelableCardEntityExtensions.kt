@@ -46,7 +46,7 @@ fun CardEntity.toParcelable(accountKey: UserKey, accountType: String): Parcelabl
 
 fun ParcelableCardEntity.getAsBoolean(key: String, def: Boolean): Boolean {
     val value = getValue(key) ?: return def
-    return value.value.toBoolean()
+    return value.value!!.toBoolean()
 }
 
 fun ParcelableCardEntity.getAsString(key: String, def: String?): String? {
