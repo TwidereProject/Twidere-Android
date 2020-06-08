@@ -150,6 +150,8 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
@@ -475,7 +477,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         if (user.created_at >= 0) {
             val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
             val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()
-            val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
+            val dailyTweets = (user.statuses_count / max(1f, daysSinceCreation)).roundToInt()
 
             createdAtContainer.visibility = View.VISIBLE
             createdAtContainer.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
@@ -1729,10 +1731,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         private fun updateValue() {
-            val shadowAlpha = Math.round(alpha * (1 - factor).coerceIn(0f, 1f))
+            val shadowAlpha = (alpha * (1 - factor).coerceIn(0f, 1f)).roundToInt()
             shadowDrawable.alpha = shadowAlpha
             val hasColor = color != 0
-            val colorAlpha = if (hasColor) Math.round(alpha * factor.coerceIn(0f, 1f)) else 0
+            val colorAlpha = if (hasColor) (alpha * factor.coerceIn(0f, 1f)).roundToInt() else 0
             colorDrawable.alpha = colorAlpha
             invalidateSelf()
         }

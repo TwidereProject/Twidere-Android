@@ -26,6 +26,7 @@ import android.view.View
 
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import kotlin.math.abs
 
 /**
  * Created by mariotaku on 15/3/15.
@@ -107,7 +108,7 @@ open class ContentScrollHandler<A>(
             scrollSum = 0
         }
         scrollSum += dy
-        if (Math.abs(scrollSum) > touchSlop) {
+        if (abs(scrollSum) > touchSlop) {
             contentListSupport.setControlVisible(reversed xor (dy < 0))
             scrollSum = 0
         }

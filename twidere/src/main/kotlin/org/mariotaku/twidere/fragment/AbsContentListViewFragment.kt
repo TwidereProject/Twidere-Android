@@ -39,6 +39,7 @@ import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
 import org.mariotaku.twidere.util.ListViewScrollHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.TwidereColorUtils
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 15/4/16.
@@ -211,10 +212,11 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         }
         val density = resources.displayMetrics.density
         val progressCircleDiameter = swipeLayout.progressCircleDiameter
-        val controlBarOffsetPixels = Math.round(activity.controlBarHeight * (1 - activity.controlBarOffset))
+        val controlBarOffsetPixels =
+            (activity.controlBarHeight * (1 - activity.controlBarOffset)).roundToInt()
         val swipeStart = systemWindowsInsets.top - controlBarOffsetPixels - progressCircleDiameter
         // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
-        val swipeDistance = Math.round(64 * density)
+        val swipeDistance = (64 * density).roundToInt()
         swipeLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance)
     }
 

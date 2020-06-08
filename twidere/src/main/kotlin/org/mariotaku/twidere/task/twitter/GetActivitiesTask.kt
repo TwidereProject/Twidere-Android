@@ -35,6 +35,8 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by mariotaku on 16/1/4.
@@ -142,12 +144,12 @@ abstract class GetActivitiesTask(
                 if (deleteBound[0] < 0) {
                     deleteBound[0] = activity.min_sort_position
                 } else {
-                    deleteBound[0] = Math.min(deleteBound[0], activity.min_sort_position)
+                    deleteBound[0] = min(deleteBound[0], activity.min_sort_position)
                 }
                 if (deleteBound[1] < 0) {
                     deleteBound[1] = activity.max_sort_position
                 } else {
-                    deleteBound[1] = Math.max(deleteBound[1], activity.max_sort_position)
+                    deleteBound[1] = max(deleteBound[1], activity.max_sort_position)
                 }
                 if (minIdx == -1 || activity < activities[minIdx]) {
                     minIdx = i

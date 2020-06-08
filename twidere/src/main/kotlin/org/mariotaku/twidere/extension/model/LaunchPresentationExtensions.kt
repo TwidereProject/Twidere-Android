@@ -24,6 +24,8 @@ import androidx.core.os.LocaleListCompat
 import org.mariotaku.ktextension.localesCompat
 import org.mariotaku.twidere.model.presentation.LaunchPresentation
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 fun LaunchPresentation.shouldShow(context: Context): Boolean {
     // Check language
@@ -69,16 +71,16 @@ fun LaunchPresentation.Image.displayingScore(viewDensity: Float, viewWidth: Int,
         viewWidth < width && viewHeight < height -> {
             val diffW = (width / viewWidth.toFloat() - 1).coerceAtMost(0.5f)
             val diffH = (height / viewHeight.toFloat() - 1).coerceAtMost(0.5f)
-            100 - Math.round(diffH * 100) - Math.round(diffW * 100)
+            100 - (diffH * 100).roundToInt() - (diffW * 100).roundToInt()
         }
         else -> {
             val diffW = (width / viewWidth.toFloat() - 1).coerceAtMost(0.5f)
             val diffH = (height / viewHeight.toFloat() - 1).coerceAtMost(0.5f)
-            100 - Math.round(diffH * 50) - Math.round(diffW * 50)
+            100 - (diffH * 50).roundToInt() - (diffW * 50).roundToInt()
         }
     }
     if (this.density != 0f) {
-        score += 100 - Math.round(Math.abs(this.density / viewDensity - 1).coerceAtMost(1f))
+        score += 100 - abs(this.density / viewDensity - 1).coerceAtMost(1f).roundToInt()
     }
     return score
 }

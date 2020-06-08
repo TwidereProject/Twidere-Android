@@ -113,6 +113,7 @@ import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import kotlin.math.abs
 import android.Manifest.permission as AndroidPermission
 
 @SuppressLint("RestrictedApi")
@@ -1906,7 +1907,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                 // Fade out the view as it is swiped out of the parent's bounds
-                val alpha = ALPHA_FULL - Math.abs(dY) / viewHolder.itemView.height.toFloat()
+                val alpha = ALPHA_FULL - abs(dY) / viewHolder.itemView.height.toFloat()
                 viewHolder.itemView.alpha = alpha
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             } else {

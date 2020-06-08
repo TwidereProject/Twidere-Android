@@ -15,6 +15,7 @@ import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.text.FanfouValidator
 import org.mariotaku.twidere.util.text.MastodonValidator
 import org.mariotaku.twidere.util.text.TwitterValidator
+import kotlin.math.min
 
 fun AccountDetails.isOfficial(context: Context?): Boolean {
     if (context == null) {
@@ -118,7 +119,7 @@ val Array<AccountDetails>.textLimit: Int
                 limit = if (limit <= 0) {
                     currentLimit
                 } else {
-                    Math.min(limit, currentLimit)
+                    min(limit, currentLimit)
                 }
             }
         }

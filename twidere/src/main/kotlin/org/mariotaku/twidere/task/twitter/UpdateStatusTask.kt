@@ -57,6 +57,7 @@ import org.mariotaku.twidere.util.text.StatusTextValidator
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 /**
  * Update status
@@ -842,7 +843,7 @@ class UpdateStatusTask(
                 var streamReadLength = 0
                 var segmentIndex = 0
                 while (streamReadLength < length) {
-                    val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - streamReadLength).toInt()
+                    val currentBulkSize = min(BULK_SIZE.toLong(), length - streamReadLength).toInt()
                     val output = ByteArrayOutputStream()
                     Utils.copyStream(stream, output, currentBulkSize)
                     val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT)

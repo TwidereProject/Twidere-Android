@@ -107,6 +107,7 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.view.HomeDrawerLayout
 import org.mariotaku.twidere.view.TabPagerIndicator
 import java.lang.ref.WeakReference
+import kotlin.math.floor
 
 class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback,
         OnLongClickListener, DrawerLayout.DrawerListener {
@@ -860,7 +861,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 "wide" -> resources.getDimension(R.dimen.preferred_tab_column_width_wide)
                 else -> resources.getDimension(R.dimen.preferred_tab_column_width_normal)
             }
-            mainTabs.columns = Math.floor(1.0 / pagerAdapter.getPageWidth(0)).toInt()
+            mainTabs.columns = floor(1.0 / pagerAdapter.getPageWidth(0)).toInt()
         } else {
             mainPager.pageMargin = 0
             mainPager.setPageMarginDrawable(null)

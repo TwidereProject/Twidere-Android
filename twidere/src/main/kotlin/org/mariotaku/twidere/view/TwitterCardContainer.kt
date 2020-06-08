@@ -23,6 +23,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import org.mariotaku.twidere.util.support.ViewSupport
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -46,7 +47,7 @@ class TwitterCardContainer(context: Context, attrs: AttributeSet? = null) : Cont
             return
         }
         val measuredWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val measuredHeight = Math.round(measuredWidth * (cardHeight / cardWidth.toFloat()))
+        val measuredHeight = (measuredWidth * (cardHeight / cardWidth.toFloat())).roundToInt()
         val newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY)
         val newHeightMeasureSpec: Int
         newHeightMeasureSpec = if (measuredHeight != 0) {

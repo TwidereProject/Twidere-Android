@@ -61,6 +61,7 @@ import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 2017/2/15.
@@ -370,7 +371,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             paint.textSize = textSizeBackup - padding
             nameWidth = paint.measureText(displayName)
             paint.textSize = textSizeBackup
-            return Math.round(nameWidth + padding * 2)
+            return (nameWidth + padding * 2).roundToInt()
         }
 
     }

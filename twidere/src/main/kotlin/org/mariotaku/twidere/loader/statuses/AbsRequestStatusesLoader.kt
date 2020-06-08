@@ -50,6 +50,7 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
+import kotlin.math.min
 
 abstract class AbsRequestStatusesLoader(
         context: Context,
@@ -211,7 +212,7 @@ abstract class AbsRequestStatusesLoader(
         if (key == null || data == null) return
         val databaseItemLimit = preferences[loadItemLimitKey]
         try {
-            val statuses = data.subList(0, Math.min(databaseItemLimit, data.size))
+            val statuses = data.subList(0, min(databaseItemLimit, data.size))
             jsonCache.saveList(key, statuses, ParcelableStatus::class.java)
         } catch (e: Exception) {
             // Ignore

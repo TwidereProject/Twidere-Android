@@ -36,6 +36,8 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.media.AuthenticatedUri
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import java.lang.ref.WeakReference
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 /**
  * Dynamic layout for media preview
@@ -219,13 +221,14 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
 
     private fun measure1Media(contentWidth: Int, childIndices: IntArray, ratioMultiplier: Float): Int {
         val child = getChildAt(childIndices[0])
-        var childHeight = Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
+        var childHeight =
+            (contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier).roundToInt()
         if (style == PreviewStyle.ACTUAL_SIZE) {
             val media = (child.layoutParams as MediaLayoutParams).media
             if (media != null) {
                 val aspectRatio = media.aspect_ratio
                 if (!aspectRatio.isNaN()) {
-                    childHeight = Math.round(contentWidth / aspectRatio.coerceIn(0.3, 20.0)).toInt()
+                    childHeight = (contentWidth / aspectRatio.coerceIn(0.3, 20.0)).roundToInt()
                 }
             }
         }
@@ -250,14 +253,14 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             widthHeightRatio: Float, horizontalSpacing: Int, verticalSpacing: Int,
             childIndices: IntArray): Int {
         val childWidth = (contentWidth - horizontalSpacing * (columnCount - 1)) / columnCount
-        val childHeight = Math.round(childWidth * widthHeightRatio)
+        val childHeight = (childWidth * widthHeightRatio).roundToInt()
         val widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
         val heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             getChildAt(childIndices[i]).measure(widthSpec, heightSpec)
             findViewById<View>(videoViewIds[i])?.measure(widthSpec, heightSpec)
         }
-        val rowsCount = Math.ceil(childCount / columnCount.toDouble()).toInt()
+        val rowsCount = ceil(childCount / columnCount.toDouble()).toInt()
         return rowsCount * childHeight + (rowsCount - 1) * verticalSpacing
     }
 
@@ -290,11 +293,11 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val child1 = getChildAt(childIndices[1])
         val child2 = getChildAt(childIndices[2])
         val childWidth = (contentWidth - horizontalSpacing) / 2
-        val childLeftHeightSpec = MeasureSpec.makeMeasureSpec(Math.round(childWidth * ratioMultiplier), MeasureSpec.EXACTLY)
+        val childLeftHeightSpec = MeasureSpec.makeMeasureSpec((childWidth * ratioMultiplier).roundToInt(), MeasureSpec.EXACTLY)
         val widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
         child0.measure(widthSpec, childLeftHeightSpec)
 
-        val childRightHeight = Math.round((childWidth - horizontalSpacing) / 2 * ratioMultiplier)
+        val childRightHeight = ((childWidth - horizontalSpacing) / 2 * ratioMultiplier).roundToInt()
         val childRightHeightSpec = MeasureSpec.makeMeasureSpec(childRightHeight, MeasureSpec.EXACTLY)
         child1.measure(widthSpec, childRightHeightSpec)
         child2.measure(widthSpec, childRightHeightSpec)
@@ -302,7 +305,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         findViewById<View>(videoViewIds[0])?.measure(widthSpec, childLeftHeightSpec)
         findViewById<View>(videoViewIds[1])?.measure(widthSpec, childRightHeightSpec)
         findViewById<View>(videoViewIds[2])?.measure(widthSpec, childRightHeightSpec)
-        return Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
+        return (contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier).roundToInt()
     }
 
     private fun layout3Media(horizontalSpacing: Int, verticalSpacing: Int, childIndices: IntArray) {

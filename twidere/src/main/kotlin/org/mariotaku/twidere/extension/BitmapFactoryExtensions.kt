@@ -1,6 +1,8 @@
 package org.mariotaku.twidere.extension
 
 import android.graphics.BitmapFactory
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 fun BitmapFactory.Options.calculateInSampleSize(preferredWidth: Int, preferredHeight: Int): Int {
     if (preferredHeight > outHeight && preferredWidth > outWidth) {
@@ -9,6 +11,7 @@ fun BitmapFactory.Options.calculateInSampleSize(preferredWidth: Int, preferredHe
     if (preferredHeight <= 0 && preferredWidth <= 0) {
         return 1
     }
-    val result = Math.round(Math.max(outWidth, outHeight) / Math.max(preferredWidth, preferredHeight).toFloat())
-    return Math.max(1, result)
+    val result = (max(outWidth, outHeight) / max(preferredWidth, preferredHeight)
+        .toFloat()).roundToInt()
+    return max(1, result)
 }

@@ -526,7 +526,7 @@ class ParcelableActivitiesAdapter(
             result = 31 * result + timestamp.hashCode()
             result = 31 * result + gap.hashCode()
             result = 31 * result + action.hashCode()
-            result = 31 * result + (filteredSources?.let { Arrays.hashCode(it) } ?: 0)
+            result = 31 * result + (filteredSources?.contentHashCode() ?: 0)
             return result
         }
     }

@@ -74,6 +74,8 @@ import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
 import kotlin.concurrent.thread
+import kotlin.math.abs
+import kotlin.math.roundToInt
 import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener,
@@ -145,7 +147,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                     activityLayout.statusBarAlpha = offset
                 }
                 try {
-                    actionBar.hideOffset = Math.round(controlBarHeight * (1f - offset))
+                    actionBar.hideOffset = (controlBarHeight * (1f - offset)).roundToInt()
                 } catch (e: UnsupportedOperationException) {
                     // Some device will throw this exception
                     hideOffsetNotSupported = true
@@ -408,10 +410,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun onSwipeOffsetChanged(offset: Int) {
-        val offsetFactor = 1 - (Math.abs(offset).toFloat() / swipeContainer.height)
+        val offsetFactor = 1 - (abs(offset).toFloat() / swipeContainer.height)
         swipeContainer.backgroundAlpha = offsetFactor
         val colorToolbar = overrideTheme.colorToolbar
-        val alpha = Math.round(Color.alpha(colorToolbar) * offsetFactor).coerceIn(0..255)
+        val alpha = (Color.alpha(colorToolbar) * offsetFactor).roundToInt().coerceIn(0..255)
         activityLayout.statusBarAlpha = alpha / 255f
     }
 

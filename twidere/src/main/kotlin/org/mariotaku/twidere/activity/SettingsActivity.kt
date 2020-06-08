@@ -54,6 +54,7 @@ import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import java.util.*
+import kotlin.system.exitProcess
 
 class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartFragmentCallback {
 
@@ -74,8 +75,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             shouldTerminate = savedInstanceState.getBoolean(EXTRA_SHOULD_TERMINATE, shouldTerminate)
         } else if (intent.getBooleanExtra(EXTRA_SHOULD_TERMINATE, false)) {
             finishNoRestart()
-            System.exit(0)
-            return
+            exitProcess(0)
         }
 
         val backgroundOption = currentThemeBackgroundOption

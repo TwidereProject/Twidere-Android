@@ -72,6 +72,7 @@ import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import java.io.IOException
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 15/4/12.
@@ -83,7 +84,7 @@ object MenuUtils {
         val pm = context.packageManager
         val res = context.resources
         val density = res.displayMetrics.density
-        val padding = Math.round(density * 4)
+        val padding = (density * 4).roundToInt()
         val activities = pm.queryIntentActivities(queryIntent, 0)
         for (info in activities) {
             val intent = Intent(queryIntent)
@@ -383,7 +384,7 @@ object MenuUtils {
         val pm = context.packageManager
         val res = context.resources
         val density = res.displayMetrics.density
-        val padding = Math.round(density * 4)
+        val padding = (density * 4).roundToInt()
         val queryIntent = Intent(action)
         queryIntent.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
         val activities = pm.queryIntentActivities(queryIntent, PackageManager.GET_META_DATA)

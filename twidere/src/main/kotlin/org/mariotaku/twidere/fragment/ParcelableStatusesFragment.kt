@@ -46,6 +46,8 @@ import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.util.Utils
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -211,8 +213,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     fun replaceStatusStates(status: ParcelableStatus?) {
         if (status == null) return
         val lm = layoutManager
-        val rangeStart = Math.max(adapter.statusStartIndex, lm.findFirstVisibleItemPosition())
-        val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.getStatusCount(false) - 1)
+        val rangeStart = max(adapter.statusStartIndex, lm.findFirstVisibleItemPosition())
+        val rangeEnd = min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.getStatusCount(false) - 1)
         for (i in rangeStart..rangeEnd) {
             val item = adapter.getStatus(i, false)
             if (status == item) {

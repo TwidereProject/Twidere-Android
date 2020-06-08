@@ -300,7 +300,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
                 for (i in 0 until handlerFilter.countDataAuthorities()) {
                     val authorityEntry = handlerFilter.getDataAuthority(i)
                     val port = authorityEntry.port
-                    intentFilter.addDataAuthority(authorityEntry.host, if (port < 0) null else Integer.toString(port))
+                    intentFilter.addDataAuthority(authorityEntry.host, if (port < 0) null else port.toString())
                 }
                 try {
                     adapter.enableForegroundDispatch(this, intent, arrayOf(intentFilter), null)

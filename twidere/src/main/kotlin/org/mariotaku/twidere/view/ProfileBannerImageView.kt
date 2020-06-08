@@ -31,6 +31,7 @@ import android.view.WindowInsets
 import android.widget.ImageView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.view.iface.IExtendedView
+import kotlin.math.roundToInt
 
 class ProfileBannerImageView(context: Context, attrs: AttributeSet) :
         ForegroundImageView(context, attrs), IExtendedView {
@@ -67,7 +68,7 @@ class ProfileBannerImageView(context: Context, attrs: AttributeSet) :
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = Math.round(width / bannerAspectRatio)
+        val height = (width / bannerAspectRatio).roundToInt()
         setMeasuredDimension(width, height)
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
     }

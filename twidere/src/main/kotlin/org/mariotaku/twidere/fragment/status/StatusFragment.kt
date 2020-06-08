@@ -107,6 +107,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener
 import org.mariotaku.yandex.YandexAPIFactory
 import java.lang.ref.WeakReference
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Displays status details
@@ -832,7 +834,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun computeVerticalScrollExtent(state: RecyclerView.State): Int {
             val firstPosition = findFirstVisibleItemPosition()
-            val lastPosition = Math.min(validScrollItemCount - 1, findLastVisibleItemPosition())
+            val lastPosition = min(validScrollItemCount - 1, findLastVisibleItemPosition())
             if (firstPosition < 0 || lastPosition < 0) return 0
             val childCount = lastPosition - firstPosition + 1
             if (childCount > 0) {
@@ -861,7 +863,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun computeVerticalScrollOffset(state: RecyclerView.State): Int {
             val firstPosition = findFirstVisibleItemPosition()
-            val lastPosition = Math.min(validScrollItemCount - 1, findLastVisibleItemPosition())
+            val lastPosition = min(validScrollItemCount - 1, findLastVisibleItemPosition())
             if (firstPosition < 0 || lastPosition < 0) return 0
             val childCount = lastPosition - firstPosition + 1
             val skippedCount = skippedScrollItemCount
@@ -871,7 +873,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     val top = view.top
                     val height = view.height
                     if (height > 0) {
-                        return Math.max((firstPosition - skippedCount) * 100 - top * 100 / height, 0)
+                        return max((firstPosition - skippedCount) * 100 - top * 100 / height, 0)
                     }
                 } else {
                     val count = validScrollItemCount
@@ -888,7 +890,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun computeVerticalScrollRange(state: RecyclerView.State): Int {
             return if (isSmoothScrollbarEnabled) {
-                Math.max(validScrollItemCount * 100, 0)
+                max(validScrollItemCount * 100, 0)
             } else {
                 validScrollItemCount
             }

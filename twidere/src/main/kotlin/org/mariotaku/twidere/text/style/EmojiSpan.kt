@@ -23,6 +23,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.text.style.DynamicDrawableSpan
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 15/12/22.
@@ -38,16 +39,16 @@ class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(ALIGN_BOTT
             fm: Paint.FontMetricsInt?): Int {
         val drawable = getDrawable() ?: return 0
         paint.getFontMetrics(fontMetrics)
-        val textHeightPx = Math.round(fontMetrics.descent - fontMetrics.ascent)
+        val textHeightPx = (fontMetrics.descent - fontMetrics.ascent).roundToInt()
         val intrinsicWidth = drawable.intrinsicWidth.toFloat()
         val intrinsicHeight = drawable.intrinsicHeight.toFloat()
         val scaledWidth: Int
         scaledWidth = if (intrinsicWidth > intrinsicHeight) {
-            Math.round(textHeightPx * (intrinsicWidth / intrinsicHeight))
+            (textHeightPx * (intrinsicWidth / intrinsicHeight)).roundToInt()
         } else {
-            Math.round(intrinsicWidth * (textHeightPx / intrinsicHeight))
+            (intrinsicWidth * (textHeightPx / intrinsicHeight)).roundToInt()
         }
-        val top = Math.round(fontMetrics.bottom) - textHeightPx
+        val top = fontMetrics.bottom.roundToInt() - textHeightPx
         val left = 0
         drawable.setBounds(left, top, left + scaledWidth, top + textHeightPx)
         return scaledWidth

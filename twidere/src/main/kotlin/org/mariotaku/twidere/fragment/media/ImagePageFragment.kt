@@ -39,6 +39,9 @@ import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.media.MediaExtra
 import java.io.IOException
 import java.lang.ref.WeakReference
+import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.min
 
 class ImagePageFragment : SubsampleImageViewerFragment() {
 
@@ -150,9 +153,9 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
                 val cr = context.contentResolver
                 decodeBitmap(cr, uri, o)
                 val dm = context.resources.displayMetrics
-                val targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels))
-                val sizeRatio = Math.ceil(Math.max(o.outHeight, o.outWidth) / targetSize.toDouble())
-                o.inSampleSize = Math.max(1.0, sizeRatio).toInt().nextPowerOf2
+                val targetSize = min(1024, max(dm.widthPixels, dm.heightPixels))
+                val sizeRatio = ceil(max(o.outHeight, o.outWidth) / targetSize.toDouble())
+                o.inSampleSize = max(1.0, sizeRatio).toInt().nextPowerOf2
                 o.inJustDecodeBounds = false
                 return decodeBitmap(cr, uri, o) ?: throw IOException()
             }

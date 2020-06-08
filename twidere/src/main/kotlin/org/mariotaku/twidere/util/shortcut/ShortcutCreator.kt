@@ -50,6 +50,7 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 import org.mariotaku.twidere.util.glide.DeferredTarget
 import java.lang.ref.WeakReference
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 2017/8/23.
@@ -159,8 +160,8 @@ object ShortcutCreator {
     private fun Drawable.toProfileImageIcon(context: Context): IconCompat {
         if (useAdaptiveIcon) {
             val density = context.resources.displayMetrics.density
-            val adaptiveIconSize = Math.round(adaptiveIconSizeDp * density)
-            val adaptiveIconOuterSides = Math.round(adaptiveIconOuterSidesDp * density)
+            val adaptiveIconSize = (adaptiveIconSizeDp * density).roundToInt()
+            val adaptiveIconOuterSides = (adaptiveIconOuterSidesDp * density).roundToInt()
 
             val bitmap = Bitmap.createBitmap(adaptiveIconSize, adaptiveIconSize,
                     Bitmap.Config.ARGB_8888)

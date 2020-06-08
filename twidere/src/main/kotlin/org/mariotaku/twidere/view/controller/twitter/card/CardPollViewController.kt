@@ -51,6 +51,7 @@ import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.view.ContainerView
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 15/12/20.
@@ -191,7 +192,9 @@ class CardPollViewController : ContainerView.ViewController() {
             if (label == null) throw NullPointerException()
             val choicePercent = if (votesSum == 0) 0f else value / votesSum.toFloat()
             choiceLabelView.spannable = label
-            choicePercentView.text = String.format(Locale.US, "%d%%", Math.round(choicePercent * 100))
+            choicePercentView.text = String.format(Locale.US, "%d%%",
+                (choicePercent * 100).roundToInt()
+            )
 
             pollItem.setOnClickListener(clickListener)
 
