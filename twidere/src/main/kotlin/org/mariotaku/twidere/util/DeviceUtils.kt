@@ -25,6 +25,7 @@ import androidx.appcompat.view.menu.MenuBuilder
 import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.WindowManager
+import kotlin.math.min
 
 /**
  * Created by mariotaku on 2017/4/17.
@@ -55,7 +56,7 @@ object DeviceUtils {
         } else {
             defaultDisplay.getRealMetrics(metrics)
         }
-        val mw = Math.min(metrics.widthPixels / metrics.density, metrics.heightPixels / metrics.density)
+        val mw = min(metrics.widthPixels / metrics.density, metrics.heightPixels / metrics.density)
         return mw >= 600
     }
 

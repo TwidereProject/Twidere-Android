@@ -343,8 +343,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     private fun deleteInternal(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        val tableId = DataStoreUtils.getTableId(uri)
-        when (tableId) {
+        when (val tableId = DataStoreUtils.getTableId(uri)) {
             VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS -> {
                 notificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS)
                 return 1
@@ -415,13 +414,17 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
             }
             else -> {
                 val conflictAlgorithm = getConflictAlgorithm(tableId)
-                if (conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE) {
-                    rowId = databaseWrapper.insertWithOnConflict(table, null, values,
+                rowId = when {
+                    conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE -> {
+                        databaseWrapper.insertWithOnConflict(table, null, values,
                             conflictAlgorithm)
-                } else if (table != null) {
-                    rowId = databaseWrapper.insert(table, null, values)
-                } else {
-                    return null
+                    }
+                    table != null -> {
+                        databaseWrapper.insert(table, null, values)
+                    }
+                    else -> {
+                        return null
+                    }
                 }
             }
         }

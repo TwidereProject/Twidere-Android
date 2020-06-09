@@ -68,15 +68,15 @@ class UserListTimelineLoader(
 
     private fun getMicroBlogStatuses(account: AccountDetails, paging: Paging): ResponseList<Status> {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-        when {
+        return when {
             listId != null -> {
-                return microBlog.getUserListStatuses(listId, paging)
+                microBlog.getUserListStatuses(listId, paging)
             }
             listName != null && userKey != null -> {
-                return microBlog.getUserListStatuses(listName.replace(' ', '-'), userKey.id, paging)
+                microBlog.getUserListStatuses(listName.replace(' ', '-'), userKey.id, paging)
             }
             listName != null && screenName != null -> {
-                return microBlog.getUserListStatuses(listName.replace(' ', '-'), screenName, paging)
+                microBlog.getUserListStatuses(listName.replace(' ', '-'), screenName, paging)
             }
             else -> {
                 throw MicroBlogException("User id or screen name is required for list name")

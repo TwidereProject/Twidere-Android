@@ -53,6 +53,6 @@ abstract class ProgressSaveFileTask(
     }
 
     companion object {
-        private val PROGRESS_FRAGMENT_TAG = "progress"
+        private const val PROGRESS_FRAGMENT_TAG = "progress"
     }
 }

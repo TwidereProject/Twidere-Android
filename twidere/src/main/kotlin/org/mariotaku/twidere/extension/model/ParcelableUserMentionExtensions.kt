@@ -26,9 +26,9 @@ import org.mariotaku.twidere.model.UserKey
  * Created by mariotaku on 2017/4/23.
  */
 fun ParcelableUserMention.getAcct(accountKey: UserKey): String {
-    if (accountKey.host == key.host) {
-        return screen_name
+    return if (accountKey.host == key.host) {
+        screen_name
     } else {
-        return "$screen_name@${key.host}"
+        "$screen_name@${key.host}"
     }
 }

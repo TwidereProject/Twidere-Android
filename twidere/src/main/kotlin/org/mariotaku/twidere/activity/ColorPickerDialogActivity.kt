@@ -69,7 +69,7 @@ class ColorPickerDialogActivity : BaseActivity(), Callback {
 
     companion object {
 
-        val RESULT_CLEARED = -2
+        const val RESULT_CLEARED = -2
     }
 
 }

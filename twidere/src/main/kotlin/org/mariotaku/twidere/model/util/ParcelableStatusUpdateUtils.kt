@@ -25,8 +25,7 @@ object ParcelableStatusUpdateUtils {
         statusUpdate.text = draft.text
         statusUpdate.location = draft.location
         statusUpdate.media = draft.media
-        val actionExtras = draft.action_extras
-        when (actionExtras) {
+        when (val actionExtras = draft.action_extras) {
             is UpdateStatusActionExtras -> {
                 statusUpdate.in_reply_to_status = actionExtras.inReplyToStatus
                 statusUpdate.is_possibly_sensitive = actionExtras.isPossiblySensitive

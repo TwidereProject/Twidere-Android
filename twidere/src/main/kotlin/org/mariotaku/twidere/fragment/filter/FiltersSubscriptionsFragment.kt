@@ -60,7 +60,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
 
-        adapter = FilterSubscriptionsAdapter(context!!)
+        adapter = FilterSubscriptionsAdapter(requireContext())
         listView.adapter = adapter
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
@@ -137,7 +137,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             R.id.refresh -> {
                 executeAfterFragmentResumed { fragment ->
                     ProgressDialogFragment.show(fragment.childFragmentManager, FRAGMENT_TAG_RREFRESH_FILTERS)
-                    val task = RefreshFiltersSubscriptionsTask(fragment.context!!)
+                    val task = RefreshFiltersSubscriptionsTask(fragment.requireContext())
                     val fragmentRef = WeakReference(fragment)
                     task.callback = {
                         fragmentRef.get()?.executeAfterFragmentResumed { fragment ->
@@ -157,7 +157,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        val loader = CursorLoader(context!!)
+        val loader = CursorLoader(requireContext())
         loader.uri = Filters.Subscriptions.CONTENT_URI
         loader.projection = Filters.Subscriptions.COLUMNS
         return loader
@@ -233,7 +233,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
                 val subscription = indices.newObject(cursor)
-                subscription.instantiateComponent(context!!)?.deleteLocalData()
+                subscription.instantiateComponent(requireContext())?.deleteLocalData()
                 cursor.moveToNext()
             }
         }
@@ -284,7 +284,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
 
     class AddUrlSubscriptionDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_add_filters_subscription)
             builder.setPositiveButton(R.string.action_add_filters_subscription) { dialog, _ ->
                 dialog as AlertDialog
@@ -293,10 +293,10 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 val subscription = FiltersSubscription()
                 subscription.name = editName.text.toString()
                 subscription.setupUrl(editUrl.text.toString())
-                val component = subscription.instantiateComponent(context!!) ?: return@setPositiveButton
+                val component = subscription.instantiateComponent(requireContext()) ?: return@setPositiveButton
                 component.firstAdded()
                 val vc = ObjectCursor.valuesCreatorFrom(FiltersSubscription::class.java)
-                context!!.contentResolver.insert(Filters.Subscriptions.CONTENT_URI, vc.create(subscription))
+                requireContext().contentResolver.insert(Filters.Subscriptions.CONTENT_URI, vc.create(subscription))
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()

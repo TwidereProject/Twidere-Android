@@ -41,7 +41,7 @@ class MediaStatusesSearchFragment : AbsMediaStatusesFragment() {
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return MediaStatusesSearchLoader(activity!!, accountKey, query, adapter.getData(), null, tabPosition,
+        return MediaStatusesSearchLoader(requireActivity(), accountKey, query, adapter.getData(), null, tabPosition,
                 fromUser, makeGap, loadingMore)
     }
 

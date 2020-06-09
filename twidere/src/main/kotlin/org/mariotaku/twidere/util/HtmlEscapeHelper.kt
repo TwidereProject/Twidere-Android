@@ -80,11 +80,11 @@ object HtmlEscapeHelper {
 
     private class IgnoreErrorNumericEntityUnescaper : NumericEntityUnescaper() {
         override fun translate(input: CharSequence?, index: Int, out: Writer?): Int {
-            try {
-                return super.translate(input, index, out)
+            return try {
+                super.translate(input, index, out)
             } catch (e: IllegalArgumentException) {
                 // Ignore unsupported code points
-                return 0
+                0
             }
         }
     }

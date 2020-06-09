@@ -107,6 +107,7 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.view.HomeDrawerLayout
 import org.mariotaku.twidere.view.TabPagerIndicator
 import java.lang.ref.WeakReference
+import kotlin.math.floor
 
 class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback,
         OnLongClickListener, DrawerLayout.DrawerListener {
@@ -422,12 +423,18 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (!ViewCompat.getFitsSystemWindows(homeMenu)) {
             homeContent.setPadding(0, insets.systemWindowInsetTop, 0, 0)
         }
+        (toolbar.layoutParams as? MarginLayoutParams)?.bottomMargin = insets.systemWindowInsetBottom
         (actionsButton.layoutParams as? MarginLayoutParams)?.bottomMargin =
-                actionsButtonBottomMargin + insets.systemWindowInsetBottom
+                actionsButtonBottomMargin + if (preferences[tabPositionKey] == SharedPreferenceConstants.VALUE_TAB_POSITION_TOP) {
+                    insets.systemWindowInsetBottom
+                } else {
+                    0
+                }
         return insets
     }
 
     override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
         val tabPosition = handleIntent(intent, false)
         if (tabPosition >= 0) {
             mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
@@ -623,16 +630,22 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 }
                 notifyControlBarOffsetChanged()
             } else {
+                val layoutparams = toolbar.layoutParams
+                val toolbarMarginBottom = if (layoutparams is MarginLayoutParams) {
+                    layoutparams.bottomMargin
+                } else {
+                    0
+                }
                 val translationY = if (mainTabs.columns > 1 || !toolbar.isVisible) {
                     0
                 } else {
-                    (toolbar.height * (offset - 1)).toInt()
+                    ((toolbar.height + toolbarMarginBottom) * (offset - 1)).toInt()
                 }
                 toolbar.translationY = -translationY.toFloat()
                 windowOverlay.translationY = -translationY.toFloat()
                 val lp = actionsButton.layoutParams
                 if (lp is MarginLayoutParams) {
-                    actionsButton.translationY = (lp.bottomMargin + toolbar.height + actionsButton.height) * (1 - offset)
+                    actionsButton.translationY = (lp.bottomMargin + toolbar.height + actionsButton.height + toolbarMarginBottom) * (1 - offset)
                 } else {
                     actionsButton.translationY = actionsButton.height * (1 - offset)
                 }
@@ -848,7 +861,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 "wide" -> resources.getDimension(R.dimen.preferred_tab_column_width_wide)
                 else -> resources.getDimension(R.dimen.preferred_tab_column_width_normal)
             }
-            mainTabs.columns = Math.floor(1.0 / pagerAdapter.getPageWidth(0)).toInt()
+            mainTabs.columns = floor(1.0 / pagerAdapter.getPageWidth(0)).toInt()
         } else {
             mainPager.pageMargin = 0
             mainPager.setPageMarginDrawable(null)
@@ -1059,7 +1072,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     class AutoRefreshConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.auto_refresh)
             builder.setMessage(R.string.message_auto_refresh_confirm)
             builder.setPositiveButton(android.R.string.ok) { _, _ ->

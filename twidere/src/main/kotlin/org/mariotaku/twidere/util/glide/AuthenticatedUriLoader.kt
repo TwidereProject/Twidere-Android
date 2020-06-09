@@ -24,7 +24,6 @@ import android.content.Context
 import android.net.Uri
 import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher
 import com.bumptech.glide.load.Options
-import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
 import com.bumptech.glide.load.model.ModelLoader.LoadData
 import com.bumptech.glide.signature.ObjectKey

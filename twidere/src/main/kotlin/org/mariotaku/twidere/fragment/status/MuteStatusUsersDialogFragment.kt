@@ -42,7 +42,7 @@ class MuteStatusUsersDialogFragment : BaseDialogFragment() {
     private val status: ParcelableStatus get() = arguments?.getParcelable(EXTRA_STATUS)!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val referencedUsers = status.referencedUsers
         val nameFirst = preferences[nameFirstKey]
         val displayNames = referencedUsers.map {
@@ -50,7 +50,7 @@ class MuteStatusUsersDialogFragment : BaseDialogFragment() {
         }.toTypedArray()
         builder.setTitle(R.string.action_status_mute_users)
         builder.setItems(displayNames) { _, which ->
-            CreateUserMuteDialogFragment.show(fragmentManager!!, referencedUsers[which])
+            CreateUserMuteDialogFragment.show(requireFragmentManager(), referencedUsers[which])
         }
         val dialog = builder.create()
         dialog.onShow { it.applyTheme() }

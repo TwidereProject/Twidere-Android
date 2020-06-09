@@ -231,7 +231,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                     Activity.RESULT_OK -> if (data != null) {
                         val mediaUris = MediaPickerActivity.getMediaUris(data)
                         val types = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)?.getIntArray(EXTRA_TYPES)
-                        TaskStarter.execute(AddMediaTask(this, mediaUris, types, false, false))
+                        TaskStarter.execute(AddMediaTask(this, mediaUris, types,
+                            copySrc = false,
+                            deleteSrc = false
+                        ))
                     }
                     RESULT_SEARCH_GIF -> {
                         val provider = gifShareProvider ?: return
@@ -278,7 +281,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
-        return ConversationLoader(context!!, accountKey, conversationId)
+        return ConversationLoader(requireContext(), accountKey, conversationId)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableMessage>?>, data: List<ParcelableMessage>?) {
@@ -319,7 +322,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     override fun onLoadMoreContents(position: Long) {
         if (ILoadMoreSupportAdapter.START !in position) return
         val context = context ?: return
-        val message = adapter.getMessage(adapter.messageRange.endInclusive)
+        val message = adapter.getMessage(adapter.messageRange.last)
         setLoadMoreIndicatorPosition(position)
         val param = GetMessagesTask.LoadMoreMessageTaskParam(context, accountKey, conversationId,
                 message.id)
@@ -543,8 +546,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             } else {
                 ParcelableMedia.Type.IMAGE
             }
-            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), intArrayOf(type), true,
-                    false)
+            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), intArrayOf(type),
+                copySrc = true,
+                deleteSrc = false
+            )
             task.callback = {
                 contentInfo.releasePermission()
             }
@@ -558,7 +563,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             types: IntArray?,
             copySrc: Boolean,
             deleteSrc: Boolean
-    ) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(fragment.context!!, sources, types, copySrc, deleteSrc) {
+    ) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(fragment.requireContext(), sources, types, copySrc, deleteSrc) {
 
         private val fragmentRef = WeakReference(fragment)
 
@@ -581,7 +586,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     internal class DeleteMediaTask(
             fragment: MessagesConversationFragment,
             val media: Array<ParcelableMediaUpdate>
-    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.context!!,
+    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.requireContext(),
             media.mapToArray { Uri.parse(it.uri) }) {
 
         init {

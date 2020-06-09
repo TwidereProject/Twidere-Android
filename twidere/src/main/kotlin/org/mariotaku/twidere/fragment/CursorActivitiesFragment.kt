@@ -51,6 +51,8 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Displays statuses from database
@@ -59,7 +61,7 @@ import org.mariotaku.twidere.util.Utils
 abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
+        get() = Utils.getAccountKeys(requireContext(), arguments) ?: DataStoreUtils.getActivatedAccountKeys(requireContext())
 
     abstract val contentUri: Uri
 
@@ -241,8 +243,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     fun replaceStatusStates(result: ParcelableStatus?) {
         if (result == null) return
         val lm = layoutManager
-        val rangeStart = Math.max(adapter.activityStartIndex, lm.findFirstVisibleItemPosition())
-        val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.activityStartIndex + adapter.getActivityCount(false) - 1)
+        val rangeStart = max(adapter.activityStartIndex, lm.findFirstVisibleItemPosition())
+        val rangeEnd = min(lm.findLastVisibleItemPosition(), adapter.activityStartIndex + adapter.getActivityCount(false) - 1)
         loop@ for (i in rangeStart..rangeEnd) {
             val activity = adapter.getActivity(i, false)
             if (result.account_key == activity.account_key && result.id == activity.id) {
@@ -353,7 +355,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
         class ActivityCursor(
                 cursor: Cursor,
-                indies: ObjectCursor.CursorIndices<ParcelableActivity>,
+                indies: CursorIndices<ParcelableActivity>,
                 val filteredUserIds: Array<UserKey>,
                 val filteredUserNames: Array<String>,
                 val filteredUserDescriptions: Array<String>

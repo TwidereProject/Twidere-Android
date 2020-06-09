@@ -57,8 +57,7 @@ class VariousItemsAdapter(
             }
             VIEW_TYPE_HASHTAG -> {
                 val view = inflater.inflate(R.layout.list_item_two_line_small, parent, false)
-                val holder = HashtagViewHolder(view, hashtagClickListener)
-                return holder
+                return HashtagViewHolder(view, hashtagClickListener)
             }
         }
         throw UnsupportedOperationException()
@@ -88,12 +87,12 @@ class VariousItemsAdapter(
     }
 
     private fun getItemViewType(obj: Any): Int {
-        when (obj) {
-            is ParcelableStatus -> return VIEW_TYPE_STATUS
-            is ParcelableUser -> return VIEW_TYPE_USER
-            is ParcelableUserList -> return VIEW_TYPE_USER_LIST
-            is ParcelableHashtag -> return VIEW_TYPE_HASHTAG
-            else -> throw UnsupportedOperationException("Unsupported object " + obj)
+        return when (obj) {
+            is ParcelableStatus -> VIEW_TYPE_STATUS
+            is ParcelableUser -> VIEW_TYPE_USER
+            is ParcelableUserList -> VIEW_TYPE_USER_LIST
+            is ParcelableHashtag -> VIEW_TYPE_HASHTAG
+            else -> throw UnsupportedOperationException("Unsupported object $obj")
         }
     }
 
@@ -113,9 +112,9 @@ class VariousItemsAdapter(
 
     companion object {
 
-        val VIEW_TYPE_STATUS = 1
-        val VIEW_TYPE_USER = 2
-        val VIEW_TYPE_USER_LIST = 3
-        val VIEW_TYPE_HASHTAG = 4
+        const val VIEW_TYPE_STATUS = 1
+        const val VIEW_TYPE_USER = 2
+        const val VIEW_TYPE_USER_LIST = 3
+        const val VIEW_TYPE_HASHTAG = 4
     }
 }

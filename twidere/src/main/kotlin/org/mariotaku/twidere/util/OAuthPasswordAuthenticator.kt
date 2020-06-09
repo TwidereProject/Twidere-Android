@@ -44,7 +44,7 @@ import java.io.Reader
 
 class OAuthPasswordAuthenticator(
         private val oauth: TwitterOAuth,
-        private val loginVerificationCallback: OAuthPasswordAuthenticator.LoginVerificationCallback,
+        private val loginVerificationCallback: LoginVerificationCallback,
         private val userAgent: String
 ) {
     private val client: RestHttpClient

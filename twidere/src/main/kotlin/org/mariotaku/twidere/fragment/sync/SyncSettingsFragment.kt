@@ -94,9 +94,9 @@ class SyncSettingsFragment : BasePreferenceFragment() {
 
     class DisconnectSyncConfirmDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
-            val entry = DataSyncProvider.Factory.getProviderEntry(context!!, providerInfo.type)!!
+            val entry = DataSyncProvider.Factory.getProviderEntry(requireContext(), providerInfo.type)!!
             builder.setMessage(getString(R.string.message_sync_disconnect_from_name_confirm, entry.name))
             builder.setPositiveButton(R.string.action_sync_disconnect) { _, _ ->
                 (parentFragment as SyncSettingsFragment).cleanupAndDisconnect()

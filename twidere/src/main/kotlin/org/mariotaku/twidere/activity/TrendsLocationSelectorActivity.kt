@@ -93,7 +93,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
         private val list: Array<LocationsMap.LocationsData> get() = arguments?.getTypedArray(EXTRA_DATA) ?: emptyArray()
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val selectorBuilder = AlertDialog.Builder(context!!)
+            val selectorBuilder = AlertDialog.Builder(requireContext())
             selectorBuilder.setTitle(R.string.trends_location)
             selectorBuilder.setView(R.layout.dialog_expandable_list)
             selectorBuilder.setNegativeButton(android.R.string.cancel, null)
@@ -101,7 +101,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             dialog.onShow {
                 it.applyTheme()
                 val listView = it.expandableList
-                val adapter = ExpandableTrendLocationsListAdapter(context!!)
+                val adapter = ExpandableTrendLocationsListAdapter(requireContext())
                 adapter.data = list
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { _, _, groupPosition, _ ->
@@ -177,23 +177,14 @@ class TrendsLocationSelectorActivity : BaseActivity() {
         }
 
         override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
-            val view: View
-            if (convertView != null) {
-                view = convertView
-            } else {
-                view = inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false)
-            }
+            val view: View = convertView ?: inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false)
             view.findViewById<TextView>(android.R.id.text1).text = getGroup(groupPosition).name
             return view
         }
 
         override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
-            val view: View
-            if (convertView != null) {
-                view = convertView
-            } else {
-                view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
-            }
+            val view: View =
+                convertView ?: inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
             val location = getChild(groupPosition, childPosition)
             val text1 = view.findViewById<TextView>(android.R.id.text1)
             if (location.parentId == WORLDWIDE) {

@@ -2,7 +2,6 @@ package androidx.loader.content
 
 import android.content.Context
 import android.os.AsyncTask
-import androidx.loader.content.AsyncTaskLoader
 import org.mariotaku.twidere.extension.set
 import org.mariotaku.twidere.util.Analyzer
 

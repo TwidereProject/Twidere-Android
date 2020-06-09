@@ -72,20 +72,25 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
 
         remoteDrafts.forEach { remoteDraft ->
             val localDraft = localDrafts.find { it.filename == remoteDraft.draftFileName }
-            if (remoteDraft.draftFileName.substringBefore(".eml") in localRemovedIds) {
-                // Local removed, remove remote
-                removeRemoteInfoList.add(remoteDraft)
-            } else if (localDraft == null) {
-                // Local doesn't exist, download remote
-                downloadRemoteInfoList.add(remoteDraft)
-            } else if (remoteDraft.draftTimestamp - localDraft.timestamp > 1000) {
-                // Local is older, update from remote
-                localDraft.remote_extras = remoteDraft.draftRemoteExtras
-                updateLocalInfoList[localDraft._id] = remoteDraft
-            } else if (localDraft.timestamp - remoteDraft.draftTimestamp > 1000) {
-                // Local is newer, upload local
-                localDraft.remote_extras = remoteDraft.draftRemoteExtras
-                uploadLocalList.add(localDraft)
+            when {
+                remoteDraft.draftFileName.substringBefore(".eml") in localRemovedIds -> {
+                    // Local removed, remove remote
+                    removeRemoteInfoList.add(remoteDraft)
+                }
+                localDraft == null -> {
+                    // Local doesn't exist, download remote
+                    downloadRemoteInfoList.add(remoteDraft)
+                }
+                remoteDraft.draftTimestamp - localDraft.timestamp > 1000 -> {
+                    // Local is older, update from remote
+                    localDraft.remote_extras = remoteDraft.draftRemoteExtras
+                    updateLocalInfoList[localDraft._id] = remoteDraft
+                }
+                localDraft.timestamp - remoteDraft.draftTimestamp > 1000 -> {
+                    // Local is newer, upload local
+                    localDraft.remote_extras = remoteDraft.draftRemoteExtras
+                    uploadLocalList.add(localDraft)
+                }
             }
         }
 

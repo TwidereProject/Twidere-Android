@@ -45,7 +45,7 @@ class WindowBackgroundDrawable(private val color: Int) : Drawable() {
         return PixelFormat.TRANSLUCENT
     }
 
-    override fun getConstantState(): Drawable.ConstantState {
+    override fun getConstantState(): ConstantState {
         return State(color)
     }
 

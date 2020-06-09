@@ -48,16 +48,16 @@ class MutesUsersLoader(
 
     @Throws(MicroBlogException::class)
     override fun getUsers(details: AccountDetails, paging: Paging): PaginatedList<ParcelableUser> {
-        when (details.type) {
+        return when (details.type) {
             AccountType.MASTODON -> {
                 val mastodon = details.newMicroBlogInstance(context, Mastodon::class.java)
-                return mastodon.getMutes(paging).mapToPaginated {
+                mastodon.getMutes(paging).mapToPaginated {
                     it.toParcelable(details)
                 }
             }
             else -> {
                 val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getMutesUsersList(paging).mapToPaginated {
+                microBlog.getMutesUsersList(paging).mapToPaginated {
                     it.toParcelable(details, profileImageSize = profileImageSize)
                 }
             }

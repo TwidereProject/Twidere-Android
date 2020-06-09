@@ -114,7 +114,7 @@ class AddEditItemFragment : BaseDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setView(R.layout.dialog_filter_rule_editor)
 
         if (arguments?.getLong(EXTRA_ID, -1) ?: -1 >= 0) {
@@ -129,10 +129,10 @@ class AddEditItemFragment : BaseDialogFragment() {
             applyTheme()
             window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             editText.setAdapter(when (contentUri) {
-                Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(activity!!)
-                Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(activity!!, requestManager).apply {
+                Filters.Sources.CONTENT_URI -> SourceAutoCompleteAdapter(requireActivity())
+                Filters.Users.CONTENT_URI -> ComposeAutoCompleteAdapter(requireActivity(), requestManager).apply {
                     val am = AccountManager.get(activity)
-                    account = AccountUtils.getDefaultAccountDetails(activity!!, am, false)
+                    account = AccountUtils.getDefaultAccountDetails(requireActivity(), am, false)
                 }
                 else -> null
             })
@@ -142,7 +142,7 @@ class AddEditItemFragment : BaseDialogFragment() {
                 advancedExpanded = !advancedExpanded
             }
             positiveButton.setOnClickListener(this@AddEditItemFragment::handlePositiveClick)
-            advancedContainer.children.filter { it is CheckBox }.forEach {
+            advancedContainer.children.filterIsInstance<CheckBox>().forEach {
                 val checkBox = it as CheckBox
                 checkBox.setOnClickListener onClick@ {
                     if (extraFeaturesService.isAdvancedFiltersEnabled) return@onClick
@@ -151,7 +151,7 @@ class AddEditItemFragment : BaseDialogFragment() {
                     val df = ExtraFeaturesIntroductionDialogFragment.create(
                             ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
                     df.setTargetFragment(this@AddEditItemFragment, REQUEST_CHANGE_SCOPE_PURCHASE)
-                    df.show(fragmentManager!!, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
+                    df.show(requireFragmentManager(), ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
                 }
             }
 
@@ -253,7 +253,7 @@ class AddEditItemFragment : BaseDialogFragment() {
                         Toast.LENGTH_SHORT).show()
             } else {
                 val idWhere = Expression.equals(Filters._ID, rowId).sql
-                resolver?.update(uri, values, idWhere, null)
+                resolver.update(uri, values, idWhere, null)
             }
         } else {
             resolver?.insert(uri, values)

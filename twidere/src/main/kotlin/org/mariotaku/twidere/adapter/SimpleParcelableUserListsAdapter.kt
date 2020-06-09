@@ -67,8 +67,7 @@ class SimpleParcelableUserListsAdapter(
                 return view
             }
             1 -> {
-                val view = createViewFromResource(position, convertView, parent, R.layout.list_item_load_indicator)
-                return view
+                return createViewFromResource(position, convertView, parent, R.layout.list_item_load_indicator)
             }
         }
         throw UnsupportedOperationException()

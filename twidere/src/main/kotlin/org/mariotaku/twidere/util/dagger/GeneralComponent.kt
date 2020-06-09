@@ -58,7 +58,7 @@ import javax.inject.Singleton
  * Created by mariotaku on 15/10/5.
  */
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class))
+@Component(modules = [ApplicationModule::class])
 interface GeneralComponent {
     fun inject(adapter: DummyItemAdapter)
 

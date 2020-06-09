@@ -50,16 +50,16 @@ class NetworkPublicTimelineLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(account: AccountDetails, paging: Paging): PaginatedList<ParcelableStatus> {
-        when (account.type) {
+        return when (account.type) {
             AccountType.MASTODON -> {
                 val mastodon = account.newMicroBlogInstance(context, Mastodon::class.java)
-                return mastodon.getPublicTimeline(paging, false).mapToPaginated {
+                mastodon.getPublicTimeline(paging, false).mapToPaginated {
                     it.toParcelable(account)
                 }
             }
             AccountType.STATUSNET -> {
                 val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
-                return microBlog.getNetworkPublicTimeline(paging).mapMicroBlogToPaginated {
+                microBlog.getNetworkPublicTimeline(paging).mapMicroBlogToPaginated {
                     it.toParcelable(account, profileImageSize = profileImageSize)
                 }
             }

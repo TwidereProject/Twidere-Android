@@ -24,6 +24,8 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.view.View
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * Static utility methods for Transitions.
@@ -50,9 +52,9 @@ object TransitionUtils {
      */
     fun createViewBitmap(view: View, matrix: Matrix, bounds: RectF): Bitmap? {
         if (bounds.isEmpty) return null
-        var bitmapWidth = Math.round(bounds.width())
-        var bitmapHeight = Math.round(bounds.height())
-        val scale = Math.min(1f, MAX_IMAGE_SIZE.toFloat() / (bitmapWidth * bitmapHeight))
+        var bitmapWidth = bounds.width().roundToInt()
+        var bitmapHeight = bounds.height().roundToInt()
+        val scale = min(1f, MAX_IMAGE_SIZE.toFloat() / (bitmapWidth * bitmapHeight))
         bitmapWidth *= scale.toInt()
         bitmapHeight *= scale.toInt()
         matrix.postTranslate(-bounds.left, -bounds.top)

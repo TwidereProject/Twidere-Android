@@ -46,12 +46,16 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
             val result = ArrayList<String>()
             result.add(AUTHORITY_USER_FAVORITES)
             result.add("account=$accountKey")
-            if (userKey != null) {
-                result.add("user_id=$userKey")
-            } else if (screenName != null) {
-                result.add("screen_name=$screenName")
-            } else {
-                return null
+            when {
+                userKey != null -> {
+                    result.add("user_id=$userKey")
+                }
+                screenName != null -> {
+                    result.add("screen_name=$screenName")
+                }
+                else -> {
+                    return null
+                }
             }
             return result.toTypedArray()
         }
@@ -65,12 +69,16 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
 
             val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
             val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-            if (userKey != null) {
-                sb.append(userKey)
-            } else if (screenName != null) {
-                sb.append(screenName)
-            } else {
-                return null
+            when {
+                userKey != null -> {
+                    sb.append(userKey)
+                }
+                screenName != null -> {
+                    sb.append(screenName)
+                }
+                else -> {
+                    return null
+                }
             }
             return sb.toString()
         }
@@ -90,7 +98,7 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
     override fun notifyFavoriteTask(event: FavoriteTaskEvent) {
         if (event.action == FavoriteTaskEvent.Action.DESTROY && event.isSucceeded) {
             event.status?.let { status ->
-                val args = arguments!!
+                val args = requireArguments()
                 val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
                 if (status.account_key == userKey) {
                     removeStatus(event.statusId)

@@ -70,7 +70,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         get() = false
 
     override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context!!, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context!!)
+        get() = Utils.getAccountKeys(requireContext(), arguments) ?: DataStoreUtils.getActivatedAccountKeys(requireContext())
 
     abstract val errorInfoKey: String
     abstract val isFilterEnabled: Boolean

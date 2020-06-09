@@ -50,7 +50,6 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.api.mastodon.toParcelable
@@ -132,7 +131,10 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<SingleResponse<ParcelableUser>> {
         progressContainer.visibility = View.VISIBLE
         editProfileContent.visibility = View.GONE
-        return ParcelableUserLoader(activity!!, accountKey, accountKey, null, arguments, false, false)
+        return ParcelableUserLoader(requireActivity(), accountKey, accountKey, null, arguments,
+            omitIntentExtra = false,
+            loadFromCache = false
+        )
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
@@ -175,7 +177,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        if (!Utils.isMyAccount(activity!!, accountKey)) {
+        if (!Utils.isMyAccount(requireActivity(), accountKey)) {
             activity?.finish()
             return
         }
@@ -232,18 +234,19 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             REQUEST_UPLOAD_PROFILE_BANNER_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
-                if (resultCode == RESULT_REMOVE_BANNER) {
-                    currentTask = context?.let { RemoveProfileBannerTaskInternal(it, accountKey) }
+                currentTask = if (resultCode == RESULT_REMOVE_BANNER) {
+                    context?.let { RemoveProfileBannerTaskInternal(it, accountKey) }
                 } else {
-                    currentTask = UpdateProfileBannerImageTaskInternal(this, accountKey,
-                            data.data!!, true)
+                    UpdateProfileBannerImageTaskInternal(this, accountKey,
+                        data.data!!, true)
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {
                 val task = currentTask
                 if (task != null && !task.isFinished) return
                 currentTask = UpdateProfileBackgroundImageTaskInternal(this, accountKey,
-                        data.data!!, false, true)
+                        data.data!!, tile = false, deleteImage = true
+                )
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
                 val task = currentTask
@@ -379,7 +382,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             private val linkColor: Int,
             private val backgroundColor: Int
     ) : AbsAccountRequestTask<Any?, Pair<ParcelableUser, AccountDetails>,
-            UserProfileEditorFragment>(fragment.context!!, accountKey) {
+            UserProfileEditorFragment>(fragment.requireContext(), accountKey) {
 
         init {
             this.callback = fragment
@@ -456,7 +459,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
         companion object {
 
-            private val DIALOG_FRAGMENT_TAG = "updating_user_profile"
+            private const val DIALOG_FRAGMENT_TAG = "updating_user_profile"
         }
 
     }
@@ -490,7 +493,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             accountKey: UserKey,
             imageUri: Uri,
             deleteImage: Boolean
-    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
+    ) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(fragment.requireContext(), accountKey, imageUri, deleteImage) {
 
         init {
             callback = fragment
@@ -513,7 +516,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             imageUri: Uri,
             tile: Boolean,
             deleteImage: Boolean
-    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri,
+    ) : UpdateProfileBackgroundImageTask<UserProfileEditorFragment>(fragment.requireContext(), accountKey, imageUri,
             tile, deleteImage) {
 
         init {
@@ -538,7 +541,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
             accountKey: UserKey,
             imageUri: Uri,
             deleteImage: Boolean
-    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.context!!, accountKey, imageUri, deleteImage) {
+    ) : UpdateProfileImageTask<UserProfileEditorFragment>(fragment.requireContext(), accountKey, imageUri, deleteImage) {
 
         init {
             callback = fragment
@@ -559,16 +562,16 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     companion object {
 
-        private val LOADER_ID_USER = 1
+        private const val LOADER_ID_USER = 1
 
-        private val REQUEST_UPLOAD_PROFILE_IMAGE = 1
-        private val REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2
-        private val REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE = 3
-        private val REQUEST_PICK_LINK_COLOR = 11
-        private val REQUEST_PICK_BACKGROUND_COLOR = 12
+        private const val REQUEST_UPLOAD_PROFILE_IMAGE = 1
+        private const val REQUEST_UPLOAD_PROFILE_BANNER_IMAGE = 2
+        private const val REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE = 3
+        private const val REQUEST_PICK_LINK_COLOR = 11
+        private const val REQUEST_PICK_BACKGROUND_COLOR = 12
 
-        private val RESULT_REMOVE_BANNER = 101
-        private val UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile"
+        private const val RESULT_REMOVE_BANNER = 101
+        private const val UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile"
 
     }
 }

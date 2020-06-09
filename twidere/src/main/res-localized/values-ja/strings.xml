@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="account_options">アカウントオプション</string>
+    <string name="account_type_fanfou">Fanfou</string>
+    <string name="account_type_mastodon">マストドン</string>
+    <string name="account_type_statusnet">StatusNet</string>
+    <string name="account_type_twitter">Twitter</string>
+    <!-- [verb] Accept a friend request (follow request) -->
+    <string name="action_accept_friend_request">許可</string>
+    <!-- [verb] Accept a permission request like allow to use camera etc. -->
+    <string name="action_accept_permission_request">許可</string>
+    <!-- [verb] Add an item to a list/collection -->
+    <string name="action_add">追加</string>
+    <string name="action_add_content_warning">コンテンツの警告を追加</string>
+    <!-- [verb] Add a member to a message conversation -->
+    <string name="action_add_conversation_participant">メンバーを追加</string>
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">ルールを追加</string>
+    <string name="action_add_filters_subscription">購読を追加</string>
+    <string name="action_add_gif">GIF画像を追加</string>
+    <string name="action_add_media">メディアを追加</string>
+    <string name="action_add_member">メンバーを追加</string>
+    <string name="action_add_name_to_home_screen">ホーム画面に <xliff:g example="Name" id="name">%1$s</xliff:g> を追加</string>
+    <string name="action_add_tab">タブを追加</string>
+    <string name="action_add_tab_to_home_screen">ホーム画面にタブを追加</string>
+    <string name="action_add_to_filter">フィルターに追加</string>
+    <string name="action_add_to_home_screen">ホーム画面に追加</string>
+    <string name="action_add_to_home_screen_more">ホーム画面に追加...</string>
+    <string name="action_add_to_list">リストに追加</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">ブロック</string>
+    <string name="action_buffer_disconnect">Buffer から切断</string>
+    <string name="action_buffer_settings">設定</string>
+    <string name="action_buffer_update_now">今すぐ公開</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
+    <string name="action_cancel_retweet">リツイートの取り消し</string>
+    <string name="action_center">中央</string>
+    <string name="action_change_language">言語を変更</string>
+    <string name="action_clear">クリア</string>
+    <string name="action_clear_messages">メッセージを削除</string>
+    <string name="action_clear_messages_and_delete_conversation">会話のクリアと削除</string>
+    <string name="action_comment">コメント</string>
+    <string name="action_compose">ツイートする</string>
+    <string name="action_compose_message_convert_to_status">ツイートに変換</string>
+    <string name="action_connect_to_buffer">接続</string>
+    <string name="action_conversation_info">会話の情報</string>
+    <string name="action_create_conversation">会話を作成</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">削除</string>
+    <string name="action_delete_messages">メッセージを削除</string>
+    <string name="action_disable_promotions">広告を無効にする</string>
+    <string name="action_dont_restart">再起動しない</string>
+    <string name="action_dont_terminate">終了しない</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_edit">編集</string>
+    <string name="action_edit_conversation_avatar">アイコンの編集</string>
+    <string name="action_edit_conversation_name">名前の編集</string>
+    <string name="action_edit_filter_rule">ルールの編集</string>
+    <string name="action_enable">有効</string>
+    <string name="action_enable_notifications">通知をオン</string>
+    <string name="action_enable_promotions">広告を有効にする</string>
+    <string name="action_enable_retweets">リツイートを有効にする</string>
+    <string name="action_export_to_muted_users">ミュート済みユーザーをエクスポート</string>
+    <string name="action_favorite">お気に入り</string>
+    <string name="action_filter_import_from_blocked_users">ブロック済みユーザーをインポートする</string>
+    <string name="action_filter_import_from_muted_users">ミュート済みユーザーをインポートする</string>
+    <string name="action_filter_subscriptions_card_manage">購読の管理</string>
+    <string name="action_finish">終了</string>
+    <string name="action_follow">フォロー</string>
+    <string name="action_format_search_update_status"><xliff:g id="text">%1$s</xliff:g> をツイート</string>
+    <!-- [verb] Perform import action -->
+    <string name="action_import">インポート</string>
+    <string name="action_import_from">インポート&#8230;</string>
+    <string name="action_invert_selection">選択を反転</string>
+    <!-- Used for decide something later, like permission request -->
+    <string name="action_later">あとで</string>
+    <string name="action_leave_conversation">会話から退出</string>
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_like">いいね</string>
+    <string name="action_list_creator">リスト作成者</string>
+    <string name="action_location">位置情報</string>
+    <string name="action_manage_in_buffer">Bufferで管理</string>
+    <string name="action_mark_as_read">既読を付ける</string>
+    <string name="action_mute">ミュート</string>
+    <string name="action_mute_notifications">通知をミュート</string>
+    <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g> - 保存日時:<xliff:g id="time">%2$s</xliff:g></string>
+    <string name="action_next_step">次へ</string>
+    <string name="action_no_thanks">いいえ、結構です</string>
+    <string name="action_open_in_browser">ブラウザで開く</string>
+    <string name="action_pick_color">色を選択</string>
+    <string name="action_purchase">購入</string>
+    <string name="action_purchase_features_pack">追加機能パックを購入</string>
+    <string name="action_qr_code">QRコード</string>
+    <string name="action_quote">引用</string>
+    <string name="action_record_video">動画を撮る</string>
+    <string name="action_refresh">更新</string>
+    <string name="action_refresh_launch_presentations">起動画面を更新</string>
+    <string name="action_register">新規登録</string>
+    <string name="action_remove_conversation_avatar">アイコンを削除</string>
+    <string name="action_reply">返信</string>
+    <string name="action_report_spam">スパムとして報告</string>
+    <!-- [verb] Restore purchase -->
+    <string name="action_restore_purchase">復元</string>
+    <string name="action_retry">再試行</string>
+    <!-- [verb] Action for performing retweet -->
+    <string name="action_retweet">リツイート</string>
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">保存</string>
+    <string name="action_save_to">保存先を選択&#8230;</string>
+    <string name="action_search">検索</string>
+    <string name="action_select_all">すべて選択</string>
+    <string name="action_select_none">選択を解除</string>
+    <string name="action_select_user">ユーザーを選択</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">送信</string>
+    <string name="action_set_color">色を設定</string>
+    <string name="action_set_nickname">ニックネームの設定</string>
+    <string name="action_set_status_visibility">公開範囲を設定</string>
+    <string name="action_settings">設定</string>
+    <string name="action_share">共有</string>
+    <string name="action_sign_in">ログイン</string>
+    <!-- [verb] Used for skip some settings -->
+    <string name="action_skip">スキップ</string>
+    <string name="action_start">開始</string>
+    <string name="action_status_attachment">ツイートの添付ファイル</string>
+    <string name="action_status_block_users">&#8230;をブロック</string>
+    <string name="action_status_mute_users">&#8230;をミュート</string>
+    <string name="action_status_pin">ツイートを固定表示する</string>
+    <string name="action_status_schedule">ツイートの予約</string>
+    <string name="action_status_unpin">ツイートの固定を解除</string>
+    <string name="action_subscribe">保存する</string>
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <string name="action_sync_connect_to_storage">接続</string>
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_disconnect">切断</string>
+    <string name="action_sync_settings">設定</string>
+    <string name="action_sync_sync_now">今すぐ同期</string>
+    <string name="action_take_photo">写真を撮る</string>
+    <string name="action_toggle">切り替え</string>
+    <string name="action_translate">翻訳</string>
+    <string name="action_twitter_mute_user">ユーザーをミュート</string>
+    <string name="action_twitter_muted_users">ミュートしたユーザー</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_unblock">ブロックを解除</string>
+    <string name="action_undo_like">いいねを取り消し</string>
+    <string name="action_unfavorite">お気に入りを解除</string>
+    <string name="action_unfollow">フォローを解除</string>
+    <string name="action_unmute">ミュートを解除</string>
+    <string name="action_unsubscribe">保存を解除</string>
+    <string name="action_view_map">地図</string>
+    <string name="activated_accounts">アクティブなアカウント</string>
+    <string name="activities_about_me">みんなの反応</string>
+    <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g>がお気に入りに登録しました</string>
+    <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がお気に入りに登録しました</string>
+    <string name="activity_about_me_favorited_media_tagged">あなたがタグ付けされたツイートを <xliff:g id="user">%s</xliff:g> がお気に入りに登録しました</string>
+    <string name="activity_about_me_favorited_media_tagged_multi">あなたがタグ付けされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がお気に入りに登録しました</string>
+    <string name="activity_about_me_favorited_mention">あなたが参加している会話を <xliff:g id="user">%s</xliff:g> がお気に入りに登録しました</string>
+    <string name="activity_about_me_favorited_mention_multi">あなたが参加している会話を <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がお気に入りに登録しました</string>
+    <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをお気に入りに登録しました</string>
+    <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> あなたのリツイートをお気に入りに登録しました</string>
+    <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> があなたをフォローしました</string>
+    <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをフォローしました</string>
+    <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> がいいねしました</string>
+    <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がいいねしました</string>
+    <string name="activity_about_me_liked_media_tagged">あなたがタグ付けされたツイートを <xliff:g id="user">%s</xliff:g> がいいねしました</string>
+    <string name="activity_about_me_liked_media_tagged_multi">あなたがタグ付けされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がいいねしました</string>
+    <string name="activity_about_me_liked_mention">あなたが参加している会話を <xliff:g id="user">%s</xliff:g> がいいねしました</string>
+    <string name="activity_about_me_liked_mention_multi">あなたが参加している会話を <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がいいねしました</string>
+    <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをいいねしました</string>
+    <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> あなたのリツイートをいいねしました</string>
+    <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> があなたをリストに追加しました</string>
+    <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをリストに追加しました</string>
+    <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> があなたをリスト <xliff:g id="list">%2$s</xliff:g>に追加しました</string>
+    <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> があなたをタグ付けしました</string>
+    <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをタグ付けしました</string>
+    <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> がリツイートしました</string>
+    <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> リツイートしました</string>
+    <string name="activity_about_me_retweeted_media_tagged">あなたがタグ付けされたツイートを <xliff:g id="user">%s</xliff:g> がリツイートしました</string>
+    <string name="activity_about_me_retweeted_media_tagged_multi">あなたがタグ付けされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がリツイートしました</string>
+    <string name="activity_about_me_retweeted_mention">あなたが参加している会話を <xliff:g id="user">%s</xliff:g> がリツイートしました</string>
+    <string name="activity_about_me_retweeted_mention_multi">あなたが参加している会話を <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がリツイートしました</string>
+    <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをリツイートしました</string>
+    <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> あなたのリツイートをリツイートしました</string>
+    <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g>が Twitter をはじめました</string>
+    <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> が Twitter をはじめました</string>
+    <string name="add_account">アカウントを追加</string>
+    <string name="add_host_mapping">ホストマッピングを追加</string>
+    <string name="add_image">画像を追加</string>
+    <string name="and_N_more">その他 <xliff:g id="count">%d</xliff:g> 件</string>
+    <string name="api_url_format">API URL の形式</string>
+    <string name="app_description">あなた自身の Twitter アプリ</string>
+    <!-- App name, normally you don't need to translate this. -->
+    <string name="app_name">Twidere</string>
+    <string name="app_restart_confirm">設定を適用するため、Twidere を再起動します</string>
+    <string name="app_terminate_confirm">設定を適用するため、Twidere を終了します</string>
+    <string name="appearance">外観</string>
+    <string name="auth_type_basic">Basic</string>
+    <string name="auth_type_oauth">OAuth</string>
+    <string name="auth_type_oauth2">OAuth 2</string>
+    <string name="auth_type_twip_o">twip O Mode</string>
+    <string name="auth_type_xauth">xAuth</string>
+    <string name="auto_refresh">自動更新</string>
+    <string name="background">背景</string>
+    <string name="bandwidth_saving_mode">データ通信節約モード</string>
+    <string name="bandwidth_saving_mode_summary">モバイルデータ通信の場合、メディアのプレビューを無効にします</string>
+    <string name="belongs_to">自分が含まれるリスト</string>
+    <string name="block_user_confirm_message"><xliff:g id="name">%s</xliff:g> をブロックしますか？このユーザーは、あなたをフォローしたり返信やDMを送信したりできなくなります。</string>
+    <string name="bug_reports">バグ報告</string>
+    <string name="bug_reports_summary">Powered by Fabric</string>
+    <string name="builtin_dns_resolver">組み込みDNSリゾルバ</string>
+    <string name="cache_size_limit">キャッシュサイズの上限</string>
+    <string name="cant_load_all_replies_explanation">Twitterは、非公式のTwitterクライアントに制限を設けています。そのため、Twidereはツイートへの返信にアクセスすることができず、すべての返信を読み込むことができない可能性があります。</string>
+    <string name="cant_load_all_replies_message">すべての返信を読み込むことができません。&lt;a href=\"#dialog\";&gt;理由を表示&lt;/a&gt;</string>
+    <string name="cards">カード</string>
+    <string name="clear_cache">キャッシュを消去</string>
+    <string name="clear_cache_summary">メディアのキャッシュをクリア</string>
+    <string name="clear_databases">データベースを消去</string>
+    <string name="clear_databases_summary">ツイート、プロフィール、メッセージを含め、データはすべて消去されます。\nご心配なく、アカウント情報は失われません。</string>
+    <string name="clear_search_history">検索履歴を消去</string>
+    <string name="click_item_to_configure">設定したい項目をタップしてください</string>
+    <string name="close_accounts_dashboard">アカウント・ダッシュボードを閉じる</string>
+    <string name="color">カラー</string>
+    <string name="combined_notifications">通知を統合</string>
+    <string name="combined_notifications_summary_off">通知を個別表示</string>
+    <string name="combined_notifications_summary_on">通知をまとめて表示</string>
+    <string name="comment_hint">コメント&#8230;</string>
+    <string name="compact_cards">カードのコンパクト化</string>
+    <string name="compact_cards_summary">画面あたりのカード表示数を増やせます。</string>
+    <string name="compose_now">Tweet Now</string>
+    <string name="compose_now_action">Tweet Now アクション</string>
+    <string name="compose_now_summary">ホームキーを上にスワイプするときに表示するGoogle Nowショートカットを「ツイートする」に変更します。</string>
+    <string name="conflicts_with_name"><xliff:g id="name">%s</xliff:g> と競合</string>
+    <string name="connection_timeout">接続タイムアウト</string>
+    <string name="consumer_key">Consumer key</string>
+    <string name="consumer_secret">Consumer secret</string>
+    <string name="content">ツイート</string>
+    <string name="content_and_storage">コンテンツとストレージ</string>
+    <string name="content_description_sticker">ステッカー</string>
+    <string name="content_to_notify">通知するコンテンツ</string>
+    <string name="content_to_refresh">更新するコンテンツ</string>
+    <string name="contributors_list_summary">寄付・翻訳しているにも関わらずあなたの名前が無い場合、プロジェクトアカウントに英語で連絡してください。</string>
+    <string name="copy_link">リンクをコピー</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="count_label_retweets">リツイート</string>
+    <string name="created_by"><xliff:g id="created_by">%s</xliff:g>が作成しました</string>
+    <string name="created_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を作成しました。</string>
+    <string name="current_status">現在のツイート</string>
+    <string name="custom_host_mapping">ホストマッピングの設定</string>
+    <string name="custom_host_mapping_summary">rootedでなくても/etc/hostsのようにホストマッピングができます。</string>
+    <string name="dark_theme">暗いテーマ</string>
+    <string name="default_account">デフォルト</string>
+    <string name="default_api_settings">デフォルトAPI設定</string>
+    <string name="default_api_settings_summary">この設定はログインし直さないと反映されません。</string>
+    <string name="default_ringtone">デフォルトの通知音</string>
+    <string name="delete_conversation">会話を削除</string>
+    <string name="delete_conversation_confirm_message">この会話のメッセージを全て削除しますか？</string>
+    <string name="delete_drafts_confirm">選択した下書きを削除しますか？</string>
+    <string name="delete_message_confirm_message">このメッセージを削除しますか？</string>
+    <string name="delete_user"><xliff:g id="name">%s</xliff:g> を削除</string>
+    <string name="delete_user_confirm_message"><xliff:g id="name">%s</xliff:g> を削除しますか？復元はできません。</string>
+    <string name="delete_user_from_list_confirm"><xliff:g id="user">%1$s</xliff:g> をリスト \"<xliff:g id="list">%2$s</xliff:g>\" から削除しますか？</string>
+    <string name="delete_user_list">リスト<xliff:g id="name">%s</xliff:g>を削除</string>
+    <string name="delete_user_list_confirm_message">リスト <xliff:g id="name">%s</xliff:g> を削除しますか？復元はできません。</string>
+    <string name="delete_users">ユーザーを削除</string>
+    <string name="deleted_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を削除しました。</string>
+    <string name="deleted_user_from_list"><xliff:g id="user">%1$s</xliff:g>をリスト\"<xliff:g id="list">%2$s</xliff:g>\"から削除しました。</string>
+    <string name="denied_users_follow_request"><xliff:g id="user">%s</xliff:g>のフォローリクエストを拒否しました。</string>
+    <string name="deny">いいえ</string>
+    <string name="destroy_saved_search">保存した検索\"<xliff:g id="name">%s</xliff:g>\"を削除</string>
+    <string name="destroy_saved_search_confirm_message">保存した検索 \"<xliff:g id="name">%s</xliff:g>\" を削除しますか？あとで再び保存することもできます。</string>
+    <string name="destroy_status">ツイートを削除</string>
+    <string name="destroy_status_confirm_message">このツイートを削除しますか？</string>
+    <string name="developed_by">開発者</string>
+    <string name="discard">破棄</string>
+    <string name="display_sensitive_contents">不適切な内容を表示</string>
+    <string name="display_sensitive_contents_summary">プロンプトを表示せずに不適切な可能性のある内容を表示します。</string>
+    <string name="dns_server">DNS サーバー</string>
+    <string name="dns_server_summary">通信に使用するDNSサーバーを設定します。</string>
+    <string name="yandex_key">Yandex APIキー</string>
+    <string name="draft_saved">下書きを保存</string>
+    <string name="drafts_hint_messages">未送信のツイートが保存されます。</string>
+    <string name="drawer_toggle">ドロワーを切り替え</string>
+    <string name="edit_api">APIを編集</string>
+    <string name="edit_description">説明を編集</string>
+    <string name="edit_draft">下書きを編集</string>
+    <string name="edit_media">メディアを編集</string>
+    <string name="edit_tab">タブを編集</string>
+    <string name="edit_tabs">タブを編集</string>
+    <string name="ellipsis">&#8230;</string>
+    <string name="emoji_support">絵文字対応</string>
+    <string name="empty_content">コンテンツなし</string>
+    <string name="error_info_oauth_timestamp_error">システムの日付と時刻の設定を確認してください。</string>
+    <string name="error_message">エラー：<xliff:g id="message">%s</xliff:g></string>
+    <string name="error_message_device_incompatible">このデバイスには、Twidereとの互換性がありません。最新のAndroid OSへのアップグレードが推奨されます。\nデバイスの製造元にこの問題を報告するために、以下の情報を送信できます。</string>
+    <string name="error_message_media_message_attachment_not_supported">DM へのメディアの添付はサポートされていません。</string>
+    <string name="error_message_media_message_too_many">メディアの件数が多すぎます。</string>
+    <string name="error_message_media_upload_failed">メディアのアップロードに失敗しました。</string>
+    <string name="error_message_media_uploader_not_found">メディアのアップロード先が見つかりません。アンインストールされた可能性があります。</string>
+    <string name="error_message_message_too_long">メッセージが長すぎます。</string>
+    <string name="error_message_message_too_many_participants">参加者が多すぎます。</string>
+    <string name="error_message_no_content">コンテンツなし</string>
+    <string name="error_message_rate_limit">Twitter APIの制限に引っかかりました。<xliff:g id="time">%s</xliff:g>後にもう一度試してください。</string>
+    <string name="error_message_scheduler_not_available">ツイートの予約が利用できません。</string>
+    <string name="error_message_status_too_long">ツイートのテキストが長過ぎます。</string>
+    <string name="error_message_tweet_shorten_failed">ツイートを短縮できません。</string>
+    <string name="error_message_tweet_shortener_not_found">ツイート短縮サービスが見つかりません。</string>
+    <string name="error_message_video_upload_not_supported">動画のアップロードはサポートされていません</string>
+    <string name="error_no_access_for_credentials">アプリケーションが該当リソースにアクセスできません。</string>
+    <string name="error_no_dm_permission">ダイレクトメッセージへのアクセス許可がありません。Twitter 設定のアプリ連携を確認してください。</string>
+    <string name="error_title_device_incompatible">デバイスには互換性がありません。</string>
+    <string name="error_too_many_photos_fanfou">画像が多すぎます</string>
+    <string name="error_unknown_error">エラー：詳細不明、バグかもしれません…</string>
+    <string name="exclude_this_host">対象ホストを除外</string>
+    <string name="excluded">除外済み</string>
+    <string name="export_settings">設定のエクスポート</string>
+    <string name="export_settings_type_dialog_title">設定をエクスポート中&#8230;</string>
+    <string name="extensions">拡張機能</string>
+    <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> の外部グループ</string>
+    <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>の外部ユーザー</string>
+    <string name="extra_configurations">追加設定</string>
+    <string name="extra_feature_description_advanced_filters">フィルターの保存や高度なルールなど</string>
+    <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
+    <string name="extra_feature_description_share_gif">ツイートでGIF動画を共有</string>
+    <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
+    <string name="extra_feature_title_advanced_filters">高度なフィルター</string>
+    <!-- Enhanced (paid) features description -->
+    <string name="extra_features_description">Twidere を支援して追加機能を取得</string>
+    <string name="extra_features_pack_description">または、追加機能パックを購入して、すべての機能 (将来追加される機能を含む) を手に入れましょう。</string>
+    <!-- Enhanced (paid) features title -->
+    <string name="extra_features_restore_purchase_hint">追加拡張パックを購入済みの場合、「復元」から購入情報を復元してください。</string>
+    <string name="fab_visible">フローティングアクションボタン</string>
+    <string name="fab_visible_summary">フローティングアクションボタンを表示</string>
+    <string name="fast_image_loading">高速画像読み込み</string>
+    <string name="fast_image_loading_summary">有効にすると画像を高速に読み込みます。\n画像が読み込めない場合は無効にしてください。</string>
+    <string name="filter_everywhere">すべての場所にフィルターを適用</string>
+    <string name="filter_everywhere_description">Twidere の次の場所にフィルターを適用します。\n  ・ユーザーのツイート\n  ・ユーザーのメンション\n  ・ユーザーのリツイート/引用リツイート</string>
+    <string name="filter_type_keywords">キーワード</string>
+    <string name="filter_type_links">リンク</string>
+    <string name="filter_type_sources">クライアント</string>
+    <string name="filter_type_users">ユーザー</string>
+    <string name="filter_user_confirm_message"><xliff:g example="Username" id="name">%s</xliff:g> をフィルターに追加しますか？</string>
+    <string name="follow_request_sent">フォローリクエストを送信しました。</string>
+    <string name="followed_user"><xliff:g id="user">%s</xliff:g>をフォロー済み</string>
+    <string name="following_only">フォロー中のみ</string>
+    <string name="following_only_summary">フォローしているユーザーからの通知だけを表示するようにします。</string>
+    <string name="following_you">あなたをフォロー中</string>
+    <string name="follows">フォロー</string>
+    <string name="font">フォント</string>
+    <string name="font_family">フォントファミリー</string>
+    <string name="from_camera">カメラから</string>
+    <string name="from_gallery">ギャラリーから</string>
+    <string name="from_name"><xliff:g id="name">%1$s</xliff:g>から</string>
+    <string name="from_name_and_N_others"><xliff:g id="name">%1$s</xliff:g>と他<xliff:g id="name">%2$d</xliff:g>人から</string>
+    <string name="from_name_and_name"><xliff:g id="name">%1$s</xliff:g>と<xliff:g id="name">%2$s</xliff:g>から</string>
+    <string name="function">機能</string>
+    <string name="general">基本</string>
+    <string name="getting_location">位置情報を取得</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="group">グループ</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
+    <string name="groups">グループ</string>
+    <string name="hashtag">ハッシュタグ</string>
+    <string name="hidden_settings">隠し設定</string>
+    <string name="hidden_settings_warning_message">よくわからない場合この設定を変えないでください。もしかしたら\n * 藪から出てきた蛇に噛まれたり\n * 北朝鮮の核兵器が発射されたり\n * すべての魔法少女が魔女化したり\n * 宇宙が再構築されたり\nするかもしれません…</string>
+    <string name="hidden_settings_warning_title">警告: これらの設定は危なっかしいかも！</string>
+    <string name="hide_card_actions">アクションボタンを非表示</string>
+    <string name="hide_card_numbers">評価数を非表示</string>
+    <string name="hide_quotes">引用を非表示</string>
+    <string name="hide_replies">返信を非表示</string>
+    <string name="hide_retweets">リツイートを非表示</string>
+    <string name="highlight">ハイライト</string>
+    <string name="highlight_and_underline">ハイライトと下線</string>
+    <string name="hint_accounts_dashboard_message">アカウント・ダッシュボードを開くには、画面の端からスワイプしてください。</string>
+    <string name="hint_accounts_dashboard_title">アカウント・ダッシュボード</string>
+    <string name="hint_conversation_name">会話の名前</string>
+    <string name="hint_empty_filters_subscriptions">保存したフィルターはありません</string>
+    <string name="hint_error_field_required">必須</string>
+    <string name="hint_error_message_no_content">コンテンツなし</string>
+    <string name="hint_message_select_user">ユーザー検索</string>
+    <string name="hint_no_account">アカウント無し</string>
+    <string name="hint_search_gif">GIF動画を検索</string>
+    <string name="hint_status_reply_to_user_removed">ツイートしたユーザーのIDが取り除かれているため、引用ツイートとして送信されます。 &lt;a href=\"#dialog\";&gt;詳細&lt;/a&gt;</string>
+    <string name="hints">ヒント</string>
+    <string name="home_refresh">ホームTLの更新</string>
+    <string name="host_mapping_address">アドレス (他のホストアドレスも可)</string>
+    <string name="host_mapping_host">ホスト</string>
+    <string name="i_want_my_stars_back">お気に入りの星を復活させる</string>
+    <string name="i_want_my_stars_back_summary">いいね (♥) の代わりにお気に入り (★) を使用します。</string>
+    <string name="icon">アイコン</string>
+    <string name="icon_restored_message">アイコンを元に戻しました！</string>
+    <string name="import_export_settings">設定の保存/読み込み</string>
+    <string name="import_settings">設定のインポート</string>
+    <string name="import_settings_type_dialog_title">設定のインポート&#8230;</string>
+    <string name="in_reply_to_name"><xliff:g id="user_name">%s</xliff:g>への返信</string>
+    <string name="inbox">受信箱</string>
+    <string name="incoming_friendships">保留中のフォローリクエスト</string>
+    <string name="input_text">テキストを入力</string>
+    <string name="interactions">つながり</string>
+    <string name="invalid_consumer_key">無効なコンシューマーキーです</string>
+    <string name="invalid_consumer_secret">無効なコンシューマーシークレットです</string>
+    <string name="invalid_list_name">英数字で始まり、英数字と「-」と「_」だけを含む名前にしてください。</string>
+    <string name="invalid_tab">不正なタブです</string>
+    <string name="jump_to_top">一番上にジャンプ</string>
+    <string name="just_now">たった今</string>
+    <string name="keyboard_shortcut_back">戻る</string>
+    <string name="keyboard_shortcut_hint">キーを押してください</string>
+    <string name="keyboard_shortcuts">キーボードショートカット</string>
+    <string name="keyword_filter_name">キーワード: <xliff:g id="name">%s</xliff:g></string>
+    <string name="label_account">アカウント</string>
+    <string name="label_account_type">アカウントの種類</string>
+    <string name="label_advanced">詳細</string>
+    <string name="label_auth_type">認証タイプ</string>
+    <string name="label_background_operation_service">バックグラウンド操作サービス</string>
+    <string name="label_buffer_accounts">Buffer アカウント</string>
+    <string name="label_buffer_due_at_no_time">時刻指定なし</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_g">G</string>
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_pg">PG</string>
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_pg13">PG-13</string>
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+    <string name="label_content_rating_r">R</string>
+    <string name="label_content_warning">コンテンツの警告</string>
+    <string name="label_data_provider">Twidere データベースプロバイダ</string>
+    <string name="label_feedback_content">コンテンツ</string>
+    <string name="label_feedback_title">タイトル</string>
+    <string name="label_filter_apply_to">適用範囲</string>
+    <string name="label_filter_for">対象</string>
+    <string name="label_filter_scope_home">ホーム</string>
+    <string name="label_filter_scope_interactions">みんなの反応</string>
+    <string name="label_filter_scope_messages">メッセージ</string>
+    <string name="label_filter_scope_search_other">その他</string>
+    <string name="label_filter_scope_search_results">検索結果</string>
+    <string name="label_filter_target_description">説明</string>
+    <string name="label_filter_target_name">名前</string>
+    <string name="label_filter_target_text">テキスト</string>
+    <string name="label_filters_subscription">保存</string>
+    <string name="label_follow_request_sent">フォローリクエストを送信しました。</string>
+    <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
+    <string name="label_location_coarse">大まかな位置情報 (市町村)</string>
+    <string name="label_location_no_location">なし</string>
+    <string name="label_location_precise">正確な位置情報 (経緯度)</string>
+    <string name="label_location_your_coarse_location">位置情報が不正確です</string>
+    <string name="label_mastodon_host">Mastodonインスタンス</string>
+    <string name="label_media">メディア</string>
+    <string name="label_original_status">元のツイート</string>
+    <string name="label_password">パスワード</string>
+    <string name="label_password_sign_in">パスワードでサインイン</string>
+    <string name="label_photo">画像</string>
+    <string name="label_photos">画像</string>
+    <string name="label_poll">投票</string>
+    <string name="label_powered_by_giphy">Powered by GIPHY</string>
+    <string name="label_quote_name"><xliff:g id="user_name">%s</xliff:g>を引用</string>
+    <string name="label_quote_name_text"><xliff:g id="name">%1$s</xliff:g>のツイートを引用: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="label_refresh_and_sync_service">更新＆同期サービス</string>
+    <string name="label_refresh_service">サービスをリフレッシュ</string>
+    <string name="label_reply_name"><xliff:g id="user_name">%s</xliff:g>への返信</string>
+    <string name="label_reply_name_text"><xliff:g id="name">%1$s</xliff:g>への返信: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="label_schedule_time_buffer_default">Buffer のデフォルト</string>
+    <string name="label_send_at">送信時刻</string>
+    <string name="label_sensitive_content">不適切なコンテンツ</string>
+    <string name="label_status_hint">いまどうしてる？</string>
+    <string name="label_status_not_available">このツイートは利用できません</string>
+    <string name="label_status_show_more">さらに表示</string>
+    <string name="label_status_type_reply">返信</string>
+    <!-- Mastodon feature, post to mentioned users only -->
+    <string name="label_status_visibility_direct">ダイレクト</string>
+    <!-- Mastodon feature, post to followers only -->
+    <string name="label_status_visibility_private">プライベート</string>
+    <!-- Mastodon feature, post to public timelines -->
+    <string name="label_status_visibility_public">パブリック</string>
+    <!-- Mastodon feature, do not show in public timelines -->
+    <string name="label_status_visibility_unlisted">パブリックタイムラインに表示しない</string>
+    <string name="label_statuses">ツイート</string>
+    <string name="label_statuses_replies">ツイートと返信</string>
+    <string name="label_statuses_retweets">ツイートとリツイート</string>
+    <string name="label_statuses_retweets_replies">ツイートとリツイートと返信</string>
+    <string name="label_translate_from_language"><xliff:g id="language">%s</xliff:g>から翻訳</string>
+    <string name="label_translated_to_language"><xliff:g id="language">%s</xliff:g> へ翻訳</string>
+    <string name="label_translation">翻訳</string>
+    <string name="label_username">ユーザー名かメールアドレス</string>
+    <string name="label_video">動画</string>
+    <string name="label_your_profile_image">あなたのプロフィール画像</string>
+    <string name="large">大</string>
+    <string name="leftside_compose_button">ツイートボタンを左に配置</string>
+    <string name="leftside_compose_button_summary">ツイートボタンを左に配置します。</string>
+    <string name="link_highlight_option">リンクの強調オプション</string>
+    <string name="link_to_quoted_status">引用ツイートへのリンク</string>
+    <string name="list_members">リスト内アカウント</string>
+    <string name="list_subscribers">リスト保存ユーザー数</string>
+    <string name="list_timeline">リストタイムライン</string>
+    <string name="listed">リスト</string>
+    <string name="lists">リスト</string>
+    <string name="lists_following_user">追加されたリスト</string>
+    <string name="lists_following_user_with_name"><xliff:g id="name">%s</xliff:g>が追加されているリスト</string>
+    <string name="load_defaults">デフォルトの設定を読み込む</string>
+    <string name="load_item_limit">ツイートの読み込み上限</string>
+    <string name="load_item_limit_summary">一度に読み込むツイートの数を制限します。</string>
+    <string name="load_media">メディアを読み込む</string>
+    <string name="load_more">さらに読み込む</string>
+    <string name="load_more_from_top">上からさらに読み込む</string>
+    <string name="load_more_from_top_summary">下から上に読みたい場合に便利です。</string>
+    <string name="location_countrywide">全国</string>
+    <string name="login_challenge_retype_email_hint">あなたの Twitter アカウントに関連付けられているメールアドレスを再入力してください。</string>
+    <string name="login_challenge_retype_phone_hint">あなたの Twitter アカウントに関連付けられている電話番号を再入力してください。</string>
+    <string name="login_type_default">デフォルト</string>
+    <string name="login_type_user_settings">ユーザーの設定</string>
+    <string name="login_verification">ログイン認証</string>
+    <string name="login_verification_pin_hint">あなたの携帯電話であることを確認するためにPINコードを入力して、ログインしてください。</string>
+    <string name="login_verification_push_hint">要求を承認したあと、Twitterアプリからのログインを受け入れてOKをタップしてください。</string>
+    <string name="long_click_to_open_menu">長押しでメニューを表示</string>
+    <string name="mark_as_sensitive">不適切なメディアとして投稿</string>
+    <string name="media">メディア</string>
+    <string name="media_preload">メディアをプリロード</string>
+    <string name="media_preview">メディアのプレビュー</string>
+    <string name="media_preview_style">メディアプレビューのスタイル</string>
+    <string name="media_uploader">メディアのアップロード先</string>
+    <string name="media_uploader_default">デフォルト（Twitter）</string>
+    <string name="members">メンバー</string>
+    <string name="mention_this_user">この人へツイート</string>
+    <string name="mention_user"><xliff:g id="user">%s</xliff:g>宛にツイート</string>
+    <string name="mention_user_name"><xliff:g id="name">%1$s</xliff:g>宛にツイート</string>
+    <string name="mentions_only">ユーザー宛のツイートのみ</string>
+    <string name="message_account_delete_confirm">Twidereからアカウントを削除します。</string>
+    <string name="message_api_data_corrupted">APIデータが破損しています。</string>
+    <string name="message_api_url_format_help">[DOMAIN]: Twitter APIのドメイン\n例: https://[DOMAIN].twitter.com/ は https://api.twitter.com/ のように置き換えられます。</string>
+    <string name="message_app_crashed">Twidere がクラッシュしてしまいました。この問題が修正できるよう、バグレポートの送信をお願いします。</string>
+    <string name="message_auto_refresh_confirm">自動更新を有効にして、新しいツイートを自動的に取得しますか？</string>
+    <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g>をブロック済み</string>
+    <string name="message_buffer_delete_schedule_confirm">このスケジュールを削除しますか？</string>
+    <string name="message_buffer_disconnect_confirm">Buffer の接続を解除しますか？</string>
+    <string name="message_clear_messages_confirm">すべてのメッセージを削除しますか？</string>
+    <string name="message_conversation_created">会話が作成されました。</string>
+    <string name="message_destroy_conversation_confirm">この会話を退出しますか？</string>
+    <string name="message_direct_message_deleted">DMを削除しました。</string>
+    <string name="message_direct_message_sent">DMを送信しました。</string>
+    <string name="message_error_buffer_connection_failed">Buffer に接続できません</string>
+    <string name="message_error_buffer_media_not_supported">Bufferのメディア付きツイートの予約には、まだ対応していません</string>
+    <string name="message_error_invalid_account">いくつかのアカウントのデータが破損しています。Twidere のクラッシュを防ぐために、これらのアカウントを削除します。</string>
+    <string name="message_format_compose_message_convert_to_status">このツイートは、<xliff:g id="name">%1$s</xliff:g> へのメッセージとして送信されます。よろしいですか？ 通常のツイートに変更すると、文字数が多くなります。</string>
+    <string name="message_format_conversation_avatar_update">会話のアバターが変更されました</string>
+    <string name="message_format_conversation_avatar_update_by_user">        <xliff:g example="User" id="by_user">%1$s</xliff:g> が会話のアバターを変更しました</string>
+    <string name="message_format_conversation_name_update">会話の名前が次に変更されました <xliff:g example="User" id="name">%1$s</xliff:g></string>
+    <string name="message_format_conversation_name_update_by_user">        <xliff:g example="User" id="by_user">%1$s</xliff:g> が会話の名前を <xliff:g example="New name" id="name">%2$s</xliff:g> に変更しました
+    </string>
+    <string name="message_format_participants_join">        <xliff:g example="User" id="name">%1$s</xliff:g> が参加しました</string>
+    <string name="message_format_participants_join_added">        <xliff:g example="Sender" id="sender">%1$s</xliff:g> が <xliff:g example="Recipient" id="recipient">%2$s</xliff:g> を追加しました
+    </string>
+    <string name="message_format_participants_leave">        <xliff:g example="User" id="name">%1$s</xliff:g> が退出しました</string>
+    <string name="message_format_sender_time">        <xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g>
+    </string>
+    <string name="message_gif_sharing_introduction">GIPHY で GIF動画 を検索、共有</string>
+    <string name="message_info_buffer_queue_empty">Buffer のキューは空です。</string>
+    <string name="message_join_conversation">会話に参加しました。</string>
+    <string name="message_permission_request_compose_location">位置情報の権限は、ツイートに位置情報を追加するために必要です。</string>
+    <string name="message_permission_request_save_media">ストレージの権限は、Twidere がメディアを保存するために必要です。</string>
+    <string name="message_permission_request_share_media">ストレージの権限は、Twidere がメディアを他のアプリに共有するために必要です。</string>
+    <string name="message_pin_status_confirm">このツイートを固定してもよろしいですか？ 以前設定した固定ツイートは解除されます。</string>
+    <string name="message_please_wait">しばらくお待ちください…</string>
+    <string name="message_promotions_reward">広告機能をオンにすれば、すべてのプレミアム機能が無料で使えます。
+ウルサイ通知などは一切ございません。</string>
+    <string name="message_status_reply_to_user_removed_explanation">TwitterはツイートしたユーザーのIDを常に返信に記載します。ユーザーIDを取り除いた場合、Twidereはこの返信を引用として送信し、コンテキストを保持します。</string>
+    <string name="message_status_scheduling_connect_buffer_hint">Buffer に接続すると、指定時刻のときにオフラインでも予約ツイートが行えるようになります。</string>
+    <string name="message_status_scheduling_connected_to_buffer">Twidere は Buffer に接続できるようになりました</string>
+    <string name="message_summary_type_sticker">[Sticker]</string>
+    <string name="message_sync_data_connect_hint">データを同期するために Twidere をネットワークストレージに接続する</string>
+    <string name="message_sync_data_synced_with_name">Twidere が <xliff:g example="ownCloud" id="name">%s</xliff:g> と同期されました</string>
+    <string name="message_sync_disconnect_from_name_confirm"><xliff:g example="ownCloud" id="name">%s</xliff:g> から切断しますか？</string>
+    <string name="message_sync_last_synced_time">最終同期: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
+    <string name="message_tab_field_is_required">フィールド \"<xliff:g example="Field" id="name">%s</xliff:g>\" が必要です</string>
+    <string name="message_ticker_promotions_reward">広告機能をオンにすれば、すべてのプレミアム機能が無料で使えます。</string>
+    <!--
+      ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
+      ~ periods should be omitted
+    -->
+    <string name="message_toast_accepted_users_follow_request"><xliff:g id="user">%s</xliff:g>からのフォローリクエストを許可する</string>
+    <string name="message_toast_added_to_filter">フィルターに追加しました</string>
+    <string name="message_toast_added_user_to_list">\"<xliff:g id="list">%2$s</xliff:g>のリストに<xliff:g id="user">%1$s</xliff:g>を追加</string>
+    <string name="message_toast_already_logged_in">あなたはすでにログインしています</string>
+    <string name="message_toast_cannot_get_location">位置情報が取得できません</string>
+    <string name="message_toast_compose_write_storage_no_permission">撮影した写真/動画を削除するには権限が必要です</string>
+    <string name="message_toast_duplicate_filter_rule">ルールが重複しています</string>
+    <string name="message_toast_error_occurred">エラーが発生しました。もう一度お試しください。</string>
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <string name="message_toast_extra_features_not_purchased">追加機能パックは未購入です。</string>
+    <string name="message_toast_filters_import_hint">インポートするには \"+\" をタップしてください</string>
+    <string name="message_toast_internal_storage_install_required">SD カードへのインストールはサポートされていないため、再起動後にアカウントが失われることがあります。</string>
+    <string name="message_toast_invalid_mastodon_host">不正なMastodonインスタンス</string>
+    <string name="message_toast_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
+    <string name="message_toast_livewp_daydream_enabled_message">システム設定のどこかにプレゼントを隠したぜ！</string>
+    <string name="message_toast_login_verification_failed">ログイン認証に失敗しました</string>
+    <string name="message_toast_media_saved">メディアを保存しました</string>
+    <!-- Toast message for network errors -->
+    <string name="message_toast_network_error">ネットワークエラー</string>
+    <string name="message_toast_network_error_with_message">ネットワークエラー: <xliff:g id="message">%s</xliff:g></string>
+    <string name="message_toast_no_account">アカウント無し</string>
+    <string name="message_toast_no_account_permission">アカウントの権限が必要です</string>
+    <string name="message_toast_no_account_selected">アカウントが選択されていません</string>
+    <string name="message_toast_no_user_selected">ユーザを選択してください</string>
+    <string name="message_toast_press_again_to_close">閉じるにはもう一度押して下さい</string>
+    <string name="message_toast_profile_background_image_updated">背景画像を更新しました</string>
+    <string name="message_toast_profile_banner_image_updated">ヘッダー画像を更新しました</string>
+    <string name="message_toast_profile_image_updated">プロフィール画像を更新しました</string>
+    <string name="message_toast_qr_scan_link_not_supported">リンクはサポートされていません</string>
+    <string name="message_toast_qr_scanner_not_supported">QRスキャナーはサポートされていません</string>
+    <string name="message_toast_retweet_cancelled">リツイートをキャンセルしました。</string>
+    <string name="message_toast_save_media_no_storage_permission">ストレージアクセス許可は、メディアを保存するために必要とされます。</string>
+    <string name="message_toast_saved_to_gallery">ギャラリーに保存しました</string>
+    <string name="message_toast_schedule_future_time_required">日付/時刻は未来でなければなりません</string>
+    <string name="message_toast_search_deleted">検索を削除しました。</string>
+    <string name="message_toast_search_name_deleted">検索 \"<xliff:g id="name">%s</xliff:g>\"を削除しました。</string>
+    <string name="message_toast_search_name_saved">検索 \"<xliff:g id="name">%s</xliff:g>\"を保存しました。</string>
+    <string name="message_toast_search_saved">検索を保存しました。</string>
+    <string name="message_toast_select_file_no_storage_permission">ストレージアクセス許可は、ファイルを選択するために必要とされます。</string>
+    <string name="message_toast_share_media_no_storage_permission">一部のアプリケーションでは、メディアを共有するためのストレージのアクセス許可が要求されます。</string>
+    <string name="message_toast_ssl_tls_error">TLS エラーが発生しました。時刻またはプロキシの設定を確認してください。</string>
+    <string name="message_toast_status_deleted">ツイートを削除しました。</string>
+    <string name="message_toast_status_favorited">ツイートをお気に入りに登録しました</string>
+    <string name="message_toast_status_like_removed">いいねを取り消しました</string>
+    <string name="message_toast_status_liked">ツイートをいいねしました</string>
+    <string name="message_toast_status_pinned">ツイートが固定されました</string>
+    <string name="message_toast_status_retweeted">リツイートしました。</string>
+    <string name="message_toast_status_saved_to_draft">ツイートは下書きに保存されました</string>
+    <string name="message_toast_status_scheduled">ツイートの予約</string>
+    <string name="message_toast_status_unfavorited">ツイートのお気に入りを解除しました</string>
+    <string name="message_toast_status_unpinned">ツイートの固定が解除されました</string>
+    <string name="message_toast_status_updated">ツイートを送信しました。</string>
+    <string name="message_toast_unable_to_load_more_statuses">以前のツイートを読み込むことができません</string>
+    <string name="message_toast_user_filters_removed">フィルターから削除しました</string>
+    <string name="message_toast_users_filters_added">フィルターに追加しました</string>
+    <string name="message_toast_wrong_api_key">API URL または consumer key/secret が正しくありません。もう一度確認してください。</string>
+    <string name="message_toast_wrong_username_password">間違ったユーザー名/パスワードです。</string>
+    <string name="message_unpin_status_confirm">このツイートの固定を解除しますか？</string>
+    <string name="message_video_too_long">動画が長すぎます</string>
+    <string name="message_video_too_short">動画が短すぎます</string>
+    <string name="multi_select">複数選択</string>
+    <string name="mute_user"><xliff:g id="name">%s</xliff:g>をミュート</string>
+    <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>をミュートしますか？フォローしたままで、このユーザーのツイートが表示されなくなります。</string>
+    <string name="muted_user"><xliff:g id="name">%s</xliff:g>をミュート済み</string>
+    <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g>と他のユーザーがリツイート</string>
+    <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g>と他<xliff:g id="retweet_count">%2$d</xliff:g>人がリツイート</string>
+    <string name="name_first">名前を先に表示</string>
+    <string name="name_first_summary_off">先に\@ユーザー名を表示する</string>
+    <string name="name_first_summary_on">名前を先に表示</string>
+    <string name="name_not_set"><xliff:g id="name">%s</xliff:g>が設定されていません</string>
+    <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g>がリツイート</string>
+    <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="network">ネットワーク</string>
+    <string name="network_diagnostics">ネットワーク診断</string>
+    <string name="new_direct_message">新規ダイレクトメッセージ</string>
+    <string name="new_document_api">新しいドキュメントAPIを使用</string>
+    <string name="new_document_api_summary">プロフィールとメディアを新しいタスクで開きます。</string>
+    <string name="new_user_list">新しいリスト</string>
+    <!-- Next item (tweet, user etc.) -->
+    <string name="next_item">次</string>
+    <string name="next_step">次へ</string>
+    <string name="next_tab">次のタブ</string>
+    <string name="no_close_after_status_updated">編集画面をツイート送信後に開いたままにする</string>
+    <string name="no_close_after_status_updated_summary">ツイート編集画面の動作を変更します。</string>
+    <string name="no_extension_installed">拡張機能がインストールされていません</string>
+    <string name="no_location">位置情報なし</string>
+    <string name="no_rule">ルールなし</string>
+    <string name="no_status_content_text">コンテンツなし</string>
+    <string name="no_tab">タブ無し</string>
+    <string name="no_tab_hint">タブ無し</string>
+    <string name="no_user_found">ユーザーが見つかりません。</string>
+    <string name="no_version_suffix">バージョンサフィックスなし</string>
+    <string name="none">なし</string>
+    <string name="notification_channel_description_content_interactions">「いいね」された＠メンションとリツイートをみんなの反応に表示する</string>
+    <string name="notification_channel_description_content_messages">DMのような重要なメッセージ</string>
+    <string name="notification_channel_descriptions_content_subscriptions">ユーザーのツイート通知</string>
+    <string name="notification_channel_descriptions_content_updates">ホームタイムラインに新しい「いいね」ツイートの更新</string>
+    <string name="notification_channel_name_app_notices">アプリの通知</string>
+    <string name="notification_channel_name_background_progresses">バックグラウンド操作</string>
+    <string name="notification_channel_name_content_interactions">みんなの反応</string>
+    <string name="notification_channel_name_content_messages">メッセージ</string>
+    <string name="notification_channel_name_content_subscriptions">フィルターの保存</string>
+    <string name="notification_channel_name_content_updates">アップデート</string>
+    <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g>からDMが届きました。</string>
+    <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g>はあなたに<xliff:g id="messages_count">%2$d</xliff:g>通のDMを送信しました。</string>
+    <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g>と他<xliff:g id="users_count">%2$d</xliff:g>人があなたに<xliff:g id="messages_count">%3$d</xliff:g>通のDMを送信しました。</string>
+    <string name="notification_light_color">LED色</string>
+    <string name="notification_mention">%sからあなた宛のツイートがあります。</string>
+    <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> と他<xliff:g id="count">%2$d</xliff:g>人からあなた宛のツイートがあります。</string>
+    <!-- Notification method, flashing LED light -->
+    <string name="notification_method_light">LED点灯</string>
+    <!-- Notification method, ringtone -->
+    <string name="notification_method_ringtone">通知音</string>
+    <!-- Notification method, device vibration -->
+    <string name="notification_method_vibration">バイブレーション</string>
+    <string name="notification_status"><xliff:g id="user">%s</xliff:g>の新しいツイート</string>
+    <string name="notification_status_multiple"><xliff:g id="user">%1$s</xliff:g>と他<xliff:g id="count">%2$d</xliff:g>人の新しいツイート</string>
+    <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> がリツイートしました</string>
+    <string name="notification_title_new_status_by_user"><xliff:g id="user">%1$s</xliff:g> が新しいツイートをしました</string>
+    <string name="notification_type_home">ホーム</string>
+    <string name="notification_type_interactions">みんなの反応</string>
+    <string name="notification_type_messages">メッセージ</string>
+    <string name="notifications">通知</string>
+    <string name="notifications_type">通知のタイプ</string>
+    <string name="open_accounts_dashboard">アカウント・ダッシュボードを開く</string>
+    <string name="open_twitter_links">Twitterリンクを開く</string>
+    <string name="open_with_account">アカウントを選んで開く</string>
+    <string name="other_settings">その他の設定</string>
+    <string name="overwrite">上書き</string>
+    <string name="page_down">ページダウン</string>
+    <string name="page_up">ページアップ</string>
+    <string name="password_sign_in_twitter_only">パスワードでログイン (Twitterのみ)</string>
+    <string name="pause">一時停止</string>
+    <string name="pebble_notifications">Pebbleへ通知</string>
+    <string name="pebble_notifications_summary">通知をPebbleへ送信する</string>
+    <string name="permission_description_accounts">アカウント情報の読み込み</string>
+    <string name="permission_description_direct_messages">ダイレクトメッセージの読み取り、書き込みと送信</string>
+    <string name="permission_description_none">権限は必要ありません</string>
+    <string name="permission_description_preferences">設定の読み込み</string>
+    <string name="permission_description_read">ツイートとキャッシュしたコンテンツの読み込み</string>
+    <string name="permission_description_refresh">タイムラインの更新 (DMを含める)</string>
+    <string name="permission_description_shorten_status">送信するツイートへの Twidere のアクセスを許可し、ツイートを短縮できるようにします。</string>
+    <string name="permission_description_sync_timeline">既読位置情報への Twidere のアクセスを許可し、既読位置を同期できるようにします。</string>
+    <string name="permission_description_upload_media">送信するツイートのメディアへの Twidere のアクセスを許可し、メディアをアップロードできるようにします。</string>
+    <string name="permission_description_write">データベースへの書き込み、ステータスの更新</string>
+    <string name="permission_label_shorten_status">短縮ツイート</string>
+    <string name="permission_label_sync_timeline">タイムライン同期</string>
+    <string name="permission_label_upload_media">メディアを投稿</string>
+    <string name="permissions_request">権限の要求</string>
+    <string name="permissions_request_message">アプリは以下の権限を要求しています。</string>
+    <string name="phishing_link_warning">詐欺サイトの警告</string>
+    <string name="phishing_link_warning_message_1">詐欺サイトに接続するかもしれないDM内のリンクを開こうとしています。\n\n個人情報を入力する前にサイトのアドレスを確認してください。</string>
+    <string name="phishing_link_warning_message_2">続行しますか？</string>
+    <string name="phishing_link_warning_summary">DMで詐欺の恐れのあるサイトにアクセスする時、警告プロンプトを表示します。</string>
+    <string name="photo">画像</string>
+    <string name="pick_file">ファイルを選択</string>
+    <string name="pinned_status">固定ツイート</string>
+    <string name="play">再生</string>
+    <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+    <string name="preference_filter_possibility_sensitive_statuses">不適切なツイートをフィルターする</string>
+    <string name="preference_filter_unavailable_quote_statuses">引用できないツイートをフィルターする</string>
+    <string name="preference_multitasking">マルチタスク</string>
+    <string name="preference_multitasking_summary">プロフィールとメディアを新しいタスクで開きます。</string>
+    <string name="preference_randomize_account_name">アプリ内部で使用するアカウント名をランダム化する</string>
+    <string name="preference_randomize_account_name_summary">他のアプリからアカウント名が読み取れなくなるため、プライバシーが向上します。</string>
+    <string name="preference_randomize_account_rename_accounts_confirm">既存のアカウント名を変更しますか？</string>
+    <string name="preference_summary_auto_refresh_compatibility_mode">更新間隔を短くしますが、Android 5.0+では電池の消費が早くなります</string>
+    <string name="preference_summary_auto_refresh_power_saving">電池残量不足時に自動更新を停止します</string>
+    <string name="preference_summary_chrome_custom_tab">Chrome カスタムタブでリンクを開く</string>
+    <string name="preference_summary_database_item_limit">各アカウントのデータベースに格納するアイテムの上限数です。\n小さな値に設定すると読み込み速度を速くできます。</string>
+    <string name="preference_summary_favorite_confirmation">ツイートをいいねする前に確認を表示</string>
+    <string name="preference_summary_like_confirmation">ツイートをお気に入りする前に確認を表示</string>
+    <string name="preference_summary_media_preload_non_metered_network">Wi-Fi などの無料のネットワーク上でのみメディアを先読みします</string>
+    <string name="preference_summary_sync_timeline_positions">「位置を記憶」の有効時</string>
+    <string name="preference_summary_trends_location">タブの設定でトレンドの地域を個別に設定できます。</string>
+    <string name="preference_summary_auto_hide_tabs">タブが1つしか無い場合にタブを隠します</string>
+    <string name="preference_title_accounts">アカウント</string>
+    <string name="preference_title_advanced">詳細設定</string>
+    <string name="preference_title_auto_refresh_compatibility_mode">互換性モード</string>
+    <string name="preference_title_auto_refresh_power_saving">省電力モード</string>
+    <string name="preference_title_chrome_custom_tab">Chrome カスタムタブ</string>
+    <string name="preference_title_database_item_limit">アイテム制限</string>
+    <string name="preference_title_favorite_confirmation">お気に入りの確認</string>
+    <string name="preference_title_filter_manage_subscriptions">管理</string>
+    <string name="preference_title_filter_subscriptions">フィルターの保存</string>
+    <string name="preference_title_floating_detailed_view">フローティング詳細表示</string>
+    <string name="preference_title_landscape">ランドスケープ</string>
+    <string name="preference_title_light_font">細字フォント</string>
+    <string name="preference_title_like_confirmation">いいねの確認</string>
+    <string name="preference_title_media_preload_non_metered_network">無料のネットワークでのみ先読み</string>
+    <string name="preference_title_multi_column_tab_width">複数カラムの幅</string>
+    <string name="preference_title_multi_column_tabs">多列タブ</string>
+    <string name="preference_title_navbar_style">ナビバーのスタイル</string>
+    <string name="preference_title_tab_position">タブの位置</string>
+    <string name="preference_title_auto_hide_tab">タブの自動非表示</string>
+    <string name="preference_title_notification_channels">チャンネル</string>
+    <string name="preference_title_notification_ringtone">通知音</string>
+    <string name="preference_title_override_language">アプリの言語</string>
+    <string name="preference_title_portrait">ポートレイト</string>
+    <string name="preference_title_storage">ストレージ</string>
+    <string name="preference_title_tablet_mode">タブレットモード</string>
+    <string name="preference_title_text_size">フォントサイズ</string>
+    <string name="preference_title_timeline_positions">タイムラインの位置</string>
+    <string name="preference_title_translate">翻訳する</string>
+    <string name="preference_title_trends_location">トレンドの場所</string>
+    <string name="preload_wifi_only">Wi-Fi接続時のみ先読み</string>
+    <string name="preview">プレビュー</string>
+    <string name="preview_images">プレビュー画像</string>
+    <!-- Media will be cropped to fit preview -->
+    <string name="preview_style_crop">切り取り</string>
+    <!-- Actual size, media preview will be scaled respectively -->
+    <string name="preview_style_real_size">実際のサイズ</string>
+    <!-- Media will be scaled to fit preview -->
+    <string name="preview_style_scale">拡大縮小</string>
+    <!-- Previous item (tweet, user etc.) -->
+    <string name="previous_item">前</string>
+    <string name="previous_tab">前のタブ</string>
+    <string name="profile">プロフィール</string>
+    <string name="profile_background">背景画像</string>
+    <string name="profile_background_color">背景色</string>
+    <string name="profile_banner">ヘッダー画像</string>
+    <string name="profile_image">プロフィール画像</string>
+    <string name="profile_image_style">プロフィール画像のスタイル</string>
+    <string name="profile_images">プロフィール画像</string>
+    <string name="profile_link_color_main_color">テーマカラー</string>
+    <string name="profile_text_color">テキストの色</string>
+    <string name="profile_updated">プロフィールを更新しました。</string>
+    <string name="progress">進捗</string>
+    <string name="project_account">プロジェクトアカウント</string>
+    <string name="projects_we_took_part">参加されたプロジェクト：</string>
+    <!-- Normally you don't need to translate this -->
+    <string name="provider_default">アプリの既定</string>
+    <!-- Fanfou is a Chinese micro blogging website https://fanfou.com/ -->
+    <string name="provider_fanfou">Fanfou</string>
+    <string name="provider_gnusocial_de">GNU Social.de</string>
+    <string name="provider_gnusocial_net">GNU Social.net</string>
+    <string name="provider_loadaverage_org">LoadAverage.org</string>
+    <string name="provider_mastodon">Mastodon</string>
+    <string name="provider_quitter_se">Quitter.se</string>
+    <string name="proxy">プロキシ</string>
+    <string name="proxy_host">ホスト</string>
+    <string name="proxy_password">プロキシのパスワード</string>
+    <string name="proxy_port">ポート番号</string>
+    <string name="proxy_summary">すべてのネットワーク要件においてプロキシを使用します。</string>
+    <string name="proxy_type">プロキシの種類</string>
+    <string name="proxy_username">プロキシのユーザー名</string>
+    <string name="query">クエリ</string>
+    <string name="quick_send">エンターキーで送信</string>
+    <string name="quick_send_summary">エンターキーを押すと送信します。</string>
+    <string name="quote_format">引用形式</string>
+    <string name="quote_format_summary">\"[TEXT]\" = ツイート内容\n\"[NAME]\" = ユーザー名</string>
+    <string name="quote_original_status">ツイートを引用</string>
+    <string name="quote_protected_status_warning_message">このツイートは非公開にされています。\n\n非公開ユーザーのツイートを公開しないでください。</string>
+    <string name="quote_user"><xliff:g id="user_name">%s</xliff:g>のツイートを引用</string>
+    <string name="rate_limit">API制限</string>
+    <string name="read_from_bottom">タイムラインを下から読む</string>
+    <string name="read_from_bottom_summary_off">更新後、最新のツイートにジャンプする</string>
+    <string name="read_from_bottom_summary_on">現在の位置を更新後も維持する</string>
+    <string name="recent_media">最近のメディア</string>
+    <string name="refresh_after_status_updated">ツイート送信後に更新</string>
+    <string name="refresh_after_status_updated_summary">ツイート送信後にTLとつながりを更新します。</string>
+    <string name="refresh_interval">更新間隔</string>
+    <string name="refresh_on_start">起動時に更新</string>
+    <string name="refresh_on_start_summary">起動時にホーム/@ツイートを更新します。</string>
+    <string name="refresh_type_home">ホーム</string>
+    <string name="refresh_type_interactions">みんなの反応</string>
+    <string name="refresh_type_messages">メッセージ</string>
+    <string name="refresh_type_trends">トレンド</string>
+    <string name="remember_position">位置を記憶</string>
+    <string name="remember_position_summary">Twidere を閉じる時にリスト/タブの位置を記憶します。</string>
+    <string name="remove">削除</string>
+    <string name="remove_from_filter">フィルターから削除</string>
+    <string name="remove_sensitive_mark">不適切な内容のマークを消去</string>
+    <string name="replies">返信</string>
+    <string name="report_for_spam">スパム報告</string>
+    <string name="report_usage_statistics_now">現在の使用状況を報告する。</string>
+    <string name="report_user"><xliff:g id="name">%s</xliff:g>をスパム報告</string>
+    <string name="report_user_confirm_message"><xliff:g id="name">%s</xliff:g> をスパム報告しますか？同時にブロックもします。</string>
+    <string name="reported_user_for_spam">このユーザーをスパム報告しました。</string>
+    <string name="reported_users_for_spam">選択したユーザーをスパムとして報告しました。</string>
+    <string name="requested">要求した</string>
+    <string name="reset_keyboard_shortcuts_confirm">キーボードショートカットを初期化しますか？</string>
+    <string name="reset_to_default">初期化する</string>
+    <string name="retry_on_network_issue">ネットワークに問題がある場合に再接続</string>
+    <string name="retry_on_network_issue_summary">ネットワークに問題が生じている場合に、自動的に接続を回復しようと試みます</string>
+    <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g>人のリツイート</string>
+    <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g>のリツイート</string>
+    <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g>と他<xliff:g id="retweet_count">%2$d</xliff:g>人のリツイート</string>
+    <string name="retweets_of_me">リツイートされたツイート</string>
+    <string name="revoke_permissions">許可を取り消す</string>
+    <string name="round">丸型</string>
+    <string name="safety">安全性</string>
+    <string name="same_oauth_signing_url">OAuth 認証に同じ URL を使う</string>
+    <string name="save_to_gallery">ギャラリーに保存</string>
+    <string name="saved_searches">保存した検索</string>
+    <string name="saved_searches_already_saved_hint">おそらく、既にこの検索は保存されています</string>
+    <string name="scheduled_statuses">定期ツイート</string>
+    <string name="scrapyard">ゴミ置き場</string>
+    <string name="search_hint">ツイートかユーザーの検索</string>
+    <string name="search_hint_users">ユーザー検索</string>
+    <string name="search_statuses">ツイートの検索</string>
+    <string name="search_type_federated">横断検索</string>
+    <string name="search_type_local">ローカル検索</string>
+    <string name="search_type_media">メディア</string>
+    <string name="search_type_statuses">ツイート</string>
+    <string name="search_type_users">ユーザー</string>
+    <string name="security_key">セキュリティーキー</string>
+    <string name="select_account">アカウントを選択</string>
+    <string name="select_accounts">アカウントを選択</string>
+    <string name="select_accounts_for_compose">ツイートするアカウントを選択</string>
+    <string name="select_user">ユーザーの選択</string>
+    <string name="select_user_list">ユーザーリストを選択</string>
+    <string name="send_anyway">送信する</string>
+    <string name="send_at">送信</string>
+    <string name="send_crash_report">Twidereのクラッシュレポートを送信</string>
+    <string name="send_direct_message">DMを送信</string>
+    <string name="send_follow_request">フォローリクエストを送信</string>
+    <string name="sending_direct_message">DM</string>
+    <string name="sensitive_content_warning">このツイートには不適切な内容が含まれている可能性があります。続行しますか？</string>
+    <string name="sent_follow_request_to_user">フォローリクエストを<xliff:g id="user">%s</xliff:g>に送信済み</string>
+    <string name="server_address">サーバーのアドレス</string>
+    <string name="set_consumer_key_secret_message">Twidere はトークン規制が迫っているので、 https://apps.twitter.com/ でアプリを作成し、コンシューマーキーとシークレットを下に貼り付けて規制を回避してください。\nもしこのまま Twidere のキーを使い続けると、サインインできないかもしれません。</string>
+    <string name="settings_interface">インターフェース</string>
+    <string name="settings_notifications">通知</string>
+    <string name="settings_refresh">更新</string>
+    <string name="share_format">共有形式</string>
+    <string name="share_format_summary">\"[TITLE]\" = タイトル\n\"[TEXT]\" = ツイート内容</string>
+    <string name="share_link">共有リンク</string>
+    <string name="share_status">ツイートをシェア</string>
+    <string name="shortener_version_incompatible">興味が無いツイートを短縮</string>
+    <string name="show_absolute_time">絶対時間を表示</string>
+    <string name="show_absolute_time_summary">ツイートの時間を絶対時間で表示します。</string>
+    <string name="show_in_timeline">TLに表示</string>
+    <string name="sign_in_service_email">メールアドレス</string>
+    <string name="sign_in_service_google_id">Google ID</string>
+    <string name="sign_in_service_twitter">Twitter</string>
+    <string name="sign_in_with_ellip">ログイン方法</string>
+    <string name="sign_up">新規登録</string>
+    <string name="signing_in_error_browser_sign_in_hint">ログインエラー、ブラウザでログインする方法を試してみてください。(カスタムAPI設定は無視されます)</string>
+    <string name="size">サイズ</string>
+    <string name="small">小</string>
+    <string name="sound">音</string>
+    <string name="source"><xliff:g id="source">%s</xliff:g></string>
+    <string name="source_camera">カメラ</string>
+    <string name="source_clipboard">クリップボード</string>
+    <string name="source_filter_name">クライアント: <xliff:g id="name">%s</xliff:g></string>
+    <string name="source_gallery">ギャラリー</string>
+    <string name="special_thanks_to">スペシャルサンクス</string>
+    <string name="sponsored_by">スポンサー</string>
+    <string name="square">四角</string>
+    <string name="state_blocking">ブロックしています</string>
+    <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
+    <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
+    <string name="status_is_duplicate">既にあなたは同じツイートを送信済みです。</string>
+    <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+    <string name="status_not_updated">ツイートは送信されませんでした。</string>
+    <string name="status_not_updated_summary">ツイートは送信されませんでした。下書きに保存されています。</string>
+    <string name="status_share_subject_format_with_time"><xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>) のツイート, <xliff:g id="time">%3$s</xliff:g></string>
+    <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
+    <string name="status_shortener">ツイート短縮サービス</string>
+    <string name="status_shortener_default">なし (送信を取り消す)</string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <string name="status_type_retweet">リツイート</string>
+    <string name="style">スタイル</string>
+    <string name="subscribed_to_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を保存しました。</string>
+    <string name="summary_interactions_account_not_supported">アカウントはサポートされていません</string>
+    <string name="swipe_down_to_refresh">下にスワイプすると更新されます</string>
+    <string name="sync_provider_name_dropbox">Dropbox</string>
+    <string name="sync_provider_name_google_drive">Google ドライブ</string>
+    <string name="system_default">システムデフォルト</string>
+    <string name="tab_display_option">タブの表示オプション</string>
+    <string name="tab_display_option_icon">アイコン</string>
+    <string name="tab_display_option_icon_and_label">アイコンとラベル</string>
+    <string name="tab_display_option_label">ラベル</string>
+    <string name="tab_editor_hint_name">名前</string>
+    <string name="tabs">タブ</string>
+    <string name="tcp_dns_query">TCP DNS クエリー</string>
+    <string name="tcp_dns_query_summary">DNSの偽装によるなりすましを防ぐために、TCPプロトコルを使用してDNSの要求が行われるようにします。</string>
+    <string name="text_copied">テキストがクリップボードにコピーされました。</string>
+    <string name="text_size">フォントサイズ</string>
+    <string name="text_size_summary">ツイートの文字サイズ</string>
+    <string name="theme">テーマ</string>
+    <string name="theme_auto">自動</string>
+    <string name="theme_background_default">デフォルト</string>
+    <string name="theme_background_solid">白/黒一色</string>
+    <string name="theme_background_transparent">背景透過</string>
+    <string name="theme_color">テーマ色</string>
+    <!-- Dark theme -->
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_dark_actionbar">黒アクションバー</string>
+    <string name="theme_font_family">使用するフォント</string>
+    <!-- Light theme -->
+    <string name="theme_light">ライト</string>
+    <string name="thumbor_integration">Thumbor 連携</string>
+    <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
+    <string name="timeline_sync_service">タイムライン同期サービス</string>
+    <string name="title_about">バージョン情報</string>
+    <string name="title_account_delete_confirm">サインアウト</string>
+    <string name="title_accounts">アカウント</string>
+    <string name="title_add_or_remove_from_list">リストから追加または削除する</string>
+    <string name="title_block_user"><xliff:g id="name">%s</xliff:g>をブロック</string>
+    <string name="title_blocked_users">ブロックしたユーザー</string>
+    <string name="title_browser_sign_in">ブラウザでログイン</string>
+    <string name="title_buffer_queue_manager">Buffer キュー</string>
+    <string name="title_buffer_schedule">Buffer スケジュール</string>
+    <string name="title_buffer_set_schedule">Buffer でツイート予約</string>
+    <string name="title_buffer_settings">Buffer の設定</string>
+    <string name="title_compose">ツイートする</string>
+    <string name="title_conversation">会話</string>
+    <string name="title_crop_image">画像のトリミング</string>
+    <string name="title_dialog_sync_connect_to">接続中&#8230;</string>
+    <string name="title_direct_messages">メッセージ</string>
+    <string name="title_direct_messages_conversation_info">会話の情報</string>
+    <string name="title_direct_messages_conversation_new">新しい会話</string>
+    <string name="title_drafts">下書き</string>
+    <string name="title_edit_details">詳細の編集</string>
+    <string name="title_edit_profile">プロフィール編集</string>
+    <string name="title_error_invalid_account">無効なアカウント</string>
+    <!-- Enhanced (paid) features title -->
+    <string name="title_extra_features">追加機能</string>
+    <string name="title_favorite_confirm">このツイートをお気に入りしますか？</string>
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_favorites">お気に入り</string>
+    <string name="title_filters">フィルター</string>
+    <string name="title_filters_subscription_invalid">保存できません</string>
+    <string name="title_filters_subscription_url">URL</string>
+    <string name="title_followers">フォロワー</string>
+    <string name="title_following">フォロー中</string>
+    <string name="title_gif_sharing">GIF動画を共有</string>
+    <string name="title_home">ホーム</string>
+    <string name="title_like_confirm">このツイートをいいねしますか？</string>
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_likes">いいね</string>
+    <string name="title_manage_filter_subscriptions">フィルターの保存</string>
+    <string name="title_media_timeline">メディアタイムライン</string>
+    <string name="title_mentions">つながり</string>
+    <string name="title_message_conversation_info">会話の情報</string>
+    <string name="title_network_public_timeline">連合タイムライン</string>
+    <string name="title_nicknames">ニックネーム</string>
+    <string name="title_open_source_license">オープンソースライセンス</string>
+    <string name="title_pin_status_confirm">ツイートの固定</string>
+    <string name="title_premium_features_name">Twidere ∞</string>
+    <string name="title_promotions_reward">広告オン　特典</string>
+    <string name="title_public_timeline">公開タイムライン</string>
+    <string name="title_quick_action">クイック アクション</string>
+    <string name="title_retweet_quote_confirm">フォロワーにリツイートしますか？</string>
+    <string name="title_scheduled_statuses">予約ツイート</string>
+    <string name="title_search">検索</string>
+    <string name="title_search_gif">GIF動画を検索</string>
+    <string name="title_select_users">ユーザーを選択</string>
+    <string name="title_set_nickname">ニックネームの設定</string>
+    <string name="title_sign_in_to_buffer">Buffer へサインイン</string>
+    <string name="title_status">ツイート</string>
+    <string name="title_statuses">ツイート</string>
+    <string name="title_statuses_and_replies">ツイート &amp; 返信</string>
+    <string name="title_statuses_scheduling">ツイートの予約</string>
+    <string name="title_subscription_name">名前</string>
+    <string name="title_subscription_url">URL</string>
+    <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+    <string name="title_sync">データ同期</string>
+    <string name="title_sync_settings">同期設定</string>
+    <string name="title_translate_to">&#8230;へ翻訳</string>
+    <string name="title_unpin_status_confirm">ツイート固定の解除</string>
+    <string name="title_user">ユーザー</string>
+    <string name="title_user_colors">ユーザー色</string>
+    <string name="title_user_feedback">フィードバック</string>
+    <string name="title_user_list">リスト</string>
+    <string name="title_user_list_memberships">保存されている</string>
+    <string name="title_user_list_ownerships">作成済み</string>
+    <string name="title_user_list_subscriptions">保存済み</string>
+    <string name="title_user_timeline_filter">タイムラインのフィルター</string>
+    <string name="title_userlist_subscribers">保存しているユーザー</string>
+    <string name="title_users_favorited_this">お気に入りに登録したユーザーを表示</string>
+    <string name="title_users_liked_this">いいねしたユーザーを表示</string>
+    <string name="title_users_retweeted_this">リツイートしたユーザーを表示</string>
+    <string name="translation_destination">翻訳先の言語</string>
+    <string name="translators">翻訳者</string>
+    <string name="trends">トレンド</string>
+    <string name="trends_location">トレンドの場所</string>
+    <string name="trends_location_summary">ローカルトレンドの場所を変更します。</string>
+    <!-- 'Tweet' here is a verb -->
+    <string name="tweet_from_name"><xliff:g id="text">%1$s</xliff:g>からツイート投稿</string>
+    <string name="tweet_hashtag">ツイート#<xliff:g id="text">%1$s</xliff:g></string>
+    <string name="twidere_test">Twidereテスト</string>
+    <string name="type_name_to_search">検索する名前を入力</string>
+    <string name="type_to_compose">メッセージを入力</string>
+    <string name="unblocked_user"><xliff:g id="user">%s</xliff:g>のブロックを解除済み</string>
+    <string name="underline">下線</string>
+    <string name="unfollow_user"><xliff:g id="name">%s</xliff:g>のフォローを解除</string>
+    <string name="unfollow_user_confirm_message"><xliff:g id="name">%s</xliff:g> のフォローを解除しますか？このユーザーのツイートはタイムラインに表示されなくなります。</string>
+    <string name="unfollowed_user"><xliff:g id="user">%s</xliff:g>のフォローを解除済み</string>
+    <string name="uninstall">アンインストール</string>
+    <string name="unknown_language">不明な言語です</string>
+    <string name="unknown_location">場所不明</string>
+    <string name="unmute_user"><xliff:g id="name">%s</xliff:g>のミュートを解除</string>
+    <string name="unmuted_user"><xliff:g id="name">%s</xliff:g>のミュートを解除しました</string>
+    <string name="unread_count">未読数の表示</string>
+    <string name="unsubscribe_from_user_list">リスト<xliff:g id="name">%s</xliff:g>の保存を解除</string>
+    <string name="unsubscribe_from_user_list_confirm_message">リスト「<xliff:g id="name">%s</xliff:g>」の保存を解除しますか? 後で再び保存することもできます。</string>
+    <string name="unsubscribed_from_list">リスト\"<xliff:g id="list">%s</xliff:g>\"の保存を解除しました。</string>
+    <string name="unsupported_activity_action_summary">上記のアクションを報告してください</string>
+    <string name="unsupported_login_verification_type_name"><xliff:g id="name">%1$s</xliff:g>でのログイン認証はサポートされていません。これをサポートするために、アカウントを報告してください。</string>
+    <string name="update_status">ツイート</string>
+    <string name="updated_list_details">リスト \"<xliff:g id="list">%s</xliff:g>\" の詳細を更新しました。</string>
+    <string name="updating_status_notification">ツイートの送信中...</string>
+    <string name="uploader_version_incompatible">互換性のないメディアのアップロード先</string>
+    <string name="usage_statistics">匿名利用状況データ</string>
+    <string name="usage_statistics_header_summary">Twidere は研究プロジェクトに参加しています。プロジェクトに参加する事で、Twidere や他のアプリがより良くなります。</string>
+    <string name="usage_statistics_notification_summary">Twidereの機能向上にご協力ください</string>
+    <string name="user_blocked">このユーザーをブロックしました。</string>
+    <string name="user_filter_name">ユーザー: <xliff:g id="name">%s</xliff:g></string>
+    <string name="user_list_details">リストの詳細</string>
+    <!-- User list description -->
+    <string name="user_list_details_description">リストの説明</string>
+    <!-- User list is public -->
+    <string name="user_list_details_is_public">公開</string>
+    <!-- User list name -->
+    <string name="user_list_details_name">名前</string>
+    <string name="user_lists">リスト</string>
+    <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g>からのツイート</string>
+    <string name="user_mentions">このユーザー宛ての返信</string>
+    <string name="user_profile_description">紹介文</string>
+    <string name="user_profile_location">現在地</string>
+    <string name="user_profile_name">名前</string>
+    <string name="user_profile_url">URL</string>
+    <string name="user_protected_summary">このツイートは非公開です。見るためにはフォローリクエストを送信し、承認される必要があります</string>
+    <string name="user_type_protected">保護済み</string>
+    <string name="user_type_verified">認証済み</string>
+    <string name="user_unblocked">このユーザーのブロックを解除しました。</string>
+    <string name="users_blocked">選択したユーザーをブロックしました。</string>
+    <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>が保存しているリスト</string>
+    <string name="users_statuses">ユーザーのツイート</string>
+    <string name="label_drafts_all">すべて</string>
+    <string name="label_drafts_statuses">ツイート</string>
+    <string name="label_drafts_others">その他</string>
+</resources>

@@ -56,6 +56,5 @@ public @interface FilterScope {
 
     // Contains all flags
     int ALL = 0xFFFFFFFF;
-    @SuppressWarnings("PointlessBitwiseExpression")
     int DEFAULT = ALL & ~(TARGET_NAME | TARGET_DESCRIPTION);
 }

@@ -52,7 +52,7 @@ class TrendsTabConfiguration : TabConfiguration() {
             TrendsLocationExtraConfiguration(EXTRA_PLACE, R.string.trends_location).mutable(true)
     )
 
-    override fun applyExtraConfigurationTo(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun applyExtraConfigurationTo(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val extras = tab.extras as TrendsTabExtras
         when (extraConf.key) {
             EXTRA_PLACE -> {
@@ -70,7 +70,7 @@ class TrendsTabConfiguration : TabConfiguration() {
         return true
     }
 
-    override fun readExtraConfigurationFrom(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun readExtraConfigurationFrom(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val extras = tab.extras as? TrendsTabExtras ?: return false
         when (extraConf.key) {
             EXTRA_PLACE -> {

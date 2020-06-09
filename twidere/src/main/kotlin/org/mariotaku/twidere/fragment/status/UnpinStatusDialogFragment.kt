@@ -35,13 +35,13 @@ class UnpinStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
         get() = getString(R.string.message_unpin_status_confirm)
 
     override fun onPerformAction(status: ParcelableStatus) {
-        val task = UnpinStatusTask(context!!, status.account_key, status.id)
+        val task = UnpinStatusTask(requireContext(), status.account_key, status.id)
         TaskStarter.execute(task)
     }
 
     companion object {
 
-        val FRAGMENT_TAG = "unpin_status"
+        const val FRAGMENT_TAG = "unpin_status"
 
         fun show(fm: FragmentManager, status: ParcelableStatus): UnpinStatusDialogFragment {
             val args = Bundle()

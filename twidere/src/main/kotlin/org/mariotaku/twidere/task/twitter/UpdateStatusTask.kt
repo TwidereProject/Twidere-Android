@@ -57,6 +57,7 @@ import org.mariotaku.twidere.util.text.StatusTextValidator
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 /**
  * Update status
@@ -65,7 +66,7 @@ import java.util.concurrent.TimeUnit
  */
 class UpdateStatusTask(
         context: Context,
-        internal val stateCallback: UpdateStatusTask.StateCallback
+        internal val stateCallback: StateCallback
 ) : BaseAbstractTask<Pair<ParcelableStatusUpdate, ScheduleInfo?>, UpdateStatusTask.UpdateStatusResult, Any?>(context) {
 
     override fun doLongOperation(params: Pair<ParcelableStatusUpdate, ScheduleInfo?>): UpdateStatusResult {
@@ -74,12 +75,12 @@ class UpdateStatusTask(
             applyUpdateStatus(update)
         }
         microBlogWrapper.addSendingDraftId(draftId)
-        try {
+        return try {
             val result = doUpdateStatus(update, info, draftId)
             deleteOrUpdateDraft(update, result, draftId)
-            return result
+            result
         } catch (e: UpdateStatusException) {
-            return UpdateStatusResult(e, draftId)
+            UpdateStatusResult(e, draftId)
         } finally {
             microBlogWrapper.removeSendingDraftId(draftId)
         }
@@ -117,10 +118,10 @@ class UpdateStatusTask(
             uploadMedia(uploader, update, info, pendingUpdate)
             shortenStatus(shortener, update, pendingUpdate)
 
-            if (info != null) {
-                result = requestScheduleStatus(update, pendingUpdate, info, draftId)
+            result = if (info != null) {
+                requestScheduleStatus(update, pendingUpdate, info, draftId)
             } else {
-                result = requestUpdateStatus(update, pendingUpdate, draftId)
+                requestUpdateStatus(update, pendingUpdate, draftId)
             }
 
             mediaUploadCallback(uploader, pendingUpdate, result)
@@ -204,7 +205,7 @@ class UpdateStatusTask(
                 pending.mediaUploadResults[i] = uploadResult
                 if (uploadResult.shared_owners != null) {
                     for (sharedOwner in uploadResult.shared_owners) {
-                        sharedMedia.put(sharedOwner, uploadResult)
+                        sharedMedia[sharedOwner] = uploadResult
                     }
                 }
             }
@@ -243,7 +244,7 @@ class UpdateStatusTask(
                 pending.statusShortenResults[i] = shortenResult
                 if (shortenResult.shared_owners != null) {
                     for (sharedOwner in shortenResult.shared_owners) {
-                        sharedShortened.put(sharedOwner, shortenResult)
+                        sharedShortened[sharedOwner] = shortenResult
                     }
                 }
             }
@@ -690,7 +691,7 @@ class UpdateStatusTask(
 
     companion object {
 
-        private val BULK_SIZE = 512 * 1024// 512 Kib
+        private const val BULK_SIZE = 512 * 1024// 512 Kib
 
         @Throws(UploadException::class)
         fun uploadMicroBlogMediaShared(context: Context, upload: TwitterUpload,
@@ -842,10 +843,10 @@ class UpdateStatusTask(
                 var streamReadLength = 0
                 var segmentIndex = 0
                 while (streamReadLength < length) {
-                    val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - streamReadLength).toInt()
+                    val currentBulkSize = min(BULK_SIZE.toLong(), length - streamReadLength).toInt()
                     val output = ByteArrayOutputStream()
                     Utils.copyStream(stream, output, currentBulkSize)
-                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
+                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT)
                     upload.appendUploadMedia(response.id, segmentIndex, data)
                     output.close()
                     segmentIndex++
@@ -880,9 +881,9 @@ class UpdateStatusTask(
         }
 
         private fun shouldWaitForProcess(info: MediaUploadResponse.ProcessingInfo): Boolean {
-            when (info.state) {
-                MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> return true
-                else -> return false
+            return when (info.state) {
+                MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> true
+                else -> false
             }
         }
 

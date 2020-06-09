@@ -117,11 +117,11 @@ abstract class AccountsListPreference(context: Context, attrs: AttributeSet? = n
             }
             val titleView = holder.findViewById(android.R.id.title)
             if (titleView is TextView) {
-                titleView.setSingleLine(true)
+                titleView.isSingleLine = true
             }
             val summaryView = holder.findViewById(android.R.id.summary)
             if (summaryView is TextView) {
-                summaryView.setSingleLine(true)
+                summaryView.isSingleLine = true
             }
             val switchView = holder.findViewById(android.R.id.toggle) as SwitchCompat
             if (switchKey != null) {

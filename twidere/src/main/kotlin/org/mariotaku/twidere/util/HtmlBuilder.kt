@@ -58,7 +58,7 @@ class HtmlBuilder(
 
     fun buildWithIndices(): Pair<String, Array<SpanItem>> {
         if (spanSpecs.isEmpty()) return Pair(escapeSource(), emptyArray())
-        Collections.sort(spanSpecs)
+        spanSpecs.sort()
         val sb = StringBuilder()
         val linksSize = spanSpecs.size
         val items = arrayOfNulls<SpanItem>(linksSize)
@@ -119,12 +119,16 @@ class HtmlBuilder(
     }
 
     private fun appendSource(builder: StringBuilder, start: Int, end: Int, escapeSource: Boolean, sourceEscaped: Boolean) {
-        if (sourceEscaped == escapeSource) {
-            builder.append(source.substring(start, end), escapeSource, sourceEscaped)
-        } else if (escapeSource) {
-            builder.append(HtmlEscapeHelper.escape(source.substring(start, end)), true, sourceEscaped)
-        } else {
-            builder.append(HtmlEscapeHelper.unescape(source.substring(start, end)), false, sourceEscaped)
+        when {
+            sourceEscaped == escapeSource -> {
+                builder.append(source.substring(start, end), escapeSource, sourceEscaped)
+            }
+            escapeSource -> {
+                builder.append(HtmlEscapeHelper.escape(source.substring(start, end)), true, sourceEscaped)
+            }
+            else -> {
+                builder.append(HtmlEscapeHelper.unescape(source.substring(start, end)), false, sourceEscaped)
+            }
         }
     }
 
@@ -157,7 +161,7 @@ class HtmlBuilder(
             if (display != null) {
                 sb.append(display, false, displayIsHtml)
             } else {
-                sb.append(link, false, false)
+                sb.append(link, escapeText = false, textEscaped = false)
             }
         }
 
@@ -166,12 +170,16 @@ class HtmlBuilder(
     companion object {
 
         private fun StringBuilder.append(text: String, escapeText: Boolean, textEscaped: Boolean) {
-            if (textEscaped == escapeText) {
-                append(text)
-            } else if (escapeText) {
-                append(HtmlEscapeHelper.escape(text))
-            } else {
-                append(HtmlEscapeHelper.unescape(text))
+            when {
+                textEscaped == escapeText -> {
+                    append(text)
+                }
+                escapeText -> {
+                    append(HtmlEscapeHelper.escape(text))
+                }
+                else -> {
+                    append(HtmlEscapeHelper.unescape(text))
+                }
             }
         }
     }

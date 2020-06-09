@@ -52,12 +52,9 @@ public final class InternalParseUtil {
                     accessLevel = TwitterResponse.AccessLevel.READ_WRITE;
                     break;
                 case 25:
-                    // “read-write-directmessages” (Read, Write, & Direct
-                    // Message)
-                    accessLevel = TwitterResponse.AccessLevel.READ_WRITE_DIRECTMESSAGES;
-                    break;
                 case 26:
                     // “read-write-privatemessages” (Read, Write, & Direct
+                    // “read-write-directmessages” (Read, Write, & Direct
                     // Message)
                     accessLevel = TwitterResponse.AccessLevel.READ_WRITE_DIRECTMESSAGES;
                     break;

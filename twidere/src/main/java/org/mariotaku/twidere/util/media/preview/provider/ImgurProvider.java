@@ -15,12 +15,7 @@ public class ImgurProvider implements Provider {
     public boolean supports(@NonNull String link) {
         final String authority = UriUtils.getAuthority(link);
         if (authority == null) return false;
-        switch (authority) {
-            case "i.imgur.com":
-                return true;
-            default:
-                return false;
-        }
+        return "i.imgur.com".equals(authority);
     }
 
     @Nullable
@@ -28,13 +23,11 @@ public class ImgurProvider implements Provider {
     public ParcelableMedia from(@NonNull String url) {
         final String authority = UriUtils.getAuthority(url);
         if (authority == null) return null;
-        switch (authority) {
-            case "i.imgur.com": {
-                final String path = UriUtils.getPath(url);
-                if (path == null) return null;
-                ParcelableMedia media = new ParcelableMedia();
-                media.url = url;
-            }
+        if ("i.imgur.com".equals(authority)) {
+            final String path = UriUtils.getPath(url);
+            if (path == null) return null;
+            ParcelableMedia media = new ParcelableMedia();
+            media.url = url;
         }
         return null;
     }

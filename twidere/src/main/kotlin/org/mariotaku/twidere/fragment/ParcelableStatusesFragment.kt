@@ -46,6 +46,8 @@ import org.mariotaku.twidere.model.pagination.Pagination
 import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.util.Utils
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -193,13 +195,12 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     fun removeStatus(statusId: String) {
         val list = adapterData ?: return
         val dataToRemove = HashSet<ParcelableStatus>()
-        for (i in 0 until list.size) {
-            val status = list[i]
-            if (status.id == statusId || status.retweet_id == statusId) {
-                dataToRemove.add(status)
-            } else if (status.my_retweet_id == statusId) {
-                status.my_retweet_id = null
-                status.retweet_count = status.retweet_count - 1
+        for (element in list) {
+            if (element.id == statusId || element.retweet_id == statusId) {
+                dataToRemove.add(element)
+            } else if (element.my_retweet_id == statusId) {
+                element.my_retweet_id = null
+                element.retweet_count = element.retweet_count - 1
             }
         }
         if (list is MutableList) {
@@ -211,8 +212,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     fun replaceStatusStates(status: ParcelableStatus?) {
         if (status == null) return
         val lm = layoutManager
-        val rangeStart = Math.max(adapter.statusStartIndex, lm.findFirstVisibleItemPosition())
-        val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.getStatusCount(false) - 1)
+        val rangeStart = max(adapter.statusStartIndex, lm.findFirstVisibleItemPosition())
+        val rangeEnd = min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.getStatusCount(false) - 1)
         for (i in rangeStart..rangeEnd) {
             val item = adapter.getStatus(i, false)
             if (status == item) {
@@ -232,7 +233,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
     private fun updateRetweetedStatuses(status: ParcelableStatus?) {
         val data = adapterData
-        if (status == null || status.retweet_id == null || data == null) return
+        if (status?.retweet_id == null || data == null) return
         data.forEach { orig ->
             if (orig.account_key == status.account_key && TextUtils.equals(orig.id, status.retweet_id)) {
                 orig.my_retweet_id = status.my_retweet_id

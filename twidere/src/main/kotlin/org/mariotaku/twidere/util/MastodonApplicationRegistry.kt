@@ -40,10 +40,10 @@ class MastodonApplicationRegistry(private val context: Context) {
 
     operator fun get(host: String): RegisteredApplication? {
         val json = preferences.getString(host, null) ?: return null
-        try {
-            return JsonSerializer.parse(json, RegisteredApplication::class.java)
+        return try {
+            JsonSerializer.parse(json, RegisteredApplication::class.java)
         } catch (e: IOException) {
-            return null
+            null
         }
     }
 

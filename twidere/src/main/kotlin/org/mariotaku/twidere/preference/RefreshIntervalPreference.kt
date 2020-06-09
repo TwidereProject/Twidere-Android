@@ -58,7 +58,7 @@ class RefreshIntervalPreference(
         }
         val valueMinutes = value.toLongOr(-1)
         val minValue = entryValues.firstOrNull()?.toString().toLongOr(-1)
-        if (valueMinutes > 0 && valueMinutes < minValue) {
+        if (valueMinutes in 1 until minValue) {
             value = minValue.toString()
         }
     }

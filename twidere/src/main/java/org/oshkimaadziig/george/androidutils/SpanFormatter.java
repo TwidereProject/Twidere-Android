@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Uses https://github.com/george-steel/android-utils/commit/289aff11e53593a55d780f9f5986e49343a79e55
+
 package org.oshkimaadziig.george.androidutils;
 
 import android.text.Spannable;
@@ -33,7 +35,6 @@ import java.util.regex.Pattern;
  *
  * @author George T. Steel
  */
-@SuppressWarnings("IfCanBeSwitch")
 public class SpanFormatter {
     public static final Pattern FORMAT_SEQUENCE = Pattern.compile("%([0-9]+\\$|<?)([^a-zA-z%]*)([[a-zA-Z%]&&[^tT]]|[tT][a-zA-Z])");
 
@@ -88,10 +89,10 @@ public class SpanFormatter {
 
             if (typeTerm.equals("%")) {
                 cookedArg = "%";
-            } else if (typeTerm.equals("%")) {
+            } else if (typeTerm.equals("n")) {
                 cookedArg = "\n";
             } else {
-                int argIdx = 0;
+                int argIdx;
                 if (argTerm.equals("")) argIdx = ++argAt;
                 else if (argTerm.equals("<")) argIdx = argAt;
                 else argIdx = Integer.parseInt(argTerm.substring(0, argTerm.length() - 1)) - 1;

@@ -9,7 +9,7 @@ import android.content.SharedPreferences
 object UserNicknamesSyncProcessor : FileBasedPreferencesValuesSyncAction.Processor {
     override fun loadValue(map: MutableMap<String, String>, key: String, value: Any?) {
         if (value is String) {
-            map.put(key, value)
+            map[key] = value
         }
     }
 

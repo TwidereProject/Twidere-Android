@@ -12,7 +12,7 @@ import org.mariotaku.ktextension.toHexColor
 object UserColorsSyncProcessor : FileBasedPreferencesValuesSyncAction.Processor {
     override fun loadValue(map: MutableMap<String, String>, key: String, value: Any?) {
         if (value is Int) {
-            map.put(key, toHexColor(value, format = HexColorFormat.RGB))
+            map[key] = toHexColor(value, format = HexColorFormat.RGB)
         }
     }
 

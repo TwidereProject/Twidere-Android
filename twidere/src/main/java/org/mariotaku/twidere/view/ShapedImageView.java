@@ -196,17 +196,14 @@ public class ShapedImageView extends AppCompatImageView {
                 contentHeight = contentBottom - contentTop;
         final int size = Math.min(contentWidth, contentHeight);
 
-        if (OUTLINE_DRAW) {
-            drawShape(canvas, mDestination, 0, mBackgroundPaint);
-            super.onDraw(canvas);
-        } else {
+        if (!OUTLINE_DRAW) {
             if (mShadowBitmap != null && mDrawShadow) {
                 canvas.drawBitmap(mShadowBitmap, contentLeft + (contentWidth - size) / 2 - mShadowRadius,
                         contentTop + (contentHeight - size) / 2 - mShadowRadius, null);
             }
-            drawShape(canvas, mDestination, 0, mBackgroundPaint);
-            super.onDraw(canvas);
         }
+        drawShape(canvas, mDestination, 0, mBackgroundPaint);
+        super.onDraw(canvas);
         // Then draw the border.
         if (mBorderEnabled) {
             drawBorder(canvas, mDestination);

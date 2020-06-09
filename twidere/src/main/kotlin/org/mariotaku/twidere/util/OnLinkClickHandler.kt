@@ -61,7 +61,7 @@ open class OnLinkClickHandler(
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {
-                IntentUtils.openTweetSearch(context, accountKey, "#" + link)
+                IntentUtils.openTweetSearch(context, accountKey, "#$link")
                 return true
             }
             TwidereLinkify.LINK_TYPE_LINK_IN_TEXT -> {

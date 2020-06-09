@@ -87,10 +87,10 @@ class SendMessageTask(
             message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         when (account.type) {
             AccountType.TWITTER -> {
-                if (account.isOfficial(context)) {
-                    return sendTwitterOfficialDM(microBlog, account, message)
+                return if (account.isOfficial(context)) {
+                    sendTwitterOfficialDM(microBlog, account, message)
                 } else {
-                    return sendTwitterMessageEvent(microBlog, account, message)
+                    sendTwitterMessageEvent(microBlog, account, message)
                 }
             }
             AccountType.FANFOU -> {

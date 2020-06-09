@@ -31,6 +31,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.view.holder.AccountProfileImageViewHolder
 import org.mariotaku.twidere.view.transformer.AccountsSelectorTransformer
 import java.util.*
+import kotlin.math.max
 
 class AccountSelectorAdapter(
         private val inflater: LayoutInflater,
@@ -46,7 +47,7 @@ class AccountSelectorAdapter(
         set(value) {
             if (value != null) {
                 val previousAccounts = accounts
-                if (previousAccounts != null) {
+                field = if (previousAccounts != null) {
                     val tmpList = arrayListOf(*value)
                     val tmpResult = ArrayList<AccountDetails>()
                     previousAccounts.forEach { previousAccount ->
@@ -56,9 +57,9 @@ class AccountSelectorAdapter(
                         }
                     }
                     tmpResult.addAll(tmpList)
-                    field = tmpResult.toTypedArray()
+                    tmpResult.toTypedArray()
                 } else {
-                    field = value
+                    value
                 }
             } else {
                 field = null
@@ -115,16 +116,16 @@ class AccountSelectorAdapter(
     }
 
     override fun getCount(): Int {
-        return Math.max(3, accountsCount)
+        return max(3, accountsCount)
     }
 
     val accountStart: Int
-        get() = Math.max(0, 3 - accountsCount)
+        get() = max(0, 3 - accountsCount)
 
     val accountsCount: Int
         get() {
             val accounts = this.accounts ?: return 0
-            return Math.max(0, accounts.size - 1)
+            return max(0, accounts.size - 1)
         }
 
     override fun getPageWidth(position: Int): Float {

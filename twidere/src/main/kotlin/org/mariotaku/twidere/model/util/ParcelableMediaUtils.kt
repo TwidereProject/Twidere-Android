@@ -157,10 +157,10 @@ object ParcelableMediaUtils {
     }
 
     fun getPrimaryMedia(status: ParcelableStatus): Array<ParcelableMedia>? {
-        if (status.is_quote && status.media.isNullOrEmpty()) {
-            return status.quoted_media
+        return if (status.is_quote && status.media.isNullOrEmpty()) {
+            status.quoted_media
         } else {
-            return status.media
+            status.media
         }
     }
 

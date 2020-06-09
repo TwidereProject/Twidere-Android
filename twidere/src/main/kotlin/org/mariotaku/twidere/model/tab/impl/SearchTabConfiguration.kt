@@ -49,7 +49,7 @@ class SearchTabConfiguration : TabConfiguration() {
             StringExtraConfiguration(EXTRA_QUERY, R.string.search_statuses, null).maxLines(1).headerTitle(R.string.query)
     )
 
-    override fun applyExtraConfigurationTo(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun applyExtraConfigurationTo(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val arguments = tab.arguments as TextQueryArguments
         when (extraConf.key) {
             EXTRA_QUERY -> {
@@ -60,7 +60,7 @@ class SearchTabConfiguration : TabConfiguration() {
         return true
     }
 
-    override fun readExtraConfigurationFrom(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun readExtraConfigurationFrom(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val arguments = tab.arguments as? TextQueryArguments ?: return false
         when (extraConf.key) {
             EXTRA_QUERY -> {

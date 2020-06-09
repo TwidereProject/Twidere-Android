@@ -90,6 +90,7 @@ val tabPositionKey = KStringKey(KEY_TAB_POSITION, SharedPreferenceConstants.DEFA
 val yandexKeyKey = KStringKey(SharedPreferenceConstants.KEY_YANDEX_KEY, TwidereConstants.YANDEX_KEY)
 val autoHideTabs = KBooleanKey(SharedPreferenceConstants.KEY_AUTO_HIDE_TABS, true)
 val hideCardNumbersKey = KBooleanKey(KEY_HIDE_CARD_NUMBERS, false)
+val showLinkPreviewKey = KBooleanKey(KEY_SHOW_LINK_PREVIEW, false)
 
 
 object cacheSizeLimitKey : KSimpleKey<Int>(KEY_CACHE_SIZE_LIMIT, 300) {
@@ -146,10 +147,10 @@ object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ImageShap
 
 object mediaPreviewStyleKey : KSimpleKey<Int>(KEY_MEDIA_PREVIEW_STYLE, PreviewStyle.CROP) {
     override fun read(preferences: SharedPreferences): Int {
-        when (preferences.getString(key, null)) {
-            VALUE_MEDIA_PREVIEW_STYLE_SCALE -> return PreviewStyle.SCALE
-            VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE -> return PreviewStyle.ACTUAL_SIZE
-            else -> return PreviewStyle.CROP
+        return when (preferences.getString(key, null)) {
+            VALUE_MEDIA_PREVIEW_STYLE_SCALE -> PreviewStyle.SCALE
+            VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE -> PreviewStyle.ACTUAL_SIZE
+            else -> PreviewStyle.CROP
         }
     }
 

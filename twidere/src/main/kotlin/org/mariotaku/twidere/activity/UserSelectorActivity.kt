@@ -109,12 +109,15 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUser>> {
         val accountKey = args?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)!!
-        val query = args?.getString(EXTRA_QUERY).orEmpty()
-        val fromCache = args?.getBoolean(EXTRA_FROM_CACHE)
+        val query = args.getString(EXTRA_QUERY).orEmpty()
+        val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
         if (!fromCache) {
             showProgress()
         }
-        return CacheUserSearchLoader(this, accountKey, query, !fromCache, true, true)
+        return CacheUserSearchLoader(this, accountKey, query, !fromCache,
+            fromCache = true,
+            fromUser = true
+        )
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>>) {
@@ -126,12 +129,16 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         listContainer.visibility = View.VISIBLE
         adapter.setData(data, true)
         loader as CacheUserSearchLoader
-        if (data.isNotNullOrEmpty()) {
-            showList()
-        } else if (loader.query.isEmpty()) {
-            showSearchHint()
-        } else {
-            showNotFound()
+        when {
+            data.isNotNullOrEmpty() -> {
+                showList()
+            }
+            loader.query.isEmpty() -> {
+                showSearchHint()
+            }
+            else -> {
+                showNotFound()
+            }
         }
     }
 

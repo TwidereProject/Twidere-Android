@@ -446,6 +446,7 @@
 
     <string name="hide_card_actions">Hide card actions</string>
     <string name="hide_card_numbers">Hide card numbers</string>
+    <string name="show_link_preview">Show link preview</string>
     <string name="hide_quotes">Hide quotes</string>
     <string name="hide_replies">Hide replies</string>
     <string name="hide_retweets">Hide retweets</string>

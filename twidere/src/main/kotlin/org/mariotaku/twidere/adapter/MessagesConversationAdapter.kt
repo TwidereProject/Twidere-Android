@@ -120,8 +120,7 @@ class MessagesConversationAdapter(
             }
             ITEM_LOAD_OLDER_INDICATOR -> {
                 val view = inflater.inflate(LoadIndicatorViewHolder.layoutResource, parent, false)
-                val holder = LoadIndicatorViewHolder(view)
-                return holder
+                return LoadIndicatorViewHolder(view)
             }
         }
         throw UnsupportedOperationException()
@@ -151,20 +150,19 @@ class MessagesConversationAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val countIndex = itemCounts.getItemCountIndex(position)
-        when (countIndex) {
+        return when (val countIndex = itemCounts.getItemCountIndex(position)) {
             ITEM_START_MESSAGE -> when (getMessage(position, reuse = true).message_type) {
                 MessageType.STICKER -> {
-                    return ITEM_TYPE_STICKER_MESSAGE
+                    ITEM_TYPE_STICKER_MESSAGE
                 }
                 MessageType.CONVERSATION_CREATE, MessageType.JOIN_CONVERSATION,
                 MessageType.PARTICIPANTS_LEAVE, MessageType.PARTICIPANTS_JOIN,
                 MessageType.CONVERSATION_NAME_UPDATE, MessageType.CONVERSATION_AVATAR_UPDATE -> {
-                    return ITEM_TYPE_NOTICE_MESSAGE
+                    ITEM_TYPE_NOTICE_MESSAGE
                 }
-                else -> return ITEM_TYPE_TEXT_MESSAGE
+                else -> ITEM_TYPE_TEXT_MESSAGE
             }
-            ITEM_START_LOAD_OLDER -> return ITEM_LOAD_OLDER_INDICATOR
+            ITEM_START_LOAD_OLDER -> ITEM_LOAD_OLDER_INDICATOR
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
     }

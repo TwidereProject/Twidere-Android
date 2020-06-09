@@ -50,7 +50,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val users = users
         val userList = userList
         if (users == null || userList == null) throw NullPointerException()
@@ -90,7 +90,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
 
     companion object {
 
-        val FRAGMENT_TAG = "destroy_user_list_member"
+        const val FRAGMENT_TAG = "destroy_user_list_member"
 
         fun show(fm: FragmentManager, userList: ParcelableUserList,
                  vararg users: ParcelableUser): DeleteUserListMembersDialogFragment {

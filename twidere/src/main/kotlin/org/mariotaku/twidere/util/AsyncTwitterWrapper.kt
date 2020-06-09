@@ -60,7 +60,7 @@ import org.mariotaku.twidere.util.collection.CompactHashSet
 
 class AsyncTwitterWrapper(
         val context: Context,
-        private val bus: Bus,
+        bus: Bus,
         private val preferences: SharedPreferences,
         private val notificationManager: NotificationManagerWrapper
 ) {

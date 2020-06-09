@@ -34,7 +34,7 @@ open class AbsDeleteMediaTask<Callback>(
     val context: Context? get() = contextRef.get()
 
     override fun doLongOperation(params: Unit?): BooleanArray {
-        val context = contextRef.get() ?: return kotlin.BooleanArray(sources.size) { false }
+        val context = contextRef.get() ?: return BooleanArray(sources.size) { false }
         return BooleanArray(sources.size) { Utils.deleteMedia(context, sources[it]) }
     }
 

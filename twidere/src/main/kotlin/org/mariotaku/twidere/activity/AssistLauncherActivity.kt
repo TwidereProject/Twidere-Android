@@ -13,8 +13,7 @@ class AssistLauncherActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val composeNowAction = prefs.getString(KEY_COMPOSE_NOW_ACTION, VALUE_COMPOSE_NOW_ACTION_COMPOSE)
-        val action = when (composeNowAction) {
+        val action = when (prefs.getString(KEY_COMPOSE_NOW_ACTION, VALUE_COMPOSE_NOW_ACTION_COMPOSE)) {
             VALUE_COMPOSE_NOW_ACTION_TAKE_PHOTO -> INTENT_ACTION_COMPOSE_TAKE_PHOTO
             VALUE_COMPOSE_NOW_ACTION_PICK_IMAGE -> INTENT_ACTION_COMPOSE_PICK_IMAGE
             else -> INTENT_ACTION_COMPOSE

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            tools:src="@mipmap/ic_launcher"
+            android:id="@+id/link_preview_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="Google"
+            android:id="@+id/link_preview_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingBottom="8dp"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:id="@+id/link_preview_link"
+            tools:text="https://www.google.com"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <org.mariotaku.chameleon.view.ChameleonProgressBar
+            android:visibility="gone"
+            android:id="@+id/link_preview_loader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</merge>

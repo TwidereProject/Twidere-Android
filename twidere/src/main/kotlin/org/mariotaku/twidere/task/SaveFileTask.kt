@@ -54,7 +54,7 @@ abstract class SaveFileTask(
 
     override fun onPostExecute(result: SaveFileResult?) {
         dismissProgress()
-        if (result != null && result.savedFile != null) {
+        if (result?.savedFile != null) {
             onFileSaved(result.savedFile!!, result.mimeType)
         } else {
             onFileSaveFailed()

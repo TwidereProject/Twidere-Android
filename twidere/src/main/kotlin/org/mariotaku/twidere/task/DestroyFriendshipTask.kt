@@ -55,7 +55,7 @@ class DestroyFriendshipTask(context: Context) : AbsFriendshipOperationTask(conte
         resolver.delete(Statuses.CONTENT_URI, where.sql, whereArgs)
     }
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         val message = context.getString(R.string.unfollowed_user, manager.getDisplayName(user, nameFirst))
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

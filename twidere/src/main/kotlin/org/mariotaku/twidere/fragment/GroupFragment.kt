@@ -53,7 +53,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-        return ParcelableGroupLoader(context!!, omitIntentExtra, arguments, accountKey, groupId,
+        return ParcelableGroupLoader(requireContext(), omitIntentExtra, arguments, accountKey, groupId,
                 groupName)
     }
 
@@ -113,12 +113,16 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
                 val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
                         throw MicroBlogException("No account")
                 val group: Group
-                if (groupId != null) {
-                    group = twitter.showGroup(groupId)
-                } else if (groupName != null) {
-                    group = twitter.showGroupByName(groupName)
-                } else {
-                    return SingleResponse()
+                group = when {
+                    groupId != null -> {
+                        twitter.showGroup(groupId)
+                    }
+                    groupName != null -> {
+                        twitter.showGroupByName(groupName)
+                    }
+                    else -> {
+                        return SingleResponse()
+                    }
                 }
                 return SingleResponse.getInstance(ParcelableGroupUtils.from(group, accountKey, 0,
                         group.isMember))

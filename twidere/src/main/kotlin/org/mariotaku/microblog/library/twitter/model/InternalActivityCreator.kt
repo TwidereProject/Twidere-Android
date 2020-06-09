@@ -35,20 +35,24 @@ object InternalActivityCreator {
         activity.maxSortPosition = activity.minSortPosition
         activity.createdAt = status.getCreatedAt()
 
-        if (status.getInReplyToUserId() == accountId) {
-            activity.action = Activity.Action.REPLY
-            activity.targetStatuses = arrayOf(status)
+        when {
+            status.getInReplyToUserId() == accountId -> {
+                activity.action = Activity.Action.REPLY
+                activity.targetStatuses = arrayOf(status)
 
-            //TODO set target statuses (in reply to status)
-            activity.targetObjectStatuses = arrayOfNulls<Status>(0)
-        } else if (status.quotedStatus?.user?.id == accountId) {
-            activity.action = Activity.Action.QUOTE
-            activity.targetStatuses = arrayOf(status)
-            activity.targetObjectStatuses = arrayOfNulls<Status>(0)
-        } else {
-            activity.action = Activity.Action.MENTION
-            activity.targetUsers = arrayOfNulls<User>(0)
-            activity.targetObjectStatuses = arrayOf(status)
+                //TODO set target statuses (in reply to status)
+                activity.targetObjectStatuses = arrayOfNulls<Status>(0)
+            }
+            status.quotedStatus?.user?.id == accountId -> {
+                activity.action = Activity.Action.QUOTE
+                activity.targetStatuses = arrayOf(status)
+                activity.targetObjectStatuses = arrayOfNulls<Status>(0)
+            }
+            else -> {
+                activity.action = Activity.Action.MENTION
+                activity.targetUsers = arrayOfNulls<User>(0)
+                activity.targetObjectStatuses = arrayOf(status)
+            }
         }
         activity.sourcesSize = 1
         activity.sources = arrayOf(status.getUser())

@@ -132,7 +132,7 @@ public class MouseScrollDirectionDecider {
     }
 
     @SuppressLint("ViewConstructor")
-    private class InternalHorizontalScrollView extends HorizontalScrollView {
+    private static class InternalHorizontalScrollView extends HorizontalScrollView {
 
         private final int factor;
         private final MouseScrollDirectionDecider decider;

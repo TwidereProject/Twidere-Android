@@ -70,6 +70,7 @@ import org.mariotaku.twidere.util.deleteDrafts
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 /**
  * Intent service for lengthy operations like update status/send DM.
@@ -215,15 +216,13 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
 
     private fun handleUpdateStatusIntent(intent: Intent) {
         val status = intent.getParcelableExtra<ParcelableStatusUpdate>(EXTRA_STATUS)
-        val statusParcelables = intent.getNullableTypedArrayExtra<ParcelableStatusUpdate>(EXTRA_STATUSES)
         val scheduleInfo = intent.getParcelableExtra<ScheduleInfo>(EXTRA_SCHEDULE_INFO)
         val statuses: Array<ParcelableStatusUpdate>
-        if (statusParcelables != null) {
-            statuses = statusParcelables
-        } else if (status != null) {
-            statuses = arrayOf(status)
-        } else
-            return
+        statuses = intent.getNullableTypedArrayExtra(EXTRA_STATUSES)
+            ?: if (status != null) {
+                arrayOf(status)
+            } else
+                return
         @Draft.Action
         val actionType = intent.getStringExtra(EXTRA_ACTION)
         statuses.forEach { it.draft_action = actionType }
@@ -334,10 +333,10 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 var streamReadLength = 0
                 var segmentIndex = 0
                 while (streamReadLength < length) {
-                    val currentBulkSize = Math.min(BULK_SIZE, length - streamReadLength).toInt()
+                    val currentBulkSize = min(BULK_SIZE, length - streamReadLength).toInt()
                     val output = ByteArrayOutputStream()
                     Utils.copyStream(stream, output, currentBulkSize)
-                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT);
+                    val data = Base64.encodeToString(output.toByteArray(), Base64.DEFAULT)
                     upload.appendUploadMedia(response.id, segmentIndex, data)
                     output.close()
                     segmentIndex++
@@ -375,9 +374,9 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     }
 
     private fun shouldWaitForProcess(info: ProcessingInfo): Boolean {
-        when (info.state) {
-            ProcessingInfo.State.PENDING, ProcessingInfo.State.IN_PROGRESS -> return true
-            else -> return false
+        return when (info.state) {
+            ProcessingInfo.State.PENDING, ProcessingInfo.State.IN_PROGRESS -> true
+            else -> false
         }
     }
 
@@ -400,7 +399,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     }
 
     companion object {
-        private val BULK_SIZE = (128 * 1024).toLong() // 128KiB
+        private const val BULK_SIZE = (128 * 1024).toLong() // 128KiB
 
         private fun updateSendDirectMessageNotification(context: Context,
                 builder: NotificationCompat.Builder,

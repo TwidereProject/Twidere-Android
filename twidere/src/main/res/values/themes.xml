@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Twidere" parent="Theme.Twidere.DayNight">
         <item name="darkThemeResource">@style/Theme.Twidere.Dark</item>
@@ -41,7 +41,7 @@
         <!-- Window attributes -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
 
         <item name="windowActionBarOverlay">true</item>
         <item name="actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>

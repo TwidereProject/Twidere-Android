@@ -111,7 +111,7 @@ class ExtensionsListLoader(
 
         constructor(info: ApplicationInfo, pm: PackageManager) : this(
                 info.packageName,
-                info.loadLabel(pm) ?: info.packageName,
+                info.loadLabel(pm),
                 info.loadDescription(pm),
                 info.loadIcon(pm),
                 info.metaData?.getString(METADATA_KEY_EXTENSION_PERMISSIONS)?.split('|')?.filterNot(String::isEmpty)?.toTypedArray(),

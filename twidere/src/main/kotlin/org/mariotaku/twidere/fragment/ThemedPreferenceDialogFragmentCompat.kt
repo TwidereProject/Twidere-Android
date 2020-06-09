@@ -29,7 +29,7 @@ abstract class ThemedPreferenceDialogFragmentCompat : PreferenceDialogFragmentCo
         val context = context
         val preference = preference
         onClick(null, DialogInterface.BUTTON_NEGATIVE)
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
                 .setTitle(preference.dialogTitle)
                 .setIcon(preference.dialogIcon)
                 .setPositiveButton(preference.positiveButtonText, this)

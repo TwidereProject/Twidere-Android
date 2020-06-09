@@ -65,7 +65,7 @@ class AccountsSpinnerAdapter(
             text1?.spannable = item.user.name
             text2?.visibility = View.VISIBLE
             val showType = objects.filter { it.type != null }.groupBy { it.type }.count().let { it > 1 }
-            text2?.spannable = if (item.type == AccountType.MASTODON) {
+            text2?.spannable = if (item.type == AccountType.MASTODON || item.type == AccountType.STATUSNET) {
                 item.account.name
             } else {
                 "${if (showType) item.type else ""}@${item.user.screen_name}"

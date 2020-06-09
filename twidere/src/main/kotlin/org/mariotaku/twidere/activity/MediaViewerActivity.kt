@@ -26,7 +26,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
-import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -75,6 +74,8 @@ import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
 import kotlin.concurrent.thread
+import kotlin.math.abs
+import kotlin.math.roundToInt
 import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener,
@@ -146,7 +147,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                     activityLayout.statusBarAlpha = offset
                 }
                 try {
-                    actionBar.hideOffset = Math.round(controlBarHeight * (1f - offset))
+                    actionBar.hideOffset = (controlBarHeight * (1f - offset)).roundToInt()
                 } catch (e: UnsupportedOperationException) {
                     // Some device will throw this exception
                     hideOffsetNotSupported = true
@@ -181,6 +182,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_SHARE_MEDIA -> {
                 ShareProvider.clearTempFiles(this)
@@ -367,10 +369,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             ParcelableMedia.Type.IMAGE -> {
                 val mediaUrl = media.media_url ?: return Fragment.instantiate(this, ExternalBrowserPageFragment::class.java.name, args) as MediaViewerFragment
                 args.putParcelable(EXTRA_MEDIA_URI, Uri.parse(mediaUrl))
-                if (mediaUrl.endsWith(".gif")) {
-                    return Fragment.instantiate(this, GifPageFragment::class.java.name, args) as MediaViewerFragment
+                return if (mediaUrl.endsWith(".gif")) {
+                    Fragment.instantiate(this, GifPageFragment::class.java.name, args) as MediaViewerFragment
                 } else {
-                    return Fragment.instantiate(this, ImagePageFragment::class.java.name, args) as MediaViewerFragment
+                    Fragment.instantiate(this, ImagePageFragment::class.java.name, args) as MediaViewerFragment
                 }
             }
             ParcelableMedia.Type.ANIMATED_GIF, ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
@@ -408,10 +410,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun onSwipeOffsetChanged(offset: Int) {
-        val offsetFactor = 1 - (Math.abs(offset).toFloat() / swipeContainer.height)
+        val offsetFactor = 1 - (abs(offset).toFloat() / swipeContainer.height)
         swipeContainer.backgroundAlpha = offsetFactor
         val colorToolbar = overrideTheme.colorToolbar
-        val alpha = Math.round(Color.alpha(colorToolbar) * offsetFactor).coerceIn(0..255)
+        val alpha = (Color.alpha(colorToolbar) * offsetFactor).roundToInt().coerceIn(0..255)
         activityLayout.statusBarAlpha = alpha / 255f
     }
 
@@ -450,11 +452,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     private fun instantiateMediaViewerFragment(args: Bundle): MediaViewerFragment {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            Fragment.instantiate(this, VideoPageFragment::class.java.name, args) as MediaViewerFragment
-        } else {
-            Fragment.instantiate(this, ExoPlayerPageFragment::class.java.name, args) as MediaViewerFragment
-        }
+        return Fragment.instantiate(this, ExoPlayerPageFragment::class.java.name, args) as MediaViewerFragment
     }
 
     private fun processShareIntent(intent: Intent) {
@@ -468,11 +466,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (checkAllSelfPermissionsGranted(AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
             saveToStorage()
         } else {
-            val permissions: Array<String>
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE, AndroidPermissions.READ_EXTERNAL_STORAGE)
+            val permissions: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE, AndroidPermissions.READ_EXTERNAL_STORAGE)
             } else {
-                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
+                arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
             }
             PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_save_media),
                     permissions, REQUEST_PERMISSION_SAVE_MEDIA)
@@ -503,8 +500,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     private fun saveToStorage() {
         val fileInfo = getCurrentCacheFileInfo(saveToStoragePosition) ?: return
-        val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
-        val pubDir = when (type) {
+        val pubDir = when ((fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType) {
             CacheFileType.VIDEO -> {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
@@ -640,10 +636,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
     companion object {
 
-        private val REQUEST_SHARE_MEDIA = 201
-        private val REQUEST_PERMISSION_SAVE_MEDIA = 202
-        private val REQUEST_PERMISSION_SHARE_MEDIA = 203
-        private val REQUEST_SELECT_SAVE_MEDIA = 204
+        private const val REQUEST_SHARE_MEDIA = 201
+        private const val REQUEST_PERMISSION_SAVE_MEDIA = 202
+        private const val REQUEST_PERMISSION_SHARE_MEDIA = 203
+        private const val REQUEST_SELECT_SAVE_MEDIA = 204
 
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
         const val FLAG_SYSTEM_UI_HIDE_BARS = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or

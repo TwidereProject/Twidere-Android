@@ -49,12 +49,16 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
             val result = ArrayList<String>()
             result.add(AUTHORITY_GROUP_TIMELINE)
             result.add("account=$accountKey")
-            if (groupId != null) {
-                result.add("group_id=$groupId")
-            } else if (groupName != null) {
-                result.add("group_name=$groupName")
-            } else {
-                return null
+            when {
+                groupId != null -> {
+                    result.add("group_id=$groupId")
+                }
+                groupName != null -> {
+                    result.add("group_name=$groupName")
+                }
+                else -> {
+                    return null
+                }
             }
             return result.toTypedArray()
         }
@@ -115,7 +119,7 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
         val groupName = args.getString(EXTRA_GROUP_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return GroupTimelineLoader(activity!!, accountKey, groupId, groupName, adapterData,
+        return GroupTimelineLoader(requireActivity(), accountKey, groupId, groupName, adapterData,
                 savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
     }
 

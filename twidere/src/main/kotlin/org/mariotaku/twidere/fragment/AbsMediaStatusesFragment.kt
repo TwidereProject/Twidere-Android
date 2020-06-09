@@ -88,7 +88,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableStatus>?> {
         val fromUser = args?.getBoolean(EXTRA_FROM_USER)
         args?.remove(EXTRA_FROM_USER)
-        return onCreateStatusesLoader(activity!!, args!!, fromUser!!)
+        return onCreateStatusesLoader(requireActivity(), args!!, fromUser!!)
     }
 
     final override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
@@ -146,7 +146,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         val maxId = pagination?.maxId?.takeIf(String::isNotEmpty)
         val sinceId = pagination?.sinceId?.takeIf(String::isNotEmpty)
         if (sinceId == null && maxId != null) {
-            if (data != null && !data.isEmpty()) {
+            if (data != null && data.isNotEmpty()) {
                 return changed
             }
         }

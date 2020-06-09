@@ -64,7 +64,7 @@ public class CardDataMap implements ValueMap {
     @Override
     public String[] keys() {
         final Set<String> keySet = map.keySet();
-        return keySet.toArray(new String[keySet.size()]);
+        return keySet.toArray(new String[0]);
     }
 
     @Override

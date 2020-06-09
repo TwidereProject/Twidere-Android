@@ -23,7 +23,6 @@ import android.content.Context
 import android.os.Bundle
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.Loader
-import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
 import androidx.loader.app.hasRunningLoadersSafe
 import com.bumptech.glide.RequestManager
@@ -72,7 +71,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         get() = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     protected fun hasMoreData(data: List<ParcelableGroup>?): Boolean {
-        return data == null || !data.isEmpty()
+        return data == null || data.isNotEmpty()
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableGroup>?>, data: List<ParcelableGroup>?) {
@@ -132,7 +131,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableGroup>?> {
         val fromUser = args?.getBoolean(EXTRA_FROM_USER)
         args?.remove(EXTRA_FROM_USER)
-        return onCreateUserListsLoader(activity!!, args!!, fromUser!!)
+        return onCreateUserListsLoader(requireActivity(), args!!, fromUser!!)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableGroup>?>) {

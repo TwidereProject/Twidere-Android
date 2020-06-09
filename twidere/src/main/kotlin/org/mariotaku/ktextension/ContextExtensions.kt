@@ -20,11 +20,11 @@ fun Context.checkAnySelfPermissionsGranted(vararg permissions: String): Boolean 
 
 fun Context.unregisterReceiverSafe(receiver: BroadcastReceiver?): Boolean {
     if (receiver == null) return false
-    try {
+    return try {
         unregisterReceiver(receiver)
-        return true
+        true
     } catch (e: IllegalArgumentException) {
-        return false
+        false
     }
 }
 

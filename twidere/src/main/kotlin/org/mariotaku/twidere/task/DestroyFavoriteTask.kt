@@ -60,7 +60,7 @@ class DestroyFavoriteTask(
     }
 
     override fun beforeExecute() {
-        val hashCode = AsyncTwitterWrapper.calculateHashCode(accountKey, statusId)
+        val hashCode = calculateHashCode(accountKey, statusId)
         if (!destroyingFavoriteIds.contains(hashCode)) {
             destroyingFavoriteIds.add(hashCode)
         }
@@ -68,12 +68,11 @@ class DestroyFavoriteTask(
     }
 
     override fun afterExecute(callback: Any?, result: ParcelableStatus?, exception: MicroBlogException?) {
-        destroyingFavoriteIds.remove(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
+        destroyingFavoriteIds.remove(calculateHashCode(accountKey, statusId))
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY, accountKey, statusId)
         taskEvent.isFinished = true
         if (result != null) {
-            val status = result
-            taskEvent.status = status
+            taskEvent.status = result
             taskEvent.isSucceeded = true
             Toast.makeText(context, R.string.message_toast_status_unfavorited, Toast.LENGTH_SHORT).show()
         } else {

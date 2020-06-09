@@ -53,9 +53,6 @@ class PromotionOfferViewController : PremiumDashboardActivity.ExtraFeatureViewCo
 
     private fun enablePromotions() {
         preferences[promotionsEnabledKey] = true
-        val activity = ChameleonUtils.getActivity(context)
-        if (activity != null) {
-            activity.recreate()
-        }
+        ChameleonUtils.getActivity(context)?.recreate()
     }
 }

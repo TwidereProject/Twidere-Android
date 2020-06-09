@@ -47,7 +47,7 @@ class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
         val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserListOwnershipsLoader(activity!!, accountKey, userKey, screenName, data).apply {
+        return UserListOwnershipsLoader(requireActivity(), accountKey, userKey, screenName, data).apply {
             pagination = args.getParcelable(EXTRA_PAGINATION)
         }
     }
@@ -82,7 +82,7 @@ class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
             menu.setItemAvailability(R.id.new_user_list, true)
         } else {
             menu.setItemAvailability(R.id.new_user_list, screenName != null &&
-                    Utils.isMyAccount(activity!!, screenName))
+                    Utils.isMyAccount(requireActivity(), screenName))
         }
     }
 

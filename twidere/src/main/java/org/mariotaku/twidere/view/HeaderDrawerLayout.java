@@ -409,13 +409,11 @@ public class HeaderDrawerLayout extends ViewGroup {
             if (dy > 0 && mDrawer.canScrollCallback(-dy) && mDrawer.isTouchingScrollableContent()) {
                 if (!mDrawer.isUsingDragHelper()) {
                     // Scrolling up while list still has space to scroll, so make header still
-                    mScrollingHeaderByHelper = false;
-                    return current;
                 } else {
                     mDrawer.scrollByCallback(-dy);
-                    mScrollingHeaderByHelper = false;
-                    return current;
                 }
+                mScrollingHeaderByHelper = false;
+                return current;
             }
             final int min = mDrawer.getHeaderTopMinimum(), max = mDrawer.getHeaderTopMaximum();
             if (top < min && mDrawer.isTouchingScrollableContent() && mDrawer.isUsingDragHelper()) {

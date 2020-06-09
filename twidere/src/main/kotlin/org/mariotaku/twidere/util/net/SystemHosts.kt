@@ -55,7 +55,7 @@ class SystemHosts {
 
     companion object {
 
-        private val HOSTS_PATH = "/system/etc/hosts"
+        private const val HOSTS_PATH = "/system/etc/hosts"
     }
 
 }

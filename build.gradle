@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.android.tools.build:gradle:4.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -17,13 +17,13 @@ buildscript {
 allprojects {
     ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 512
-        projectVersionName = '4.1.3'
+        projectVersionCode = 513
+        projectVersionName = '4.1.4'
 
         globalCompileSdkVersion = 29
         globalBuildToolsVersion = "29.0.3"
 
-        globalMinSdkVersion = 19
+        globalMinSdkVersion = 16
         globalTargetSdkVersion = 29
     }
 
@@ -39,54 +39,18 @@ subprojects {
     buildscript {
         ext {
             kotlinVersion = '1.3.72'
-            pluginVersions = [
-                    AndroidSvgDrawable: '3.0.0',
-                    PlayServices      : '4.3.3',
-            ]
-            libVersions = [
+            sharedVersions = [
                     Kotlin               : "${kotlinVersion}",
-                    SupportTest          : '1.0.0',
-                    MariotakuCommons     : '0.9.20',
-                    RestFu               : '0.9.60',
-                    ObjectCursor         : '0.9.21',
-                    PlayServices         : '17.0.0',
-                    MapsUtils            : '0.6.2',
-                    DropboxCoreSdk       : '3.1.3',
-                    GoogleDriveApi       : 'v3-rev193-1.25.0',
-                    Exoplayer            : '2.11.4',
-                    Toro                 : '2.1.0',
+
                     LoganSquare          : '1.3.7',
-                    IABv3                : '1.1.0',
-                    Mime4J               : '0.7.2',
-                    OkHttp               : '3.8.1',
-                    Stetho               : '1.5.0',
-                    OSMDroid             : '5.6.5',
-                    LeakCanary           : '2.1',
-                    TwitterText          : '1.14.7',
-                    MediaViewerLibrary   : '0.9.23',
-                    MultiValueSwitch     : '0.9.8',
-                    PickNCrop            : '0.9.27',
-                    AndroidGIFDrawable   : '1.2.6',
-                    KPreferences         : '0.9.7',
-                    Kovenant             : '3.3.0',
+                    Jackson              : '2.7.4',
                     ParcelablePlease     : '1.0.2',
-                    Chameleon            : '0.9.28',
-                    UniqR                : '0.9.4',
-                    SQLiteQB             : '0.9.15',
-                    Glide                : '4.11.0',
-                    GlideOkHttp3         : '4.11.0',
-                    GlideTransformations : '4.1.0',
-                    AndroidImageCropper  : '2.4.6',
+
                     ExportablePreferences: '0.9.7',
-                    ACRA                 : '4.9.2',
-                    AbstractTask         : '0.9.5',
-                    Dagger               : '2.11',
-                    StethoBeanShellREPL  : '0.1',
-                    MessageBubbleView    : '3.5',
+                    MariotakuCommons     : '0.9.20',
+                    ObjectCursor         : '0.9.21',
+                    RestFu               : '0.9.60',
             ]
-
         }
-
     }
-
 }

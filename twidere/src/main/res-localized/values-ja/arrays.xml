@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>ホーム</item>
+        <item>みんなの反応</item>
+        <item>ダイレクトメッセージ</item>
+        <item>トレンド</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>ツイート</item>
+        <item>写真を撮る</item>
+        <item>メディアを追加</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>つながり</item>
+        <item>ダイレクトメッセージ</item>
+        <item>トレンド</item>
+        <item>保存した検索</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>カメラ</item>
+        <item>ギャラリー</item>
+        <item>クリップボード</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>切り取り</item>
+        <item>拡大縮小</item>
+        <item>実際のサイズ</item>
+    </string-array>
+    <string-array name="entries_navbar_style">
+        <item>デフォルト</item>
+        <item>透明</item>
+        <item>色付き</item>
+    </string-array>
+    <string-array name="entries_tab_position">
+        <item>上部</item>
+        <item>下部</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>ホーム</item>
+        <item>つながり</item>
+        <item>ダイレクトメッセージ</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>円形</item>
+        <item>四角</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>リバースプロキシ</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>ユーザー</item>
+        <item>ユーザータイムライン</item>
+        <item>ユーザーのお気に入り</item>
+        <item>リスト</item>
+        <item>リストタイムライン</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3分</item>
+        <item>5分</item>
+        <item>10分</item>
+        <item>15分</item>
+        <item>30分</item>
+        <item>1時間</item>
+        <item>2時間</item>
+        <item>4時間</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>狭い</item>
+        <item>普通</item>
+        <item>広い</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>アイコン</item>
+        <item>ラベル</item>
+        <item>アイコンとラベル</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>明るい</item>
+        <item>暗い</item>
+        <item>自動</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>デフォルト</item>
+        <item>モノクロ</item>
+        <item>背景透過</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>リプライ</item>
+        <item>リツイート</item>
+    </string-array>
+</resources>

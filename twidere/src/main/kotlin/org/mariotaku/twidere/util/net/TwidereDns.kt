@@ -137,7 +137,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
     private fun dumpLog(logger: TimingLogger, addresses: List<InetAddress>) {
         if (BuildConfig.DEBUG) return
-        Log.v(RESOLVER_LOGTAG, "Resolved " + addresses)
+        Log.v(RESOLVER_LOGTAG, "Resolved $addresses")
         logger.dumpToLog()
     }
 
@@ -155,10 +155,10 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
     }
 
     private fun fromSystemHosts(host: String): List<InetAddress>? {
-        try {
-            return systemHosts.resolve(host)
+        return try {
+            systemHosts.resolve(host)
         } catch (e: IOException) {
-            return null
+            null
         }
 
     }
@@ -236,7 +236,7 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
     companion object {
 
-        private val RESOLVER_LOGTAG = "TwidereDns"
+        private const val RESOLVER_LOGTAG = "TwidereDns"
 
 
         private fun hostMatches(host: String?, rule: String?): Boolean {
@@ -303,11 +303,10 @@ class TwidereDns(val context: Context, private val preferences: SharedPreference
 
         @Throws(UnknownHostException::class)
         private fun addrFromRecord(name: String, r: Record): InetAddress {
-            val addr: InetAddress
-            if (r is ARecord) {
-                addr = r.address
+            val addr: InetAddress = if (r is ARecord) {
+                r.address
             } else {
-                addr = (r as AAAARecord).address
+                (r as AAAARecord).address
             }
             return InetAddress.getByAddress(name, addr.address)
         }

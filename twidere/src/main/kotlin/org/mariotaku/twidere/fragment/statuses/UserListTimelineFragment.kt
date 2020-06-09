@@ -49,17 +49,21 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
             val result = ArrayList<String>()
             result.add(TwidereConstants.AUTHORITY_USER_LIST_TIMELINE)
             result.add("account=$accountKey")
-            if (listId != null) {
-                result.add("list_id=$listId")
-            } else if (listName != null) {
-                if (userKey != null) {
-                    result.add("user_id=$userKey")
-                } else if (screenName != null) {
-                    result.add("screen_name=$screenName")
+            when {
+                listId != null -> {
+                    result.add("list_id=$listId")
                 }
-                return null
-            } else {
-                return null
+                listName != null -> {
+                    if (userKey != null) {
+                        result.add("user_id=$userKey")
+                    } else if (screenName != null) {
+                        result.add("screen_name=$screenName")
+                    }
+                    return null
+                }
+                else -> {
+                    return null
+                }
             }
             return result.toTypedArray()
         }
@@ -72,22 +76,30 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
             if (tabPosition < 0) return null
             val listId = arguments.getString(EXTRA_LIST_ID)
             val listName = arguments.getString(EXTRA_LIST_NAME)
-            if (listId != null) {
-                sb.append(listId)
-            } else if (listName != null) {
-                val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
-                val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-                if (userKey != null) {
-                    sb.append(userKey)
-                } else if (screenName != null) {
-                    sb.append(screenName)
-                } else {
+            when {
+                listId != null -> {
+                    sb.append(listId)
+                }
+                listName != null -> {
+                    val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
+                    val screenName = arguments.getString(EXTRA_SCREEN_NAME)
+                    when {
+                        userKey != null -> {
+                            sb.append(userKey)
+                        }
+                        screenName != null -> {
+                            sb.append(screenName)
+                        }
+                        else -> {
+                            return null
+                        }
+                    }
+                    sb.append('_')
+                    sb.append(listName)
+                }
+                else -> {
                     return null
                 }
-                sb.append('_')
-                sb.append(listName)
-            } else {
-                return null
             }
             return sb.toString()
         }
@@ -103,7 +115,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserListTimelineLoader(activity!!, accountKey, listId, userKey, screenName, listName,
+        return UserListTimelineLoader(requireActivity(), accountKey, listId, userKey, screenName, listName,
                 adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore, extras)
     }
 

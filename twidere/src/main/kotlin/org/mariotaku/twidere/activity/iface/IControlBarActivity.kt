@@ -63,12 +63,12 @@ interface IControlBarActivity {
             }
             val animator: ObjectAnimator
             val offset = activity.controlBarOffset
-            if (visible) {
+            animator = if (visible) {
                 if (offset >= 1) return
-                animator = ObjectAnimator.ofFloat(activity, ControlBarOffsetProperty, offset, 1f)
+                ObjectAnimator.ofFloat(activity, ControlBarOffsetProperty, offset, 1f)
             } else {
                 if (offset <= 0) return
-                animator = ObjectAnimator.ofFloat(activity, ControlBarOffsetProperty, offset, 0f)
+                ObjectAnimator.ofFloat(activity, ControlBarOffsetProperty, offset, 0f)
             }
             animator.interpolator = DecelerateInterpolator()
             animator.addListener(object : AnimatorListener {

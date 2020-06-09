@@ -46,7 +46,7 @@ class DestroyUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCl
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity
-        val builder = AlertDialog.Builder(context!!)
+        val builder = AlertDialog.Builder(requireContext())
         val userList = userList
         builder.setTitle(getString(R.string.delete_user_list, userList.name))
         builder.setMessage(getString(R.string.delete_user_list_confirm_message, userList.name))

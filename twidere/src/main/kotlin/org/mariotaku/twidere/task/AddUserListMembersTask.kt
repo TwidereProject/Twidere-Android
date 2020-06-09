@@ -34,16 +34,16 @@ class AddUserListMembersTask(
 
     override fun onSucceed(callback: Any?, result: ParcelableUserList) {
         val message: String
-        if (users.size == 1) {
+        message = if (users.size == 1) {
             val user = users.first()
             val nameFirst = preferences[nameFirstKey]
             val displayName = userColorNameManager.getDisplayName(user.key, user.name,
-                    user.screen_name, nameFirst)
-            message = context.getString(R.string.message_toast_added_user_to_list, displayName, result.name)
+                user.screen_name, nameFirst)
+            context.getString(R.string.message_toast_added_user_to_list, displayName, result.name)
         } else {
             val res = context.resources
-            message = res.getQuantityString(R.plurals.added_N_users_to_list, users.size, users.size,
-                    result.name)
+            res.getQuantityString(R.plurals.added_N_users_to_list, users.size, users.size,
+                result.name)
         }
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         bus.post(UserListMembersChangedEvent(UserListMembersChangedEvent.Action.ADDED, result, users))

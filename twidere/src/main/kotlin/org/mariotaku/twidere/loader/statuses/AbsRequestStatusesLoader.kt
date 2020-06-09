@@ -50,6 +50,7 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
+import kotlin.math.min
 
 abstract class AbsRequestStatusesLoader(
         context: Context,
@@ -197,8 +198,7 @@ abstract class AbsRequestStatusesLoader(
     }
 
     protected open fun List<ParcelableStatus>.foundInPagination(): Boolean {
-        val pagination = this@AbsRequestStatusesLoader.pagination
-        return when (pagination) {
+        return when (val pagination = this@AbsRequestStatusesLoader.pagination) {
             is SinceMaxPagination -> return any { it.id == pagination.maxId }
             else -> false
         }
@@ -212,7 +212,7 @@ abstract class AbsRequestStatusesLoader(
         if (key == null || data == null) return
         val databaseItemLimit = preferences[loadItemLimitKey]
         try {
-            val statuses = data.subList(0, Math.min(databaseItemLimit, data.size))
+            val statuses = data.subList(0, min(databaseItemLimit, data.size))
             jsonCache.saveList(key, statuses, ParcelableStatus::class.java)
         } catch (e: Exception) {
             // Ignore

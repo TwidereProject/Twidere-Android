@@ -38,7 +38,7 @@ fun Account.getCredentials(am: AccountManager): Credentials {
             if (token != null) return@run token
         }
         return@run null
-    } ?: throw NullPointerException("AuthToken is null for ${this}")
+    } ?: throw NullPointerException("AuthToken is null for $this")
     return parseCredentials(authToken, getCredentialsType(am))
 }
 
@@ -175,10 +175,10 @@ internal object AccountDataQueue {
             return callable.call()
         }
         val future = executor.submit(callable)
-        try {
-            return future.get(1, TimeUnit.SECONDS)
+        return try {
+            future.get(1, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
-            return manager.getUserData(account, key)
+            manager.getUserData(account, key)
         }
     }
 
@@ -190,10 +190,10 @@ internal object AccountDataQueue {
             return callable.call()
         }
         val future = executor.submit(callable)
-        try {
-            return future.get(1, TimeUnit.SECONDS)
+        return try {
+            future.get(1, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
-            return manager.peekAuthToken(account, authTokenType)
+            manager.peekAuthToken(account, authTokenType)
         }
     }
 }

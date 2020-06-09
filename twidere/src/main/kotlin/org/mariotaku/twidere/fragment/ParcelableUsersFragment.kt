@@ -124,7 +124,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUser>?> {
         val fromUser = args?.getBoolean(EXTRA_FROM_USER)
         args?.remove(EXTRA_FROM_USER)
-        return onCreateUsersLoader(activity!!, args!!, fromUser!!).apply {
+        return onCreateUsersLoader(requireActivity(), args!!, fromUser!!).apply {
             if (this is AbsRequestUsersLoader) {
                 pagination = args.getParcelable(EXTRA_PAGINATION)
             }
@@ -270,7 +270,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     protected fun hasMoreData(data: List<ParcelableUser>?): Boolean {
-        return data == null || !data.isEmpty()
+        return data == null || data.isNotEmpty()
     }
 
     protected fun createMessageBusCallback(): Any {

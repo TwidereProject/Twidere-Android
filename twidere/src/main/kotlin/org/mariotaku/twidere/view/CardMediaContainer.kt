@@ -36,6 +36,8 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.media.AuthenticatedUri
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import java.lang.ref.WeakReference
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 /**
  * Dynamic layout for media preview
@@ -63,14 +65,18 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val k = imageRes.size
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            if (child !is ImageView) {
-                child.visibility = View.GONE
-            } else if (i < k) {
-                child.setImageResource(imageRes[i])
-                child.visibility = View.VISIBLE
-            } else {
-                child.setImageDrawable(null)
-                child.visibility = View.GONE
+            when {
+                child !is ImageView -> {
+                    child.visibility = View.GONE
+                }
+                i < k -> {
+                    child.setImageResource(imageRes[i])
+                    child.visibility = View.VISIBLE
+                }
+                else -> {
+                    child.setImageDrawable(null)
+                    child.visibility = View.GONE
+                }
             }
         }
     }
@@ -157,12 +163,16 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val childCount = rebuildChildInfo()
         if (childCount > 0) {
-            if (childCount == 1) {
-                layout1Media(childIndices)
-            } else if (childCount == 3) {
-                layout3Media(horizontalSpacing, verticalSpacing, childIndices)
-            } else {
-                layoutGridMedia(childCount, 2, horizontalSpacing, verticalSpacing, childIndices)
+            when (childCount) {
+                1 -> {
+                    layout1Media(childIndices)
+                }
+                3 -> {
+                    layout3Media(horizontalSpacing, verticalSpacing, childIndices)
+                }
+                else -> {
+                    layoutGridMedia(childCount, 2, horizontalSpacing, verticalSpacing, childIndices)
+                }
             }
         }
     }
@@ -172,7 +182,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val contentWidth = measuredWidth - paddingLeft - paddingRight
         var ratioMultiplier = 1f
         var contentHeight = -1
-        if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+        if (layoutParams.height != LayoutParams.WRAP_CONTENT) {
             val measuredHeight = View.resolveSize(suggestedMinimumWidth, widthMeasureSpec)
             ratioMultiplier = if (contentWidth > 0) measuredHeight / (contentWidth * WIDTH_HEIGHT_RATIO) else 1f
             contentHeight = contentWidth
@@ -180,16 +190,21 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val childCount = rebuildChildInfo()
         var heightSum = 0
         if (childCount > 0) {
-            if (childCount == 1) {
-                heightSum = measure1Media(contentWidth, childIndices, ratioMultiplier)
-            } else if (childCount == 2) {
-                heightSum = measureGridMedia(childCount, 2, contentWidth, ratioMultiplier, horizontalSpacing,
+            heightSum = when (childCount) {
+                1 -> {
+                    measure1Media(contentWidth, childIndices, ratioMultiplier)
+                }
+                2 -> {
+                    measureGridMedia(childCount, 2, contentWidth, ratioMultiplier, horizontalSpacing,
                         verticalSpacing, childIndices)
-            } else if (childCount == 3) {
-                heightSum = measure3Media(contentWidth, horizontalSpacing, childIndices, ratioMultiplier)
-            } else {
-                heightSum = measureGridMedia(childCount, 2, contentWidth,
+                }
+                3 -> {
+                    measure3Media(contentWidth, horizontalSpacing, childIndices, ratioMultiplier)
+                }
+                else -> {
+                    measureGridMedia(childCount, 2, contentWidth,
                         WIDTH_HEIGHT_RATIO * ratioMultiplier, horizontalSpacing, verticalSpacing, childIndices)
+                }
             }
             if (contentHeight > 0) {
                 heightSum = contentHeight
@@ -198,7 +213,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             heightSum = contentHeight
         }
         val height = heightSum + paddingTop + paddingBottom
-        setMeasuredDimension(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+        setMeasuredDimension(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
     }
 
     override fun checkLayoutParams(p: LayoutParams?): Boolean {
@@ -219,18 +234,19 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
 
     private fun measure1Media(contentWidth: Int, childIndices: IntArray, ratioMultiplier: Float): Int {
         val child = getChildAt(childIndices[0])
-        var childHeight = Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
+        var childHeight =
+            (contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier).roundToInt()
         if (style == PreviewStyle.ACTUAL_SIZE) {
             val media = (child.layoutParams as MediaLayoutParams).media
             if (media != null) {
                 val aspectRatio = media.aspect_ratio
                 if (!aspectRatio.isNaN()) {
-                    childHeight = Math.round(contentWidth / aspectRatio.coerceIn(0.3, 20.0)).toInt()
+                    childHeight = (contentWidth / aspectRatio.coerceIn(0.3, 20.0)).roundToInt()
                 }
             }
         }
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(contentWidth, View.MeasureSpec.EXACTLY)
-        val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
+        val widthSpec = MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
         child.measure(widthSpec, heightSpec)
         findViewById<View>(videoViewIds[0])?.measure(widthSpec, heightSpec)
         return childHeight
@@ -250,14 +266,14 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             widthHeightRatio: Float, horizontalSpacing: Int, verticalSpacing: Int,
             childIndices: IntArray): Int {
         val childWidth = (contentWidth - horizontalSpacing * (columnCount - 1)) / columnCount
-        val childHeight = Math.round(childWidth * widthHeightRatio)
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.EXACTLY)
-        val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
+        val childHeight = (childWidth * widthHeightRatio).roundToInt()
+        val widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             getChildAt(childIndices[i]).measure(widthSpec, heightSpec)
             findViewById<View>(videoViewIds[i])?.measure(widthSpec, heightSpec)
         }
-        val rowsCount = Math.ceil(childCount / columnCount.toDouble()).toInt()
+        val rowsCount = ceil(childCount / columnCount.toDouble()).toInt()
         return rowsCount * childHeight + (rowsCount - 1) * verticalSpacing
     }
 
@@ -290,19 +306,19 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val child1 = getChildAt(childIndices[1])
         val child2 = getChildAt(childIndices[2])
         val childWidth = (contentWidth - horizontalSpacing) / 2
-        val childLeftHeightSpec = View.MeasureSpec.makeMeasureSpec(Math.round(childWidth * ratioMultiplier), View.MeasureSpec.EXACTLY)
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.EXACTLY)
+        val childLeftHeightSpec = MeasureSpec.makeMeasureSpec((childWidth * ratioMultiplier).roundToInt(), MeasureSpec.EXACTLY)
+        val widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
         child0.measure(widthSpec, childLeftHeightSpec)
 
-        val childRightHeight = Math.round((childWidth - horizontalSpacing) / 2 * ratioMultiplier)
-        val childRightHeightSpec = View.MeasureSpec.makeMeasureSpec(childRightHeight, View.MeasureSpec.EXACTLY)
+        val childRightHeight = ((childWidth - horizontalSpacing) / 2 * ratioMultiplier).roundToInt()
+        val childRightHeightSpec = MeasureSpec.makeMeasureSpec(childRightHeight, MeasureSpec.EXACTLY)
         child1.measure(widthSpec, childRightHeightSpec)
         child2.measure(widthSpec, childRightHeightSpec)
 
         findViewById<View>(videoViewIds[0])?.measure(widthSpec, childLeftHeightSpec)
         findViewById<View>(videoViewIds[1])?.measure(widthSpec, childRightHeightSpec)
         findViewById<View>(videoViewIds[2])?.measure(widthSpec, childRightHeightSpec)
-        return Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
+        return (contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier).roundToInt()
     }
 
     private fun layout3Media(horizontalSpacing: Int, verticalSpacing: Int, childIndices: IntArray) {
@@ -346,7 +362,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         return indicesCount
     }
 
-    class MediaLayoutParams : ViewGroup.LayoutParams {
+    class MediaLayoutParams : LayoutParams {
 
         val isMediaItemView: Boolean
         val videoViewId: Int
@@ -373,7 +389,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             listener: OnMediaClickListener?,
             private val accountKey: UserKey?,
             private val extraId: Long
-    ) : View.OnClickListener {
+    ) : OnClickListener {
 
         private val weakListener = WeakReference<OnMediaClickListener>(listener)
 

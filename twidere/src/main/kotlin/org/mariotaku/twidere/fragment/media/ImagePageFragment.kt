@@ -24,13 +24,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Bundle
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
 import org.mariotaku.ktextension.nextPowerOf2
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -39,6 +39,9 @@ import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.media.MediaExtra
 import java.io.IOException
 import java.lang.ref.WeakReference
+import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.min
 
 class ImagePageFragment : SubsampleImageViewerFragment() {
 
@@ -50,7 +53,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         get() = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy {
-        return@lazy SizedResultCreator(context!!)
+        return@lazy SizedResultCreator(requireContext())
     }
 
     private var mediaLoadState: Int = 0
@@ -96,7 +99,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
     }
 
     override fun getImageSource(data: CacheDownloadLoader.Result): ImageSource {
-        assert(data.cacheUri != null)
+        if (BuildConfig.DEBUG && data.cacheUri == null) { error("Assertion failed") }
         if (data !is SizedResult) {
             return super.getImageSource(data)
         }
@@ -108,7 +111,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     override fun getPreviewImageSource(data: CacheDownloadLoader.Result): ImageSource? {
         if (data !is SizedResult) return null
-        assert(data.cacheUri != null)
+        if (BuildConfig.DEBUG && data.cacheUri == null) { error("Assertion failed") }
         return ImageSource.uri(UriUtils.appendQueryParameters(data.cacheUri, QUERY_PARAM_PREVIEW, true))
     }
 
@@ -150,9 +153,9 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
                 val cr = context.contentResolver
                 decodeBitmap(cr, uri, o)
                 val dm = context.resources.displayMetrics
-                val targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels))
-                val sizeRatio = Math.ceil(Math.max(o.outHeight, o.outWidth) / targetSize.toDouble())
-                o.inSampleSize = Math.max(1.0, sizeRatio).toInt().nextPowerOf2
+                val targetSize = min(1024, max(dm.widthPixels, dm.heightPixels))
+                val sizeRatio = ceil(max(o.outHeight, o.outWidth) / targetSize.toDouble())
+                o.inSampleSize = max(1.0, sizeRatio).toInt().nextPowerOf2
                 o.inJustDecodeBounds = false
                 return decodeBitmap(cr, uri, o) ?: throw IOException()
             }

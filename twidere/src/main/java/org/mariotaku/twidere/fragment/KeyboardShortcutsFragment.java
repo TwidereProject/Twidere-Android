@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -66,12 +65,10 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.reset: {
-                final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
-                f.show(getFragmentManager(), "reset_keyboard_shortcut_confirm");
-                return true;
-            }
+        if (item.getItemId() == R.id.reset) {
+            final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
+            f.show(getFragmentManager(), "reset_keyboard_shortcut_confirm");
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -90,12 +87,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             mAction = action;
             setPersistent(false);
             setTitle(KeyboardShortcutsHandler.getActionLabel(context, action));
-            mPreferencesChangeListener = new OnSharedPreferenceChangeListener() {
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-                    updateSummary();
-                }
-            };
+            mPreferencesChangeListener = (preferences, key) -> updateSummary();
             updateSummary();
         }
 
@@ -103,8 +95,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         protected void onClick() {
             final Context context = getContext();
             final Intent intent = new Intent(context, KeyboardShortcutPreferenceCompatActivity.class);
-            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.Companion.getEXTRA_CONTEXT_TAG(), mContextTag);
-            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.Companion.getEXTRA_KEY_ACTION(), mAction);
+            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.EXTRA_CONTEXT_TAG, mContextTag);
+            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.EXTRA_KEY_ACTION, mAction);
             context.startActivity(intent);
         }
 
@@ -132,11 +124,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             implements OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE: {
-                    keyboardShortcutsHandler.reset();
-                    break;
-                }
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                keyboardShortcutsHandler.reset();
             }
         }
 
@@ -148,12 +137,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
             final AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialog) {
-                    DialogExtensionsKt.applyTheme((AlertDialog) dialog);
-                }
-            });
+            dialog.setOnShowListener(dialog1 -> DialogExtensionsKt.applyTheme((AlertDialog) dialog1));
             return dialog;
         }
     }

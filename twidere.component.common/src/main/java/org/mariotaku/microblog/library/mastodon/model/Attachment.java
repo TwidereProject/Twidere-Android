@@ -18,8 +18,11 @@
 
 package org.mariotaku.microblog.library.mastodon.model;
 
+import androidx.annotation.Nullable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * {@see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#attachment}
@@ -59,6 +62,9 @@ public class Attachment {
     @JsonField(name = "text_url")
     String textUrl;
 
+    @JsonField(name = "meta")
+    MetaInfo meta;
+
     public String getId() {
         return id;
     }
@@ -83,6 +89,51 @@ public class Attachment {
         return textUrl;
     }
 
+    public MetaInfo getMeta() {
+        return meta;
+    }
+
+    @JsonObject
+    public static class MetaInfo {
+
+        @ParcelableThisPlease
+        @JsonField(name = "focus")
+        @Nullable
+        public FocusInfo focus;
+        @ParcelableThisPlease
+        @JsonField(name = "original")
+        @Nullable
+        public MetaDataInfo original;
+        @ParcelableThisPlease
+        @JsonField(name = "small")
+        @Nullable
+        public MetaDataInfo small;
+
+        @JsonObject
+        public static class FocusInfo {
+            @ParcelableThisPlease
+            @JsonField(name = "x")
+            public float x;
+            @ParcelableThisPlease
+            @JsonField(name = "y")
+            public float y;
+        }
+
+        @JsonObject
+        public static class MetaDataInfo {
+            @ParcelableThisPlease
+            @JsonField(name = "width")
+            public long width;
+            @ParcelableThisPlease
+            @JsonField(name = "height")
+            public long height;
+            @ParcelableThisPlease
+            @JsonField(name = "aspect")
+            public float aspect;
+        }
+
+
+    }
     @Override
     public String toString() {
         return "Attachment{" +

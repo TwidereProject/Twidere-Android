@@ -57,11 +57,11 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ExtensionsAdapter {
-        return ExtensionsAdapter(activity!!, requestManager)
+        return ExtensionsAdapter(requireActivity(), requestManager)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ExtensionInfo>> {
-        return ExtensionsListLoader(activity!!)
+        return ExtensionsListLoader(requireActivity())
     }
 
     override fun onLoadFinished(loader: Loader<List<ExtensionInfo>>, data: List<ExtensionInfo>) {
@@ -128,7 +128,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         if (info.settings != null) {
             intent.setClassName(info.packageName, info.settings)
         } else {
-            val pm = activity!!.packageManager
+            val pm = requireActivity().packageManager
             val activities = pm.queryIntentActivities(intent, 0)
             if (activities.isEmpty()) {
                 return false

@@ -316,7 +316,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         val listName = args.getString(EXTRA_LIST_NAME)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-        return ParcelableUserListLoader(activity!!, omitIntentExtra, arguments, accountKey, listId,
+        return ParcelableUserListLoader(requireActivity(), omitIntentExtra, arguments, accountKey, listId,
                 listName, userKey, screenName)
     }
 
@@ -372,15 +372,15 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)
                         ?: throw MicroBlogException("No account")
                 val list: UserList
-                when {
+                list = when {
                     listId != null -> {
-                        list = twitter.showUserList(listId)
+                        twitter.showUserList(listId)
                     }
                     listName != null && userKey != null -> {
-                        list = twitter.showUserList(listName, userKey.id)
+                        twitter.showUserList(listName, userKey.id)
                     }
                     listName != null && screenName != null -> {
-                        list = twitter.showUserListByScrenName(listName, screenName)
+                        twitter.showUserListByScrenName(listName, screenName)
                     }
                     else -> {
                         return SingleResponse(MicroBlogException("Invalid argument"))
@@ -401,8 +401,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     class UserListDetailsDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val userList = arguments!!.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
-            val builder = AlertDialog.Builder(context!!)
+            val userList = requireArguments().getParcelable<ParcelableUserList>(EXTRA_USER_LIST)!!
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(userList.name)
             builder.setMessage(userList.description)
             builder.setPositiveButton(android.R.string.ok, null)

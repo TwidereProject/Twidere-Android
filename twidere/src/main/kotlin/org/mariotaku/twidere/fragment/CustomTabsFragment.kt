@@ -93,7 +93,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        adapter = CustomTabsAdapter(context!!)
+        adapter = CustomTabsAdapter(requireContext())
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
         listView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
@@ -130,7 +130,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity!!, Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER)
+        return CursorLoader(requireActivity(), Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -138,7 +138,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         val context = this.context
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), false)
         val itemAdd = menu.findItem(R.id.add_submenu)
-        val theme = Chameleon.getOverrideTheme(context!!, context)
+        val theme = Chameleon.getOverrideTheme(requireContext(), context)
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             val subMenu = itemAdd.subMenu
             subMenu.clear()
@@ -394,7 +394,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_custom_tab_editor)
             builder.setPositiveButton(R.string.action_save, null)
             builder.setNegativeButton(android.R.string.cancel, null)

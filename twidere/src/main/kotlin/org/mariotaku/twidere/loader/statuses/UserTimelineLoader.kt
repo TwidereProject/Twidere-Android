@@ -140,20 +140,24 @@ class UserTimelineLoader(
             option.setExcludeReplies(!timelineFilter.isIncludeReplies)
             option.setIncludeRetweets(timelineFilter.isIncludeRetweets)
         }
-        if (userKey != null) {
-            if (account.type == AccountType.STATUSNET && userKey.host != account.key.host
+        when {
+            userKey != null -> {
+                if (account.type == AccountType.STATUSNET && userKey.host != account.key.host
                     && profileUrl != null) {
-                try {
-                    return showStatusNetExternalTimeline(profileUrl, paging)
-                } catch (e: IOException) {
-                    throw MicroBlogException(e)
+                    try {
+                        return showStatusNetExternalTimeline(profileUrl, paging)
+                    } catch (e: IOException) {
+                        throw MicroBlogException(e)
+                    }
                 }
+                return microBlog.getUserTimeline(userKey.id, paging, option)
             }
-            return microBlog.getUserTimeline(userKey.id, paging, option)
-        } else if (screenName != null) {
-            return microBlog.getUserTimelineByScreenName(screenName, paging, option)
-        } else {
-            throw MicroBlogException("Invalid user")
+            screenName != null -> {
+                return microBlog.getUserTimelineByScreenName(screenName, paging, option)
+            }
+            else -> {
+                throw MicroBlogException("Invalid user")
+            }
         }
     }
 

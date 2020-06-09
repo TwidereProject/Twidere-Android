@@ -30,7 +30,6 @@ import okhttp3.Dns
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
-import org.mariotaku.twidere.util.DebugModeUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -63,7 +62,7 @@ open class BaseDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestManager = Glide.with(context!!)// TODO: Upgrade Glide usage
+        requestManager = Glide.with(requireContext())// TODO: Upgrade Glide usage
     }
 
     override fun onStart() {

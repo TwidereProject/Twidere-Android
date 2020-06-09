@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder.status
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
+import android.net.Uri
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -36,10 +37,12 @@ import androidx.annotation.UiThread
 import androidx.appcompat.widget.ActionMenuView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.hideIfEmpty
@@ -54,6 +57,7 @@ import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.hideCardNumbersKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.constant.showLinkPreviewKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsStatusesFragment
@@ -63,6 +67,7 @@ import org.mariotaku.twidere.menu.RetweetItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.task.LinkPreviewTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 import org.mariotaku.twidere.view.ProfileImageView
@@ -162,18 +167,22 @@ class DetailStatusViewHolder(
 
                 val quotedMedia = status.quoted_media
 
-                if (quotedMedia?.isEmpty() != false) {
-                    itemView.quotedMediaLabel.visibility = View.GONE
-                    itemView.quotedMediaPreview.visibility = View.GONE
-                } else if (adapter.isDetailMediaExpanded) {
-                    itemView.quotedMediaLabel.visibility = View.GONE
-                    itemView.quotedMediaPreview.visibility = View.VISIBLE
-                    itemView.quotedMediaPreview.displayMedia(adapter.requestManager,
+                when {
+                    quotedMedia?.isEmpty() != false -> {
+                        itemView.quotedMediaLabel.visibility = View.GONE
+                        itemView.quotedMediaPreview.visibility = View.GONE
+                    }
+                    adapter.isDetailMediaExpanded -> {
+                        itemView.quotedMediaLabel.visibility = View.GONE
+                        itemView.quotedMediaPreview.visibility = View.VISIBLE
+                        itemView.quotedMediaPreview.displayMedia(adapter.requestManager,
                             media = quotedMedia, accountKey = status.account_key,
                             mediaClickListener = adapter.fragment)
-                } else {
-                    itemView.quotedMediaLabel.visibility = View.VISIBLE
-                    itemView.quotedMediaPreview.visibility = View.GONE
+                    }
+                    else -> {
+                        itemView.quotedMediaLabel.visibility = View.VISIBLE
+                        itemView.quotedMediaPreview.visibility = View.GONE
+                    }
                 }
             } else {
                 itemView.quotedName.visibility = View.GONE
@@ -197,12 +206,10 @@ class DetailStatusViewHolder(
 
         itemView.profileContainer.drawStart(colorNameManager.getUserColor(status.user_key))
 
-        val timestamp: Long
-
-        if (status.is_retweet) {
-            timestamp = status.retweet_timestamp
+        val timestamp: Long = if (status.is_retweet) {
+            status.retweet_timestamp
         } else {
-            timestamp = status.timestamp
+            status.timestamp
         }
 
         nameView.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
@@ -296,22 +303,26 @@ class DetailStatusViewHolder(
 
         val media = status.media
 
-        if (media?.isEmpty() != false) {
-            itemView.mediaPreviewContainer.visibility = View.GONE
-            itemView.mediaPreview.visibility = View.GONE
-            itemView.mediaPreviewLoad.visibility = View.GONE
-            itemView.mediaPreview.displayMedia()
-        } else if (adapter.isDetailMediaExpanded) {
-            itemView.mediaPreviewContainer.visibility = View.VISIBLE
-            itemView.mediaPreview.visibility = View.VISIBLE
-            itemView.mediaPreviewLoad.visibility = View.GONE
-            itemView.mediaPreview.displayMedia(adapter.requestManager, media = media,
+        when {
+            media?.isEmpty() != false -> {
+                itemView.mediaPreviewContainer.visibility = View.GONE
+                itemView.mediaPreview.visibility = View.GONE
+                itemView.mediaPreviewLoad.visibility = View.GONE
+                itemView.mediaPreview.displayMedia()
+            }
+            adapter.isDetailMediaExpanded -> {
+                itemView.mediaPreviewContainer.visibility = View.VISIBLE
+                itemView.mediaPreview.visibility = View.VISIBLE
+                itemView.mediaPreviewLoad.visibility = View.GONE
+                itemView.mediaPreview.displayMedia(adapter.requestManager, media = media,
                     accountKey = status.account_key, mediaClickListener = adapter.fragment)
-        } else {
-            itemView.mediaPreviewContainer.visibility = View.VISIBLE
-            itemView.mediaPreview.visibility = View.GONE
-            itemView.mediaPreviewLoad.visibility = View.VISIBLE
-            itemView.mediaPreview.displayMedia()
+            }
+            else -> {
+                itemView.mediaPreviewContainer.visibility = View.VISIBLE
+                itemView.mediaPreview.visibility = View.GONE
+                itemView.mediaPreviewLoad.visibility = View.VISIBLE
+                itemView.mediaPreview.displayMedia()
+            }
         }
 
         if (TwitterCardUtils.isCardSupported(status)) {
@@ -366,6 +377,28 @@ class DetailStatusViewHolder(
 
         textView.movementMethod = LinkMovementMethod.getInstance()
         itemView.quotedText.movementMethod = null
+
+
+        val url = status.extras?.entities_url?.firstOrNull()
+        itemView.linkPreview.isVisible = url != null && fragment.preferences[showLinkPreviewKey]
+        if (url != null && itemView.linkPreview.isVisible) {
+            if (!LinkPreviewTask.isInLoading(url)) {
+                val linkPreviewData = LinkPreviewTask.getCached(url)
+                if (linkPreviewData != null) {
+                    itemView.linkPreview.displayData(url, linkPreviewData, adapter.requestManager)
+                } else {
+                    LinkPreviewTask(context).let {
+                        it.params = url
+                        TaskStarter.execute(it)
+                    }
+                    itemView.linkPreview.reset()
+                }
+            } else {
+                itemView.linkPreview.reset()
+            }
+        } else {
+            itemView.linkPreview.reset()
+        }
     }
 
     override fun onClick(v: View) {
@@ -373,6 +406,10 @@ class DetailStatusViewHolder(
         val fragment = adapter.fragment
         val preferences = fragment.preferences
         when (v) {
+            itemView.linkPreview -> {
+                val url = status.extras?.entities_url?.firstOrNull()
+                OnLinkClickHandler.openLink(fragment.requireContext(), preferences, Uri.parse(url))
+            }
             itemView.mediaPreviewLoad -> {
                 if (adapter.sensitiveContentEnabled || !status.is_possibly_sensitive) {
                     adapter.isDetailMediaExpanded = true
@@ -472,6 +509,7 @@ class DetailStatusViewHolder(
         ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = *intArrayOf(Constants.MENU_GROUP_STATUS_SHARE))
         itemView.mediaPreviewLoad.setOnClickListener(this)
         itemView.profileContainer.setOnClickListener(this)
+        itemView.linkPreview.setOnClickListener(this)
         retweetedByView.setOnClickListener(this)
         locationView.setOnClickListener(this)
         itemView.quotedView.setOnClickListener(this)
@@ -575,7 +613,7 @@ class DetailStatusViewHolder(
                 ITEM_VIEW_TYPE_USER -> return ProfileImageViewHolder(this, inflater.inflate(R.layout.adapter_item_status_interact_user, parent, false))
                 ITEM_VIEW_TYPE_COUNT -> return CountViewHolder(this, inflater.inflate(R.layout.adapter_item_status_count_label, parent, false))
             }
-            throw UnsupportedOperationException("Unsupported viewType " + viewType)
+            throw UnsupportedOperationException("Unsupported viewType $viewType")
         }
 
         fun setUsers(users: List<ParcelableUser>?) {
@@ -704,16 +742,15 @@ class DetailStatusViewHolder(
             }
 
             fun displayCount(count: LabeledCount, hideNumbers: Boolean) {
-                val label: String
-                when (count.type) {
+                val label: String = when (count.type) {
                     KEY_REPLY_COUNT -> {
-                        label = adapter.context.getString(R.string.replies)
+                        adapter.context.getString(R.string.replies)
                     }
                     KEY_RETWEET_COUNT -> {
-                        label = adapter.context.getString(R.string.count_label_retweets)
+                        adapter.context.getString(R.string.count_label_retweets)
                     }
                     KEY_FAVORITE_COUNT -> {
-                        label = adapter.context.getString(R.string.title_favorites)
+                        adapter.context.getString(R.string.title_favorites)
                     }
                     else -> {
                         throw UnsupportedOperationException("Unsupported type " + count.type)
@@ -729,12 +766,12 @@ class DetailStatusViewHolder(
         internal class LabeledCount(var type: Int, var count: Long)
 
         companion object {
-            private val ITEM_VIEW_TYPE_USER = 1
-            private val ITEM_VIEW_TYPE_COUNT = 2
+            private const val ITEM_VIEW_TYPE_USER = 1
+            private const val ITEM_VIEW_TYPE_COUNT = 2
 
-            private val KEY_REPLY_COUNT = 1
-            private val KEY_RETWEET_COUNT = 2
-            private val KEY_FAVORITE_COUNT = 3
+            private const val KEY_REPLY_COUNT = 1
+            private const val KEY_RETWEET_COUNT = 2
+            private const val KEY_FAVORITE_COUNT = 3
         }
     }
 

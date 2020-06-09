@@ -3,7 +3,6 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader
@@ -127,7 +126,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<Any>?> {
-        return ItemsLoader(context!!, arguments!!)
+        return ItemsLoader(requireContext(), requireArguments())
     }
 
     final override fun onLoadFinished(loader: Loader<List<Any>?>, data: List<Any>?) {
@@ -176,7 +175,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                     startActivity(chooser)
                     return true
                 }
-                return MenuUtils.handleStatusClick(activity!!, this, fragmentManager!!,
+                return MenuUtils.handleStatusClick(requireActivity(), this, requireFragmentManager(),
                         preferences, userColorNameManager, twitterWrapper, status, item)
             }
         }

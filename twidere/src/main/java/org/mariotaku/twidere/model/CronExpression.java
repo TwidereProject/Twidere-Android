@@ -447,7 +447,7 @@ public class CronExpression {
         if (match) {
             list.add(str.substring(start, i));
         }
-        return list.toArray(new String[list.size()]);
+        return list.toArray(new String[0]);
     }
 
 }

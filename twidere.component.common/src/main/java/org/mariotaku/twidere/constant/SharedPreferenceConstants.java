@@ -291,6 +291,8 @@ public interface SharedPreferenceConstants {
     String KEY_AUTO_HIDE_TABS = "auto_hide_tabs";
     @ExportablePreference(BOOLEAN)
     String KEY_HIDE_CARD_NUMBERS = "hide_card_numbers";
+    @ExportablePreference(BOOLEAN)
+    String KEY_SHOW_LINK_PREVIEW = "show_link_preview";
 
     // Internal preferences
 

@@ -28,6 +28,7 @@ import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.util.Utils.formatSameDayTime
 import java.lang.ref.WeakReference
+import kotlin.math.abs
 
 class ShortTimeView(
         context: Context,
@@ -63,7 +64,7 @@ class ShortTimeView(
             setTextIfChanged(formatSameDayTime(context, time))
         } else {
             val current = System.currentTimeMillis()
-            if (Math.abs(current - time) > 60 * 1000) {
+            if (abs(current - time) > 60 * 1000) {
                 setTextIfChanged(DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(),
                         DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL))
             } else {

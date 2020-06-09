@@ -91,15 +91,15 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
 
     class ConnectNetworkStorageSelectionDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val providers = DataSyncProvider.Factory.getSupportedProviders(context!!)
+            val providers = DataSyncProvider.Factory.getSupportedProviders(requireContext())
             val itemNames = providers.mapToArray(SyncProviderEntry::name)
 
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.title_dialog_sync_connect_to)
             builder.setItems(itemNames) { _, which ->
                 val activity = activity as PremiumDashboardActivity
                 activity.startActivityForControllerResult(providers[which].authIntent,
-                        arguments!!.getInt(EXTRA_POSITION), REQUEST_CONNECT_NETWORK_STORAGE)
+                        requireArguments().getInt(EXTRA_POSITION), REQUEST_CONNECT_NETWORK_STORAGE)
             }
             val dialog = builder.create()
             dialog.onShow { it.applyTheme() }
@@ -116,6 +116,6 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
     }
 
     companion object {
-        private val REQUEST_CONNECT_NETWORK_STORAGE: Int = 201
+        private const val REQUEST_CONNECT_NETWORK_STORAGE: Int = 201
     }
 }

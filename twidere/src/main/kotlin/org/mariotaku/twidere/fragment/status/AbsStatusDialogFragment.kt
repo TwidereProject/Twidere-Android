@@ -68,19 +68,19 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
     private lateinit var adapter: DummyItemAdapter
 
     final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = Builder(context!!)
+        val builder = Builder(requireContext())
         val accountKey = this.accountKey
 
         builder.setupAlertDialog()
 
-        adapter = DummyItemAdapter(context!!, requestManager = requestManager)
+        adapter = DummyItemAdapter(requireContext(), requestManager = requestManager)
         adapter.showCardActions = false
         adapter.showCardNumbers = false
         adapter.showAccountsColor = true
 
         val dialog = builder.create()
         dialog.onShow {
-            val context = it.context ?: return@onShow
+            val context = it.context
             it.applyTheme()
 
             val am = AccountManager.get(context)
@@ -97,7 +97,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 showStatus(weakHolder.get()!!, extraStatus, details, savedInstanceState)
             } else promiseOnUi {
                 weakThis.get()?.showProgress()
-            } and AbsStatusDialogFragment.showStatus(context, details, statusId, extraStatus).successUi { status ->
+            } and showStatus(context, details, statusId, extraStatus).successUi { status ->
                 val holder = weakHolder.get() ?: return@successUi
                 weakThis.get()?.showStatus(holder, status, details, savedInstanceState)
             }.failUi {

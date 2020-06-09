@@ -31,6 +31,7 @@ import android.widget.TextView
 import org.mariotaku.chameleon.view.ChameleonTextView
 import org.mariotaku.twidere.extension.setupEmojiFactory
 import java.lang.ref.WeakReference
+import kotlin.math.roundToInt
 
 /**
  * Returns true when not clicking links
@@ -79,11 +80,11 @@ class TimelineContentTextView(
     }
 
     override fun onTextContextMenuItem(id: Int): Boolean {
-        try {
-            return super.onTextContextMenuItem(id)
+        return try {
+            super.onTextContextMenuItem(id)
         } catch (e: AbstractMethodError) {
             // http://crashes.to/s/69acd0ea0de
-            return true
+            true
         }
     }
 
@@ -98,12 +99,12 @@ class TimelineContentTextView(
                     val layout = widget.layout
                     val x = event.x - widget.paddingLeft + widget.scrollX
                     val y = event.y - widget.paddingTop + widget.scrollY
-                    val line = layout.getLineForVertical(Math.round(y))
+                    val line = layout.getLineForVertical(y.roundToInt())
                     val offset = layout.getOffsetForHorizontal(line, x)
-                    if (x <= layout.getLineWidth(line)) {
-                        targetSpan = WeakReference(text.getSpans(offset, offset, ClickableSpan::class.java).firstOrNull())
+                    targetSpan = if (x <= layout.getLineWidth(line)) {
+                        WeakReference(text.getSpans(offset, offset, ClickableSpan::class.java).firstOrNull())
                     } else {
-                        targetSpan = null
+                        null
                     }
                 }
                 MotionEvent.ACTION_UP -> {

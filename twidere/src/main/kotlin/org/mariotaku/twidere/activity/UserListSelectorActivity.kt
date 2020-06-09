@@ -28,7 +28,6 @@ import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
 import androidx.loader.app.hasRunningLoadersSafe
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.contains
@@ -96,8 +95,7 @@ class UserListSelectorActivity : BaseActivity(),
         listView.setOnScrollListener(handler)
         listView.setOnTouchListener(handler.touchListener)
         listView.onItemClickListener = OnItemClickListener { view, _, position, _ ->
-            val item = view.getItemAtPosition(position)
-            when (item) {
+            when (val item = view.getItemAtPosition(position)) {
                 is ParcelableUserList -> {
                     val data = Intent()
                     data.putExtra(EXTRA_USER_LIST, item)
@@ -135,6 +133,7 @@ class UserListSelectorActivity : BaseActivity(),
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_SELECT_USER -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {

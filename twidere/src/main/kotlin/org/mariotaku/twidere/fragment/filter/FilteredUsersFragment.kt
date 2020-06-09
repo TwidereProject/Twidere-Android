@@ -105,7 +105,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity!!, contentUri, contentColumns, null, null, sortOrder)
+        return CursorLoader(requireActivity(), contentUri, contentColumns, null, null, sortOrder)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -218,7 +218,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val am = AccountManager.get(fragment.context)
             val account = AccountUtils.getAccountDetails(am, accountKey, true) ?:
                     throw AccountNotFoundException()
-            CreateUserMuteTask.muteUsers(fragment.context!!, account, items)
+            CreateUserMuteTask.muteUsers(fragment.requireContext(), account, items)
         }.alwaysUi {
             weakThis.get()?.dismissProgressDialog("export_to_muted")
         }

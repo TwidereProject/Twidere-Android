@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Strona główna</item>
+        <item>Interakcje</item>
+        <item>Wiadomości bezpośrednie</item>
+        <item>Trendy</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>Tweetnij</item>
+        <item>Zrób zdjęcie</item>
+        <item>Dodaj media</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Interakcje</item>
+        <item>Wiadomości bezpośrednie</item>
+        <item>Trendy</item>
+        <item>Zapisane wyniki wyszukiwania</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Aparat</item>
+        <item>Galeria</item>
+        <item>Schowek</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Przytnij</item>
+        <item>Skaluj</item>
+        <item>Rzeczywisty rozmiar</item>
+    </string-array>
+    <string-array name="entries_navbar_style">
+        <item>Domyślne</item>
+        <item>Przezroczyste</item>
+        <item>Pokolorowane</item>
+    </string-array>
+    <string-array name="entries_tab_position">
+        <item>Góra</item>
+        <item>Dół</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Strona główna</item>
+        <item>Interakcje</item>
+        <item>Wiadomości bezpośrednie</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Koło</item>
+        <item>Kwadrat</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>Buforowanie wsteczne</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
+    <string-array name="entries_quick_access_shortcut_types">
+        <item>Użytkownik</item>
+        <item>Strumień użytkownika</item>
+        <item>Ulubione użytkowników</item>
+        <item>Lista</item>
+        <item>Strumień listy</item>
+    </string-array>
+    <string-array name="entries_refresh_interval">
+        <item>3 minuty</item>
+        <item>5 minut</item>
+        <item>10 minut</item>
+        <item>15 minut</item>
+        <item>30 minut</item>
+        <item>1 godzina</item>
+        <item>2 godziny</item>
+        <item>4 godziny</item>
+    </string-array>
+    <string-array name="entries_tab_column_width">
+        <item>Wąska</item>
+        <item>Normalny</item>
+        <item>Szeroka</item>
+    </string-array>
+    <string-array name="entries_tab_display_option">
+        <item>Ikona</item>
+        <item>Etykieta</item>
+        <item>Ikona i etykieta</item>
+    </string-array>
+    <string-array name="entries_theme">
+        <item>Jasny</item>
+        <item>Ciemny</item>
+        <item>Automatycznie</item>
+    </string-array>
+    <string-array name="entries_theme_background">
+        <item>Domyślne</item>
+        <item>Czyste biało-czarne</item>
+        <item>Przezroczyste</item>
+    </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>Odpowiedzi</item>
+        <item>Retweety</item>
+    </string-array>
+</resources>

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util.glide
 import android.content.Context
 import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher
 import com.bumptech.glide.load.Options
-import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.*
 import com.bumptech.glide.signature.ObjectKey
 import okhttp3.OkHttpClient

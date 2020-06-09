@@ -428,23 +428,30 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     internal fun onSignInError(exception: Exception) {
         DebugLog.w(LOGTAG, "Sign in error", exception)
         var errorReason: String? = null
-        if (exception is AuthenticityTokenException) {
-            Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_api_key"
-        } else if (exception is WrongUserPassException) {
-            Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_username_password"
-        } else if (exception is SignInTask.WrongBasicCredentialException) {
-            Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_username_password"
-        } else if (exception is SignInTask.WrongAPIURLFormatException) {
-            Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_api_key"
-        } else if (exception is LoginVerificationException) {
-            Toast.makeText(this, R.string.message_toast_login_verification_failed, Toast.LENGTH_SHORT).show()
-            errorReason = "login_verification_failed"
-        } else {
-            Toast.makeText(this, exception.getErrorMessage(this), Toast.LENGTH_SHORT).show()
+        when (exception) {
+            is AuthenticityTokenException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_api_key"
+            }
+            is WrongUserPassException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_username_password"
+            }
+            is SignInTask.WrongBasicCredentialException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_username_password"
+            }
+            is SignInTask.WrongAPIURLFormatException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_api_key"
+            }
+            is LoginVerificationException -> {
+                Toast.makeText(this, R.string.message_toast_login_verification_failed, Toast.LENGTH_SHORT).show()
+                errorReason = "login_verification_failed"
+            }
+            else -> {
+                Toast.makeText(this, exception.getErrorMessage(this), Toast.LENGTH_SHORT).show()
+            }
         }
         Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType,
                 errorReason = errorReason, accountType = apiConfig.type))
@@ -573,13 +580,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class SignInTypeChooserDialogFragment : BaseDialogFragment(),
             LoaderManager.LoaderCallbacks<List<CustomAPIConfig>> {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
             dialog.onShow {
                 it.applyTheme()
                 val listView = it.expandableList
-                val adapter = LoginTypeAdapter(context!!)
+                val adapter = LoginTypeAdapter(requireContext())
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
                     val type = adapter.getGroup(groupPosition)
@@ -623,7 +630,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     AccountType.MASTODON, AccountType.STATUSNET)
             val result = supportedAccountTypes.mapNotNullTo(ArrayList()) { type ->
                 if (type == AccountType.MASTODON) return@mapNotNullTo LoginType(type,
-                        listOf(CustomAPIConfig.mastodon(context!!)))
+                        listOf(CustomAPIConfig.mastodon(requireContext())))
                 return@mapNotNullTo configGroup[type]?.let { list ->
                     LoginType(type, list.sortedBy { !it.isDefault })
                 }
@@ -632,7 +639,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         }
 
         override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CustomAPIConfig>> {
-            return DefaultAPIConfigLoader(context!!)
+            return DefaultAPIConfigLoader(requireContext())
         }
 
         override fun onLoaderReset(loader: Loader<List<CustomAPIConfig>>) {
@@ -694,7 +701,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         var challengeType: String? = null
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.login_verification)
             builder.setView(R.layout.dialog_login_verification_code)
             builder.positive(android.R.string.ok, this::performVerification)
@@ -753,7 +760,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     class PasswordSignInDialogFragment : BaseDialogFragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_password_sign_in)
             builder.positive(R.string.action_sign_in, this::onPositiveButton)
             builder.setNegativeButton(android.R.string.cancel, null)
@@ -809,10 +816,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val oauth = newMicroBlogInstance(context, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = TwitterOAuth::class.java)
             val accessToken: OAuthToken
-            if (oauthVerifier != null) {
-                accessToken = oauth.getAccessToken(requestToken, oauthVerifier)
+            accessToken = if (oauthVerifier != null) {
+                oauth.getAccessToken(requestToken, oauthVerifier)
             } else {
-                accessToken = oauth.getAccessToken(requestToken)
+                oauth.getAccessToken(requestToken)
             }
             auth = apiConfig.getOAuthAuthorization(accessToken) ?:
                     throw MicroBlogException("Invalid OAuth credential")
@@ -823,7 +830,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
@@ -901,7 +908,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return authOAuth()
         }
 
-        @Throws(OAuthPasswordAuthenticator.AuthenticationException::class, MicroBlogException::class)
+        @Throws(AuthenticationException::class, MicroBlogException::class)
         private fun authOAuth(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
@@ -940,7 +947,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return getOAuthSignInResponse(activity, accessToken, Credentials.Type.XAUTH)
         }
 
-        @Throws(MicroBlogException::class, OAuthPasswordAuthenticator.AuthenticationException::class)
+        @Throws(MicroBlogException::class, AuthenticationException::class)
         private fun authBasic(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             val versionSuffix = if (apiConfig.isNoVersionSuffix) null else "1.1"
@@ -962,7 +969,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             }
 
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -991,7 +998,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -1018,7 +1025,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val (type, extras) = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val (type, extras) = detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = apiUser.key
             val user = apiUser.toParcelable(accountKey, type, profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
@@ -1040,11 +1047,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             return SignInResponse(account != null, authType, credentials, user, color, type, extras)
         }
 
-        internal class WrongBasicCredentialException : OAuthPasswordAuthenticator.AuthenticationException()
+        internal class WrongBasicCredentialException : AuthenticationException()
 
-        internal class WrongAPIURLFormatException : OAuthPasswordAuthenticator.AuthenticationException()
+        internal class WrongAPIURLFormatException : AuthenticationException()
 
-        internal inner class InputLoginVerificationCallback : OAuthPasswordAuthenticator.LoginVerificationCallback {
+        internal inner class InputLoginVerificationCallback : LoginVerificationCallback {
 
             override fun getLoginVerification(challengeType: String): String? {
                 // Dismiss current progress dialog
@@ -1087,10 +1094,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         protected val profileImageSize: String = activity.getString(R.string.profile_image_size)
 
         final override fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
-            try {
-                return SingleResponse.getInstance(performLogin())
+            return try {
+                SingleResponse.getInstance(performLogin())
             } catch (e: Exception) {
-                return SingleResponse.getInstance(e)
+                SingleResponse.getInstance(e)
             }
         }
 
@@ -1189,8 +1196,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         const val REQUEST_BROWSER_TWITTER_SIGN_IN = 101
         const val REQUEST_BROWSER_MASTODON_SIGN_IN = 102
 
-        private val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
-        private val EXTRA_API_LAST_CHANGE = "api_last_change"
+        private const val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
+        private const val EXTRA_API_LAST_CHANGE = "api_last_change"
 
         @Throws(IOException::class)
         internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {

@@ -70,15 +70,14 @@ class SelectableUsersAdapter(
         when (viewType) {
             ITEM_VIEW_TYPE_USER -> {
                 val view = inflater.inflate(R.layout.list_item_simple_user, parent, false)
-                val holder = SelectableUserViewHolder(view, this)
-                return holder
+                return SelectableUserViewHolder(view, this)
             }
             ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
         }
-        throw IllegalStateException("Unknown view type " + viewType)
+        throw IllegalStateException("Unknown view type $viewType")
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -90,18 +89,16 @@ class SelectableUsersAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val countIndex = itemCounts.getItemCountIndex(position)
-        when (countIndex) {
-            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
-            ITEM_TYPE_USER -> return ITEM_VIEW_TYPE_USER
+        return when (val countIndex = itemCounts.getItemCountIndex(position)) {
+            ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> ITEM_VIEW_TYPE_LOAD_INDICATOR
+            ITEM_TYPE_USER -> ITEM_VIEW_TYPE_USER
             else -> throw UnsupportedCountIndexException(countIndex, position)
         }
 
     }
 
     override fun getItemId(position: Int): Long {
-        val countIndex = itemCounts.getItemCountIndex(position)
-        return when (countIndex) {
+        return when (val countIndex = itemCounts.getItemCountIndex(position)) {
             ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> (countIndex.toLong() shl 32)
             ITEM_TYPE_USER -> (countIndex.toLong() shl 32) or getUser(position).hashCode().toLong()
             else -> throw UnsupportedCountIndexException(countIndex, position)

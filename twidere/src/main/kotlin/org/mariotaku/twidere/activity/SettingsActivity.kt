@@ -54,6 +54,7 @@ import org.mariotaku.twidere.util.DeviceUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.ThemeUtils
 import java.util.*
+import kotlin.system.exitProcess
 
 class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartFragmentCallback {
 
@@ -74,8 +75,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             shouldTerminate = savedInstanceState.getBoolean(EXTRA_SHOULD_TERMINATE, shouldTerminate)
         } else if (intent.getBooleanExtra(EXTRA_SHOULD_TERMINATE, false)) {
             finishNoRestart()
-            System.exit(0)
-            return
+            exitProcess(0)
         }
 
         val backgroundOption = currentThemeBackgroundOption
@@ -349,8 +349,8 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
         companion object {
 
-            val VIEW_TYPE_PREFERENCE_ENTRY = 0
-            val VIEW_TYPE_HEADER_ENTRY = 1
+            const val VIEW_TYPE_PREFERENCE_ENTRY = 0
+            const val VIEW_TYPE_HEADER_ENTRY = 1
         }
     }
 
@@ -388,7 +388,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     class RestartConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(activity!!)
+            val builder = AlertDialog.Builder(requireActivity())
             if (arguments?.getBoolean(EXTRA_SHOULD_TERMINATE) == true) {
                 builder.setMessage(R.string.app_terminate_confirm)
                 builder.setNegativeButton(R.string.action_dont_terminate, this)
@@ -424,7 +424,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     companion object {
 
-        private val RESULT_SETTINGS_CHANGED = 10
+        private const val RESULT_SETTINGS_CHANGED = 10
 
         fun setShouldRecreate(activity: Activity) {
             if (activity !is SettingsActivity) return
