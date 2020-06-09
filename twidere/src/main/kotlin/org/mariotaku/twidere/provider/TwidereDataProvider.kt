@@ -414,13 +414,17 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
             }
             else -> {
                 val conflictAlgorithm = getConflictAlgorithm(tableId)
-                rowId = if (conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE) {
-                    databaseWrapper.insertWithOnConflict(table, null, values,
-                        conflictAlgorithm)
-                } else if (table != null) {
-                    databaseWrapper.insert(table, null, values)
-                } else {
-                    return null
+                rowId = when {
+                    conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE -> {
+                        databaseWrapper.insertWithOnConflict(table, null, values,
+                            conflictAlgorithm)
+                    }
+                    table != null -> {
+                        databaseWrapper.insert(table, null, values)
+                    }
+                    else -> {
+                        return null
+                    }
                 }
             }
         }

@@ -171,25 +171,29 @@ abstract class ParcelableStatusesAdapter(
 
     override fun setData(data: List<ParcelableStatus>?): Boolean {
         var changed = true
-        if (data == null) {
-            displayPositions = null
-            displayDataCount = 0
-        } else if (data is ObjectCursor) {
-            displayPositions = null
-            displayDataCount = data.size
-        } else {
-            var filteredCount = 0
-            displayPositions = IntArray(data.size).apply {
-                data.forEachIndexed { i, item ->
-                    if (!item.is_gap && item.is_filtered) {
-                        filteredCount++
-                    } else {
-                        this[i - filteredCount] = i
+        when (data) {
+            null -> {
+                displayPositions = null
+                displayDataCount = 0
+            }
+            is ObjectCursor -> {
+                displayPositions = null
+                displayDataCount = data.size
+            }
+            else -> {
+                var filteredCount = 0
+                displayPositions = IntArray(data.size).apply {
+                    data.forEachIndexed { i, item ->
+                        if (!item.is_gap && item.is_filtered) {
+                            filteredCount++
+                        } else {
+                            this[i - filteredCount] = i
+                        }
                     }
                 }
+                displayDataCount = data.size - filteredCount
+                changed = this.data != data
             }
-            displayDataCount = data.size - filteredCount
-            changed = this.data != data
         }
         this.data = data
         this.infoCache = if (data != null) arrayOfNulls(data.size) else null

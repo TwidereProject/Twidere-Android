@@ -48,14 +48,19 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             val targetFragment = this.targetFragment
             val parentFragment = this.parentFragment
             val host = this.host
-            if (targetFragment is APIEditorCallback) {
-                targetFragment.onSaveAPIConfig(applyCustomAPIConfig())
-            } else if (parentFragment is APIEditorCallback) {
-                parentFragment.onSaveAPIConfig(applyCustomAPIConfig())
-            } else if (host is APIEditorCallback) {
-                host.onSaveAPIConfig(applyCustomAPIConfig())
-            } else {
-                kPreferences[defaultAPIConfigKey] = applyCustomAPIConfig()
+            when {
+                targetFragment is APIEditorCallback -> {
+                    targetFragment.onSaveAPIConfig(applyCustomAPIConfig())
+                }
+                parentFragment is APIEditorCallback -> {
+                    parentFragment.onSaveAPIConfig(applyCustomAPIConfig())
+                }
+                host is APIEditorCallback -> {
+                    host.onSaveAPIConfig(applyCustomAPIConfig())
+                }
+                else -> {
+                    kPreferences[defaultAPIConfigKey] = applyCustomAPIConfig()
+                }
             }
         }
         builder.setNegativeButton(android.R.string.cancel, null)

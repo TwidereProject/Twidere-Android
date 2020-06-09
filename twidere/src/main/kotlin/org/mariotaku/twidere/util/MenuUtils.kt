@@ -125,13 +125,17 @@ object MenuUtils {
         val favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite)
         val likeHighlight = ContextCompat.getColor(context, R.color.highlight_like)
         val isMyRetweet: Boolean =
-            if (RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)) {
-            true
-        } else if (twitter.isDestroyingStatus(status.account_key, status.id)) {
-            false
-        } else {
-            status.retweeted || Utils.isMyRetweet(status)
-        }
+            when {
+                RetweetStatusTask.isCreatingRetweet(status.account_key, status.id) -> {
+                    true
+                }
+                twitter.isDestroyingStatus(status.account_key, status.id) -> {
+                    false
+                }
+                else -> {
+                    status.retweeted || Utils.isMyRetweet(status)
+                }
+            }
         val isMyStatus = Utils.isMyStatus(status)
         menu.setItemAvailability(R.id.delete, isMyStatus)
         if (isMyStatus) {
@@ -165,13 +169,17 @@ object MenuUtils {
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
             val isFavorite: Boolean =
-                if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
-                true
-            } else if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
-                false
-            } else {
-                status.is_favorite
-            }
+                when {
+                    CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id) -> {
+                        true
+                    }
+                    DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id) -> {
+                        false
+                    }
+                    else -> {
+                        status.is_favorite
+                    }
+                }
             val provider = MenuItemCompat.getActionProvider(favorite)
             val useStar = preferences[iWantMyStarsBackKey]
             if (provider is FavoriteItemProvider) {
@@ -205,20 +213,25 @@ object MenuUtils {
                 INTENT_ACTION_EXTENSION_OPEN_STATUS, EXTRA_STATUS, EXTRA_STATUS_JSON, status)
         val shareItem = menu.findItem(R.id.share)
         val shareProvider = MenuItemCompat.getActionProvider(shareItem)
-        if (shareProvider is SupportStatusShareProvider) {
-            shareProvider.status = status
-        } else if (shareProvider is ShareActionProvider) {
-            val shareIntent = Utils.createStatusShareIntent(context, status)
-            shareProvider.setShareIntent(shareIntent)
-        } else if (shareItem.hasSubMenu()) {
-            val shareSubMenu = shareItem.subMenu
-            val shareIntent = Utils.createStatusShareIntent(context, status)
-            shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE)
-            addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE)
-        } else {
-            val shareIntent = Utils.createStatusShareIntent(context, status)
-            val chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_status))
-            shareItem.intent = chooserIntent
+        when {
+            shareProvider is SupportStatusShareProvider -> {
+                shareProvider.status = status
+            }
+            shareProvider is ShareActionProvider -> {
+                val shareIntent = Utils.createStatusShareIntent(context, status)
+                shareProvider.setShareIntent(shareIntent)
+            }
+            shareItem.hasSubMenu() -> {
+                val shareSubMenu = shareItem.subMenu
+                val shareIntent = Utils.createStatusShareIntent(context, status)
+                shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE)
+                addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE)
+            }
+            else -> {
+                val shareIntent = Utils.createStatusShareIntent(context, status)
+                val chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_status))
+                shareItem.intent = chooserIntent
+            }
         }
 
     }
@@ -233,19 +246,23 @@ object MenuUtils {
                 }
             }
             R.id.retweet -> {
-                if (fragment is BaseFragment) {
-                    fragment.executeAfterFragmentResumed {
-                        RetweetQuoteDialogFragment.show(it.childFragmentManager, status.account_key,
+                when {
+                    fragment is BaseFragment -> {
+                        fragment.executeAfterFragmentResumed {
+                            RetweetQuoteDialogFragment.show(it.childFragmentManager, status.account_key,
                                 status.id, status)
+                        }
                     }
-                } else if (context is BaseActivity) {
-                    context.executeAfterFragmentResumed {
-                        RetweetQuoteDialogFragment.show(it.supportFragmentManager, status.account_key,
+                    context is BaseActivity -> {
+                        context.executeAfterFragmentResumed {
+                            RetweetQuoteDialogFragment.show(it.supportFragmentManager, status.account_key,
                                 status.id, status)
+                        }
                     }
-                } else {
-                    RetweetQuoteDialogFragment.show(fm, status.account_key,
+                    else -> {
+                        RetweetQuoteDialogFragment.show(fm, status.account_key,
                             status.id, status)
+                    }
                 }
             }
             R.id.quote -> {
@@ -260,19 +277,23 @@ object MenuUtils {
             }
             R.id.favorite -> {
                 if (preferences[favoriteConfirmationKey]) {
-                    if (fragment is BaseFragment) {
-                        fragment.executeAfterFragmentResumed {
-                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                    when {
+                        fragment is BaseFragment -> {
+                            fragment.executeAfterFragmentResumed {
+                                FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)
+                            }
                         }
-                    } else if (context is BaseActivity) {
-                        context.executeAfterFragmentResumed {
-                            FavoriteConfirmDialogFragment.show(it.supportFragmentManager,
+                        context is BaseActivity -> {
+                            context.executeAfterFragmentResumed {
+                                FavoriteConfirmDialogFragment.show(it.supportFragmentManager,
                                     status.account_key, status.id, status)
+                            }
                         }
-                    } else {
-                        FavoriteConfirmDialogFragment.show(fm, status.account_key, status.id,
+                        else -> {
+                            FavoriteConfirmDialogFragment.show(fm, status.account_key, status.id,
                                 status)
+                        }
                     }
                 } else if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_key, status.id)

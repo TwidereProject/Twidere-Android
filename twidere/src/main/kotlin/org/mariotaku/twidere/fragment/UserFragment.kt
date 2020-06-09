@@ -244,38 +244,42 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
                                     data: SingleResponse<ParcelableUser>) {
             val activity = activity ?: return
-            if (data.data != null) {
-                val user = data.data
-                cardContent.visibility = View.VISIBLE
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
-                val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)!!
-                displayUser(user, account)
-                if (user.is_cache) {
-                    val args = Bundle()
-                    args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
-                    args.putParcelable(EXTRA_USER_KEY, user.key)
-                    args.putString(EXTRA_SCREEN_NAME, user.screen_name)
-                    args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-                    loaderManager.restartLoader(LOADER_ID_USER, args, this)
+            when {
+                data.data != null -> {
+                    val user = data.data
+                    cardContent.visibility = View.VISIBLE
+                    errorContainer.visibility = View.GONE
+                    progressContainer.visibility = View.GONE
+                    val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)!!
+                    displayUser(user, account)
+                    if (user.is_cache) {
+                        val args = Bundle()
+                        args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
+                        args.putParcelable(EXTRA_USER_KEY, user.key)
+                        args.putString(EXTRA_SCREEN_NAME, user.screen_name)
+                        args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
+                        loaderManager.restartLoader(LOADER_ID_USER, args, this)
+                    }
+                    updateOptionsMenuVisibility()
                 }
-                updateOptionsMenuVisibility()
-            } else if (user?.is_cache == true) {
-                cardContent.visibility = View.VISIBLE
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
-                displayUser(user, account)
-                updateOptionsMenuVisibility()
-            } else {
-                if (data.hasException()) {
-                    errorText.text = data.exception?.getErrorMessage(activity)
-                    errorText.visibility = View.VISIBLE
+                user?.is_cache == true -> {
+                    cardContent.visibility = View.VISIBLE
+                    errorContainer.visibility = View.GONE
+                    progressContainer.visibility = View.GONE
+                    displayUser(user, account)
+                    updateOptionsMenuVisibility()
                 }
-                cardContent.visibility = View.GONE
-                errorContainer.visibility = View.VISIBLE
-                progressContainer.visibility = View.GONE
-                displayUser(null, null)
-                updateOptionsMenuVisibility()
+                else -> {
+                    if (data.hasException()) {
+                        errorText.text = data.exception?.getErrorMessage(activity)
+                        errorText.visibility = View.VISIBLE
+                    }
+                    cardContent.visibility = View.GONE
+                    errorContainer.visibility = View.VISIBLE
+                    progressContainer.visibility = View.GONE
+                    displayUser(null, null)
+                    updateOptionsMenuVisibility()
+                }
             }
         }
 
@@ -495,13 +499,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         listedContainer.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
         groupsContainer.visibility = if (user.groups_count < 0) View.GONE else View.VISIBLE
 
-        if (user.color != 0) {
-            setUiColor(user.color)
-        } else if (user.link_color != 0) {
-            setUiColor(user.link_color)
-        } else {
-            val theme = Chameleon.getOverrideTheme(activity, activity)
-            setUiColor(theme.colorPrimary)
+        when {
+            user.color != 0 -> {
+                setUiColor(user.color)
+            }
+            user.link_color != 0 -> {
+                setUiColor(user.link_color)
+            }
+            else -> {
+                val theme = Chameleon.getOverrideTheme(activity, activity)
+                setUiColor(theme.colorPrimary)
+            }
         }
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
@@ -1227,14 +1235,19 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     val userRelationship = relationship
                     val twitter = twitterWrapper
                     if (userRelationship == null) return
-                    if (userRelationship.blocking) {
-                        twitter.destroyBlockAsync(accountKey, user.key)
-                    } else if (userRelationship.blocked_by) {
-                        CreateUserBlockDialogFragment.show(childFragmentManager, user)
-                    } else if (userRelationship.following) {
-                        DestroyFriendshipDialogFragment.show(fragmentManager, user)
-                    } else {
-                        twitter.createFriendshipAsync(accountKey, user.key, user.screen_name)
+                    when {
+                        userRelationship.blocking -> {
+                            twitter.destroyBlockAsync(accountKey, user.key)
+                        }
+                        userRelationship.blocked_by -> {
+                            CreateUserBlockDialogFragment.show(childFragmentManager, user)
+                        }
+                        userRelationship.following -> {
+                            DestroyFriendshipDialogFragment.show(fragmentManager, user)
+                        }
+                        else -> {
+                            twitter.createFriendshipAsync(accountKey, user.key, user.screen_name)
+                        }
                     }
                 }
             }

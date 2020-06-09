@@ -29,14 +29,18 @@ fun Attachment.toParcelable(externalUrl: String?) : ParcelableMedia? {
     val mimeType = mimetype ?: return null
     val result = ParcelableMedia()
 
-    if (mimeType.startsWith("image/")) {
-        result.type = ParcelableMedia.Type.IMAGE
-    } else if (mimeType.startsWith("video/")) {
-        result.type = ParcelableMedia.Type.VIDEO
-    } else {
-        // https://github.com/TwidereProject/Twidere-Android/issues/729
-        // Skip unsupported attachment
-        return null
+    when {
+        mimeType.startsWith("image/") -> {
+            result.type = ParcelableMedia.Type.IMAGE
+        }
+        mimeType.startsWith("video/") -> {
+            result.type = ParcelableMedia.Type.VIDEO
+        }
+        else -> {
+            // https://github.com/TwidereProject/Twidere-Android/issues/729
+            // Skip unsupported attachment
+            return null
+        }
     }
     result.width = width
     result.height = height

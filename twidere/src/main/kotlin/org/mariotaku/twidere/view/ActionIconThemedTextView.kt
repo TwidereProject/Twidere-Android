@@ -97,12 +97,16 @@ class ActionIconThemedTextView(
         for (d in TextViewSupport.getCompoundDrawablesRelative(this)) {
             if (d == null) continue
             d.mutate()
-            val color: Int = if (isActivated) {
-                activatedColor
-            } else if (isEnabled) {
-                defaultColor
-            } else {
-                disabledColor
+            val color: Int = when {
+                isActivated -> {
+                    activatedColor
+                }
+                isEnabled -> {
+                    defaultColor
+                }
+                else -> {
+                    disabledColor
+                }
             }
 
             if (iconWidth > 0 && iconHeight > 0) {

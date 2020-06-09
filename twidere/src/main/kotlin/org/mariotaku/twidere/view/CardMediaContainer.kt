@@ -65,14 +65,18 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val k = imageRes.size
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            if (child !is ImageView) {
-                child.visibility = View.GONE
-            } else if (i < k) {
-                child.setImageResource(imageRes[i])
-                child.visibility = View.VISIBLE
-            } else {
-                child.setImageDrawable(null)
-                child.visibility = View.GONE
+            when {
+                child !is ImageView -> {
+                    child.visibility = View.GONE
+                }
+                i < k -> {
+                    child.setImageResource(imageRes[i])
+                    child.visibility = View.VISIBLE
+                }
+                else -> {
+                    child.setImageDrawable(null)
+                    child.visibility = View.GONE
+                }
             }
         }
     }
@@ -159,12 +163,16 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val childCount = rebuildChildInfo()
         if (childCount > 0) {
-            if (childCount == 1) {
-                layout1Media(childIndices)
-            } else if (childCount == 3) {
-                layout3Media(horizontalSpacing, verticalSpacing, childIndices)
-            } else {
-                layoutGridMedia(childCount, 2, horizontalSpacing, verticalSpacing, childIndices)
+            when (childCount) {
+                1 -> {
+                    layout1Media(childIndices)
+                }
+                3 -> {
+                    layout3Media(horizontalSpacing, verticalSpacing, childIndices)
+                }
+                else -> {
+                    layoutGridMedia(childCount, 2, horizontalSpacing, verticalSpacing, childIndices)
+                }
             }
         }
     }
@@ -182,16 +190,21 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val childCount = rebuildChildInfo()
         var heightSum = 0
         if (childCount > 0) {
-            heightSum = if (childCount == 1) {
-                measure1Media(contentWidth, childIndices, ratioMultiplier)
-            } else if (childCount == 2) {
-                measureGridMedia(childCount, 2, contentWidth, ratioMultiplier, horizontalSpacing,
-                    verticalSpacing, childIndices)
-            } else if (childCount == 3) {
-                measure3Media(contentWidth, horizontalSpacing, childIndices, ratioMultiplier)
-            } else {
-                measureGridMedia(childCount, 2, contentWidth,
-                    WIDTH_HEIGHT_RATIO * ratioMultiplier, horizontalSpacing, verticalSpacing, childIndices)
+            heightSum = when (childCount) {
+                1 -> {
+                    measure1Media(contentWidth, childIndices, ratioMultiplier)
+                }
+                2 -> {
+                    measureGridMedia(childCount, 2, contentWidth, ratioMultiplier, horizontalSpacing,
+                        verticalSpacing, childIndices)
+                }
+                3 -> {
+                    measure3Media(contentWidth, horizontalSpacing, childIndices, ratioMultiplier)
+                }
+                else -> {
+                    measureGridMedia(childCount, 2, contentWidth,
+                        WIDTH_HEIGHT_RATIO * ratioMultiplier, horizontalSpacing, verticalSpacing, childIndices)
+                }
             }
             if (contentHeight > 0) {
                 heightSum = contentHeight

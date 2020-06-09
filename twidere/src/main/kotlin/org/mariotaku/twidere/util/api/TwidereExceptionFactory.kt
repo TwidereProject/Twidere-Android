@@ -35,12 +35,16 @@ import java.io.IOException
 object TwidereExceptionFactory : ExceptionFactory<MicroBlogException> {
 
     override fun newException(cause: Throwable?, request: HttpRequest?, response: HttpResponse?): MicroBlogException {
-        val te = if (cause != null) {
-            MicroBlogException(cause)
-        } else if (response != null) {
-            parseTwitterException(response)
-        } else {
-            MicroBlogException()
+        val te = when {
+            cause != null -> {
+                MicroBlogException(cause)
+            }
+            response != null -> {
+                parseTwitterException(response)
+            }
+            else -> {
+                MicroBlogException()
+            }
         }
         te.httpRequest = request
         te.httpResponse = response

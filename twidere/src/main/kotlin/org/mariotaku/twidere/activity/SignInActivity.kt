@@ -428,23 +428,30 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     internal fun onSignInError(exception: Exception) {
         DebugLog.w(LOGTAG, "Sign in error", exception)
         var errorReason: String? = null
-        if (exception is AuthenticityTokenException) {
-            Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_api_key"
-        } else if (exception is WrongUserPassException) {
-            Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_username_password"
-        } else if (exception is SignInTask.WrongBasicCredentialException) {
-            Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_username_password"
-        } else if (exception is SignInTask.WrongAPIURLFormatException) {
-            Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_api_key"
-        } else if (exception is LoginVerificationException) {
-            Toast.makeText(this, R.string.message_toast_login_verification_failed, Toast.LENGTH_SHORT).show()
-            errorReason = "login_verification_failed"
-        } else {
-            Toast.makeText(this, exception.getErrorMessage(this), Toast.LENGTH_SHORT).show()
+        when (exception) {
+            is AuthenticityTokenException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_api_key"
+            }
+            is WrongUserPassException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_username_password"
+            }
+            is SignInTask.WrongBasicCredentialException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_username_password"
+            }
+            is SignInTask.WrongAPIURLFormatException -> {
+                Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
+                errorReason = "wrong_api_key"
+            }
+            is LoginVerificationException -> {
+                Toast.makeText(this, R.string.message_toast_login_verification_failed, Toast.LENGTH_SHORT).show()
+                errorReason = "login_verification_failed"
+            }
+            else -> {
+                Toast.makeText(this, exception.getErrorMessage(this), Toast.LENGTH_SHORT).show()
+            }
         }
         Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType,
                 errorReason = errorReason, accountType = apiConfig.type))

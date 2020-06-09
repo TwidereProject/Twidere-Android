@@ -87,24 +87,29 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                 }
                 val info = filterItems!![checkPositions.keyAt(i)]
                 val value = info.value
-                if (value is ParcelableUserMention) {
-                    userKeys.add(value.key)
-                    userValues.add(ContentValuesCreator.createFilteredUser(value))
-                } else if (value is UserItem) {
-                    userKeys.add(value.key)
-                    userValues.add(createFilteredUser(value))
-                } else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
-                    val keyword = ParseUtils.parseString(value)
-                    keywords.add(keyword)
-                    val values = ContentValues()
-                    values.put(Filters.Keywords.VALUE, "#$keyword")
-                    keywordValues.add(values)
-                } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
-                    val source = ParseUtils.parseString(value)
-                    sources.add(source)
-                    val values = ContentValues()
-                    values.put(Filters.Sources.VALUE, source)
-                    sourceValues.add(values)
+                when {
+                    value is ParcelableUserMention -> {
+                        userKeys.add(value.key)
+                        userValues.add(ContentValuesCreator.createFilteredUser(value))
+                    }
+                    value is UserItem -> {
+                        userKeys.add(value.key)
+                        userValues.add(createFilteredUser(value))
+                    }
+                    info.type == FilterItemInfo.FILTER_TYPE_KEYWORD -> {
+                        val keyword = ParseUtils.parseString(value)
+                        keywords.add(keyword)
+                        val values = ContentValues()
+                        values.put(Filters.Keywords.VALUE, "#$keyword")
+                        keywordValues.add(values)
+                    }
+                    info.type == FilterItemInfo.FILTER_TYPE_SOURCE -> {
+                        val source = ParseUtils.parseString(value)
+                        sources.add(source)
+                        val values = ContentValues()
+                        values.put(Filters.Sources.VALUE, source)
+                        sourceValues.add(values)
+                    }
                 }
             }
             context?.contentResolver?.let { resolver ->
@@ -164,12 +169,15 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         }
 
     private fun getName(manager: UserColorNameManager, value: Any, nameFirst: Boolean): String {
-        return if (value is ParcelableUserMention) {
-            manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
-        } else if (value is UserItem) {
-            manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
-        } else
-            ParseUtils.parseString(value)
+        return when (value) {
+            is ParcelableUserMention -> {
+                manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
+            }
+            is UserItem -> {
+                manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
+            }
+            else -> ParseUtils.parseString(value)
+        }
     }
 
     internal data class FilterItemInfo(

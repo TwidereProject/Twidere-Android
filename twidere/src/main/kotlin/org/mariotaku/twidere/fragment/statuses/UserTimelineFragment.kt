@@ -61,12 +61,16 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
             val result = ArrayList<String>()
             result.add(AUTHORITY_USER_TIMELINE)
             result.add("account=$accountKey")
-            if (userKey != null) {
-                result.add("user_id=$userKey")
-            } else if (screenName != null) {
-                result.add("screen_name=$screenName")
-            } else {
-                return null
+            when {
+                userKey != null -> {
+                    result.add("user_id=$userKey")
+                }
+                screenName != null -> {
+                    result.add("screen_name=$screenName")
+                }
+                else -> {
+                    return null
+                }
             }
             (timelineFilter as? UserTimelineFilter)?.let {
                 if (it.isIncludeReplies) {
@@ -87,12 +91,16 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
 
             val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
             val screenName = arguments.getString(EXTRA_SCREEN_NAME)
-            if (userKey != null) {
-                sb.append(userKey)
-            } else if (screenName != null) {
-                sb.append(screenName)
-            } else {
-                return null
+            when {
+                userKey != null -> {
+                    sb.append(userKey)
+                }
+                screenName != null -> {
+                    sb.append(screenName)
+                }
+                else -> {
+                    return null
+                }
             }
             return sb.toString()
         }

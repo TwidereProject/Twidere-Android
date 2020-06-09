@@ -116,12 +116,16 @@ object ThemeUtils {
 
     fun getCardBackgroundColor(context: Context, backgroundOption: String, themeAlpha: Int): Int {
         val color = getColorFromAttribute(context, R.attr.cardItemBackgroundColor)
-        return if (isTransparentBackground(backgroundOption)) {
-            ColorUtils.setAlphaComponent(color, themeAlpha)
-        } else if (isSolidBackground(backgroundOption)) {
-            TwidereColorUtils.getContrastYIQ(color, Color.WHITE, Color.BLACK)
-        } else {
-            color
+        return when {
+            isTransparentBackground(backgroundOption) -> {
+                ColorUtils.setAlphaComponent(color, themeAlpha)
+            }
+            isSolidBackground(backgroundOption) -> {
+                TwidereColorUtils.getContrastYIQ(color, Color.WHITE, Color.BLACK)
+            }
+            else -> {
+                color
+            }
         }
     }
 
@@ -163,15 +167,20 @@ object ThemeUtils {
     }
 
     fun applyWindowBackground(context: Context, window: Window, backgroundOption: String, alpha: Int) {
-        if (isWindowFloating(context)) {
-            window.setBackgroundDrawable(getWindowBackground(context))
-        } else if (VALUE_THEME_BACKGROUND_TRANSPARENT == backgroundOption) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
-            window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, alpha))
-        } else if (VALUE_THEME_BACKGROUND_SOLID == backgroundOption) {
-            window.setBackgroundDrawable(ColorDrawable(if (isLightTheme(context)) Color.WHITE else Color.BLACK))
-        } else {
-            window.setBackgroundDrawable(getWindowBackground(context))
+        when {
+            isWindowFloating(context) -> {
+                window.setBackgroundDrawable(getWindowBackground(context))
+            }
+            VALUE_THEME_BACKGROUND_TRANSPARENT == backgroundOption -> {
+                window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+                window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, alpha))
+            }
+            VALUE_THEME_BACKGROUND_SOLID == backgroundOption -> {
+                window.setBackgroundDrawable(ColorDrawable(if (isLightTheme(context)) Color.WHITE else Color.BLACK))
+            }
+            else -> {
+                window.setBackgroundDrawable(getWindowBackground(context))
+            }
         }
     }
 

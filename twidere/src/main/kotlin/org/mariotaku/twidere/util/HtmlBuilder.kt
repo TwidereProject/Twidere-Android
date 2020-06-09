@@ -119,12 +119,16 @@ class HtmlBuilder(
     }
 
     private fun appendSource(builder: StringBuilder, start: Int, end: Int, escapeSource: Boolean, sourceEscaped: Boolean) {
-        if (sourceEscaped == escapeSource) {
-            builder.append(source.substring(start, end), escapeSource, sourceEscaped)
-        } else if (escapeSource) {
-            builder.append(HtmlEscapeHelper.escape(source.substring(start, end)), true, sourceEscaped)
-        } else {
-            builder.append(HtmlEscapeHelper.unescape(source.substring(start, end)), false, sourceEscaped)
+        when {
+            sourceEscaped == escapeSource -> {
+                builder.append(source.substring(start, end), escapeSource, sourceEscaped)
+            }
+            escapeSource -> {
+                builder.append(HtmlEscapeHelper.escape(source.substring(start, end)), true, sourceEscaped)
+            }
+            else -> {
+                builder.append(HtmlEscapeHelper.unescape(source.substring(start, end)), false, sourceEscaped)
+            }
         }
     }
 
@@ -166,12 +170,16 @@ class HtmlBuilder(
     companion object {
 
         private fun StringBuilder.append(text: String, escapeText: Boolean, textEscaped: Boolean) {
-            if (textEscaped == escapeText) {
-                append(text)
-            } else if (escapeText) {
-                append(HtmlEscapeHelper.escape(text))
-            } else {
-                append(HtmlEscapeHelper.unescape(text))
+            when {
+                textEscaped == escapeText -> {
+                    append(text)
+                }
+                escapeText -> {
+                    append(HtmlEscapeHelper.escape(text))
+                }
+                else -> {
+                    append(HtmlEscapeHelper.unescape(text))
+                }
             }
         }
     }

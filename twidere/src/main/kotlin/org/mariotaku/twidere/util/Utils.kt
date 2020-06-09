@@ -160,25 +160,29 @@ object Utils {
 
     fun getAccountKeys(context: Context, args: Bundle?): Array<UserKey>? {
         if (args == null) return null
-        if (args.containsKey(EXTRA_ACCOUNT_KEYS)) {
-            return args.getNullableTypedArray(EXTRA_ACCOUNT_KEYS)
-        } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
-            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) ?: return emptyArray()
-            return arrayOf(accountKey)
-        } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
-            val accountId = args.get(EXTRA_ACCOUNT_ID).toString()
-            try {
-                if (java.lang.Long.parseLong(accountId) <= 0) return null
-            } catch (e: NumberFormatException) {
-                // Ignore
+        when {
+            args.containsKey(EXTRA_ACCOUNT_KEYS) -> {
+                return args.getNullableTypedArray(EXTRA_ACCOUNT_KEYS)
             }
+            args.containsKey(EXTRA_ACCOUNT_KEY) -> {
+                val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) ?: return emptyArray()
+                return arrayOf(accountKey)
+            }
+            args.containsKey(EXTRA_ACCOUNT_ID) -> {
+                val accountId = args.get(EXTRA_ACCOUNT_ID).toString()
+                try {
+                    if (java.lang.Long.parseLong(accountId) <= 0) return null
+                } catch (e: NumberFormatException) {
+                    // Ignore
+                }
 
-            val accountKey = DataStoreUtils.findAccountKey(context, accountId)
-            args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
-            if (accountKey == null) return arrayOf(UserKey(accountId, null))
-            return arrayOf(accountKey)
+                val accountKey = DataStoreUtils.findAccountKey(context, accountId)
+                args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
+                if (accountKey == null) return arrayOf(UserKey(accountId, null))
+                return arrayOf(accountKey)
+            }
+            else -> return null
         }
-        return null
     }
 
     fun getAccountKey(context: Context, args: Bundle?): UserKey? {
@@ -456,12 +460,16 @@ object Utils {
     }
 
     fun getInsetsTopWithoutActionBarHeight(context: Context, top: Int): Int {
-        val actionBarHeight: Int = if (context is AppCompatActivity) {
-            getActionBarHeight(context.supportActionBar)
-        } else if (context is Activity) {
-            getActionBarHeight(context.actionBar)
-        } else {
-            return top
+        val actionBarHeight: Int = when (context) {
+            is AppCompatActivity -> {
+                getActionBarHeight(context.supportActionBar)
+            }
+            is Activity -> {
+                getActionBarHeight(context.actionBar)
+            }
+            else -> {
+                return top
+            }
         }
         if (actionBarHeight > top) {
             return top

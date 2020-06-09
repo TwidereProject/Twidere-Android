@@ -167,18 +167,22 @@ class DetailStatusViewHolder(
 
                 val quotedMedia = status.quoted_media
 
-                if (quotedMedia?.isEmpty() != false) {
-                    itemView.quotedMediaLabel.visibility = View.GONE
-                    itemView.quotedMediaPreview.visibility = View.GONE
-                } else if (adapter.isDetailMediaExpanded) {
-                    itemView.quotedMediaLabel.visibility = View.GONE
-                    itemView.quotedMediaPreview.visibility = View.VISIBLE
-                    itemView.quotedMediaPreview.displayMedia(adapter.requestManager,
+                when {
+                    quotedMedia?.isEmpty() != false -> {
+                        itemView.quotedMediaLabel.visibility = View.GONE
+                        itemView.quotedMediaPreview.visibility = View.GONE
+                    }
+                    adapter.isDetailMediaExpanded -> {
+                        itemView.quotedMediaLabel.visibility = View.GONE
+                        itemView.quotedMediaPreview.visibility = View.VISIBLE
+                        itemView.quotedMediaPreview.displayMedia(adapter.requestManager,
                             media = quotedMedia, accountKey = status.account_key,
                             mediaClickListener = adapter.fragment)
-                } else {
-                    itemView.quotedMediaLabel.visibility = View.VISIBLE
-                    itemView.quotedMediaPreview.visibility = View.GONE
+                    }
+                    else -> {
+                        itemView.quotedMediaLabel.visibility = View.VISIBLE
+                        itemView.quotedMediaPreview.visibility = View.GONE
+                    }
                 }
             } else {
                 itemView.quotedName.visibility = View.GONE
@@ -299,22 +303,26 @@ class DetailStatusViewHolder(
 
         val media = status.media
 
-        if (media?.isEmpty() != false) {
-            itemView.mediaPreviewContainer.visibility = View.GONE
-            itemView.mediaPreview.visibility = View.GONE
-            itemView.mediaPreviewLoad.visibility = View.GONE
-            itemView.mediaPreview.displayMedia()
-        } else if (adapter.isDetailMediaExpanded) {
-            itemView.mediaPreviewContainer.visibility = View.VISIBLE
-            itemView.mediaPreview.visibility = View.VISIBLE
-            itemView.mediaPreviewLoad.visibility = View.GONE
-            itemView.mediaPreview.displayMedia(adapter.requestManager, media = media,
+        when {
+            media?.isEmpty() != false -> {
+                itemView.mediaPreviewContainer.visibility = View.GONE
+                itemView.mediaPreview.visibility = View.GONE
+                itemView.mediaPreviewLoad.visibility = View.GONE
+                itemView.mediaPreview.displayMedia()
+            }
+            adapter.isDetailMediaExpanded -> {
+                itemView.mediaPreviewContainer.visibility = View.VISIBLE
+                itemView.mediaPreview.visibility = View.VISIBLE
+                itemView.mediaPreviewLoad.visibility = View.GONE
+                itemView.mediaPreview.displayMedia(adapter.requestManager, media = media,
                     accountKey = status.account_key, mediaClickListener = adapter.fragment)
-        } else {
-            itemView.mediaPreviewContainer.visibility = View.VISIBLE
-            itemView.mediaPreview.visibility = View.GONE
-            itemView.mediaPreviewLoad.visibility = View.VISIBLE
-            itemView.mediaPreview.displayMedia()
+            }
+            else -> {
+                itemView.mediaPreviewContainer.visibility = View.VISIBLE
+                itemView.mediaPreview.visibility = View.GONE
+                itemView.mediaPreviewLoad.visibility = View.VISIBLE
+                itemView.mediaPreview.displayMedia()
+            }
         }
 
         if (TwitterCardUtils.isCardSupported(status)) {

@@ -87,13 +87,17 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
             finish()
             return
         }
-        if (checkAllSelfPermissionsGranted(AndroidPermissions.READ_EXTERNAL_STORAGE, AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
-            showPickFileDialog()
-        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            val permissions = arrayOf(AndroidPermissions.READ_EXTERNAL_STORAGE, AndroidPermissions.WRITE_EXTERNAL_STORAGE)
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_REQUEST_PERMISSIONS)
-        } else {
-            finishWithDeniedMessage()
+        when {
+            checkAllSelfPermissionsGranted(AndroidPermissions.READ_EXTERNAL_STORAGE, AndroidPermissions.WRITE_EXTERNAL_STORAGE) -> {
+                showPickFileDialog()
+            }
+            Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN -> {
+                val permissions = arrayOf(AndroidPermissions.READ_EXTERNAL_STORAGE, AndroidPermissions.WRITE_EXTERNAL_STORAGE)
+                ActivityCompat.requestPermissions(this, permissions, REQUEST_REQUEST_PERMISSIONS)
+            }
+            else -> {
+                finishWithDeniedMessage()
+            }
         }
     }
 

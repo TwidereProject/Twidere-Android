@@ -290,12 +290,16 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             } else {
                 firstVisibleItemPosition
             }.coerceInOr(statusRange, -1)
-            lastReadId = if (lastReadPosition < 0) {
-                -1
-            } else if (useSortIdAsReadPosition) {
-                adapter.getStatusSortId(lastReadPosition, false)
-            } else {
-                adapter.getStatusPositionKey(lastReadPosition)
+            lastReadId = when {
+                lastReadPosition < 0 -> {
+                    -1
+                }
+                useSortIdAsReadPosition -> {
+                    adapter.getStatusSortId(lastReadPosition, false)
+                }
+                else -> {
+                    adapter.getStatusPositionKey(lastReadPosition)
+                }
             }
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
             loadMore = statusRange.last in 0..lastVisibleItemPosition
@@ -623,15 +627,19 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     }
                 }
                 R.id.favorite -> {
-                    if (fragment.preferences[favoriteConfirmationKey]) {
-                        fragment.executeAfterFragmentResumed {
-                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                    when {
+                        fragment.preferences[favoriteConfirmationKey] -> {
+                            fragment.executeAfterFragmentResumed {
+                                FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)
+                            }
                         }
-                    } else if (status.is_favorite) {
-                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
-                    } else {
-                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        status.is_favorite -> {
+                            fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                        }
+                        else -> {
+                            holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        }
                     }
                 }
             }
@@ -721,16 +729,20 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     return true
                 }
                 ACTION_STATUS_FAVORITE -> {
-                    if (fragment.preferences[favoriteConfirmationKey]) {
-                        fragment.executeAfterFragmentResumed {
-                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                    when {
+                        fragment.preferences[favoriteConfirmationKey] -> {
+                            fragment.executeAfterFragmentResumed {
+                                FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)
+                            }
                         }
-                    } else if (status.is_favorite) {
-                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
-                    } else {
-                        val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
-                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        status.is_favorite -> {
+                            fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                        }
+                        else -> {
+                            val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
+                            holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        }
                     }
                     return true
                 }

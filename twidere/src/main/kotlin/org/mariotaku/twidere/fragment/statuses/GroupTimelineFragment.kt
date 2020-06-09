@@ -49,12 +49,16 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
             val result = ArrayList<String>()
             result.add(AUTHORITY_GROUP_TIMELINE)
             result.add("account=$accountKey")
-            if (groupId != null) {
-                result.add("group_id=$groupId")
-            } else if (groupName != null) {
-                result.add("group_name=$groupName")
-            } else {
-                return null
+            when {
+                groupId != null -> {
+                    result.add("group_id=$groupId")
+                }
+                groupName != null -> {
+                    result.add("group_name=$groupName")
+                }
+                else -> {
+                    return null
+                }
             }
             return result.toTypedArray()
         }

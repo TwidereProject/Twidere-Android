@@ -435,7 +435,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     val src = MediaPickerActivity.getMediaUris(data)?.takeIf(Array<Uri>::isNotEmpty) ?:
                             data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)?.let { arrayOf(it) }
                     if (src != null) {
-                        TaskStarter.execute(AddMediaTask(this, src, null, false, false))
+                        TaskStarter.execute(AddMediaTask(this, src, null,
+                            copySrc = false,
+                            deleteSrc = false
+                        ))
                     }
                 }
             }
@@ -1087,16 +1090,20 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val action = intent.action
         val hasVisibility = intent.hasExtra(EXTRA_VISIBILITY)
         val hasAccountKeys: Boolean
-        if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
-            val accountKeys = intent.getTypedArrayExtra<UserKey>(EXTRA_ACCOUNT_KEYS)
-            accountsAdapter.selectedAccountKeys = accountKeys
-            hasAccountKeys = true
-        } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
-            val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
-            hasAccountKeys = true
-        } else {
-            hasAccountKeys = false
+        when {
+            intent.hasExtra(EXTRA_ACCOUNT_KEYS) -> {
+                val accountKeys = intent.getTypedArrayExtra<UserKey>(EXTRA_ACCOUNT_KEYS)
+                accountsAdapter.selectedAccountKeys = accountKeys
+                hasAccountKeys = true
+            }
+            intent.hasExtra(EXTRA_ACCOUNT_KEY) -> {
+                val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
+                hasAccountKeys = true
+            }
+            else -> {
+                hasAccountKeys = false
+            }
         }
         when (action) {
             Intent.ACTION_SEND, Intent.ACTION_SEND_MULTIPLE -> {
@@ -1105,7 +1112,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 val stream = intent.getStreamExtra()
                 if (stream != null) {
                     val src = stream.toTypedArray()
-                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                    TaskStarter.execute(AddMediaTask(this, src, null,
+                        copySrc = true,
+                        deleteSrc = false
+                    ))
                 }
             }
             else -> {
@@ -1114,7 +1124,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 val data = intent.data
                 if (data != null) {
                     val src = arrayOf(data)
-                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                    TaskStarter.execute(AddMediaTask(this, src, null,
+                        copySrc = true,
+                        deleteSrc = false
+                    ))
                 }
             }
         }
@@ -1820,7 +1833,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         })
         editText.customSelectionActionModeCallback = this
         editText.imageInputListener = { contentInfo ->
-            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), null, true, false)
+            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), null,
+                copySrc = true,
+                deleteSrc = false
+            )
             task.callback = {
                 contentInfo.releasePermission()
             }
@@ -2123,13 +2139,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     textView.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
                     textView.tag = location
                 } else {
-                    val tag = textView.tag
-                    if (tag is Address) {
-                        textView.spannable = tag.locality
-                    } else if (tag is NoAddress) {
-                        textView.setText(R.string.label_location_your_coarse_location)
-                    } else {
-                        textView.setText(R.string.getting_location)
+                    when (val tag = textView.tag) {
+                        is Address -> {
+                            textView.spannable = tag.locality
+                        }
+                        is NoAddress -> {
+                            textView.setText(R.string.label_location_your_coarse_location)
+                        }
+                        else -> {
+                            textView.setText(R.string.getting_location)
+                        }
                     }
                 }
             } else {

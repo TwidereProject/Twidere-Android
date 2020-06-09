@@ -229,22 +229,26 @@ class ActivityTitleSummaryMessage private constructor(val icon: Int, val color: 
                     nameFirst))
             firstDisplayName.setSpan(StyleSpan(Typeface.BOLD), 0, firstDisplayName.length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            if (sources.size == 1) {
-                val format = resources.getString(stringRes)
-                return SpanFormatter.format(format, firstDisplayName)
-            } else if (sources.size == 2) {
-                val format = resources.getString(stringResMulti)
-                val secondDisplayName = SpannableString(manager.getDisplayName(sources[1],
+            when (sources.size) {
+                1 -> {
+                    val format = resources.getString(stringRes)
+                    return SpanFormatter.format(format, firstDisplayName)
+                }
+                2 -> {
+                    val format = resources.getString(stringResMulti)
+                    val secondDisplayName = SpannableString(manager.getDisplayName(sources[1],
                         nameFirst))
-                secondDisplayName.setSpan(StyleSpan(Typeface.BOLD), 0, secondDisplayName.length,
+                    secondDisplayName.setSpan(StyleSpan(Typeface.BOLD), 0, secondDisplayName.length,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                return SpanFormatter.format(format, firstDisplayName,
+                    return SpanFormatter.format(format, firstDisplayName,
                         secondDisplayName)
-            } else {
-                val othersCount = sources.size - 1
-                val nOthers = resources.getQuantityString(R.plurals.N_others, othersCount, othersCount)
-                val format = resources.getString(stringResMulti)
-                return SpanFormatter.format(format, firstDisplayName, nOthers)
+                }
+                else -> {
+                    val othersCount = sources.size - 1
+                    val nOthers = resources.getQuantityString(R.plurals.N_others, othersCount, othersCount)
+                    val format = resources.getString(stringResMulti)
+                    return SpanFormatter.format(format, firstDisplayName, nOthers)
+                }
             }
         }
     }

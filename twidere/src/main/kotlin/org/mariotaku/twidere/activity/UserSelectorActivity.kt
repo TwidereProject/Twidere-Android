@@ -129,12 +129,16 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         listContainer.visibility = View.VISIBLE
         adapter.setData(data, true)
         loader as CacheUserSearchLoader
-        if (data.isNotNullOrEmpty()) {
-            showList()
-        } else if (loader.query.isEmpty()) {
-            showSearchHint()
-        } else {
-            showNotFound()
+        when {
+            data.isNotNullOrEmpty() -> {
+                showList()
+            }
+            loader.query.isEmpty() -> {
+                showSearchHint()
+            }
+            else -> {
+                showNotFound()
+            }
         }
     }
 

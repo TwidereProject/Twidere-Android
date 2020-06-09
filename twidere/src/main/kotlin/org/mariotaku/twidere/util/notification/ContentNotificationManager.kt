@@ -123,16 +123,20 @@ class ContentNotificationManager(
             val displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
                     userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
                     nameFirst)
-            notificationContent = if (usersCount == 1) {
-                context.getString(R.string.from_name, displayName)
-            } else if (usersCount == 2) {
-                userCursor.moveToPosition(1)
-                val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
-                    userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
-                    nameFirst)
-                resources.getString(R.string.from_name_and_name, displayName, othersName)
-            } else {
-                resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1)
+            notificationContent = when (usersCount) {
+                1 -> {
+                    context.getString(R.string.from_name, displayName)
+                }
+                2 -> {
+                    userCursor.moveToPosition(1)
+                    val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
+                        userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
+                        nameFirst)
+                    resources.getString(R.string.from_name_and_name, displayName, othersName)
+                }
+                else -> {
+                    resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1)
+                }
             }
 
             // Setup notification
