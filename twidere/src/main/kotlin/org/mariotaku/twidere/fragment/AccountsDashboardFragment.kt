@@ -532,12 +532,16 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val bannerView = accountProfileBanner.nextView as ImageView
         val user = account.user
-        val fallbackBanner = if (user.link_color != 0) {
-            ColorDrawable(user.link_color)
-        } else if (user.account_color != 0) {
-            ColorDrawable(user.account_color)
-        } else {
-            ColorDrawable(Chameleon.getOverrideTheme(requireActivity(), activity).colorPrimary)
+        val fallbackBanner = when {
+            user.link_color != 0 -> {
+                ColorDrawable(user.link_color)
+            }
+            user.account_color != 0 -> {
+                ColorDrawable(user.account_color)
+            }
+            else -> {
+                ColorDrawable(Chameleon.getOverrideTheme(requireActivity(), activity).colorPrimary)
+            }
         }
 
         requestManager.loadProfileBanner(requireContext(), account.user, width).fallback(fallbackBanner)

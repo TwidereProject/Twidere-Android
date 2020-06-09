@@ -37,23 +37,27 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         preferenceManager.sharedPreferencesName = SHARED_PREFERENCES_NAME
         val defaultScreen = preferenceScreen
         val preferenceScreen: PreferenceScreen
-        if (defaultScreen != null) {
+        preferenceScreen = if (defaultScreen != null) {
             defaultScreen.removeAll()
-            preferenceScreen = defaultScreen
+            defaultScreen
         } else {
-            preferenceScreen = preferenceManager.createPreferenceScreen(activity)
+            preferenceManager.createPreferenceScreen(activity)
         }
         setPreferenceScreen(preferenceScreen)
 
         val args = arguments
         val rawResId = args?.get(EXTRA_RESID)
         val resId: Int
-        if (rawResId is Int) {
-            resId = rawResId
-        } else if (rawResId is String) {
-            resId = Utils.getResId(activity, rawResId)
-        } else {
-            resId = 0
+        resId = when (rawResId) {
+            is Int -> {
+                rawResId
+            }
+            is String -> {
+                Utils.getResId(activity, rawResId)
+            }
+            else -> {
+                0
+            }
         }
         if (resId != 0) {
             addPreferencesFromResource(resId)
@@ -81,12 +85,16 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         val currentActivity = activity ?: return
         val extras = preference.extras
         if (extras != null) {
-            if (extras.containsKey(EXTRA_SHOULD_RESTART)) {
-                SettingsActivity.setShouldRestart(currentActivity)
-            } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
-                SettingsActivity.setShouldRecreate(currentActivity)
-            } else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
-                SettingsActivity.setShouldTerminate(currentActivity)
+            when {
+                extras.containsKey(EXTRA_SHOULD_RESTART) -> {
+                    SettingsActivity.setShouldRestart(currentActivity)
+                }
+                extras.containsKey(EXTRA_SHOULD_RECREATE) -> {
+                    SettingsActivity.setShouldRecreate(currentActivity)
+                }
+                extras.containsKey(EXTRA_SHOULD_TERMINATE) -> {
+                    SettingsActivity.setShouldTerminate(currentActivity)
+                }
             }
             if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
                 currentActivity.recreate()

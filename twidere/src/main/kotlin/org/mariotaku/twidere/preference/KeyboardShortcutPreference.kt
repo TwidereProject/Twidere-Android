@@ -161,7 +161,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
             fun newInstance(key: String): KeyboardShortcutDialogFragment {
                 val df = KeyboardShortcutDialogFragment()
                 val args = Bundle()
-                args.putString(PreferenceDialogFragmentCompat.ARG_KEY, key)
+                args.putString(ARG_KEY, key)
                 df.arguments = args
                 return df
             }

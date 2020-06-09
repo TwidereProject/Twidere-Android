@@ -34,8 +34,13 @@ open class UpdateProfileBackgroundImageTask<ResultHandler>(
     override fun onExecute(account: AccountDetails, params: Any?): ParcelableUser {
         val microBlog = account.newMicroBlogInstance(context, MicroBlog::class.java)
         try {
-            UpdateStatusTask.getBodyFromMedia(context, imageUri, ParcelableMedia.Type.IMAGE, true,
-                    true, null, false, null).use {
+            UpdateStatusTask.getBodyFromMedia(context, imageUri, ParcelableMedia.Type.IMAGE,
+                isDeleteAlways = true,
+                isDeleteOnSuccess = true,
+                sizeLimit = null,
+                chucked = false,
+                readListener = null
+            ).use {
                 microBlog.updateProfileBackgroundImage(it.body, tile)
             }
         } catch (e: IOException) {

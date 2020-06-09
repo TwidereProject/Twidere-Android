@@ -171,25 +171,29 @@ abstract class ParcelableStatusesAdapter(
 
     override fun setData(data: List<ParcelableStatus>?): Boolean {
         var changed = true
-        if (data == null) {
-            displayPositions = null
-            displayDataCount = 0
-        } else if (data is ObjectCursor) {
-            displayPositions = null
-            displayDataCount = data.size
-        } else {
-            var filteredCount = 0
-            displayPositions = IntArray(data.size).apply {
-                data.forEachIndexed { i, item ->
-                    if (!item.is_gap && item.is_filtered) {
-                        filteredCount++
-                    } else {
-                        this[i - filteredCount] = i
+        when (data) {
+            null -> {
+                displayPositions = null
+                displayDataCount = 0
+            }
+            is ObjectCursor -> {
+                displayPositions = null
+                displayDataCount = data.size
+            }
+            else -> {
+                var filteredCount = 0
+                displayPositions = IntArray(data.size).apply {
+                    data.forEachIndexed { i, item ->
+                        if (!item.is_gap && item.is_filtered) {
+                            filteredCount++
+                        } else {
+                            this[i - filteredCount] = i
+                        }
                     }
                 }
+                displayDataCount = data.size - filteredCount
+                changed = this.data != data
             }
-            displayDataCount = data.size - filteredCount
-            changed = this.data != data
         }
         this.data = data
         this.infoCache = if (data != null) arrayOfNulls(data.size) else null
@@ -324,7 +328,7 @@ abstract class ParcelableStatusesAdapter(
                 return TimelineFilterHeaderViewHolder(this, view)
             }
         }
-        throw IllegalStateException("Unknown view type " + viewType)
+        throw IllegalStateException("Unknown view type $viewType")
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -350,8 +354,7 @@ abstract class ParcelableStatusesAdapter(
         if (position == 0 && ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
-        val countIndex = getItemCountIndex(position)
-        when (countIndex) {
+        when (val countIndex = getItemCountIndex(position)) {
             ITEM_INDEX_LOAD_START_INDICATOR, ITEM_INDEX_LOAD_END_INDICATOR -> {
                 return ITEM_VIEW_TYPE_LOAD_INDICATOR
             }
@@ -410,7 +413,7 @@ abstract class ParcelableStatusesAdapter(
         // lesser equals than read position
         if (positionKey <= 0) return RecyclerView.NO_POSITION
         val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
-        if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
+        if (range.isEmpty() || range.first < 0) return RecyclerView.NO_POSITION
         if (positionKey < getStatusPositionKey(range.last, raw)) {
             return range.last
         }
@@ -422,7 +425,7 @@ abstract class ParcelableStatusesAdapter(
         // lesser equals than read position
         if (sortId <= 0) return RecyclerView.NO_POSITION
         val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
-        if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
+        if (range.isEmpty() || range.first < 0) return RecyclerView.NO_POSITION
         if (sortId < getStatusSortId(range.last, raw)) {
             return range.last
         }
@@ -489,11 +492,11 @@ abstract class ParcelableStatusesAdapter(
                 } else {
                     dataPosition
                 }
-                if (reuse && data is ObjectCursor) {
+                return if (reuse && data is ObjectCursor) {
                     reuseStatus.is_filtered = false
-                    return data.setInto(listPosition, reuseStatus)
+                    data.setInto(listPosition, reuseStatus)
                 } else {
-                    return data[listPosition]
+                    data[listPosition]
                 }
             }
         }

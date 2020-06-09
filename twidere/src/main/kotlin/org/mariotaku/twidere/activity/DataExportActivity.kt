@@ -105,12 +105,12 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             ?: return false
 //            val file = File(folder, fileName)
 //            file.delete()
-            try {
+            return try {
                 DataImportExportUtils.exportData(activity, file, flags)
-                return true
+                true
             } catch (e: IOException) {
                 Log.w(LOGTAG, e)
-                return false
+                false
             }
 
         }
@@ -134,7 +134,7 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         companion object {
-            private val FRAGMENT_TAG = "import_settings_dialog"
+            private const val FRAGMENT_TAG = "import_settings_dialog"
         }
 
     }

@@ -58,7 +58,6 @@ import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
 import org.mariotaku.twidere.model.tab.extra.TabExtras
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.content.ContentResolverUtils
@@ -81,66 +80,66 @@ object DataStoreUtils {
     private val CONTENT_PROVIDER_URI_MATCHER = UriMatcher(UriMatcher.NO_MATCH)
 
     init {
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Statuses.CONTENT_PATH,
                 TABLE_ID_STATUSES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Activities.AboutMe.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Activities.AboutMe.CONTENT_PATH,
                 TABLE_ID_ACTIVITIES_ABOUT_ME)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Drafts.CONTENT_PATH,
                 TABLE_ID_DRAFTS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CachedUsers.CONTENT_PATH,
                 TABLE_ID_CACHED_USERS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Users.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Filters.Users.CONTENT_PATH,
                 TABLE_ID_FILTERED_USERS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Keywords.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Filters.Keywords.CONTENT_PATH,
                 TABLE_ID_FILTERED_KEYWORDS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Sources.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Filters.Sources.CONTENT_PATH,
                 TABLE_ID_FILTERED_SOURCES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Links.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Filters.Links.CONTENT_PATH,
                 TABLE_ID_FILTERED_LINKS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Subscriptions.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Filters.Subscriptions.CONTENT_PATH,
                 TABLE_ID_FILTERS_SUBSCRIPTIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Messages.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Messages.CONTENT_PATH,
                 TABLE_ID_MESSAGES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Conversations.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Conversations.CONTENT_PATH,
                 TABLE_ID_MESSAGES_CONVERSATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedTrends.Local.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CachedTrends.Local.CONTENT_PATH,
                 TABLE_ID_TRENDS_LOCAL)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Tabs.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Tabs.CONTENT_PATH,
                 TABLE_ID_TABS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedStatuses.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CachedStatuses.CONTENT_PATH,
                 TABLE_ID_CACHED_STATUSES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedHashtags.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CachedHashtags.CONTENT_PATH,
                 TABLE_ID_CACHED_HASHTAGS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedRelationships.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CachedRelationships.CONTENT_PATH,
                 TABLE_ID_CACHED_RELATIONSHIPS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SavedSearches.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, SavedSearches.CONTENT_PATH,
                 TABLE_ID_SAVED_SEARCHES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SearchHistory.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, SearchHistory.CONTENT_PATH,
                 TABLE_ID_SEARCH_HISTORY)
 
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Permissions.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Permissions.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_PERMISSIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/*",
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/*",
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_UNSENT,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Drafts.CONTENT_PATH_UNSENT,
                 VIRTUAL_TABLE_ID_DRAFTS_UNSENT)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS,
                 VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS + "/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS + "/#",
                 VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Suggestions.AutoComplete.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Suggestions.AutoComplete.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Suggestions.Search.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, Suggestions.Search.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_DATABASE_PREPARE,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CONTENT_PATH_DATABASE_PREPARE,
                 VIRTUAL_TABLE_ID_DATABASE_PREPARE)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_NULL,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CONTENT_PATH_NULL,
                 VIRTUAL_TABLE_ID_NULL)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_EMPTY,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, CONTENT_PATH_EMPTY,
                 VIRTUAL_TABLE_ID_EMPTY)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_RAW_QUERY + "/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(AUTHORITY, "$CONTENT_PATH_RAW_QUERY/*",
                 VIRTUAL_TABLE_ID_RAW_QUERY)
     }
 
@@ -207,7 +206,7 @@ object DataStoreUtils {
             Array<String?> {
         return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getNewestActivityMaxPositions(context, uri, keys, where, whereArgs)
+            getNewestActivityMaxPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             Array(accountKeys.size) { arr1.elementAtOrNull(it) ?: arr2.elementAtOrNull(it) }
         }, accountKeys)
@@ -224,7 +223,7 @@ object DataStoreUtils {
             Array<String?> {
         return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getOldestActivityMaxPositions(context, uri, keys, where, whereArgs)
+            getOldestActivityMaxPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             Array(accountKeys.size) { arr1.elementAtOrNull(it) ?: arr2.elementAtOrNull(it) }
         }, accountKeys)
@@ -241,7 +240,7 @@ object DataStoreUtils {
             LongArray {
         return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getNewestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
+            getNewestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             LongArray(accountKeys.size) { arr1.elementAtOrNull(it)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(it) ?: 0 }
         }, accountKeys)
@@ -258,7 +257,7 @@ object DataStoreUtils {
             LongArray {
         return getOfficialSeparatedIds(context, { keys, isOfficial ->
             val (where, whereArgs) = getIdsWhere(isOfficial)
-            DataStoreUtils.getOldestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
+            getOldestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
             LongArray(accountKeys.size) { arr1.elementAtOrNull(it)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(it) ?: 0 }
         }, accountKeys)
@@ -309,13 +308,11 @@ object DataStoreUtils {
     }
 
     fun getAccountDisplayName(context: Context, accountKey: UserKey, nameFirst: Boolean): String? {
-        val name: String?
-        if (nameFirst) {
-            name = getAccountName(context, accountKey)
+        return if (nameFirst) {
+            getAccountName(context, accountKey)
         } else {
-            name = "@${getAccountScreenName(context, accountKey)}"
+            "@${getAccountScreenName(context, accountKey)}"
         }
-        return name
     }
 
     fun getAccountName(context: Context, accountKey: UserKey): String? {
@@ -751,10 +748,10 @@ object DataStoreUtils {
         val tableName = getTableNameByUri(uri) ?: throw NullPointerException()
         val having = Expression.inArgs(keyField, nonNullKeys.size)
         val bindingArgs: Array<String>
-        if (extraWhereArgs != null) {
-            bindingArgs = extraWhereArgs + nonNullKeys
+        bindingArgs = if (extraWhereArgs != null) {
+            extraWhereArgs + nonNullKeys
         } else {
-            bindingArgs = nonNullKeys
+            nonNullKeys
         }
         val builder = SQLQueryBuilder.select(Columns(keyField, *valueFields))
         builder.from(Table(tableName))
@@ -844,7 +841,7 @@ object DataStoreUtils {
 
     fun prepareDatabase(context: Context) {
         val cr = context.contentResolver
-        cr.queryReference(TwidereDataStore.CONTENT_URI_DATABASE_PREPARE, null, null,
+        cr.queryReference(CONTENT_URI_DATABASE_PREPARE, null, null,
                 null, null).use {
             // Just try to initialize database
         }
@@ -943,7 +940,7 @@ object DataStoreUtils {
         val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.equalsArgs(Statuses.ID)).sql
         val whereArgs = arrayOf(accountKey.toString(), statusId)
-        for (uri in DataStoreUtils.STATUSES_URIS) {
+        for (uri in STATUSES_URIS) {
             val status = resolver.queryOne(uri, Statuses.COLUMNS, where, whereArgs, null,
                     ParcelableStatus::class.java)
             if (status != null) return status

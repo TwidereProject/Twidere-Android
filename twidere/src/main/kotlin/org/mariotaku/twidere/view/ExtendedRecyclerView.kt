@@ -136,7 +136,7 @@ class ExtendedRecyclerView(context: Context, attrs: AttributeSet? = null) :
             return false
         }
         val position = getChildLayoutPosition(originalView)
-        if (position == RecyclerView.NO_POSITION) return false
+        if (position == NO_POSITION) return false
         contextMenuInfo = ContextMenuInfo(id, position)
         return super.showContextMenuForChild(originalView)
     }

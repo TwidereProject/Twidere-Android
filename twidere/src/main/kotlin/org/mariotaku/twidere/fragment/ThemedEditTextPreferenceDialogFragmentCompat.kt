@@ -64,7 +64,7 @@ class ThemedEditTextPreferenceDialogFragmentCompat : ThemedPreferenceDialogFragm
         fun newInstance(key: String): ThemedEditTextPreferenceDialogFragmentCompat {
             val fragment = ThemedEditTextPreferenceDialogFragmentCompat()
             val args = Bundle()
-            args.putString(PreferenceDialogFragmentCompat.ARG_KEY, key)
+            args.putString(ARG_KEY, key)
             fragment.arguments = args
             return fragment
         }

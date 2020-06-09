@@ -41,7 +41,7 @@ class PinStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "pin_status"
+        const val FRAGMENT_TAG = "pin_status"
 
         fun show(fm: FragmentManager, status: ParcelableStatus): PinStatusDialogFragment {
             val args = Bundle()

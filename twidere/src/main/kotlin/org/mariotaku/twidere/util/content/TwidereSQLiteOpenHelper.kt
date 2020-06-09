@@ -109,7 +109,7 @@ class TwidereSQLiteOpenHelper(
         @CustomTabType
         val tabTypes = arrayOf(CustomTabType.HOME_TIMELINE, CustomTabType.NOTIFICATIONS_TIMELINE,
                 CustomTabType.TRENDS_SUGGESTIONS, CustomTabType.DIRECT_MESSAGES)
-        for (i in 0 until tabTypes.size) {
+        for (i in tabTypes.indices) {
             @CustomTabType
             val tabType = tabTypes[i]
             val conf = TabConfiguration.ofType(tabType) ?: continue
@@ -265,7 +265,7 @@ class TwidereSQLiteOpenHelper(
 
     private fun migrateDrafts(db: SQLiteDatabase) {
         val draftsAlias = HashMap<String, String>()
-        draftsAlias.put(Drafts.MEDIA, "medias")
+        draftsAlias[Drafts.MEDIA] = "medias"
         safeUpgrade(db, Drafts.TABLE_NAME, Drafts.COLUMNS, Drafts.TYPES, false, draftsAlias)
     }
 

@@ -139,7 +139,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
             override fun onAddUserClick(position: Int) {
                 val conversation = adapter.conversation ?: return
-                val intent = Intent(IntentConstants.INTENT_ACTION_SELECT_USER)
+                val intent = Intent(INTENT_ACTION_SELECT_USER)
                 intent.putExtra(EXTRA_ACCOUNT_KEY, conversation.account_key)
                 intent.setClass(context, UserSelectorActivity::class.java)
                 startActivityForResult(intent, REQUEST_CONVERSATION_ADD_USER)
@@ -583,26 +583,24 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         override fun getItemViewType(position: Int): Int {
-            val countIndex = itemCounts.getItemCountIndex(position)
-            when (countIndex) {
-                ITEM_INDEX_TOP_SPACE -> return VIEW_TYPE_TOP_SPACE
-                ITEM_INDEX_HEADER -> return VIEW_TYPE_HEADER
-                ITEM_INDEX_ITEM -> return VIEW_TYPE_USER
-                ITEM_INDEX_ADD_USER -> return VIEW_TYPE_ADD_USER
-                ITEM_INDEX_SPACE -> return VIEW_TYPE_BOTTOM_SPACE
+            return when (val countIndex = itemCounts.getItemCountIndex(position)) {
+                ITEM_INDEX_TOP_SPACE -> VIEW_TYPE_TOP_SPACE
+                ITEM_INDEX_HEADER -> VIEW_TYPE_HEADER
+                ITEM_INDEX_ITEM -> VIEW_TYPE_USER
+                ITEM_INDEX_ADD_USER -> VIEW_TYPE_ADD_USER
+                ITEM_INDEX_SPACE -> VIEW_TYPE_BOTTOM_SPACE
                 else -> throw UnsupportedCountIndexException(countIndex, position)
             }
         }
 
         override fun getItemId(position: Int): Long {
-            val countIndex = itemCounts.getItemCountIndex(position)
-            when (countIndex) {
+            return when (val countIndex = itemCounts.getItemCountIndex(position)) {
                 ITEM_INDEX_ITEM -> {
                     val user = getUser(position)!!
-                    return (countIndex.toLong() shl 32) or user.hashCode().toLong()
+                    (countIndex.toLong() shl 32) or user.hashCode().toLong()
                 }
                 else -> {
-                    return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
+                    (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
                 }
             }
         }
@@ -805,8 +803,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val position = parent.getChildLayoutPosition(view)
             if (position < 0) return
             val itemCounts = adapter.itemCounts
-            val countIndex = itemCounts.getItemCountIndex(position)
-            when (countIndex) {
+            when (val countIndex = itemCounts.getItemCountIndex(position)) {
                 ConversationInfoAdapter.ITEM_INDEX_TOP_SPACE,
                 ConversationInfoAdapter.ITEM_INDEX_SPACE,
                 ConversationInfoAdapter.ITEM_INDEX_ADD_USER -> {

@@ -116,6 +116,6 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
     }
 
     companion object {
-        private val REQUEST_CONNECT_NETWORK_STORAGE: Int = 201
+        private const val REQUEST_CONNECT_NETWORK_STORAGE: Int = 201
     }
 }

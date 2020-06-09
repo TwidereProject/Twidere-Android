@@ -24,6 +24,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ScrollView
 import org.mariotaku.twidere.R
+import kotlin.math.min
 
 class MaxHeightScrollView(context: Context, attrs: AttributeSet? = null) : ScrollView(context, attrs) {
 
@@ -40,8 +41,9 @@ class MaxHeightScrollView(context: Context, attrs: AttributeSet? = null) : Scrol
         val hSpec = if (maxHeight >= 0) {
             val measuredHeight = MeasureSpec.getSize(heightMeasureSpec)
             if (measuredHeight > 0) {
-                View.MeasureSpec.makeMeasureSpec(Math.min(measuredHeight, maxHeight),
-                        View.MeasureSpec.AT_MOST)
+                MeasureSpec.makeMeasureSpec(
+                    min(measuredHeight, maxHeight),
+                        MeasureSpec.AT_MOST)
             } else {
                 maxHeight
             }

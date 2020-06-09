@@ -34,7 +34,6 @@ import android.net.Uri
 import android.nfc.NfcAdapter
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.BatteryManager
-import android.os.Build
 import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -117,8 +116,7 @@ object Utils {
         // Prior to SDK 16, announcements could only be made through FOCUSED
         // events. Jelly Bean (SDK 16) added support for speaking text verbatim
         // using the ANNOUNCEMENT event type.
-        val eventType: Int
-        eventType = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
+        val eventType: Int = AccessibilityEventCompat.TYPE_ANNOUNCEMENT
 
         // Construct an accessibility event with the minimum recommended
         // attributes. An event without a class name or package may be dropped.
@@ -135,10 +133,10 @@ object Utils {
     }
 
     fun deleteMedia(context: Context, uri: Uri): Boolean {
-        try {
-            return PNCUtils.deleteMedia(context, uri)
+        return try {
+            PNCUtils.deleteMedia(context, uri)
         } catch (e: SecurityException) {
-            return false
+            false
         }
 
     }
@@ -162,25 +160,29 @@ object Utils {
 
     fun getAccountKeys(context: Context, args: Bundle?): Array<UserKey>? {
         if (args == null) return null
-        if (args.containsKey(EXTRA_ACCOUNT_KEYS)) {
-            return args.getNullableTypedArray(EXTRA_ACCOUNT_KEYS)
-        } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
-            val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) ?: return emptyArray()
-            return arrayOf(accountKey)
-        } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
-            val accountId = args.get(EXTRA_ACCOUNT_ID).toString()
-            try {
-                if (java.lang.Long.parseLong(accountId) <= 0) return null
-            } catch (e: NumberFormatException) {
-                // Ignore
+        when {
+            args.containsKey(EXTRA_ACCOUNT_KEYS) -> {
+                return args.getNullableTypedArray(EXTRA_ACCOUNT_KEYS)
             }
+            args.containsKey(EXTRA_ACCOUNT_KEY) -> {
+                val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) ?: return emptyArray()
+                return arrayOf(accountKey)
+            }
+            args.containsKey(EXTRA_ACCOUNT_ID) -> {
+                val accountId = args.get(EXTRA_ACCOUNT_ID).toString()
+                try {
+                    if (java.lang.Long.parseLong(accountId) <= 0) return null
+                } catch (e: NumberFormatException) {
+                    // Ignore
+                }
 
-            val accountKey = DataStoreUtils.findAccountKey(context, accountId)
-            args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
-            if (accountKey == null) return arrayOf(UserKey(accountId, null))
-            return arrayOf(accountKey)
+                val accountKey = DataStoreUtils.findAccountKey(context, accountId)
+                args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
+                if (accountKey == null) return arrayOf(UserKey(accountId, null))
+                return arrayOf(accountKey)
+            }
+            else -> return null
         }
-        return null
     }
 
     fun getAccountKey(context: Context, args: Bundle?): UserKey? {
@@ -345,11 +347,11 @@ object Utils {
     fun hasNavBar(context: Context): Boolean {
         val resources = context.resources ?: return false
         val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
-        if (id > 0) {
-            return resources.getBoolean(id)
+        return if (id > 0) {
+            resources.getBoolean(id)
         } else {
             // Check for keys
-            return !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)
+            !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && !KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)
         }
     }
 
@@ -458,13 +460,16 @@ object Utils {
     }
 
     fun getInsetsTopWithoutActionBarHeight(context: Context, top: Int): Int {
-        val actionBarHeight: Int
-        if (context is AppCompatActivity) {
-            actionBarHeight = getActionBarHeight(context.supportActionBar)
-        } else if (context is Activity) {
-            actionBarHeight = getActionBarHeight(context.actionBar)
-        } else {
-            return top
+        val actionBarHeight: Int = when (context) {
+            is AppCompatActivity -> {
+                getActionBarHeight(context.supportActionBar)
+            }
+            is Activity -> {
+                getActionBarHeight(context.actionBar)
+            }
+            else -> {
+                return top
+            }
         }
         if (actionBarHeight > top) {
             return top
@@ -578,12 +583,11 @@ object Utils {
      * @param message String
      */
     fun sendPebbleNotification(context: Context, title: String?, message: String) {
-        val appName: String
 
-        if (title == null) {
-            appName = context.getString(R.string.app_name)
+        val appName: String = if (title == null) {
+            context.getString(R.string.app_name)
         } else {
-            appName = "${context.getString(R.string.app_name)} - $title"
+            "${context.getString(R.string.app_name)} - $title"
         }
 
         if (TextUtils.isEmpty(message)) return

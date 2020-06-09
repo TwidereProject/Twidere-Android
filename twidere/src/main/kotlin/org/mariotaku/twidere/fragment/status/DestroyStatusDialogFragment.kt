@@ -38,7 +38,7 @@ class DestroyStatusDialogFragment : AbsSimpleStatusOperationDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "destroy_status"
+        const val FRAGMENT_TAG = "destroy_status"
 
         fun show(fm: FragmentManager, status: ParcelableStatus): DestroyStatusDialogFragment {
             val args = Bundle()

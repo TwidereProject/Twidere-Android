@@ -147,8 +147,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         adapter.statusClickListener = this
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter, this)
-        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, false,
-                requestManager)
+        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(
+            pauseOnScroll = false, pauseOnFling = false,
+            requestManager = requestManager
+        )
 
         if (shouldInitLoader) {
             initLoaderIfNeeded()
@@ -288,15 +290,19 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             } else {
                 firstVisibleItemPosition
             }.coerceInOr(statusRange, -1)
-            lastReadId = if (lastReadPosition < 0) {
-                -1
-            } else if (useSortIdAsReadPosition) {
-                adapter.getStatusSortId(lastReadPosition, false)
-            } else {
-                adapter.getStatusPositionKey(lastReadPosition)
+            lastReadId = when {
+                lastReadPosition < 0 -> {
+                    -1
+                }
+                useSortIdAsReadPosition -> {
+                    adapter.getStatusSortId(lastReadPosition, false)
+                }
+                else -> {
+                    adapter.getStatusPositionKey(lastReadPosition)
+                }
             }
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
-            loadMore = statusRange.endInclusive in 0..lastVisibleItemPosition
+            loadMore = statusRange.last in 0..lastVisibleItemPosition
         } else if (rememberPosition) {
             val syncManager = timelineSyncManager
             val positionTag = this.readPositionTag
@@ -621,15 +627,19 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     }
                 }
                 R.id.favorite -> {
-                    if (fragment.preferences[favoriteConfirmationKey]) {
-                        fragment.executeAfterFragmentResumed {
-                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                    when {
+                        fragment.preferences[favoriteConfirmationKey] -> {
+                            fragment.executeAfterFragmentResumed {
+                                FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)
+                            }
                         }
-                    } else if (status.is_favorite) {
-                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
-                    } else {
-                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        status.is_favorite -> {
+                            fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                        }
+                        else -> {
+                            holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        }
                     }
                 }
             }
@@ -653,7 +663,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
 
         fun handleActionActivityResult(fragment: BaseFragment, requestCode: Int, resultCode: Int, data: Intent?) {
             when (requestCode) {
-                AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT -> {
+                REQUEST_FAVORITE_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)!!
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)!!
@@ -667,7 +677,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                         fragment.twitterWrapper.createFavoriteAsync(accountKey, status)
                     }
                 }
-                AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                REQUEST_RETWEET_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)!!
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)!!
@@ -719,16 +729,20 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     return true
                 }
                 ACTION_STATUS_FAVORITE -> {
-                    if (fragment.preferences[favoriteConfirmationKey]) {
-                        fragment.executeAfterFragmentResumed {
-                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                    when {
+                        fragment.preferences[favoriteConfirmationKey] -> {
+                            fragment.executeAfterFragmentResumed {
+                                FavoriteConfirmDialogFragment.show(it.childFragmentManager,
                                     status.account_key, status.id, status)
+                            }
                         }
-                    } else if (status.is_favorite) {
-                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
-                    } else {
-                        val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
-                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        status.is_favorite -> {
+                            fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                        }
+                        else -> {
+                            val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
+                            holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                        }
                     }
                     return true
                 }

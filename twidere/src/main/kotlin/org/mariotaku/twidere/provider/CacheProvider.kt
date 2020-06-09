@@ -46,8 +46,7 @@ class CacheProvider : ContentProvider() {
         if (metadata != null) {
             return metadata.contentType
         }
-        val type = uri.getQueryParameter(QUERY_PARAM_TYPE)
-        when (type) {
+        when (uri.getQueryParameter(QUERY_PARAM_TYPE)) {
             CacheFileType.IMAGE -> {
                 val file = fileCache.get(getCacheKey(uri)) ?: return null
                 return BitmapFactory.Options().apply {
@@ -168,21 +167,19 @@ class CacheProvider : ContentProvider() {
          * Copied from ContentResolver.java
          */
         private fun modeToMode(mode: String): Int {
-            val modeBits: Int
-            if ("r" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_READ_ONLY
+            return if ("r" == mode) {
+                ParcelFileDescriptor.MODE_READ_ONLY
             } else if ("w" == mode || "wt" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
+                ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
             } else if ("wa" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_APPEND
+                ParcelFileDescriptor.MODE_WRITE_ONLY or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_APPEND
             } else if ("rw" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE
+                ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE
             } else if ("rwt" == mode) {
-                modeBits = ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
+                ParcelFileDescriptor.MODE_READ_WRITE or ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE
             } else {
-                throw IllegalArgumentException("Invalid mode: " + mode)
+                throw IllegalArgumentException("Invalid mode: $mode")
             }
-            return modeBits
         }
     }
 }

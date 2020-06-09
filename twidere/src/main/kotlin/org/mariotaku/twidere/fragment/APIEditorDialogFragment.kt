@@ -48,14 +48,19 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             val targetFragment = this.targetFragment
             val parentFragment = this.parentFragment
             val host = this.host
-            if (targetFragment is APIEditorCallback) {
-                targetFragment.onSaveAPIConfig(applyCustomAPIConfig())
-            } else if (parentFragment is APIEditorCallback) {
-                parentFragment.onSaveAPIConfig(applyCustomAPIConfig())
-            } else if (host is APIEditorCallback) {
-                host.onSaveAPIConfig(applyCustomAPIConfig())
-            } else {
-                kPreferences[defaultAPIConfigKey] = applyCustomAPIConfig()
+            when {
+                targetFragment is APIEditorCallback -> {
+                    targetFragment.onSaveAPIConfig(applyCustomAPIConfig())
+                }
+                parentFragment is APIEditorCallback -> {
+                    parentFragment.onSaveAPIConfig(applyCustomAPIConfig())
+                }
+                host is APIEditorCallback -> {
+                    host.onSaveAPIConfig(applyCustomAPIConfig())
+                }
+                else -> {
+                    kPreferences[defaultAPIConfigKey] = applyCustomAPIConfig()
+                }
             }
         }
         builder.setNegativeButton(android.R.string.cancel, null)
@@ -94,10 +99,10 @@ class APIEditorDialogFragment : BaseDialogFragment() {
                         tag = "api_url_format_help")
             }
 
-            if (savedInstanceState != null) {
-                apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)!!
+            apiConfig = if (savedInstanceState != null) {
+                savedInstanceState.getParcelable(EXTRA_API_CONFIG)!!
             } else {
-                apiConfig = arguments?.getParcelable(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
+                arguments?.getParcelable(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
             }
             displayCustomApiConfig()
         }

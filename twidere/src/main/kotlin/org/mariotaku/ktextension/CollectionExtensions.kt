@@ -13,10 +13,10 @@ fun Collection<*>?.isNullOrEmpty(): Boolean {
 }
 
 fun <T> MutableCollection<T>.addAllEnhanced(collection: Collection<T>, ignoreDuplicates: Boolean): Boolean {
-    if (ignoreDuplicates) {
-        return addAll(collection.filter { it !in this })
+    return if (ignoreDuplicates) {
+        addAll(collection.filter { it !in this })
     } else {
-        return addAll(collection)
+        addAll(collection)
     }
 }
 
@@ -41,7 +41,7 @@ fun <E> Collection<E>.contentEquals(other: Collection<E>): Boolean {
 
 inline fun <reified T> List<T>.subArray(range: IntRange): Array<T> {
     return Array(range.count()) {
-        this[range.start + it]
+        this[range.first + it]
     }
 }
 

@@ -107,6 +107,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener
 import org.mariotaku.yandex.YandexAPIFactory
 import java.lang.ref.WeakReference
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Displays status details
@@ -149,7 +151,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             adapter.updateItemDecoration()
             val conversationLoader = loader as ConversationLoader
             var supportedPositions: Long = 0
-            if (data != null && !data.isEmpty()) {
+            if (data != null && data.isNotEmpty()) {
                 val sinceSortId = (conversationLoader.pagination as? SinceMaxPagination)?.sinceSortId ?: -1
                 if (sinceSortId < data[data.size - 1].sort_id) {
                     supportedPositions = supportedPositions or ILoadMoreSupportAdapter.END
@@ -288,7 +290,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
 
-    override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
+    override fun onItemActionLongClick(holder: ViewHolder, id: Int, position: Int): Boolean {
         val status = adapter.getStatus(position)
         return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
@@ -700,15 +702,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             } else {
                 dest = prefDest
             }
-            if (account.isOfficial(context)) {
-                return twitter.showTranslation(status.originalId, dest)
+            return if (account.isOfficial(context)) {
+                twitter.showTranslation(status.originalId, dest)
             } else {
                 val holder = DependencyHolder.get(context)
                 val api = YandexAPIFactory(preferences[yandexKeyKey], "https://translate.yandex.net/")
-                        .setHttpClient(holder.restHttpClient)
-                        .build()
+                    .setHttpClient(holder.restHttpClient)
+                    .build()
                 val result = api.search(status.text_plain, "${status.lang}-${dest.split('-').firstOrNull()}")
-                return TranslationResult().also {
+                TranslationResult().also {
                     it[TranslationResult::class.java.getDeclaredField("text")] = result.text?.firstOrNull()
                     it[TranslationResult::class.java.getDeclaredField("id")] = status.originalId
                     it[TranslationResult::class.java.getDeclaredField("translatedLang")] = result.lang?.split('-')?.lastOrNull()
@@ -832,7 +834,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun computeVerticalScrollExtent(state: RecyclerView.State): Int {
             val firstPosition = findFirstVisibleItemPosition()
-            val lastPosition = Math.min(validScrollItemCount - 1, findLastVisibleItemPosition())
+            val lastPosition = min(validScrollItemCount - 1, findLastVisibleItemPosition())
             if (firstPosition < 0 || lastPosition < 0) return 0
             val childCount = lastPosition - firstPosition + 1
             if (childCount > 0) {
@@ -861,7 +863,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun computeVerticalScrollOffset(state: RecyclerView.State): Int {
             val firstPosition = findFirstVisibleItemPosition()
-            val lastPosition = Math.min(validScrollItemCount - 1, findLastVisibleItemPosition())
+            val lastPosition = min(validScrollItemCount - 1, findLastVisibleItemPosition())
             if (firstPosition < 0 || lastPosition < 0) return 0
             val childCount = lastPosition - firstPosition + 1
             val skippedCount = skippedScrollItemCount
@@ -871,7 +873,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     val top = view.top
                     val height = view.height
                     if (height > 0) {
-                        return Math.max((firstPosition - skippedCount) * 100 - top * 100 / height, 0)
+                        return max((firstPosition - skippedCount) * 100 - top * 100 / height, 0)
                     }
                 } else {
                     val count = validScrollItemCount
@@ -888,7 +890,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun computeVerticalScrollRange(state: RecyclerView.State): Int {
             return if (isSmoothScrollbarEnabled) {
-                Math.max(validScrollItemCount * 100, 0)
+                max(validScrollItemCount * 100, 0)
             } else {
                 validScrollItemCount
             }
@@ -943,8 +945,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun isDividerEnabled(childPos: Int): Boolean {
             if (childPos >= statusAdapter.itemCount || childPos < 0) return false
-            val itemType = statusAdapter.getItemType(childPos)
-            when (itemType) {
+            when (statusAdapter.getItemType(childPos)) {
                 StatusDetailsAdapter.ITEM_IDX_REPLY_LOAD_MORE, StatusDetailsAdapter.ITEM_IDX_REPLY_ERROR,
                 StatusDetailsAdapter.ITEM_IDX_SPACE -> return false
             }
@@ -956,12 +957,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     companion object {
 
         // Constants
-        private val LOADER_ID_DETAIL_STATUS = 1
-        private val LOADER_ID_STATUS_CONVERSATIONS = 2
-        private val LOADER_ID_STATUS_ACTIVITY = 3
-        private val STATE_LOADED = 1
-        private val STATE_LOADING = 2
-        private val STATE_ERROR = 3
+        private const val LOADER_ID_DETAIL_STATUS = 1
+        private const val LOADER_ID_STATUS_CONVERSATIONS = 2
+        private const val LOADER_ID_STATUS_ACTIVITY = 3
+        private const val STATE_LOADED = 1
+        private const val STATE_LOADING = 2
+        private const val STATE_ERROR = 3
 
         fun Bundle.toPagination(): Pagination {
             val maxId = getString(EXTRA_MAX_ID)

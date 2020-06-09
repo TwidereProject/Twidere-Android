@@ -76,12 +76,16 @@ class DraftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         } else {
             contentView.drawEnd()
         }
-        if (summaryText != null) {
-            textView.spannable = summaryText
-        } else if (draft.text.isNullOrEmpty()) {
-            textView.setText(R.string.empty_content)
-        } else {
-            textView.spannable = draft.text
+        when {
+            summaryText != null -> {
+                textView.spannable = summaryText
+            }
+            draft.text.isNullOrEmpty() -> {
+                textView.setText(R.string.empty_content)
+            }
+            else -> {
+                textView.spannable = draft.text
+            }
         }
 
         if (draft.timestamp > 0) {

@@ -44,7 +44,7 @@ class RestFuNetworkStreamDownloader(context: Context) : NetworkStreamDownloader(
             val contentType = body.contentType().contentType ?: "image/*"
             return DownloadResult.get(body.stream(), contentType)
         } else {
-            throw IOException("Unable to get " + uri)
+            throw IOException("Unable to get $uri")
         }
     }
 

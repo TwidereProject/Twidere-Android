@@ -47,7 +47,7 @@ class WebLinkHandlerActivity : Activity() {
             startActivity(handledIntent)
         } else {
             if (!handledSuccessfully) {
-                Analyzer.logException(TwitterLinkException("Unable to handle twitter uri " + uri))
+                Analyzer.logException(TwitterLinkException("Unable to handle twitter uri $uri"))
             }
             val fallbackIntent = Intent(Intent.ACTION_VIEW, uri)
             fallbackIntent.addCategory(Intent.CATEGORY_BROWSABLE)
@@ -277,7 +277,7 @@ class WebLinkHandlerActivity : Activity() {
                     sb.append(text)
                 }
                 if (!url.isNullOrEmpty()) {
-                    if (!sb.isEmpty()) {
+                    if (sb.isNotEmpty()) {
                         sb.append(" ")
                     }
                     sb.append(url)
@@ -366,7 +366,7 @@ class WebLinkHandlerActivity : Activity() {
                 "photo", "album", "paipai", "q", "userview", "dialogue")
 
 
-        private val AUTHORITY_TWITTER_COM = "twitter.com"
+        private const val AUTHORITY_TWITTER_COM = "twitter.com"
 
 
         private fun regulateTwitterUri(data: Uri): Uri {

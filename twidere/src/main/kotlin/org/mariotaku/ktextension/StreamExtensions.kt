@@ -40,5 +40,5 @@ fun InputStream.expectLine(string: String = "", charset: Charset = Charset.defau
 fun InputStream.expectBytes(bytes: ByteArray): Boolean {
     val readBytes = ByteArray(bytes.size)
     read(readBytes)
-    return Arrays.equals(readBytes, bytes)
+    return readBytes.contentEquals(bytes)
 }

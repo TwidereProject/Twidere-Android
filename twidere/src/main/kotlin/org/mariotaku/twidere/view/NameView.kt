@@ -41,10 +41,10 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
     var twoLine: Boolean = false
         set(value) {
             field = value
-            if (value) {
-                maxLines = 2
+            maxLines = if (value) {
+                2
             } else {
-                maxLines = 1
+                1
             }
         }
 
@@ -76,11 +76,11 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
     }
 
     override fun onTextContextMenuItem(id: Int): Boolean {
-        try {
-            return super.onTextContextMenuItem(id)
+        return try {
+            super.onTextContextMenuItem(id)
         } catch (e: AbstractMethodError) {
             // http://crashes.to/s/69acd0ea0de
-            return true
+            true
         }
     }
 

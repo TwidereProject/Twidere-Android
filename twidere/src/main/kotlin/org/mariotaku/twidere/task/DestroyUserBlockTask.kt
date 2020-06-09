@@ -57,7 +57,7 @@ class DestroyUserBlockTask(context: Context) : AbsFriendshipOperationTask(contex
         resolver.insert(CachedRelationships.CONTENT_URI, values)
     }
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         val message = context.getString(R.string.unblocked_user, manager.getDisplayName(user, nameFirst))
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

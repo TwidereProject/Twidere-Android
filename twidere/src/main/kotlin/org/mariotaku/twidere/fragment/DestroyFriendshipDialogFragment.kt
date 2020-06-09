@@ -65,7 +65,7 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
 
     companion object {
 
-        val FRAGMENT_TAG = "destroy_friendship"
+        const val FRAGMENT_TAG = "destroy_friendship"
 
         fun show(fm: FragmentManager, user: ParcelableUser): DestroyFriendshipDialogFragment {
             val f = DestroyFriendshipDialogFragment()

@@ -51,9 +51,9 @@ class GroupMembersLoader(
 
     private fun getMicroBlogUsers(details: AccountDetails, paging: Paging): ResponseList<User> {
         val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
-        when {
-            groupId != null -> return microBlog.getGroupMembers(groupId, paging)
-            groupName != null -> return microBlog.getGroupMembersByName(groupName, paging)
+        return when {
+            groupId != null -> microBlog.getGroupMembers(groupId, paging)
+            groupName != null -> microBlog.getGroupMembersByName(groupName, paging)
             else -> throw MicroBlogException("groupId or groupName required")
         }
     }

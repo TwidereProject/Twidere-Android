@@ -177,23 +177,14 @@ class TrendsLocationSelectorActivity : BaseActivity() {
         }
 
         override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
-            val view: View
-            if (convertView != null) {
-                view = convertView
-            } else {
-                view = inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false)
-            }
+            val view: View = convertView ?: inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false)
             view.findViewById<TextView>(android.R.id.text1).text = getGroup(groupPosition).name
             return view
         }
 
         override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
-            val view: View
-            if (convertView != null) {
-                view = convertView
-            } else {
-                view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
-            }
+            val view: View =
+                convertView ?: inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
             val location = getChild(groupPosition, childPosition)
             val text1 = view.findViewById<TextView>(android.R.id.text1)
             if (location.parentId == WORLDWIDE) {

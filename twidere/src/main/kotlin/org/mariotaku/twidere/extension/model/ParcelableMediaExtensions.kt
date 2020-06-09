@@ -27,7 +27,7 @@ fun ParcelableMedia.getBestVideoUrlAndType(supportedTypes: Array<String>): Pair<
             val videoInfo = video_info ?: return Pair(mediaUrl, null)
             val firstMatch = videoInfo.variants.filter { variant ->
                 supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
-            }.sortedByDescending(ParcelableMedia.VideoInfo.Variant::bitrate).firstOrNull() ?: return null
+            }.maxBy(ParcelableMedia.VideoInfo.Variant::bitrate) ?: return null
             return Pair(firstMatch.url, firstMatch.content_type)
         }
         ParcelableMedia.Type.CARD_ANIMATED_GIF -> {

@@ -329,7 +329,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
 
     companion object {
 
-        private val KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized"
+        private const val KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized"
         var instance: TwidereApplication? = null
             private set
 

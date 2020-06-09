@@ -48,7 +48,7 @@ class CreateUserBlockDialogFragment : AbsUserMuteBlockDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "create_user_block"
+        const val FRAGMENT_TAG = "create_user_block"
 
         fun show(fm: FragmentManager, user: ParcelableUser): CreateUserBlockDialogFragment {
             val args = Bundle()

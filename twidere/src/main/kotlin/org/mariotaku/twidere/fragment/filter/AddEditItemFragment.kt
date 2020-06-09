@@ -142,7 +142,7 @@ class AddEditItemFragment : BaseDialogFragment() {
                 advancedExpanded = !advancedExpanded
             }
             positiveButton.setOnClickListener(this@AddEditItemFragment::handlePositiveClick)
-            advancedContainer.children.filter { it is CheckBox }.forEach {
+            advancedContainer.children.filterIsInstance<CheckBox>().forEach {
                 val checkBox = it as CheckBox
                 checkBox.setOnClickListener onClick@ {
                     if (extraFeaturesService.isAdvancedFiltersEnabled) return@onClick

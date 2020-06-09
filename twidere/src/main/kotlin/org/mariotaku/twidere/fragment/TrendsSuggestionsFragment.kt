@@ -86,14 +86,13 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
         if (multiSelectManager.isActive) return
-        val trend: String?
-        if (view is ListView) {
-            trend = adapter.getItem(position - view.headerViewsCount)
+        val trend: String = (if (view is ListView) {
+            adapter.getItem(position - view.headerViewsCount)
         } else {
-            trend = adapter.getItem(position)
+            adapter.getItem(position)
 
-        }
-        if (trend == null) return
+        })
+            ?: return
         activity?.let { openTweetSearch(it, accountKey, trend) }
     }
 

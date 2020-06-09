@@ -26,12 +26,16 @@ object AccountsSelectorTransformer : ViewPager.PageTransformer {
     internal const val selectorAccountsCount: Int = 3
 
     override fun transformPage(page: View, position: Float) {
-        if (position < 0) {
-            page.alpha = 1 + position * selectorAccountsCount
-        } else if (position > (selectorAccountsCount - 1f) / selectorAccountsCount) {
-            page.alpha = (1 - position) * selectorAccountsCount
-        } else {
-            page.alpha = 1f
+        when {
+            position < 0 -> {
+                page.alpha = 1 + position * selectorAccountsCount
+            }
+            position > (selectorAccountsCount - 1f) / selectorAccountsCount -> {
+                page.alpha = (1 - position) * selectorAccountsCount
+            }
+            else -> {
+                page.alpha = 1f
+            }
         }
     }
 

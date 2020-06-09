@@ -97,7 +97,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 showStatus(weakHolder.get()!!, extraStatus, details, savedInstanceState)
             } else promiseOnUi {
                 weakThis.get()?.showProgress()
-            } and AbsStatusDialogFragment.showStatus(context, details, statusId, extraStatus).successUi { status ->
+            } and showStatus(context, details, statusId, extraStatus).successUi { status ->
                 val holder = weakHolder.get() ?: return@successUi
                 weakThis.get()?.showStatus(holder, status, details, savedInstanceState)
             }.failUi {

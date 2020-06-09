@@ -153,10 +153,10 @@ class NetworkDiagnosticsFragment : BaseFragment() {
                 logPrintln()
 
                 val baseUrl: String
-                if (details.credentials.api_url_format != null) {
-                    baseUrl = MicroBlogAPIFactory.getApiBaseUrl(details.credentials.api_url_format, "api")
+                baseUrl = if (details.credentials.api_url_format != null) {
+                    MicroBlogAPIFactory.getApiBaseUrl(details.credentials.api_url_format, "api")
                 } else {
-                    baseUrl = MicroBlogAPIFactory.getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api")
+                    MicroBlogAPIFactory.getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api")
                 }
                 val client = DependencyHolder.get(context).restHttpClient
                 var response: HttpResponse? = null
@@ -319,8 +319,8 @@ class NetworkDiagnosticsFragment : BaseFragment() {
         startDiagnostics.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
-            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Twidere Network Diagnostics")
-            intent.putExtra(android.content.Intent.EXTRA_TEXT, logText.text)
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Twidere Network Diagnostics")
+            intent.putExtra(Intent.EXTRA_TEXT, logText.text)
             startActivity(Intent.createChooser(intent, getString(R.string.action_send)))
         }
     }

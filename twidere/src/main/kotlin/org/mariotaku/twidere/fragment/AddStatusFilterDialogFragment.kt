@@ -52,7 +52,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
         val nameFirst = preferences[nameFirstKey]
-        for (i in 0 until entries.size) {
+        for (i in entries.indices) {
             val info = filterItems!![i]
             when (info.type) {
                 FilterItemInfo.FILTER_TYPE_USER -> {
@@ -87,24 +87,29 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                 }
                 val info = filterItems!![checkPositions.keyAt(i)]
                 val value = info.value
-                if (value is ParcelableUserMention) {
-                    userKeys.add(value.key)
-                    userValues.add(ContentValuesCreator.createFilteredUser(value))
-                } else if (value is UserItem) {
-                    userKeys.add(value.key)
-                    userValues.add(createFilteredUser(value))
-                } else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
-                    val keyword = ParseUtils.parseString(value)
-                    keywords.add(keyword)
-                    val values = ContentValues()
-                    values.put(Filters.Keywords.VALUE, "#$keyword")
-                    keywordValues.add(values)
-                } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
-                    val source = ParseUtils.parseString(value)
-                    sources.add(source)
-                    val values = ContentValues()
-                    values.put(Filters.Sources.VALUE, source)
-                    sourceValues.add(values)
+                when {
+                    value is ParcelableUserMention -> {
+                        userKeys.add(value.key)
+                        userValues.add(ContentValuesCreator.createFilteredUser(value))
+                    }
+                    value is UserItem -> {
+                        userKeys.add(value.key)
+                        userValues.add(createFilteredUser(value))
+                    }
+                    info.type == FilterItemInfo.FILTER_TYPE_KEYWORD -> {
+                        val keyword = ParseUtils.parseString(value)
+                        keywords.add(keyword)
+                        val values = ContentValues()
+                        values.put(Filters.Keywords.VALUE, "#$keyword")
+                        keywordValues.add(values)
+                    }
+                    info.type == FilterItemInfo.FILTER_TYPE_SOURCE -> {
+                        val source = ParseUtils.parseString(value)
+                        sources.add(source)
+                        val values = ContentValues()
+                        values.put(Filters.Sources.VALUE, source)
+                        sourceValues.add(values)
+                    }
                 }
             }
             context?.contentResolver?.let { resolver ->
@@ -164,12 +169,15 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         }
 
     private fun getName(manager: UserColorNameManager, value: Any, nameFirst: Boolean): String {
-        if (value is ParcelableUserMention) {
-            return manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
-        } else if (value is UserItem) {
-            return manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
-        } else
-            return ParseUtils.parseString(value)
+        return when (value) {
+            is ParcelableUserMention -> {
+                manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
+            }
+            is UserItem -> {
+                manager.getDisplayName(value.key, value.name, value.screen_name, nameFirst)
+            }
+            else -> ParseUtils.parseString(value)
+        }
     }
 
     internal data class FilterItemInfo(
@@ -194,7 +202,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
 
     companion object {
 
-        val FRAGMENT_TAG = "add_status_filter"
+        const val FRAGMENT_TAG = "add_status_filter"
 
         private fun createFilteredUser(item: UserItem): ContentValues {
             val values = ContentValues()

@@ -53,14 +53,18 @@ abstract class TwitterCardViewFactory {
         private fun createCardFragment(status: ParcelableStatus): ContainerView.ViewController? {
             val card = status.card
             if (card?.name == null) return null
-            if (TwitterCardUtils.CARD_NAME_PLAYER == card.name) {
-                return createGenericPlayerFragment(card)
-            } else if (TwitterCardUtils.CARD_NAME_AUDIO == card.name) {
-                return createGenericPlayerFragment(card)
-            } else if (TwitterCardUtils.isPoll(card)) {
-                return createCardPollFragment(status)
+            return when {
+                TwitterCardUtils.CARD_NAME_PLAYER == card.name -> {
+                    createGenericPlayerFragment(card)
+                }
+                TwitterCardUtils.CARD_NAME_AUDIO == card.name -> {
+                    createGenericPlayerFragment(card)
+                }
+                TwitterCardUtils.isPoll(card) -> {
+                    createCardPollFragment(status)
+                }
+                else -> null
             }
-            return null
         }
 
 

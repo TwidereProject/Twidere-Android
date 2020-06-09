@@ -9,8 +9,8 @@ import org.mariotaku.twidere.util.support.ViewSupport
  * Created by mariotaku on 16/3/1.
  */
 class ListViewScrollHandler<A>(
-        contentListSupport: ContentScrollHandler.ContentListSupport<A>,
-        viewCallback: ContentScrollHandler.ViewCallback?
+        contentListSupport: ContentListSupport<A>,
+        viewCallback: ViewCallback?
 ) : ContentScrollHandler<A>(contentListSupport, viewCallback), AbsListView.OnScrollListener,
         ListScrollDistanceCalculator.ScrollDistanceListener {
     private val calculator: ListScrollDistanceCalculator = ListScrollDistanceCalculator()
@@ -18,7 +18,7 @@ class ListViewScrollHandler<A>(
     private var dy: Int = 0
     private var oldState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE
 
-    constructor(contentListSupport: ContentScrollHandler.ContentListSupport<A>, listView: ListView)
+    constructor(contentListSupport: ContentListSupport<A>, listView: ListView)
             : this(contentListSupport, ListViewCallback(listView))
 
     override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
@@ -49,7 +49,7 @@ class ListViewScrollHandler<A>(
         oldState = scrollState
     }
 
-    class ListViewCallback(private val listView: AbsListView) : ContentScrollHandler.ViewCallback {
+    class ListViewCallback(private val listView: AbsListView) : ViewCallback {
 
         override val computingLayout: Boolean
             get() = ViewSupport.isInLayout(listView)

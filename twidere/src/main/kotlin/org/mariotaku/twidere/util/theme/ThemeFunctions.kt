@@ -12,11 +12,10 @@ import org.mariotaku.twidere.util.ThemeUtils
  */
 
 fun getCurrentThemeResource(context: Context, theme: String, fromThemeResource: Int = 0): Int {
-    val a: TypedArray
-    if (fromThemeResource == 0) {
-        a = context.obtainStyledAttributes(R.styleable.TwidereTheme)
+    val a: TypedArray = if (fromThemeResource == 0) {
+        context.obtainStyledAttributes(R.styleable.TwidereTheme)
     } else {
-        a = context.obtainStyledAttributes(fromThemeResource, R.styleable.TwidereTheme)
+        context.obtainStyledAttributes(fromThemeResource, R.styleable.TwidereTheme)
     }
     try {
         val lightTheme = a.getResourceId(R.styleable.TwidereTheme_lightThemeResource, 0)

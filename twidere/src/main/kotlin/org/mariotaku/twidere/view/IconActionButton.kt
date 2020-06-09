@@ -111,12 +111,16 @@ class IconActionButton(
 
         fun IIconActionButton.updateColorFilter() {
             this as ImageView
-            if (isActivated) {
-                setColorFilter(activatedColor)
-            } else if (isEnabled) {
-                setColorFilter(defaultColor)
-            } else {
-                setColorFilter(disabledColor)
+            when {
+                isActivated -> {
+                    setColorFilter(activatedColor)
+                }
+                isEnabled -> {
+                    setColorFilter(defaultColor)
+                }
+                else -> {
+                    setColorFilter(disabledColor)
+                }
             }
         }
     }

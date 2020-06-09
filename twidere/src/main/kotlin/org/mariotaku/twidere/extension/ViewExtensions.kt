@@ -43,15 +43,19 @@ fun View.getFrame(rect: Rect) {
 @UiThread
 fun View.getFrameRelatedTo(rect: Rect, other: View? = null) {
     this.getFrame(rect)
-    if (other == null) {
-        offsetToRoot(this, rect)
-    } else if (other === this) {
-        rect.offsetTo(0, 0)
-    } else if (other !== parent) {
-        offsetToRoot(this, rect)
-        other.getFrame(tempRect)
-        offsetToRoot(other, tempRect)
-        rect.offset(-tempRect.left, -tempRect.top)
+    when {
+        other == null -> {
+            offsetToRoot(this, rect)
+        }
+        other === this -> {
+            rect.offsetTo(0, 0)
+        }
+        other !== parent -> {
+            offsetToRoot(this, rect)
+            other.getFrame(tempRect)
+            offsetToRoot(other, tempRect)
+            rect.offset(-tempRect.left, -tempRect.top)
+        }
     }
 }
 

@@ -41,8 +41,8 @@ class ThemedMediaPickerActivity : MediaPickerActivity() {
 
     companion object {
 
-        fun withThemed(context: Context): MediaPickerActivity.IntentBuilder {
-            val builder = MediaPickerActivity.IntentBuilder(context, ThemedMediaPickerActivity::class.java)
+        fun withThemed(context: Context): IntentBuilder {
+            val builder = IntentBuilder(context, ThemedMediaPickerActivity::class.java)
             builder.cropImageActivityClass(ImageCropperActivity::class.java)
             builder.streamDownloaderClass(RestFuNetworkStreamDownloader::class.java)
             return builder

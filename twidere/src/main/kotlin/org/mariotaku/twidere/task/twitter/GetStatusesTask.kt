@@ -146,7 +146,7 @@ abstract class GetStatusesTask(
         var minIdx = -1
         var minPositionKey: Long = -1
         var hasIntersection = false
-        if (!statuses.isEmpty()) {
+        if (statuses.isNotEmpty()) {
             val firstSortId = statuses.first().sort_id
             val lastSortId = statuses.last().sort_id
             // Get id diff of first and last item
@@ -228,13 +228,12 @@ abstract class GetStatusesTask(
         fun getPositionKey(timestamp: Long, sortId: Long, lastSortId: Long, sortDiff: Long,
                 position: Int, count: Int): Long {
             if (sortDiff == 0L) return timestamp
-            val extraValue: Int
-            if (sortDiff > 0) {
+            val extraValue: Int = if (sortDiff > 0) {
                 // descent sorted by time
-                extraValue = count - 1 - position
+                count - 1 - position
             } else {
                 // ascent sorted by time
-                extraValue = position
+                position
             }
             return timestamp + (sortId - lastSortId) * (499 - count) / sortDiff + extraValue.toLong()
         }

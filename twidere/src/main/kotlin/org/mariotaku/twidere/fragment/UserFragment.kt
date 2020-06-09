@@ -150,6 +150,8 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
@@ -242,38 +244,42 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
                                     data: SingleResponse<ParcelableUser>) {
             val activity = activity ?: return
-            if (data.data != null) {
-                val user = data.data
-                cardContent.visibility = View.VISIBLE
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
-                val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)!!
-                displayUser(user, account)
-                if (user.is_cache) {
-                    val args = Bundle()
-                    args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
-                    args.putParcelable(EXTRA_USER_KEY, user.key)
-                    args.putString(EXTRA_SCREEN_NAME, user.screen_name)
-                    args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-                    loaderManager.restartLoader(LOADER_ID_USER, args, this)
+            when {
+                data.data != null -> {
+                    val user = data.data
+                    cardContent.visibility = View.VISIBLE
+                    errorContainer.visibility = View.GONE
+                    progressContainer.visibility = View.GONE
+                    val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)!!
+                    displayUser(user, account)
+                    if (user.is_cache) {
+                        val args = Bundle()
+                        args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
+                        args.putParcelable(EXTRA_USER_KEY, user.key)
+                        args.putString(EXTRA_SCREEN_NAME, user.screen_name)
+                        args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
+                        loaderManager.restartLoader(LOADER_ID_USER, args, this)
+                    }
+                    updateOptionsMenuVisibility()
                 }
-                updateOptionsMenuVisibility()
-            } else if (user?.is_cache == true) {
-                cardContent.visibility = View.VISIBLE
-                errorContainer.visibility = View.GONE
-                progressContainer.visibility = View.GONE
-                displayUser(user, account)
-                updateOptionsMenuVisibility()
-            } else {
-                if (data.hasException()) {
-                    errorText.text = data.exception?.getErrorMessage(activity)
-                    errorText.visibility = View.VISIBLE
+                user?.is_cache == true -> {
+                    cardContent.visibility = View.VISIBLE
+                    errorContainer.visibility = View.GONE
+                    progressContainer.visibility = View.GONE
+                    displayUser(user, account)
+                    updateOptionsMenuVisibility()
                 }
-                cardContent.visibility = View.GONE
-                errorContainer.visibility = View.VISIBLE
-                progressContainer.visibility = View.GONE
-                displayUser(null, null)
-                updateOptionsMenuVisibility()
+                else -> {
+                    if (data.hasException()) {
+                        errorText.text = data.exception?.getErrorMessage(activity)
+                        errorText.visibility = View.VISIBLE
+                    }
+                    cardContent.visibility = View.GONE
+                    errorContainer.visibility = View.VISIBLE
+                    progressContainer.visibility = View.GONE
+                    displayUser(null, null)
+                    updateOptionsMenuVisibility()
+                }
             }
         }
 
@@ -379,7 +385,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-        userProfileSwipeLayout.setEnabled(state == ViewPager.SCROLL_STATE_IDLE)
+        userProfileSwipeLayout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
     }
 
     override fun scrollBy(dy: Float) {
@@ -475,7 +481,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         if (user.created_at >= 0) {
             val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
             val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()
-            val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
+            val dailyTweets = (user.statuses_count / max(1f, daysSinceCreation)).roundToInt()
 
             createdAtContainer.visibility = View.VISIBLE
             createdAtContainer.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
@@ -493,13 +499,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         listedContainer.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
         groupsContainer.visibility = if (user.groups_count < 0) View.GONE else View.VISIBLE
 
-        if (user.color != 0) {
-            setUiColor(user.color)
-        } else if (user.link_color != 0) {
-            setUiColor(user.link_color)
-        } else {
-            val theme = Chameleon.getOverrideTheme(activity, activity)
-            setUiColor(theme.colorPrimary)
+        when {
+            user.color != 0 -> {
+                setUiColor(user.color)
+            }
+            user.link_color != 0 -> {
+                setUiColor(user.link_color)
+            }
+            else -> {
+                val theme = Chameleon.getOverrideTheme(activity, activity)
+                setUiColor(theme.colorPrimary)
+            }
         }
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
@@ -1225,14 +1235,19 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     val userRelationship = relationship
                     val twitter = twitterWrapper
                     if (userRelationship == null) return
-                    if (userRelationship.blocking) {
-                        twitter.destroyBlockAsync(accountKey, user.key)
-                    } else if (userRelationship.blocked_by) {
-                        CreateUserBlockDialogFragment.show(childFragmentManager, user)
-                    } else if (userRelationship.following) {
-                        DestroyFriendshipDialogFragment.show(fragmentManager, user)
-                    } else {
-                        twitter.createFriendshipAsync(accountKey, user.key, user.screen_name)
+                    when {
+                        userRelationship.blocking -> {
+                            twitter.destroyBlockAsync(accountKey, user.key)
+                        }
+                        userRelationship.blocked_by -> {
+                            CreateUserBlockDialogFragment.show(childFragmentManager, user)
+                        }
+                        userRelationship.following -> {
+                            DestroyFriendshipDialogFragment.show(fragmentManager, user)
+                        }
+                        else -> {
+                            twitter.createFriendshipAsync(accountKey, user.key, user.screen_name)
+                        }
                     }
                 }
             }
@@ -1298,16 +1313,16 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {
-                IntentUtils.openTweetSearch(activity, user.account_key, "#" + link)
+                IntentUtils.openTweetSearch(activity, user.account_key, "#$link")
                 return true
             }
             TwidereLinkify.LINK_TYPE_LINK_IN_TEXT, TwidereLinkify.LINK_TYPE_ENTITY_URL -> {
                 val uri = Uri.parse(link)
                 val intent: Intent
-                if (uri.scheme != null) {
-                    intent = Intent(Intent.ACTION_VIEW, uri)
+                intent = if (uri.scheme != null) {
+                    Intent(Intent.ACTION_VIEW, uri)
                 } else {
-                    intent = Intent(Intent.ACTION_VIEW, uri.buildUpon().scheme("http").build())
+                    Intent(Intent.ACTION_VIEW, uri.buildUpon().scheme("http").build())
                 }
                 startActivity(intent)
                 return true
@@ -1405,18 +1420,18 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         previousActionBarItemIsDark = 0
         previousTabItemIsDark = 0
         setupBaseActionBar()
-        if (theme.isToolbarColored) {
-            primaryColor = color
+        primaryColor = if (theme.isToolbarColored) {
+            color
         } else {
-            primaryColor = theme.colorToolbar
+            theme.colorToolbar
         }
         primaryColorDark = ChameleonUtils.darkenColor(primaryColor)
         actionBarBackground.color = primaryColor
         val taskColor: Int
-        if (theme.isToolbarColored) {
-            taskColor = ColorUtils.setAlphaComponent(color, 0xFF)
+        taskColor = if (theme.isToolbarColored) {
+            ColorUtils.setAlphaComponent(color, 0xFF)
         } else {
-            taskColor = ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
+            ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
         }
         val user = this.user
         if (user != null) {
@@ -1525,10 +1540,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         val profileContentHeight = (profileNameContainer!!.height + profileDetailsContainer.height).toFloat()
         val tabOutlineAlphaFactor: Float
-        if (offset - spaceHeight > 0) {
-            tabOutlineAlphaFactor = 1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
+        tabOutlineAlphaFactor = if (offset - spaceHeight > 0) {
+            1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
         } else {
-            tabOutlineAlphaFactor = 1f
+            1f
         }
 
         actionBarBackground.apply {
@@ -1729,10 +1744,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         private fun updateValue() {
-            val shadowAlpha = Math.round(alpha * (1 - factor).coerceIn(0f, 1f))
+            val shadowAlpha = (alpha * (1 - factor).coerceIn(0f, 1f)).roundToInt()
             shadowDrawable.alpha = shadowAlpha
             val hasColor = color != 0
-            val colorAlpha = if (hasColor) Math.round(alpha * factor.coerceIn(0f, 1f)) else 0
+            val colorAlpha = if (hasColor) (alpha * factor.coerceIn(0f, 1f)).roundToInt() else 0
             colorDrawable.alpha = colorAlpha
             invalidateSelf()
         }
@@ -1887,8 +1902,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     companion object {
 
         private val sArgbEvaluator = ArgbEvaluator()
-        private val LOADER_ID_USER = 1
-        private val LOADER_ID_FRIENDSHIP = 2
+        private const val LOADER_ID_USER = 1
+        private const val LOADER_ID_FRIENDSHIP = 2
 
         private const val TAB_POSITION_STATUSES = 0
         private const val TAB_POSITION_MEDIA = 1

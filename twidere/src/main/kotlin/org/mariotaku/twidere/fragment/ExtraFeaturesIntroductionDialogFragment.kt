@@ -89,14 +89,19 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
     }
 
     private fun startActivityForResultOnTarget(intent: Intent) {
-        if (targetFragment != null) {
-            targetFragment?.startActivityForResult(intent, targetRequestCode)
-        } else if (requestCode == 0) {
-            startActivity(intent)
-        } else if (parentFragment != null) {
-            parentFragment?.startActivityForResult(intent, requestCode)
-        } else {
-            activity?.startActivityForResult(intent, requestCode)
+        when {
+            targetFragment != null -> {
+                targetFragment?.startActivityForResult(intent, targetRequestCode)
+            }
+            requestCode == 0 -> {
+                startActivity(intent)
+            }
+            parentFragment != null -> {
+                parentFragment?.startActivityForResult(intent, requestCode)
+            }
+            else -> {
+                activity?.startActivityForResult(intent, requestCode)
+            }
         }
     }
 

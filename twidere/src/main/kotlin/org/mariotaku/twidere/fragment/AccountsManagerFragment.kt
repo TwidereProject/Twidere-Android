@@ -241,6 +241,6 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
     companion object {
 
-        private val FRAGMENT_TAG_ACCOUNT_DELETION = "account_deletion"
+        private const val FRAGMENT_TAG_ACCOUNT_DELETION = "account_deletion"
     }
 }

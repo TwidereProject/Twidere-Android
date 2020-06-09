@@ -95,8 +95,7 @@ class UserListSelectorActivity : BaseActivity(),
         listView.setOnScrollListener(handler)
         listView.setOnTouchListener(handler.touchListener)
         listView.onItemClickListener = OnItemClickListener { view, _, position, _ ->
-            val item = view.getItemAtPosition(position)
-            when (item) {
+            when (val item = view.getItemAtPosition(position)) {
                 is ParcelableUserList -> {
                     val data = Intent()
                     data.putExtra(EXTRA_USER_LIST, item)

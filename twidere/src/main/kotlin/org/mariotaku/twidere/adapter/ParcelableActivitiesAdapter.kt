@@ -152,13 +152,12 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        val countIndex = itemCounts.getItemCountIndex(position)
-        when (countIndex) {
+        return when (val countIndex = itemCounts.getItemCountIndex(position)) {
             ITEM_INDEX_ACTIVITY -> {
-                return getRowId(position, false)
+                getRowId(position, false)
             }
             else -> {
-                return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
+                (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
             }
         }
     }
@@ -216,7 +215,7 @@ class ParcelableActivitiesAdapter(
                 return EmptyViewHolder(Space(context))
             }
         }
-        throw UnsupportedOperationException("Unsupported viewType " + viewType)
+        throw UnsupportedOperationException("Unsupported viewType $viewType")
     }
 
 
@@ -245,14 +244,12 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val countIndex = getItemCountIndex(position)
-        when (countIndex) {
+        when (val countIndex = getItemCountIndex(position)) {
             ITEM_INDEX_ACTIVITY -> {
                 if (isGapItem(position)) {
                     return ITEM_VIEW_TYPE_GAP
                 }
-                val action = getAction(position)
-                when (action) {
+                when (getAction(position)) {
                     Activity.Action.MENTION, Activity.Action.QUOTE, Activity.Action.REPLY -> {
                         return ITEM_VIEW_TYPE_STATUS
                     }
@@ -350,12 +347,12 @@ class ParcelableActivitiesAdapter(
             throw IndexOutOfBoundsException("index: $position, valid range is $validRange")
         }
         val data = this.data!!
-        if (reuse && data is ObjectCursor) {
+        return if (reuse && data is ObjectCursor) {
             val activity = data.setInto(dataPosition, reuseActivity)
             activity.after_filtered_sources = null
-            return activity
+            activity
         } else {
-            return data[dataPosition]
+            data[dataPosition]
         }
     }
 
@@ -428,7 +425,7 @@ class ParcelableActivitiesAdapter(
         internal val text2 = itemView.findViewById<TextView>(android.R.id.text2)
 
         init {
-            text2.setSingleLine(false)
+            text2.isSingleLine = false
         }
 
         @SuppressLint("SetTextI18n")
@@ -529,7 +526,7 @@ class ParcelableActivitiesAdapter(
             result = 31 * result + timestamp.hashCode()
             result = 31 * result + gap.hashCode()
             result = 31 * result + action.hashCode()
-            result = 31 * result + (filteredSources?.let { Arrays.hashCode(it) } ?: 0)
+            result = 31 * result + (filteredSources?.contentHashCode() ?: 0)
             return result
         }
     }

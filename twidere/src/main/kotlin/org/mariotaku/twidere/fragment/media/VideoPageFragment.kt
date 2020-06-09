@@ -61,6 +61,7 @@ import org.mariotaku.twidere.util.promotion.PromotionService
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<VideoPageFragment>,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener,
@@ -125,7 +126,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
                 if (!fromUser) return
                 val duration = videoView.duration
                 if (duration <= 0) return
-                videoView.seekTo(Math.round(duration * (progress.toFloat() / seekBar.max)))
+                videoView.seekTo((duration * (progress.toFloat() / seekBar.max)).roundToInt())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -289,12 +290,12 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
                 updateVolume()
             }
             R.id.playPauseButton -> {
-                if (videoView.isPlaying) {
+                pausedByUser = if (videoView.isPlaying) {
                     videoView.pause()
-                    pausedByUser = true
+                    true
                 } else {
                     videoView.start()
-                    pausedByUser = false
+                    false
                 }
                 updatePlayerState()
             }
@@ -358,7 +359,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
             val duration = mediaPlayerControl.duration
             val position = mediaPlayerControl.currentPosition
             if (duration <= 0 || position < 0) return
-            progressBar.progress = Math.round(1000 * position / duration.toFloat())
+            progressBar.progress = (1000 * position / duration.toFloat()).roundToInt()
             val durationSecs = TimeUnit.SECONDS.convert(duration.toLong(), TimeUnit.MILLISECONDS)
             val positionSecs = TimeUnit.SECONDS.convert(position.toLong(), TimeUnit.MILLISECONDS)
             durationLabel.text = String.format(Locale.ROOT, "%02d:%02d", durationSecs / 60, durationSecs % 60)

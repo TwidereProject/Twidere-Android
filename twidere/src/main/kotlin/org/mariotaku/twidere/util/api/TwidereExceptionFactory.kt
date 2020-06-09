@@ -35,12 +35,16 @@ import java.io.IOException
 object TwidereExceptionFactory : ExceptionFactory<MicroBlogException> {
 
     override fun newException(cause: Throwable?, request: HttpRequest?, response: HttpResponse?): MicroBlogException {
-        val te = if (cause != null) {
-            MicroBlogException(cause)
-        } else if (response != null) {
-            parseTwitterException(response)
-        } else {
-            MicroBlogException()
+        val te = when {
+            cause != null -> {
+                MicroBlogException(cause)
+            }
+            response != null -> {
+                parseTwitterException(response)
+            }
+            else -> {
+                MicroBlogException()
+            }
         }
         te.httpRequest = request
         te.httpResponse = response
@@ -49,17 +53,17 @@ object TwidereExceptionFactory : ExceptionFactory<MicroBlogException> {
 
 
     fun parseTwitterException(resp: HttpResponse): MicroBlogException {
-        try {
+        return try {
             val converter = TwitterConverterFactory.forResponse(MicroBlogException::class.java)
-            return converter.convert(resp) as MicroBlogException
+            converter.convert(resp) as MicroBlogException
         } catch (e: JsonParseException) {
-            return MicroBlogException("Malformed JSON Data", e)
+            MicroBlogException("Malformed JSON Data", e)
         } catch (e: IOException) {
-            return MicroBlogException("IOException while throwing exception", e)
+            MicroBlogException("IOException while throwing exception", e)
         } catch (e: RestConverter.ConvertException) {
-            return MicroBlogException(e)
+            MicroBlogException(e)
         } catch (e: MicroBlogException) {
-            return e
+            e
         }
 
     }

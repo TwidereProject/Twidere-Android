@@ -34,6 +34,7 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableLiteUser
+import kotlin.math.min
 
 /**
  * Created by mariotaku on 15/1/3.
@@ -128,8 +129,8 @@ class ActivityTitleSummaryViewHolder(
             }
             return
         }
-        val length = Math.min(profileImageViews.size, users.size)
-        for (i in 0 until profileImageViews.size) {
+        val length = min(profileImageViews.size, users.size)
+        for (i in profileImageViews.indices) {
             val view = profileImageViews[i]
             view.setImageDrawable(null)
             if (i < length) {

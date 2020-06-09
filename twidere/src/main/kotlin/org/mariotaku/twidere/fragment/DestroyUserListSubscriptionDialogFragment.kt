@@ -69,7 +69,7 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
 
     companion object {
 
-        val FRAGMENT_TAG = "destroy_user_list"
+        const val FRAGMENT_TAG = "destroy_user_list"
 
         fun show(fm: FragmentManager,
                  userList: ParcelableUserList): DestroyUserListSubscriptionDialogFragment {

@@ -147,10 +147,10 @@ object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ImageShap
 
 object mediaPreviewStyleKey : KSimpleKey<Int>(KEY_MEDIA_PREVIEW_STYLE, PreviewStyle.CROP) {
     override fun read(preferences: SharedPreferences): Int {
-        when (preferences.getString(key, null)) {
-            VALUE_MEDIA_PREVIEW_STYLE_SCALE -> return PreviewStyle.SCALE
-            VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE -> return PreviewStyle.ACTUAL_SIZE
-            else -> return PreviewStyle.CROP
+        return when (preferences.getString(key, null)) {
+            VALUE_MEDIA_PREVIEW_STYLE_SCALE -> PreviewStyle.SCALE
+            VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE -> PreviewStyle.ACTUAL_SIZE
+            else -> PreviewStyle.CROP
         }
     }
 

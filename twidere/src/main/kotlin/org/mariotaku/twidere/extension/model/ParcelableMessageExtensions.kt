@@ -46,42 +46,42 @@ internal fun getSummaryText(context: Context, manager: UserColorNameManager, nam
             } else {
                 res.getQuantityString(R.plurals.N_users, users.size, users.size)
             }
-            if (sender != null) {
-                return res.getString(R.string.message_format_participants_join_added,
-                        manager.getDisplayName(sender, nameFirst), joinName)
+            return if (sender != null) {
+                res.getString(R.string.message_format_participants_join_added,
+                    manager.getDisplayName(sender, nameFirst), joinName)
             } else {
-                return res.getString(R.string.message_format_participants_join, joinName)
+                res.getString(R.string.message_format_participants_join, joinName)
             }
         }
         MessageType.PARTICIPANTS_LEAVE -> {
             val users = (extras as UserArrayExtras).users
             val res = context.resources
-            if (users.size == 1) {
+            return if (users.size == 1) {
                 val displayName = manager.getDisplayName(users[0], nameFirst)
-                return res.getString(R.string.message_format_participants_leave, displayName)
+                res.getString(R.string.message_format_participants_leave, displayName)
             } else {
                 val usersName = res.getQuantityString(R.plurals.N_users, users.size, users.size)
-                return res.getString(R.string.message_format_participants_leave, usersName)
+                res.getString(R.string.message_format_participants_leave, usersName)
             }
         }
         MessageType.CONVERSATION_NAME_UPDATE -> {
             extras as ConversationInfoUpdatedExtras
             val res = context.resources
-            if (extras.user != null) {
-                return res.getString(R.string.message_format_conversation_name_update_by_user,
-                        manager.getDisplayName(extras.user, nameFirst), extras.name)
+            return if (extras.user != null) {
+                res.getString(R.string.message_format_conversation_name_update_by_user,
+                    manager.getDisplayName(extras.user, nameFirst), extras.name)
             } else {
-                return res.getString(R.string.message_format_conversation_name_update, extras.name)
+                res.getString(R.string.message_format_conversation_name_update, extras.name)
             }
         }
         MessageType.CONVERSATION_AVATAR_UPDATE -> {
             extras as ConversationInfoUpdatedExtras
             val res = context.resources
-            if (extras.user != null) {
-                return res.getString(R.string.message_format_conversation_avatar_update_by_user,
-                        manager.getDisplayName(extras.user, nameFirst))
+            return if (extras.user != null) {
+                res.getString(R.string.message_format_conversation_avatar_update_by_user,
+                    manager.getDisplayName(extras.user, nameFirst))
             } else {
-                return res.getString(R.string.message_format_conversation_avatar_update)
+                res.getString(R.string.message_format_conversation_avatar_update)
             }
         }
     }

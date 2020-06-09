@@ -122,23 +122,23 @@ fun Draft.readMimeMessageFrom(context: Context, st: InputStream): Boolean {
 fun Draft.getActionName(context: Context): String? {
     if (TextUtils.isEmpty(action_type)) return context.getString(R.string.update_status)
     when (action_type) {
-        Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
-        Draft.Action.UPDATE_STATUS_COMPAT_2 -> {
+        Action.UPDATE_STATUS, Action.UPDATE_STATUS_COMPAT_1,
+        Action.UPDATE_STATUS_COMPAT_2 -> {
             return context.getString(R.string.update_status)
         }
-        Draft.Action.REPLY -> {
+        Action.REPLY -> {
             return context.getString(R.string.action_reply)
         }
-        Draft.Action.QUOTE -> {
+        Action.QUOTE -> {
             return context.getString(R.string.action_quote)
         }
-        Draft.Action.FAVORITE -> {
+        Action.FAVORITE -> {
             return context.getString(R.string.action_favorite)
         }
-        Draft.Action.RETWEET -> {
+        Action.RETWEET -> {
             return context.getString(R.string.action_retweet)
         }
-        Draft.Action.SEND_DIRECT_MESSAGE, Draft.Action.SEND_DIRECT_MESSAGE_COMPAT -> {
+        Action.SEND_DIRECT_MESSAGE, Action.SEND_DIRECT_MESSAGE_COMPAT -> {
             return context.getString(R.string.send_direct_message)
         }
     }
@@ -157,8 +157,8 @@ fun Draft.applyUpdateStatus(statusUpdate: ParcelableStatusUpdate) {
 
 fun draftActionTypeString(@Draft.Action action: String?): String {
     return when (action) {
-        Draft.Action.QUOTE -> "quote"
-        Draft.Action.REPLY -> "reply"
+        Action.QUOTE -> "quote"
+        Action.REPLY -> "reply"
         else -> "tweet"
     }
 }

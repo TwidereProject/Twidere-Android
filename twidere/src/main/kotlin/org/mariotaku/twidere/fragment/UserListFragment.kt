@@ -372,15 +372,15 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)
                         ?: throw MicroBlogException("No account")
                 val list: UserList
-                when {
+                list = when {
                     listId != null -> {
-                        list = twitter.showUserList(listId)
+                        twitter.showUserList(listId)
                     }
                     listName != null && userKey != null -> {
-                        list = twitter.showUserList(listName, userKey.id)
+                        twitter.showUserList(listName, userKey.id)
                     }
                     listName != null && screenName != null -> {
-                        list = twitter.showUserListByScrenName(listName, screenName)
+                        twitter.showUserListByScrenName(listName, screenName)
                     }
                     else -> {
                         return SingleResponse(MicroBlogException("Invalid argument"))

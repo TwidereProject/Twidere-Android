@@ -58,6 +58,7 @@ import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
 import java.util.*
+import kotlin.math.max
 
 /**
  * Asks user to retweet/quote a status.
@@ -228,8 +229,9 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
                         update.repost_status_id = status.quoted_id
                     }
                     if (FanfouValidator.calculateLength(commentText) > FanfouValidator.textLimit) {
-                        commentText = commentText.substring(0, Math.max(FanfouValidator.textLimit,
-                                editingComment.length))
+                        commentText = commentText.substring(0, max(FanfouValidator.textLimit,
+                                editingComment.length)
+                        )
                     }
                 }
                 else -> {
@@ -344,7 +346,7 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
     companion object {
 
         private const val FRAGMENT_TAG = "retweet_quote"
-        private val showProtectedConfirm = false
+        private const val showProtectedConfirm = false
 
         fun show(fm: FragmentManager, accountKey: UserKey, statusId: String,
                  status: ParcelableStatus? = null, text: String? = null):

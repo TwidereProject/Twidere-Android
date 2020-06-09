@@ -113,6 +113,7 @@ import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import kotlin.math.abs
 import android.Manifest.permission as AndroidPermission
 
 @SuppressLint("RestrictedApi")
@@ -394,7 +395,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val src = MediaPickerActivity.getMediaUris(data)
-                    TaskStarter.execute(AddMediaTask(this, src, null, false, false))
+                    TaskStarter.execute(AddMediaTask(this, src, null,
+                        copySrc = false,
+                        deleteSrc = false
+                    ))
                     val extras = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)
                     if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) == true) {
                         possiblySensitive = true
@@ -431,7 +435,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     val src = MediaPickerActivity.getMediaUris(data)?.takeIf(Array<Uri>::isNotEmpty) ?:
                             data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)?.let { arrayOf(it) }
                     if (src != null) {
-                        TaskStarter.execute(AddMediaTask(this, src, null, false, false))
+                        TaskStarter.execute(AddMediaTask(this, src, null,
+                            copySrc = false,
+                            deleteSrc = false
+                        ))
                     }
                 }
             }
@@ -509,7 +516,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             replyLabel -> {
                 if (replyLabel.visibility != View.VISIBLE) return
-                replyLabel.setSingleLine(replyLabel.lineCount > 1)
+                replyLabel.isSingleLine = replyLabel.lineCount > 1
             }
         }
     }
@@ -807,8 +814,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun extensionIntentItemSelected(item: MenuItem) {
         val intent = item.intent ?: return
         try {
-            val action = intent.action
-            when (action) {
+            when (intent.action) {
                 INTENT_ACTION_EXTENSION_COMPOSE -> {
                     val accountKeys = accountsAdapter.selectedAccountKeys
                     intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(editText.text))
@@ -1084,16 +1090,20 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val action = intent.action
         val hasVisibility = intent.hasExtra(EXTRA_VISIBILITY)
         val hasAccountKeys: Boolean
-        if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
-            val accountKeys = intent.getTypedArrayExtra<UserKey>(EXTRA_ACCOUNT_KEYS)
-            accountsAdapter.selectedAccountKeys = accountKeys
-            hasAccountKeys = true
-        } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
-            val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
-            hasAccountKeys = true
-        } else {
-            hasAccountKeys = false
+        when {
+            intent.hasExtra(EXTRA_ACCOUNT_KEYS) -> {
+                val accountKeys = intent.getTypedArrayExtra<UserKey>(EXTRA_ACCOUNT_KEYS)
+                accountsAdapter.selectedAccountKeys = accountKeys
+                hasAccountKeys = true
+            }
+            intent.hasExtra(EXTRA_ACCOUNT_KEY) -> {
+                val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
+                hasAccountKeys = true
+            }
+            else -> {
+                hasAccountKeys = false
+            }
         }
         when (action) {
             Intent.ACTION_SEND, Intent.ACTION_SEND_MULTIPLE -> {
@@ -1102,7 +1112,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 val stream = intent.getStreamExtra()
                 if (stream != null) {
                     val src = stream.toTypedArray()
-                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                    TaskStarter.execute(AddMediaTask(this, src, null,
+                        copySrc = true,
+                        deleteSrc = false
+                    ))
                 }
             }
             else -> {
@@ -1111,7 +1124,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 val data = intent.data
                 if (data != null) {
                     val src = arrayOf(data)
-                    TaskStarter.execute(AddMediaTask(this, src, null, true, false))
+                    TaskStarter.execute(AddMediaTask(this, src, null,
+                        copySrc = true,
+                        deleteSrc = false
+                    ))
                 }
             }
         }
@@ -1147,16 +1163,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             INTENT_ACTION_EDIT_DRAFT -> {
                 val draft: Draft? = intent.getParcelableExtra(EXTRA_DRAFT)
-                when (draft?.action_type) {
+                return when (draft?.action_type) {
                     Draft.Action.REPLY -> {
-                        return showReplyLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
+                        showReplyLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
                     }
                     Draft.Action.QUOTE -> {
-                        return showQuoteLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
+                        showQuoteLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
                     }
                     else -> {
                         showDefaultLabelAndHint()
-                        return false
+                        false
                     }
                 }
             }
@@ -1786,7 +1802,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         s.setSpan(MarkForDeleteSpan(), start, start + count,
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE)
                     }
-                    if (!imageSources.isEmpty()) {
+                    if (imageSources.isNotEmpty()) {
                         val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
                                 .getMedia(Uri.parse(imageSources[0]))
                                 .build()
@@ -1817,7 +1833,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         })
         editText.customSelectionActionModeCallback = this
         editText.imageInputListener = { contentInfo ->
-            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), null, true, false)
+            val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), null,
+                copySrc = true,
+                deleteSrc = false
+            )
             task.callback = {
                 contentInfo.releasePermission()
             }
@@ -1887,7 +1906,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    class AttachedMediaItemTouchHelperCallback(adapter: SimpleItemTouchHelperCallback.ItemTouchHelperAdapter) : SimpleItemTouchHelperCallback(adapter) {
+    class AttachedMediaItemTouchHelperCallback(adapter: ItemTouchHelperAdapter) : SimpleItemTouchHelperCallback(adapter) {
 
         override fun isLongPressDragEnabled(): Boolean {
             return true
@@ -1907,7 +1926,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                 // Fade out the view as it is swiped out of the parent's bounds
-                val alpha = ALPHA_FULL - Math.abs(dY) / viewHolder.itemView.height.toFloat()
+                val alpha = ALPHA_FULL - abs(dY) / viewHolder.itemView.height.toFloat()
                 viewHolder.itemView.alpha = alpha
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             } else {
@@ -1925,7 +1944,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         companion object {
-            val ALPHA_FULL = 1.0f
+            const val ALPHA_FULL = 1.0f
         }
     }
 
@@ -1997,7 +2016,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             set(value) {
                 selection.clear()
                 for (accountKey in value) {
-                    selection.put(accountKey, true)
+                    selection[accountKey] = true
                 }
                 notifyDataSetChanged()
             }
@@ -2035,7 +2054,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         fun toggleSelection(position: Int) {
             if (accounts == null || position < 0) return
             val account = accounts!![position]
-            selection.put(account.key, true != selection[account.key])
+            selection[account.key] = true != selection[account.key]
             activity.updateAccountSelectionState()
             activity.updateVisibilityState()
             activity.updateSummaryTextState()
@@ -2047,7 +2066,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (accounts == null || position < 0) return
             val account = accounts!![position]
             selection.clear()
-            selection.put(account.key, true != selection[account.key])
+            selection[account.key] = true != selection[account.key]
             activity.updateAccountSelectionState()
             activity.updateVisibilityState()
             activity.updateSummaryTextState()
@@ -2097,12 +2116,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private class DisplayPlaceNameTask : AbstractTask<ParcelableLocation, List<Address>, ComposeActivity>() {
 
         override fun doLongOperation(location: ParcelableLocation): List<Address>? {
-            try {
+            return try {
                 val activity = callback ?: throw IOException("Interrupted")
                 val gcd = Geocoder(activity, Locale.getDefault())
-                return gcd.getFromLocation(location.latitude, location.longitude, 1)
+                gcd.getFromLocation(location.latitude, location.longitude, 1)
             } catch (e: IOException) {
-                return null
+                null
             }
 
         }
@@ -2120,13 +2139,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     textView.spannable = ParcelableLocationUtils.getHumanReadableString(location, 3)
                     textView.tag = location
                 } else {
-                    val tag = textView.tag
-                    if (tag is Address) {
-                        textView.spannable = tag.locality
-                    } else if (tag is NoAddress) {
-                        textView.setText(R.string.label_location_your_coarse_location)
-                    } else {
-                        textView.setText(R.string.getting_location)
+                    when (val tag = textView.tag) {
+                        is Address -> {
+                            textView.spannable = tag.locality
+                        }
+                        is NoAddress -> {
+                            textView.setText(R.string.label_location_your_coarse_location)
+                        }
+                        else -> {
+                            textView.setText(R.string.getting_location)
+                        }
                     }
                 }
             } else {

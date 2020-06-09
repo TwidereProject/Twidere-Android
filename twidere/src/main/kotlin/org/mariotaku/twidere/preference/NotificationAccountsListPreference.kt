@@ -27,7 +27,7 @@ import org.mariotaku.twidere.model.AccountDetails
 
 class NotificationAccountsListPreference(context: Context, attrs: AttributeSet? = null) : AccountsListPreference(context, attrs) {
 
-    override fun setupPreference(preference: AccountsListPreference.AccountItemPreference, account: AccountDetails) {
+    override fun setupPreference(preference: AccountItemPreference, account: AccountDetails) {
         preference.fragment = AccountNotificationSettingsFragment::class.java.name
         val args = preference.extras
         args.putParcelable(EXTRA_ACCOUNT, account)

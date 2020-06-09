@@ -52,7 +52,7 @@ object FilterScopeStringMap {
         var tmp = scope
         while (tmp != 0) {
             val mapping = mappings.firstOrNull { (v, _) -> v in tmp } ?: break
-            if (!result.isEmpty()) {
+            if (result.isNotEmpty()) {
                 result.append('|')
             }
             result.append(mapping.name)

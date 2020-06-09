@@ -114,20 +114,20 @@ fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMe
         size: String? = null): RequestBuilder<*> {
     if (conversation.conversation_type == ParcelableMessageConversation.ConversationType.ONE_TO_ONE) {
         val user = conversation.user
-        if (user != null) {
-            return loadProfileImage(context, user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
+        return if (user != null) {
+            loadProfileImage(context, user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
         } else {
             // TODO: show default conversation icon
-            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
-                    cornerRadius, cornerRadiusRatio)
+            loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
+                cornerRadius, cornerRadiusRatio)
         }
     } else {
-        if (conversation.conversation_avatar != null) {
-            return loadProfileImage(context, conversation.conversation_avatar, shapeStyle, cornerRadius,
-                    cornerRadiusRatio, size)
+        return if (conversation.conversation_avatar != null) {
+            loadProfileImage(context, conversation.conversation_avatar, shapeStyle, cornerRadius,
+                cornerRadiusRatio, size)
         } else {
-            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
-                    cornerRadius, cornerRadiusRatio)
+            loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
+                cornerRadius, cornerRadiusRatio)
         }
     }
 }

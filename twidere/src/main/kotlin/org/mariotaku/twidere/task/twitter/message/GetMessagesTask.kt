@@ -78,7 +78,7 @@ class GetMessagesTask(
 
     override fun doLongOperation(param: RefreshMessagesTaskParam) {
         val accountKeys = param.accountKeys
-        val am = android.accounts.AccountManager.get(context)
+        val am = AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
             val details = try {
                 getAccountDetails(am, accountKey, true) ?: return@forEachIndexed
@@ -121,19 +121,19 @@ class GetMessagesTask(
     private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
-        if (conversationId == null) {
-            return getTwitterOfficialUserInbox(microBlog, details, param, index)
+        return if (conversationId == null) {
+            getTwitterOfficialUserInbox(microBlog, details, param, index)
         } else {
-            return getTwitterOfficialConversation(microBlog, details, conversationId, param, index)
+            getTwitterOfficialConversation(microBlog, details, conversationId, param, index)
         }
     }
 
     private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
-        if (conversationId == null) {
-            return getFanfouConversations(microBlog, details, param, index)
+        return if (conversationId == null) {
+            getFanfouConversations(microBlog, details, param, index)
         } else {
-            return DatabaseUpdateData(emptyList(), emptyList())
+            DatabaseUpdateData(emptyList(), emptyList())
         }
     }
 

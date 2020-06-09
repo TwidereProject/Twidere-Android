@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Uses https://github.com/george-steel/android-utils/commit/289aff11e53593a55d780f9f5986e49343a79e55
+
 package org.oshkimaadziig.george.androidutils;
 
 import android.text.Spannable;
@@ -87,7 +89,7 @@ public class SpanFormatter {
 
             if (typeTerm.equals("%")) {
                 cookedArg = "%";
-            } else if (typeTerm.equals("%")) {
+            } else if (typeTerm.equals("n")) {
                 cookedArg = "\n";
             } else {
                 int argIdx;

@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import org.mariotaku.ktextension.coerceInOr
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 /**
  * Created by mariotaku on 2017/1/29.
@@ -48,7 +50,7 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
         override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
             val container = this@MediaSwipeCloseContainer
             val minVel = ViewConfiguration.get(context).scaledMinimumFlingVelocity
-            if (Math.abs(yvel) < Math.abs(xvel)) {
+            if (abs(yvel) < abs(xvel)) {
                 container.dragHelper.smoothSlideViewTo(releasedChild, 0, 0)
             } else when {
                 yvel > minVel && childTop > 0 -> {
@@ -125,6 +127,6 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
     var backgroundAlpha: Float
         get() = (background?.let(DrawableCompat::getAlpha) ?: 0) / 255f
         set(@FloatRange(from = 0.0, to = 1.0) value) {
-            background?.alpha = Math.round(value * 0xFF)
+            background?.alpha = (value * 0xFF).roundToInt()
         }
 }

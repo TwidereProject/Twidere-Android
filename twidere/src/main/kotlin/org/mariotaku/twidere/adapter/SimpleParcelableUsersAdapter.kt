@@ -36,11 +36,7 @@ class SimpleParcelableUsersAdapter(
 
     override fun getItemId(position: Int): Long {
         val item = getItem(position)
-        if (item != null) {
-            return item.hashCode().toLong()
-        } else {
-            return -1
-        }
+        return item?.hashCode()?.toLong() ?: -1
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

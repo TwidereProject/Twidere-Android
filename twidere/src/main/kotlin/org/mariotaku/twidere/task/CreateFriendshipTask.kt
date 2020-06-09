@@ -48,15 +48,15 @@ class CreateFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
         Utils.setLastSeen(context, user.key, System.currentTimeMillis())
     }
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         val message: String
-        if (user.is_protected) {
-            message = context.getString(R.string.sent_follow_request_to_user,
-                    manager.getDisplayName(user, nameFirst))
+        message = if (user.is_protected) {
+            context.getString(R.string.sent_follow_request_to_user,
+                manager.getDisplayName(user, nameFirst))
         } else {
-            message = context.getString(R.string.followed_user,
-                    manager.getDisplayName(user, nameFirst))
+            context.getString(R.string.followed_user,
+                manager.getDisplayName(user, nameFirst))
         }
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

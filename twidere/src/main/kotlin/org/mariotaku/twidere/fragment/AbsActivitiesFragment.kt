@@ -103,8 +103,10 @@ abstract class AbsActivitiesFragment protected constructor() :
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
-        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, false,
-                requestManager)
+        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(
+            pauseOnScroll = false, pauseOnFling = false,
+            requestManager = requestManager
+        )
 
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
@@ -237,7 +239,7 @@ abstract class AbsActivitiesFragment protected constructor() :
                 adapter.getTimestamp(lastReadPosition)
             }
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
-            loadMore = activityRange.endInclusive in 0..lastVisibleItemPosition
+            loadMore = activityRange.last in 0..lastVisibleItemPosition
         } else if (rememberPosition && readPositionTag != null) {
             val syncManager = timelineSyncManager
             val positionTag = this.readPositionTag
@@ -547,13 +549,13 @@ abstract class AbsActivitiesFragment protected constructor() :
                 (recyclerView.layoutManager as LinearLayoutManager).orientation) {
             override fun isDividerEnabled(childPos: Int): Boolean {
                 if (childPos >= layoutManager.itemCount || childPos < 0) return false
-                when (adapter.getItemViewType(childPos)) {
+                return when (adapter.getItemViewType(childPos)) {
                     ITEM_VIEW_TYPE_STATUS, ITEM_VIEW_TYPE_TITLE_SUMMARY, ITEM_VIEW_TYPE_GAP,
                     ITEM_VIEW_TYPE_STUB -> {
-                        return true
+                        true
                     }
                     else -> {
-                        return false
+                        false
                     }
                 }
             }

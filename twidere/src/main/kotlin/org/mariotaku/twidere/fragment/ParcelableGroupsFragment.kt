@@ -71,7 +71,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         get() = arguments?.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     protected fun hasMoreData(data: List<ParcelableGroup>?): Boolean {
-        return data == null || !data.isEmpty()
+        return data == null || data.isNotEmpty()
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableGroup>?>, data: List<ParcelableGroup>?) {

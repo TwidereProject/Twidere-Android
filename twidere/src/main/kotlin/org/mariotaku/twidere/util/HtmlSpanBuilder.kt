@@ -53,10 +53,10 @@ object HtmlSpanBuilder {
 
     fun fromHtml(html: String?, fallback: CharSequence?, processor: SpanProcessor? = null): CharSequence? {
         if (html == null) return fallback
-        try {
-            return fromHtml(html, processor)
+        return try {
+            fromHtml(html, processor)
         } catch (e: HtmlParseException) {
-            return fallback
+            fallback
         }
 
     }

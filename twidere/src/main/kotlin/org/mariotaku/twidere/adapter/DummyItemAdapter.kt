@@ -80,14 +80,18 @@ class DummyItemAdapter(
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        if (adapter is ParcelableStatusesAdapter) {
-            return adapter.getStatus(position, raw)
-        } else if (adapter is VariousItemsAdapter) {
-            return adapter.getItem(position) as ParcelableStatus
-        } else if (adapter is ParcelableActivitiesAdapter) {
-            return adapter.getActivity(position).activityStatus!!
+        return when (adapter) {
+            is ParcelableStatusesAdapter -> {
+                adapter.getStatus(position, raw)
+            }
+            is VariousItemsAdapter -> {
+                adapter.getItem(position) as ParcelableStatus
+            }
+            is ParcelableActivitiesAdapter -> {
+                adapter.getActivity(position).activityStatus!!
+            }
+            else -> throw IndexOutOfBoundsException()
         }
-        throw IndexOutOfBoundsException()
     }
 
     override fun getStatusCount(raw: Boolean) = 0

@@ -140,8 +140,8 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
 
     companion object {
 
-        private val REQUEST_PICK_RINGTONE = 301
-        private val EXTRA_RINGTONE_PREFERENCE_KEY = "internal:ringtone_preference_key"
+        private const val REQUEST_PICK_RINGTONE = 301
+        private const val EXTRA_RINGTONE_PREFERENCE_KEY = "internal:ringtone_preference_key"
     }
 
 }

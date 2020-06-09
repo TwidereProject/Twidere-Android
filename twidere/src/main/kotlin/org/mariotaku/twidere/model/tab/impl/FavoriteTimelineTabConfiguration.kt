@@ -53,7 +53,7 @@ class FavoriteTimelineTabConfiguration : TabConfiguration() {
             UserExtraConfiguration(EXTRA_USER).headerTitle(R.string.title_user)
     )
 
-    override fun applyExtraConfigurationTo(tab: Tab, extraConf: TabConfiguration.ExtraConfiguration): Boolean {
+    override fun applyExtraConfigurationTo(tab: Tab, extraConf: ExtraConfiguration): Boolean {
         val arguments = tab.arguments as UserArguments
         when (extraConf.key) {
             EXTRA_USER -> {

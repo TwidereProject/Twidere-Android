@@ -46,7 +46,7 @@ class DenyFriendshipTask(context: Context) : AbsFriendshipOperationTask(context,
         Utils.setLastSeen(context, user.key, -1)
     }
 
-    override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+    override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
         val message = context.getString(R.string.denied_users_follow_request,
                 manager.getDisplayName(user, nameFirst))
