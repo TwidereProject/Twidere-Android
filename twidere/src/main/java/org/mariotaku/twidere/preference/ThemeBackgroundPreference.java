@@ -98,7 +98,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
     public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         InternalDialogFragment df = InternalDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
-        df.show(fragment.getFragmentManager(), getKey());
+        df.show(fragment.getParentFragmentManager(), getKey());
     }
 
     private void saveValue() {
