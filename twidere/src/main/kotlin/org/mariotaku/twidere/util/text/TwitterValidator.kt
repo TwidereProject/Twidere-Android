@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.util.text
 
-import com.twitter.Extractor
-import com.twitter.Validator
+import com.twitter.twittertext.Extractor
+import com.twitter.twittertext.Validator
 import java.text.Normalizer
 
 object TwitterValidator : Validator() {

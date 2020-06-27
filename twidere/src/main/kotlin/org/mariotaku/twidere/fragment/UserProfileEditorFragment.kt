@@ -33,7 +33,7 @@ import android.text.TextUtils.isEmpty
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Toast
-import com.twitter.Validator
+import com.twitter.twittertext.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.ui.promiseOnUi

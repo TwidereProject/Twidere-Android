@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.extension.text.twitter
 
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import org.mariotaku.twidere.extension.model.replyMentions
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention

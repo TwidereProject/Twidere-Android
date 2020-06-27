@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.extension.text.twitter
 
-import com.twitter.Extractor
-import com.twitter.Validator
+import com.twitter.twittertext.Extractor
+import com.twitter.twittertext.Validator
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 

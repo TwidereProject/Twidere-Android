@@ -3,7 +3,7 @@ package org.mariotaku.twidere.task
 import android.content.Context
 import android.content.SharedPreferences
 import com.squareup.otto.Bus
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient

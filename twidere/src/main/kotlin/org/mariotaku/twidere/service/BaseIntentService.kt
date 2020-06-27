@@ -2,7 +2,7 @@ package org.mariotaku.twidere.service
 
 import android.app.IntentService
 import android.content.SharedPreferences
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.NotificationManagerWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
