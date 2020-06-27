@@ -43,7 +43,7 @@ subprojects {
                     Kotlin               : "${kotlinVersion}",
 
                     LoganSquare          : '1.3.7',
-                    Jackson              : '2.7.4',
+                    Jackson              : '2.11.1',
                     ParcelablePlease     : '1.0.2',
 
                     ExportablePreferences: '0.9.7',
