@@ -104,7 +104,7 @@ class DummyItemAdapter(
 
     override fun getAccountKey(position: Int, raw: Boolean) = UserKey.INVALID
 
-    override fun findStatusById(accountKey: UserKey, statusId: String) = null
+    override fun findStatusById(accountKey: UserKey, statusId: String): Nothing? = null
 
     override fun isCardNumbersShown(position: Int): Boolean {
         if (position == RecyclerView.NO_POSITION) return showCardNumbers

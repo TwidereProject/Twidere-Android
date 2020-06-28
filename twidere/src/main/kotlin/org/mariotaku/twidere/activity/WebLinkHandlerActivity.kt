@@ -177,7 +177,7 @@ class WebLinkHandlerActivity : Activity() {
                     if (pathSegments[0] in TWITTER_RESERVED_PATHS) {
                         return Pair(null, true)
                     }
-                    return handleUserSpecificPageIntent(uri, pathSegments, pathSegments[0])
+                    return handleUserSpecificPageIntent(pathSegments, pathSegments[0])
                 }
             }
         }
@@ -185,7 +185,7 @@ class WebLinkHandlerActivity : Activity() {
         return Pair(homeIntent, true)
     }
 
-    private fun handleUserSpecificPageIntent(uri: Uri, pathSegments: List<String>, screenName: String): Pair<Intent?, Boolean> {
+    private fun handleUserSpecificPageIntent(pathSegments: List<String>, screenName: String): Pair<Intent?, Boolean> {
         val segsSize = pathSegments.size
         if (segsSize == 1) {
             val builder = Uri.Builder()

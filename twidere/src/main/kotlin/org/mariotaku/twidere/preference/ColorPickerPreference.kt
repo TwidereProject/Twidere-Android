@@ -81,7 +81,7 @@ class ColorPickerPreference(context: Context, attrs: AttributeSet? = null) :
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = ColorPickerPreferenceDialogFragment.newInstance(key)
         df.setTargetFragment(fragment, 0)
-        fragment.fragmentManager?.let { df.show(it, key) }
+        fragment.parentFragmentManager.let { df.show(it, key) }
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {

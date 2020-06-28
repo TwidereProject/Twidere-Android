@@ -73,6 +73,7 @@ import android.view.View.OnTouchListener
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
+import androidx.loader.app.LoaderManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
@@ -432,7 +433,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         profileImage.visibility = View.VISIBLE
         val resources = resources
-        val lm = loaderManager
+        val lm = LoaderManager.getInstance(this)
         lm.destroyLoader(LOADER_ID_USER)
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
         cardContent.visibility = View.VISIBLE
@@ -530,7 +531,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             externalThemeManager.emoji?.applyTo(it)
         }
 
-        val userCreationDay = condition@ if (user.created_at >= 0) {
+        val userCreationDay = if (user.created_at >= 0) {
             val cal = Calendar.getInstance()
             val currentMonth = cal.get(Calendar.MONTH)
             val currentDay = cal.get(Calendar.DAY_OF_MONTH)
@@ -577,7 +578,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     fun getUserInfo(accountKey: UserKey, userKey: UserKey?, screenName: String?,
             omitIntentExtra: Boolean) {
-        val lm = loaderManager
+        val lm = LoaderManager.getInstance(this)
         lm.destroyLoader(LOADER_ID_USER)
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
         val args = Bundle()
@@ -787,7 +788,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onDestroyView() {
         user = null
         relationship = null
-        val lm = loaderManager
+        val lm = LoaderManager.getInstance(this)
         lm.destroyLoader(LOADER_ID_USER)
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
         super.onDestroyView()
@@ -903,7 +904,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val twitter = twitterWrapper
         val user = user ?: return false
         val accountKey = user.account_key ?: return false
-        val currentFragmentManager = fragmentManager ?: return false
+        val currentFragmentManager = parentFragmentManager
         val userRelationship = relationship
         when (item.itemId) {
             R.id.block -> {
@@ -1221,7 +1222,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     override fun onClick(view: View) {
         val activity = activity ?: return
-        val fragmentManager = fragmentManager ?: return
+        val fragmentManager = parentFragmentManager
         val user = user ?: return
         val accountKey = user.account_key ?: return
         when (view.id) {
@@ -1394,7 +1395,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun getFriendship() {
         val user = user ?: return
         relationship = null
-        val lm = loaderManager
+        val lm = LoaderManager.getInstance(this)
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
         val args = Bundle()
         args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
@@ -1890,7 +1891,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     df.arguments = Bundle {
                         this[EXTRA_ACCOUNT_KEY] = accountKey
                     }
-                    df.show(requireFragmentManager(), "create_user_list")
+                    df.show(parentFragmentManager, "create_user_list")
                 }
             }
             return dialog

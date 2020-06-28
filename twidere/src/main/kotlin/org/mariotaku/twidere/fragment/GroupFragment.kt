@@ -5,6 +5,7 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader
@@ -69,7 +70,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
     fun displayGroup(group: ParcelableGroup?) {
         val activity = activity ?: return
-        loaderManager.destroyLoader(0)
+        LoaderManager.getInstance(this).destroyLoader(0)
         this.group = group
 
         if (group != null) {
@@ -82,7 +83,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
 
     fun getGroupInfo(omitIntentExtra: Boolean) {
-        val lm = loaderManager
+        val lm = LoaderManager.getInstance(this)
         lm.destroyLoader(0)
         val args = Bundle(arguments)
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)

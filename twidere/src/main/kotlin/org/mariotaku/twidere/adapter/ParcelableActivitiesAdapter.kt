@@ -22,7 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.database.CursorIndexOutOfBoundsException
-import androidx.legacy.widget.Space
+import android.widget.Space
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View

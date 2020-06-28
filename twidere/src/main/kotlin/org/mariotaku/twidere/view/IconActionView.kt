@@ -23,7 +23,7 @@ open class IconActionView(
         context: Context, attrs: AttributeSet? = null
 ) : AppCompatImageView(context, attrs), IIconActionButton {
 
-    override var defaultColor: Int = 0
+    final override var defaultColor: Int = 0
         @ColorInt
         get() {
             if (field == 0) {
@@ -40,7 +40,7 @@ open class IconActionView(
             updateColorFilter()
         }
 
-    override var activatedColor: Int = 0
+    final override var activatedColor: Int = 0
         @ColorInt
         get() {
             if (field != 0) return field
@@ -51,7 +51,7 @@ open class IconActionView(
             updateColorFilter()
         }
 
-    override var disabledColor: Int = 0
+    final override var disabledColor: Int = 0
         @ColorInt
         get() {
             if (field != 0) return field

@@ -24,6 +24,7 @@ import android.os.Bundle
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.Loader
 import android.view.KeyEvent
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.hasRunningLoadersSafe
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
@@ -57,7 +58,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
+            return LoaderManager.getInstance(this).hasRunningLoadersSafe()
         }
         set(value) {
             super.refreshing = value
@@ -101,7 +102,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderArgs.putParcelable(EXTRA_PAGINATION, nextPagination)
-        loaderManager.restartLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).restartLoader(0, loaderArgs, this)
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
@@ -125,7 +126,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
                 this)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).initLoader(0, loaderArgs, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableGroup>?> {

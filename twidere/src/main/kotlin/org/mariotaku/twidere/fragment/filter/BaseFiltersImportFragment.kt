@@ -58,7 +58,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         setHasOptionsMenu(true)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).initLoader(0, loaderArgs, this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -107,7 +107,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                     return true
                 }
                 if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                    fragmentManager?.let {
+                    parentFragmentManager.let {
                         ExtraFeaturesIntroductionDialogFragment.show(it,
                                 feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                                 requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
@@ -182,14 +182,14 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderArgs.putParcelable(EXTRA_NEXT_PAGINATION, nextPagination)
-        loaderManager.restartLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).restartLoader(0, loaderArgs, this)
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): SelectableUsersAdapter {
         val adapter = SelectableUsersAdapter(context, this.requestManager)
         adapter.itemCheckedListener = listener@ { _, _ ->
             if (!extraFeaturesService.isAdvancedFiltersEnabled) {
-                ExtraFeaturesIntroductionDialogFragment.show(requireFragmentManager(),
+                ExtraFeaturesIntroductionDialogFragment.show(parentFragmentManager,
                         feature = ExtraFeaturesService.FEATURE_ADVANCED_FILTERS,
                         requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                 return@listener false

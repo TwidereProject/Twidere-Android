@@ -360,10 +360,6 @@ class AsyncTwitterWrapper(
             }
 
             override fun onException(callback: Any?, exception: MicroBlogException) {
-                if (exception !is MicroBlogException) {
-                    Analyzer.logException(exception)
-                    return
-                }
                 DebugLog.w(TwidereConstants.LOGTAG, "Unable to update friendship", exception)
             }
 

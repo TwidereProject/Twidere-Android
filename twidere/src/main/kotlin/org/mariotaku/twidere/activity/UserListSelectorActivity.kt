@@ -55,7 +55,7 @@ class UserListSelectorActivity : BaseActivity(),
 
     override var refreshing: Boolean
         get() {
-            return supportLoaderManager.hasRunningLoadersSafe()
+            return LoaderManager.getInstance(this).hasRunningLoadersSafe()
         }
         set(value) {
         }
@@ -199,9 +199,9 @@ class UserListSelectorActivity : BaseActivity(),
         }
         if (!loaderInitialized) {
             loaderInitialized = true
-            supportLoaderManager.initLoader(0, args, this)
+            LoaderManager.getInstance(this).initLoader(0, args, this)
         } else {
-            supportLoaderManager.restartLoader(0, args, this)
+            LoaderManager.getInstance(this).restartLoader(0, args, this)
         }
     }
 

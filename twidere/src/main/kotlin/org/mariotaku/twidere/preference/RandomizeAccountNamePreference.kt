@@ -58,7 +58,7 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = RenameAccountsConfirmDialogFragment.newInstance(key, getPersistedBoolean(false))
         df.setTargetFragment(fragment, 0)
-        fragment.fragmentManager?.let { df.show(it, key) }
+        fragment.parentFragmentManager.let { df.show(it, key) }
     }
 
     class RenameAccountsConfirmDialogFragment : PreferenceDialogFragmentCompat() {

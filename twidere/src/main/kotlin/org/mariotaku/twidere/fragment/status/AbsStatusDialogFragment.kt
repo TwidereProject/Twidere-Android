@@ -79,9 +79,9 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
         adapter.showAccountsColor = true
 
         val dialog = builder.create()
-        dialog.onShow {
-            val context = it.context
-            it.applyTheme()
+        dialog.onShow { alertDialog ->
+            val context = alertDialog.context
+            alertDialog.applyTheme()
 
             val am = AccountManager.get(context)
             val details = AccountUtils.getAccountDetails(am, accountKey, true) ?: run {
@@ -89,7 +89,7 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 return@onShow
             }
             val weakThis = WeakReference(this)
-            val weakHolder = WeakReference(StatusViewHolder(adapter = adapter, itemView = it.itemContent).apply {
+            val weakHolder = WeakReference(StatusViewHolder(adapter = adapter, itemView = alertDialog.itemContent).apply {
                 setupViewOptions()
             })
             val extraStatus = status

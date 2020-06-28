@@ -17,6 +17,6 @@ open class ThemedListPreference(context: Context, attrs: AttributeSet? = null) :
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = ThemedListPreferenceDialogFragmentCompat.newInstance(key)
         df.setTargetFragment(fragment, 0)
-        fragment.fragmentManager?.let { df.show(it, key) }
+        fragment.parentFragmentManager.let { df.show(it, key) }
     }
 }

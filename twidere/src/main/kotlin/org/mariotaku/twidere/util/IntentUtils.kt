@@ -187,7 +187,7 @@ object IntentUtils {
         intent.data = Uri.parse("${uri.scheme}://")
 
         return intent.resolveActivity(context.packageManager)?.takeIf {
-            it.className != null && it.packageName != "android"
+            it.packageName != "android"
         }?.packageName
     }
 

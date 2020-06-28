@@ -36,6 +36,7 @@ import android.text.TextUtils
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.FixedAsyncTaskLoader
@@ -210,7 +211,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     if (args.containsKey(EXTRA_STATUS)) {
                         args.putParcelable(EXTRA_STATUS, status)
                     }
-                    loaderManager.restartLoader(LOADER_ID_DETAIL_STATUS, args, this)
+                    LoaderManager.getInstance(this).restartLoader(LOADER_ID_DETAIL_STATUS, args, this)
                 }
             }
             REQUEST_SELECT_ACCOUNT -> {
@@ -261,7 +262,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         setState(STATE_LOADING)
 
-        loaderManager.initLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
@@ -425,7 +426,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override val refreshing: Boolean
-        get() = loaderManager.hasRunningLoadersSafe()
+        get() = LoaderManager.getInstance(this).hasRunningLoadersSafe()
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         if (!hasMoreConversation) return
@@ -485,10 +486,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             this[EXTRA_STATUS] = status
         }
         if (conversationLoaderInitialized) {
-            loaderManager.restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, conversationsLoaderCallback)
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, conversationsLoaderCallback)
             return
         }
-        loaderManager.initLoader(LOADER_ID_STATUS_CONVERSATIONS, args, conversationsLoaderCallback)
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_STATUS_CONVERSATIONS, args, conversationsLoaderCallback)
         conversationLoaderInitialized = true
     }
 
@@ -500,10 +501,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             this[EXTRA_STATUS_ID] = status.originalId
         }
         if (activityLoaderInitialized) {
-            loaderManager.restartLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
             return
         }
-        loaderManager.initLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
+        LoaderManager.getInstance(this).initLoader(LOADER_ID_STATUS_ACTIVITY, args, statusActivityLoaderCallback)
         activityLoaderInitialized = true
     }
 
@@ -592,7 +593,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val activity = activity ?: return false
-        val fragmentManager = fragmentManager ?: return false
+        val fragmentManager = parentFragmentManager
         if (!userVisibleHint) return false
         val contextMenuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return false
         val status = adapter.getStatus(contextMenuInfo.position)
@@ -650,7 +651,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val fragment = weakThis.get() ?: return@successUi
             val df = TranslationDestinationDialogFragment.create(languages, accountLanguage)
             df.setTargetFragment(fragment, 0)
-            df.show(fragment.requireFragmentManager(), "translation_destination_settings")
+            df.show(fragment.parentFragmentManager, "translation_destination_settings")
         }.alwaysUi {
             val fragment = weakThis.get() ?: return@alwaysUi
             fragment.dismissProgressDialog("get_language_settings")

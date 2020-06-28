@@ -687,7 +687,27 @@ class UpdateStatusTask(
             val ids: Array<String>,
             val deleteOnSuccess: List<MediaDeletionItem>,
             val deleteAlways: List<MediaDeletionItem>
-    )
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as SharedMediaUploadResult
+
+            if (!ids.contentEquals(other.ids)) return false
+            if (deleteOnSuccess != other.deleteOnSuccess) return false
+            if (deleteAlways != other.deleteAlways) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = ids.contentHashCode()
+            result = 31 * result + deleteOnSuccess.hashCode()
+            result = 31 * result + deleteAlways.hashCode()
+            return result
+        }
+    }
 
     companion object {
 
@@ -914,7 +934,7 @@ class UpdateStatusTask(
                 return null
             }
 
-            if (imageLimit == null || (imageLimit.checkGeomentry(o.outWidth, o.outHeight)
+            if (imageLimit == null || (imageLimit.checkGeometry(o.outWidth, o.outHeight)
                     && imageLimit.checkSize(imageSize, chucked))) return null
             o.inSampleSize = o.calculateInSampleSize(imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
@@ -1092,7 +1112,7 @@ class UpdateStatusTask(
             context.contentResolver.delete(Drafts.CONTENT_URI, where, null)
         }
 
-        fun AccountExtras.ImageLimit.checkGeomentry(width: Int, height: Int): Boolean {
+        fun AccountExtras.ImageLimit.checkGeometry(width: Int, height: Int): Boolean {
             if (this.maxWidth <= 0 || this.maxHeight <= 0) return true
             return (width <= this.maxWidth && height <= this.maxHeight) || (height <= this.maxWidth
                     && width <= this.maxHeight)

@@ -24,6 +24,7 @@ import android.os.Bundle
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.Loader
 import android.text.TextUtils
+import androidx.loader.app.LoaderManager
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import org.mariotaku.twidere.R
@@ -57,7 +58,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
+            return LoaderManager.getInstance(this).hasRunningLoadersSafe()
         }
         set(value) {
             super.refreshing = value
@@ -113,7 +114,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         args.putBoolean(EXTRA_LOADING_MORE, param.isLoadingMore)
         args.putBoolean(EXTRA_FROM_USER, true)
         args.putParcelable(EXTRA_PAGINATION, param.pagination?.getOrNull(0))
-        loaderManager.restartLoader(loaderId, args, this)
+        LoaderManager.getInstance(this).restartLoader(loaderId, args, this)
         return true
     }
 

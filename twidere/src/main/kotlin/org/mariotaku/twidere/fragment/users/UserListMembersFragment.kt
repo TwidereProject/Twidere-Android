@@ -110,7 +110,7 @@ class UserListMembersFragment : ParcelableUsersFragment() {
         val user = adapter.getUser(contextMenuInfo.position) ?: return false
         when (item.itemId) {
             R.id.delete_from_list -> {
-                fragmentManager?.let { DeleteUserListMembersDialogFragment.show(it, userList, user) }
+                parentFragmentManager.let { DeleteUserListMembersDialogFragment.show(it, userList, user) }
                 return true
             }
         }
