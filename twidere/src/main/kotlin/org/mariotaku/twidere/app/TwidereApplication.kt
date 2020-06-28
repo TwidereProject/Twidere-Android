@@ -1,18 +1,18 @@
 /*
  * 				Twidere - Twitter client for Android
- * 
+ *
  *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,6 +36,7 @@ import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import nl.komponents.kovenant.task
 import okhttp3.Dns
+import org.apache.commons.lang3.concurrent.ConcurrentUtils
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.kpreferences.KPreferences
@@ -59,7 +60,6 @@ import org.mariotaku.twidere.extension.setLocale
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.concurrent.ConstantFuture
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.ApplicationModule
 import org.mariotaku.twidere.util.dagger.GeneralComponent
@@ -320,7 +320,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         LoganSquareMapperFinder.setDefaultExecutor(object : LoganSquareMapperFinder.FutureExecutor {
             override fun <T> submit(callable: Callable<T>): Future<T> {
                 if (Looper.getMainLooper().isCurrentThreadCompat) {
-                    return ConstantFuture(callable.call())
+                    return ConcurrentUtils.constantFuture(callable.call())
                 }
                 return executor.submit(callable)
             }
