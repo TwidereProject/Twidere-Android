@@ -253,6 +253,7 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:${libVersions['Glide']}"
     implementation 'jp.wasabeef:glide-transformations:4.1.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'io.nayuki:qrcodegen:1.6.0'
 
 
 /** Custom dependencies **/
