@@ -47,9 +47,9 @@ subprojects {
                     ParcelablePlease     : '1.0.2',
 
                     ExportablePreferences: '0.9.7',
-                    MariotakuCommons     : '0.9.20',
+                    MariotakuCommons     : '0.9.22',
                     ObjectCursor         : '0.9.21',
-                    RestFu               : '0.9.60',
+                    RestFu               : '0.9.64',
             ]
         }
     }
