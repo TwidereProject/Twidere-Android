@@ -45,7 +45,7 @@ public class ActivitySupport {
         }
 
         private static TaskDescription toNativeTaskDescription(TaskDescriptionCompat taskDescription) {
-            return new TaskDescription(taskDescription.getLabel(), taskDescription.getIcon(), taskDescription.getPrimaryColor());
+            return new TaskDescription(taskDescription.getLabel(), taskDescription.getPrimaryColor());
         }
     }
 

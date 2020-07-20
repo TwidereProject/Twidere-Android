@@ -24,6 +24,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.AsyncTask
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
@@ -91,7 +92,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
     override fun setupImageView(imageView: SubsamplingScaleImageView) {
         imageView.maxScale = resources.displayMetrics.density
         imageView.setBitmapDecoderClass(PreviewBitmapDecoder::class.java)
-        imageView.setParallelLoadingEnabled(true)
+        imageView.setExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         imageView.setOnClickListener {
             val activity = activity as? MediaViewerActivity ?: return@setOnClickListener
             activity.toggleBar()

@@ -28,6 +28,7 @@ import android.database.Cursor
 import android.graphics.PorterDuff.Mode
 import android.net.Uri
 import android.os.Bundle
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
@@ -157,7 +158,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             searchQuery.setSelection(searchQuery.length())
         }
 
-        supportLoaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
 
         updateSubmitButton()
         promotionService.loadBanner(adContainer)
@@ -179,7 +180,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         adapter.addRemovedPositions(reverseSortedPositions)
         ContentResolverUtils.bulkDelete(contentResolver, SearchHistory.CONTENT_URI, SearchHistory._ID,
                 false, ids, null, null)
-        supportLoaderManager.restartLoader(0, null, this)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     override fun onClick(v: View) {
@@ -298,7 +299,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-        supportLoaderManager.restartLoader(0, null, this)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {

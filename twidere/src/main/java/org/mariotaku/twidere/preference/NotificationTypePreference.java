@@ -98,7 +98,7 @@ public class NotificationTypePreference extends DialogPreference implements
     public void displayDialog(@NonNull PreferenceFragmentCompat fragment) {
         final NotificationTypeDialogFragment df = NotificationTypeDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
-        df.show(fragment.getFragmentManager(), getKey());
+        df.show(fragment.getParentFragmentManager(), getKey());
     }
 
     public int getDefaultValue() {

@@ -29,7 +29,7 @@
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="false">
 
-    <androidx.legacy.widget.Space
+    <Space
         android:layout_width="match_parent"
         android:layout_height="@dimen/element_spacing_xlarge"/>
 </androidx.cardview.widget.CardView>

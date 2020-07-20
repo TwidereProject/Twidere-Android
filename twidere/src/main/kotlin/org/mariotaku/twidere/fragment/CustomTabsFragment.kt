@@ -39,6 +39,7 @@ import android.view.*
 import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView.OnItemClickListener
+import androidx.loader.app.LoaderManager
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
 import kotlinx.android.synthetic.main.dialog_custom_tab_editor.*
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
@@ -102,7 +103,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             df.arguments = Bundle {
                 this[EXTRA_OBJECT] = tab
             }
-            fragmentManager?.let { df.show(it, TabEditorDialogFragment.TAG_EDIT_TAB) }
+            parentFragmentManager.let { df.show(it, TabEditorDialogFragment.TAG_EDIT_TAB) }
         }
         listView.adapter = adapter
         listView.emptyView = emptyView
@@ -115,7 +116,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
         emptyText.setText(R.string.no_tab)
         emptyIcon.setImageResource(R.drawable.ic_info_tab)
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         setListShown(false)
     }
 

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.Loader
@@ -44,7 +45,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         AdapterView.OnItemLongClickListener {
 
     override var refreshing: Boolean
-        get() = loaderManager.hasRunningLoadersSafe()
+        get() = LoaderManager.getInstance(this).hasRunningLoadersSafe()
         set(value) {
             super.refreshing = value
         }
@@ -56,7 +57,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         super.onActivityCreated(savedInstanceState)
         listView.onItemClickListener = this
         listView.onItemLongClickListener = this
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         showProgress()
     }
 
@@ -80,7 +81,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
 
     override fun onItemLongClick(view: AdapterView<*>, child: View, position: Int, id: Long): Boolean {
         val item = adapter.findItem(id) ?: return false
-        fragmentManager?.let { DestroySavedSearchDialogFragment.show(it, accountKey, item.id, item.name) }
+        parentFragmentManager.let { DestroySavedSearchDialogFragment.show(it, accountKey, item.id, item.name) }
         return true
     }
 
@@ -104,7 +105,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
 
     override fun onRefresh() {
         if (refreshing) return
-        loaderManager.restartLoader(0, null, this)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     @Subscribe

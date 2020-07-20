@@ -46,6 +46,7 @@ import androidx.appcompat.view.SupportMenuInflater
 import androidx.appcompat.widget.ActionMenuView.OnMenuItemClickListener
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader
@@ -286,9 +287,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     fun loadAccounts() {
         if (!loaderInitialized) {
             loaderInitialized = true
-            loaderManager.initLoader(0, null, this)
+            LoaderManager.getInstance(this).initLoader(0, null, this)
         } else {
-            loaderManager.restartLoader(0, null, this)
+            LoaderManager.getInstance(this).restartLoader(0, null, this)
         }
     }
 
@@ -659,7 +660,25 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     data class AccountsInfo(
             val accounts: Array<AccountDetails>,
             val draftsCount: Int
-    )
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as AccountsInfo
+
+            if (!accounts.contentEquals(other.accounts)) return false
+            if (draftsCount != other.draftsCount) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = accounts.contentHashCode()
+            result = 31 * result + draftsCount
+            return result
+        }
+    }
 
     class AccountsInfoLoader(
             context: Context,

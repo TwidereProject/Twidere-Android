@@ -29,6 +29,7 @@ import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.loader.app.LoaderManager
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
@@ -86,7 +87,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         super.onActivityCreated(savedInstanceState)
         adapter.listener = this
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
-        loaderManager.initLoader(loaderId, null, this)
+        LoaderManager.getInstance(this).initLoader(loaderId, null, this)
         registerForContextMenu(recyclerView)
     }
 

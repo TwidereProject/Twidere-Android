@@ -33,7 +33,7 @@ import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.upstream.DataSource
 import com.squareup.otto.Bus
 import com.squareup.otto.ThreadEnforcer
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache

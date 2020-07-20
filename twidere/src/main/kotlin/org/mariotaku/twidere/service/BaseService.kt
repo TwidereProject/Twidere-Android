@@ -22,7 +22,7 @@ package org.mariotaku.twidere.service
 import android.app.Service
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponent
 import org.mariotaku.twidere.util.notification.ContentNotificationManager

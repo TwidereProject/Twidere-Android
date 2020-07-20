@@ -35,7 +35,7 @@ class DefaultAPIPreference(
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = APIEditorDialogFragment()
         df.setTargetFragment(fragment, 0)
-        fragment.fragmentManager?.let { df.show(it, key) }
+        fragment.parentFragmentManager.let { df.show(it, key) }
     }
 
 }

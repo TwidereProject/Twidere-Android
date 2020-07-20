@@ -25,16 +25,17 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Bundle
-import androidx.annotation.WorkerThread
-import androidx.loader.app.LoaderManager.LoaderCallbacks
-import androidx.loader.content.Loader
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.style.ReplacementSpan
 import android.view.*
+import androidx.annotation.WorkerThread
+import androidx.loader.app.LoaderManager
+import androidx.loader.app.LoaderManager.LoaderCallbacks
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_messages_conversation_new.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
@@ -305,10 +306,10 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             this[EXTRA_FROM_CACHE] = fromType
         }
         if (loaderInitialized) {
-            loaderManager.initLoader(0, args, this)
+            LoaderManager.getInstance(this).initLoader(0, args, this)
             loaderInitialized = true
         } else {
-            loaderManager.restartLoader(0, args, this)
+            LoaderManager.getInstance(this).restartLoader(0, args, this)
         }
         if (performSearchRequestRunnable != null) {
             editParticipants.removeCallbacks(performSearchRequestRunnable)

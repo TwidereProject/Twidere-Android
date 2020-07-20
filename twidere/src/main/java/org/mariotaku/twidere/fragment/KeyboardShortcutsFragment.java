@@ -67,7 +67,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.reset) {
             final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
-            f.show(getFragmentManager(), "reset_keyboard_shortcut_confirm");
+            f.show(getParentFragmentManager(), "reset_keyboard_shortcut_confirm");
             return true;
         }
         return super.onOptionsItemSelected(item);

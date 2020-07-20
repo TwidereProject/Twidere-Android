@@ -19,9 +19,10 @@
 
 package org.mariotaku.twidere.util.text
 
-import com.twitter.Extractor
-import com.twitter.Validator
+import com.twitter.twittertext.Extractor
+import com.twitter.twittertext.Validator
 import java.text.Normalizer
+import java.util.*
 
 object TwitterValidator : Validator() {
 
@@ -54,7 +55,7 @@ object TwitterValidator : Validator() {
 
         for (urlEntity in extractor.extractURLsWithIndices(normalized)) {
             length += urlEntity.start - urlEntity.end
-            length += if (urlEntity.value.toLowerCase().startsWith("https://")) shortUrlLengthHttps else shortUrlLength
+            length += if (urlEntity.value.toLowerCase(Locale.ROOT).startsWith("https://")) shortUrlLengthHttps else shortUrlLength
         }
 
         return length

@@ -152,7 +152,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             adapter = CustomAPIConfigArrayAdapter(requireContext())
             val builder = AlertDialog.Builder(requireContext())
             builder.setAdapter(adapter, this)
-            loaderManager.initLoader(0, null, this)
+            LoaderManager.getInstance(this).initLoader(0, null, this)
             val dialog = builder.create()
             dialog.onShow { it.applyTheme() }
             return dialog

@@ -242,7 +242,7 @@ object DataStoreUtils {
             val (where, whereArgs) = getIdsWhere(isOfficial)
             getNewestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
-            LongArray(accountKeys.size) { arr1.elementAtOrNull(it)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(it) ?: 0 }
+            LongArray(accountKeys.size) { array -> arr1.elementAtOrNull(array)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(array) ?: 0 }
         }, accountKeys)
     }
 
@@ -259,7 +259,7 @@ object DataStoreUtils {
             val (where, whereArgs) = getIdsWhere(isOfficial)
             getOldestActivityMaxSortPositions(context, uri, keys, where, whereArgs)
         }, { arr1, arr2 ->
-            LongArray(accountKeys.size) { arr1.elementAtOrNull(it)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(it) ?: 0 }
+            LongArray(accountKeys.size) { array -> arr1.elementAtOrNull(array)?.takeIf { it > 0 } ?: arr2.elementAtOrNull(array) ?: 0 }
         }, accountKeys)
     }
 

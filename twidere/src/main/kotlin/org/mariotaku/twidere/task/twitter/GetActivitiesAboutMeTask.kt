@@ -123,8 +123,8 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
         }
         return GetTimelineResult(account, activities, activities.flatMap {
             it.sources?.toList().orEmpty()
-        }, timeline.flatMap {
-            it.entities?.hashtags?.map { it.text }.orEmpty()
+        }, timeline.flatMap { status ->
+            status.entities?.hashtags?.map { it.text }.orEmpty()
         })
     }
 

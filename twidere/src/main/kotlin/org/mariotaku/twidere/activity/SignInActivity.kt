@@ -583,9 +583,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
-            dialog.onShow {
-                it.applyTheme()
-                val listView = it.expandableList
+            dialog.onShow { alertDialog ->
+                alertDialog.applyTheme()
+                val listView = alertDialog.expandableList
                 val adapter = LoginTypeAdapter(requireContext())
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
@@ -613,7 +613,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     return@setOnChildClickListener true
                 }
 
-                loaderManager.initLoader(0, null, this)
+                LoaderManager.getInstance(this).initLoader(0, null, this)
             }
             return dialog
         }

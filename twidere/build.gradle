@@ -127,7 +127,7 @@ android {
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
-        lintConfig rootProject.file('lint.xml')
+        disable 'MissingTranslation', 'PluralsCandidate'
     }
 
     packagingOptions {
@@ -175,11 +175,10 @@ ext {
     libVersions = [
             Kovenant          : '3.3.0',
             Mime4J            : '0.7.2',
-            Dagger            : '2.28',
-            Exoplayer         : '2.11.5',
+            Dagger            : '2.28.1',
+            Exoplayer         : '2.11.7',
             Glide             : '4.11.0',
             MediaViewerLibrary: '0.9.23',
-            PlayServices      : '17.0.0',
             Stetho            : '1.5.1',
     ]
 }
@@ -189,7 +188,7 @@ dependencies {
     implementation project(':twidere.component.nyan')
 
 /** Kotlin **/
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${sharedVersions['Kotlin']}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${sharedVersions['Kotlin']}"
     implementation "nl.komponents.kovenant:kovenant:${libVersions['Kovenant']}"
     implementation "nl.komponents.kovenant:kovenant-android:${libVersions['Kovenant']}"
     implementation "nl.komponents.kovenant:kovenant-combine:${libVersions['Kovenant']}"
@@ -201,24 +200,25 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha01'
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.core:core:1.2.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.core:core:1.3.0'
+    implementation 'androidx.core:core-ktx:1.3.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.1.0-alpha01'
     implementation 'androidx.exifinterface:exifinterface:1.2.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
 
 
 /** Third-party dependencies **/
     compileOnly 'javax.annotation:jsr250-api:1.0'
-    implementation 'com.twitter:twitter-text:1.14.7'
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
+    implementation 'com.twitter.twittertext:twitter-text:3.1.0'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.squareup:otto:1.3.8'
-    implementation 'dnsjava:dnsjava:2.1.9'
+    implementation 'dnsjava:dnsjava:3.2.2'
     implementation 'com.commonsware.cwac:layouts:0.4.5'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     implementation 'com.pnikosis:materialish-progress:1.7'
@@ -226,6 +226,7 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     implementation 'com.sprylab.android.texturevideoview:texturevideoview:1.2.1'
     implementation 'com.squareup:pollexor:2.0.4'
+    implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'org.apache.commons:commons-text:1.8'
     implementation "org.apache.james:apache-mime4j-core:${libVersions['Mime4J']}"
     implementation "org.apache.james:apache-mime4j-storage:${libVersions['Mime4J']}"
@@ -251,10 +252,11 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:${libVersions['Glide']}"
     implementation 'jp.wasabeef:glide-transformations:4.1.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'io.nayuki:qrcodegen:1.6.0'
 
 
 /** Custom dependencies **/
-    implementation 'com.github.mariotaku:AbstractTask:0.9.5'
+    implementation 'com.github.mariotaku:AbstractTask:0.9.7'
     implementation 'com.github.mariotaku:DragSortListView:0.6.1'
     implementation "com.github.mariotaku.ExportablePreferences:core:${sharedVersions['ExportablePreferences']}"
     implementation("com.github.mariotaku.CommonsLibrary:emojione-android:${sharedVersions['MariotakuCommons']}") {
@@ -272,14 +274,14 @@ dependencies {
     implementation 'com.github.mariotaku:MessageBubbleView:3.5'
     implementation "com.github.mariotaku.ObjectCursor:core:${sharedVersions['ObjectCursor']}"
     kapt "com.github.mariotaku.ObjectCursor:processor:${sharedVersions['ObjectCursor']}"
-    implementation 'com.github.mariotaku:PickNCrop:0.9.27'
+    implementation 'com.github.mariotaku:PickNCrop:0.9.29'
     implementation "com.github.mariotaku.RestFu:library:${sharedVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:logansquare:${sharedVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:oauth:${sharedVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:oauth2:${sharedVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:okhttp3:${sharedVersions['RestFu']}"
     implementation 'com.github.mariotaku:SQLiteQB:0.9.15'
-    implementation 'com.github.mariotaku.UniqR:android:0.9.4'
+    implementation 'com.github.mariotaku.UniqR:android:0.9.10'
     implementation 'com.github.Tlaster:Chameleon:0.9.28'
 
 
@@ -289,9 +291,10 @@ dependencies {
 
     if (enableGoogleVariant) {
         // START Non-FOSS component
-        googleImplementation "com.google.android.gms:play-services-ads:${libVersions['PlayServices']}"
-        googleImplementation "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
-        googleImplementation "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
+        googleImplementation 'com.google.android.gms:play-services-ads:17.0.0'
+        googleImplementation 'com.google.android.gms:play-services-auth:17.0.0'
+        googleImplementation 'com.google.android.gms:play-services-maps:17.0.0'
+
         googleImplementation 'com.google.maps.android:android-maps-utils:0.6.2'
         googleImplementation 'com.anjlab.android.iab.v3:library:1.1.0'
         googleImplementation 'com.dropbox.core:dropbox-core-sdk:3.1.3'
@@ -314,7 +317,7 @@ dependencies {
 
 
 /** Testing **/
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'

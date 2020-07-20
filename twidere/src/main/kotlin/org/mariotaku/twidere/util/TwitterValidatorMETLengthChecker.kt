@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.util
 
 import com.rengwuxian.materialedittext.validation.METLengthChecker
-import com.twitter.Validator
+import com.twitter.twittertext.Validator
 
 /**
  * Created by mariotaku on 15/4/29.

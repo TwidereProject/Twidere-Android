@@ -95,7 +95,6 @@ dependencies {
     annotationProcessor "com.github.mariotaku.ObjectCursor:processor:${sharedVersions['ObjectCursor']}"
     implementation "com.github.mariotaku.RestFu:library:${sharedVersions['RestFu']}"
     implementation "com.github.mariotaku.RestFu:oauth:${sharedVersions['RestFu']}"
-    implementation "com.github.mariotaku.RestFu:oauth2:${sharedVersions['RestFu']}"
 }
 
 install {

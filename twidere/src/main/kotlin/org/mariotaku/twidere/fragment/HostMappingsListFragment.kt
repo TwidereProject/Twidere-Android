@@ -116,14 +116,14 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
         args.putBoolean(EXTRA_EDIT_MODE, true)
         val df = AddMappingDialogFragment()
         df.arguments = args
-        fragmentManager?.let { df.show(it, "add_mapping") }
+        parentFragmentManager.let { df.show(it, "add_mapping") }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
                 val df = AddMappingDialogFragment()
-                fragmentManager?.let { df.show(it, "add_mapping") }
+                parentFragmentManager.let { df.show(it, "add_mapping") }
             }
         }
         return super.onOptionsItemSelected(item)

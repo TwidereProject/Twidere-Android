@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
+import org.apache.commons.lang3.time.DateUtils
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
@@ -39,7 +40,6 @@ import org.mariotaku.twidere.constant.linkHighlightOptionKey
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.exception.UnsupportedCountIndexException
-import org.mariotaku.twidere.extension.isSameDay
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
@@ -137,7 +137,7 @@ class MessagesConversationAdapter(
                         + itemCounts[ITEM_START_MESSAGE] - 1) {
                     calendars.first.timeInMillis = getMessageTimestamp(position + 1)
                     calendars.second.timeInMillis = message.timestamp
-                    showDate = !calendars.first.isSameDay(calendars.second)
+                    showDate = !DateUtils.isSameDay(calendars.first, calendars.second)
                 }
                 (holder as AbsMessageViewHolder).display(message, showDate)
             }

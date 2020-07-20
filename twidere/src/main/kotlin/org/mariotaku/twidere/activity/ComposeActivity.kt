@@ -56,7 +56,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import kotlinx.android.synthetic.main.activity_compose.*
 import nl.komponents.kovenant.task
 import org.mariotaku.abstask.library.AbstractTask

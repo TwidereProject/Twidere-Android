@@ -71,8 +71,8 @@ class RoundedRectTransformation(
         return "RoundedRectTransformation(radius=$radius, radiusPercent=$radius)"
     }
 
-    override fun equals(o: Any?): Boolean {
-        return o is RoundedRectTransformation
+    override fun equals(other: Any?): Boolean {
+        return other is RoundedRectTransformation
     }
 
     override fun hashCode(): Int {

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.Loader
@@ -62,7 +63,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
+            return LoaderManager.getInstance(this).hasRunningLoadersSafe()
         }
         set(value) {
             super.refreshing = value
@@ -103,7 +104,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderArgs.putParcelable(EXTRA_PAGINATION, nextPagination)
-        loaderManager.restartLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).restartLoader(0, loaderArgs, this)
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
@@ -130,7 +131,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
                 this)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).initLoader(0, loaderArgs, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableUserList>> {
@@ -159,7 +160,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         val loaderArgs = Bundle(arguments).apply {
             this[EXTRA_FROM_USER] = true
         }
-        loaderManager.restartLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).restartLoader(0, loaderArgs, this)
         showProgress()
         return true
     }

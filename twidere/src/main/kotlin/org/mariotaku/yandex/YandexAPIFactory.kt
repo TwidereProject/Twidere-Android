@@ -15,7 +15,7 @@ class YandexAPIFactory(apiKey: String, endpoint: String) {
 
     init {
         factory.setEndpoint(Endpoint(endpoint))
-        factory.setExceptionFactory { cause, request, response ->
+        factory.setExceptionFactory { cause, _, _ ->
             cause?.let { YandexException(it) }
                     ?: YandexException()
         }

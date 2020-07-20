@@ -64,7 +64,7 @@ interface StatusScheduleProvider {
     }
 
     private object NullFactory : Factory {
-        override fun newInstance(context: Context) = null
+        override fun newInstance(context: Context): Nothing? = null
 
         override fun parseInfo(json: String): ScheduleInfo? = null
 

@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import android.view.*
+import androidx.loader.app.LoaderManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
@@ -490,7 +491,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         if (isDetached || host == null || loaderInitialized) return
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(loaderId, loaderArgs, this)
+        LoaderManager.getInstance(this).initLoader(loaderId, loaderArgs, this)
         loaderInitialized = true
     }
 
@@ -575,7 +576,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 resolver?.update(contentUri, values, where, null)
                 return true
             }
-            else -> return MenuUtils.handleStatusClick(requireActivity(), this, requireFragmentManager(),
+            else -> return MenuUtils.handleStatusClick(requireActivity(), this, parentFragmentManager,
                     preferences, userColorNameManager, twitterWrapper, status, item)
         }
     }
