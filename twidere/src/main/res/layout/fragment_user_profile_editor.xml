@@ -160,7 +160,7 @@
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/user_profile_name"
-                    app:met_maxCharacters="20"
+                    app:met_maxCharacters="50"
                     app:met_primaryColor="?colorAccent"
                     tools:text="TwidereProject"/>
 
