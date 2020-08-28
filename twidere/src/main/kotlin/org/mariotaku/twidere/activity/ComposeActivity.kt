@@ -32,6 +32,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.location.*
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.TextViewCompat
@@ -1144,6 +1145,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             editText.setSelection(editText.length())
         } else {
             editText.setSelection(selection.coerceIn(0..editText.length()))
+        }
+        if (intent.hasExtra(Intent.EXTRA_PROCESS_TEXT) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            val charSequences = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
+            charSequences?.let {
+                editText.setText(it.toString())
+            }
         }
         editText.requestFocus()
         return true
