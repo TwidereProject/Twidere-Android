@@ -72,7 +72,7 @@ PayPal:  http://paypal.me/yisiliu2
 
 AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
 
-Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
+Bitcoin: `3CzmxZa6jseNCYVvM2phs3jmiqNgVBwD7P`
 
 Ethereum & ERC20 Tokens: `0x6ff82FC45aff81D4081DA7B257fb8ee5F71A2CeC`
 
