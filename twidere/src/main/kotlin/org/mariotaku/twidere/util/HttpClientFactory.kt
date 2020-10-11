@@ -190,8 +190,8 @@ object HttpClientFactory {
 
     class HttpClientConfiguration(val prefs: SharedPreferences) {
 
-        var readTimeoutSecs: Long = -1
-        var writeTimeoutSecs: Long = -1
+        var readTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
+        var writeTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
         var connectionTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
         var cacheSize: Int = prefs[cacheSizeLimitKey]
 
