@@ -6,6 +6,7 @@ import org.mariotaku.yandex.model.YandexTranslateResult
 
 interface YandexAPI {
     @POST("/api/v1.5/tr.json/translate")
+    @Throws(YandexException::class)
     fun search(@Query("text") text: String,
                @Query("lang") lang: String): YandexTranslateResult
 }
