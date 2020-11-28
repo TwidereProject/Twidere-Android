@@ -73,7 +73,6 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.yandexKeyKey
-import org.mariotaku.twidere.exception.AccountNotFoundException
 import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.model.api.key
@@ -95,7 +94,7 @@ import org.mariotaku.twidere.model.pagination.SinceMaxPagination
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
+import org.mariotaku.twidere.task.AbsAccountRequestTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -108,7 +107,6 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener
 import org.mariotaku.yandex.YandexAPIFactory
-import org.mariotaku.yandex.YandexException
 import java.lang.ref.WeakReference
 import kotlin.math.max
 import kotlin.math.min
@@ -689,14 +687,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     internal class LoadTranslationTask(fragment: StatusFragment, val status: ParcelableStatus) :
-            ExceptionHandlingAbstractTask<Any?, TranslationResult, YandexException, Any?>(fragment.requireContext()) {
+            AbsAccountRequestTask<Any?, TranslationResult, Any?>(fragment.requireContext(), status.account_key) {
 
         private val weakFragment = WeakReference(fragment)
 
-        override fun onExecute(params: Any?): TranslationResult {
-            val am = AccountManager.get(context)
-            val account = status.account_key?.let { AccountUtils.getAccountDetails(am, it, true) } ?:
-            throw AccountNotFoundException()
+        override fun onExecute(account: AccountDetails, params: Any?): TranslationResult {
             val prefDest = preferences.getString(KEY_TRANSLATION_DESTINATION, null).orEmpty()
             val twitter = account.newMicroBlogInstance(context, MicroBlog::class.java)
             val dest: String
@@ -730,11 +725,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             fragment.displayTranslation(result)
         }
 
-        override fun onException(callback: Any?, exception: YandexException) {
+        override fun onException(callback: Any?, exception: MicroBlogException) {
             Toast.makeText(context, exception.getErrorMessage(context), Toast.LENGTH_SHORT).show()
         }
-
-        final override val exceptionClass = YandexException::class.java
     }
 
 
