@@ -14,6 +14,16 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 
 ---
 
+We are working on the brand new Twidere X, in both Android and iOS
+
+**The open beta of Twidere X is here:**
+Android version: [PlayStore](https://play.google.com/store/apps/details?id=com.twidere.twiderex)
+iOS version: [AppStore](https://testflight.apple.com/join/GJIDXvW7)
+
+Twidere X is still in a very early stage, our short term target is bringing back the most basic Twitter browsing features.
+
+---
+
 ## Features ##
 
 * Customizable Material Design
