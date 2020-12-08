@@ -5,7 +5,7 @@
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
 [<img a src="https://c5.patreon.com/external/logo/become_a_patron_button.png" width="100" herf="https://www.patreon.com/bePatron?u=36020799"/>](https://www.patreon.com/bePatron?u=36020799)
 
-Material Design ready and feature rich Twitter/Mastodon/StatusNet/Fanfou app for Android 4.1+. Enjoy Fediverse now!
+Material Design ready and feature rich Twitter/Mastodon/Fanfou app for Android 4.1+. Enjoy Fediverse now!
 
 Twidere-Android is maintained by community and supporter including [Dimension](https://dimension.im/).
 
@@ -17,10 +17,18 @@ Twidere-Android is maintained by community and supporter including [Dimension](h
 We are working on the brand new Twidere X, in both Android and iOS
 
 **The open beta of Twidere X is here:**
+
 Android version: [PlayStore](https://play.google.com/store/apps/details?id=com.twidere.twiderex)
+
 iOS version: [TestFlight](https://testflight.apple.com/join/GJIDXvW7)
 
 Twidere X is still in a very early stage, our short term target is bringing back the most basic Twitter browsing features.
+
+If you have any ideas/requirements/comments/issues, just tell us in the following Twidere X repositories:
+
+[TwidereX-Android](https://github.com/TwidereProject/TwidereX-iOS/issues)
+
+[TwidereX-iOS](https://github.com/TwidereProject/TwidereX-iOS/issues)
 
 ---
 
