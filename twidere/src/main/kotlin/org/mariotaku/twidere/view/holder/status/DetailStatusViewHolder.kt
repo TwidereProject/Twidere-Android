@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder.status
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Rect
+import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -38,6 +39,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.abstask.library.TaskStarter
