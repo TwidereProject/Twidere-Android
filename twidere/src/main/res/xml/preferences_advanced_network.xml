@@ -36,12 +36,6 @@
         android:summary="@string/custom_host_mapping_summary"
         android:title="@string/custom_host_mapping"/>
 
-    <org.mariotaku.twidere.preference.ThemedEditTextPreference
-        android:dialogTitle="@string/yandex_key"
-        android:key="yandex_key"
-        android:singleLine="true"
-        android:title="@string/yandex_key"/>
-
     <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_proxy"
         android:title="@string/proxy">

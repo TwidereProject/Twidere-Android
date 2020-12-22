@@ -285,8 +285,6 @@ public interface SharedPreferenceConstants {
     String KEY_OVERRIDE_LANGUAGE = "override_language";
     @ExportablePreference(STRING)
     String KEY_TAB_POSITION = "tab_position";
-    @ExportablePreference(STRING)
-    String KEY_YANDEX_KEY = "yandex_key";
     @ExportablePreference(BOOLEAN)
     String KEY_AUTO_HIDE_TABS = "auto_hide_tabs";
     @ExportablePreference(BOOLEAN)
