@@ -26,7 +26,7 @@ Twidere X is still in a very early stage, our short term target is bringing back
 
 If you have any ideas/requirements/comments/issues, just tell us in the following Twidere X repositories:
 
-[TwidereX-Android](https://github.com/TwidereProject/TwidereX-iOS/issues)
+[TwidereX-Android](https://github.com/TwidereProject/TwidereX-Android/issues)
 
 [TwidereX-iOS](https://github.com/TwidereProject/TwidereX-iOS/issues)
 
