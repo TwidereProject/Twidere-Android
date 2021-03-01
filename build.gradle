@@ -17,8 +17,8 @@ buildscript {
 allprojects {
     ext {
         projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 515
-        projectVersionName = '4.1.6'
+        projectVersionCode = 516
+        projectVersionName = '4.1.7'
 
         globalCompileSdkVersion = 30
         globalBuildToolsVersion = "30.0.3"
