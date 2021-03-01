@@ -65,8 +65,9 @@ open class TrendsLocationExtraConfiguration(
         when (requestCode) {
             1 -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val location = data.getParcelableExtra<Location>(EXTRA_LOCATION)
-                    value = Place(location.woeid, location.name)
+                    data.getParcelableExtra<Location>(EXTRA_LOCATION)?.let { location ->
+                        value = Place(location.woeid, location.name)
+                    }
                 }
             }
         }

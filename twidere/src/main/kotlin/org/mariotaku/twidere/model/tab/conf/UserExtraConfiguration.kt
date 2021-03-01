@@ -62,11 +62,12 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
         when (requestCode) {
             1 -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val user: ParcelableUser = data.getParcelableExtra(EXTRA_USER)
-                    viewHolder.displayUser(user)
-                    viewHolder.itemView.visibility = View.VISIBLE
-                    hintView.visibility = View.GONE
-                    this.value = user
+                    data.getParcelableExtra<ParcelableUser>(EXTRA_USER)?.let { user ->
+                        viewHolder.displayUser(user)
+                        viewHolder.itemView.visibility = View.VISIBLE
+                        hintView.visibility = View.GONE
+                        this.value = user
+                    }
                 }
             }
         }

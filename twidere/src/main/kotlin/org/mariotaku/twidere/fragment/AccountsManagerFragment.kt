@@ -95,7 +95,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
                 if (resultCode != Activity.RESULT_OK || data == null)
                     return
                 val am = AccountManager.get(context)
-                val accountKey: UserKey = data.getBundleExtra(EXTRA_EXTRAS).getParcelable(EXTRA_ACCOUNT_KEY) ?: return
+                val accountKey: UserKey = data.getBundleExtra(EXTRA_EXTRAS)?.getParcelable(EXTRA_ACCOUNT_KEY) ?: return
                 val color = data.getIntExtra(EXTRA_COLOR, Color.WHITE)
                 val details = adapter.findItem(accountKey) ?: return
                 details.color = color

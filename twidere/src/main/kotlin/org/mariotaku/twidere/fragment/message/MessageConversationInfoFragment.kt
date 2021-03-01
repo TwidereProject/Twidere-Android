@@ -188,8 +188,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         when (requestCode) {
             REQUEST_CONVERSATION_ADD_USER -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
-                    performAddParticipant(user)
+                    data.getParcelableExtra<ParcelableUser>(EXTRA_USER)?.let { user ->
+                        performAddParticipant(user)
+                    }
                 }
             }
             REQUEST_PICK_MEDIA -> {
@@ -299,7 +300,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "leave_conversation_progress")
         val weakThis = WeakReference(this)
         val task = DestroyConversationTask(requireContext(), accountKey, conversationId)
-        task.callback = callback@ { succeed ->
+        task.callback = callback@{ succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("leave_conversation_progress") {
                 if (succeed) {
@@ -315,7 +316,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "clear_messages_progress")
         val weakThis = WeakReference(this)
         val task = ClearMessagesTask(requireContext(), accountKey, conversationId)
-        task.callback = callback@ { succeed ->
+        task.callback = callback@{ succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("clear_messages_progress") {
                 if (succeed) {
@@ -343,7 +344,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "set_notifications_disabled_progress")
         val weakThis = WeakReference(this)
         val task = SetConversationNotificationDisabledTask(requireContext(), accountKey, conversationId, disabled)
-        task.callback = callback@ { _ ->
+        task.callback = callback@{ _ ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("set_notifications_disabled_progress") {
                 LoaderManager.getInstance(this).restartLoader(0, null, this)
@@ -378,7 +379,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetConversationName(name: String) {
         val conversationId = this.conversationId
-        performUpdateInfo("set_name_progress", updateAction = updateAction@ { fragment, account, microBlog ->
+        performUpdateInfo("set_name_progress", updateAction = updateAction@{ fragment, account, microBlog ->
             val context = fragment.context
             when (account.type) {
                 AccountType.TWITTER -> {
@@ -395,7 +396,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetConversationAvatar(uri: Uri?) {
         val conversationId = this.conversationId
-        performUpdateInfo("set_avatar_progress", updateAction = updateAction@ { fragment, account, microBlog ->
+        performUpdateInfo("set_avatar_progress", updateAction = updateAction@{ fragment, account, microBlog ->
             val context = fragment.context
             when (account.type) {
                 AccountType.TWITTER -> {

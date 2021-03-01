@@ -44,8 +44,10 @@ abstract class AbsUserListRelatedShortcutCreatorActivity : AbsShortcutCreatorAct
                 }
                 val list = data.getParcelableExtra<ParcelableUserList>(EXTRA_USER_LIST)
                 val extras = data.getBundleExtra(EXTRA_EXTRAS)
-                val accountKey = extras.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-                onUserListSelected(accountKey, list)
+                val accountKey = extras?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+                if (list != null) {
+                    onUserListSelected(accountKey, list)
+                }
             }
             else -> {
                 super.onActivityResult(requestCode, resultCode, data)

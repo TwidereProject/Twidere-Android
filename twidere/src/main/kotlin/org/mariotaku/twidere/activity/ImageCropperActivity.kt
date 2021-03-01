@@ -41,18 +41,18 @@ class ImageCropperActivity : BaseActivity(), CropImageView.OnSetImageUriComplete
     /**
      * Persist URI image to crop URI if specific permissions are required
      */
-    private val cropImageUri: Uri get() = intent.getParcelableExtra(CropImage.CROP_IMAGE_EXTRA_SOURCE)
+    private val cropImageUri: Uri? get() = intent.getParcelableExtra(CropImage.CROP_IMAGE_EXTRA_SOURCE)
 
     /**
      * the options that were set for the crop image
      */
-    private val options: CropImageOptions get() = intent.getParcelableExtra(CropImage.CROP_IMAGE_EXTRA_OPTIONS)
+    private val options: CropImageOptions? get() = intent.getParcelableExtra(CropImage.CROP_IMAGE_EXTRA_OPTIONS)
 
     /**
      * Get Android uri to save the cropped image into.<br></br>
      * Use the given in options or create a temp file.
      */
-    private val outputUri: Uri get() = options.outputUri
+    private val outputUri: Uri? get() = options?.outputUri
 
     @SuppressLint("NewApi")
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,11 +107,13 @@ class ImageCropperActivity : BaseActivity(), CropImageView.OnSetImageUriComplete
 
     override fun onSetImageUriComplete(view: CropImageView, uri: Uri, error: Exception?) {
         if (error == null) {
-            if (options.initialCropWindowRectangle != null) {
-                cropImageView.cropRect = options.initialCropWindowRectangle
-            }
-            if (options.initialRotation > -1) {
-                cropImageView.rotatedDegrees = options.initialRotation
+            options?.let { options ->
+                if (options.initialCropWindowRectangle != null) {
+                    cropImageView.cropRect = options.initialCropWindowRectangle
+                }
+                if (options.initialRotation > -1) {
+                    cropImageView.rotatedDegrees = options.initialRotation
+                }
             }
         } else {
             setResult(null, error, 1)
@@ -128,16 +130,18 @@ class ImageCropperActivity : BaseActivity(), CropImageView.OnSetImageUriComplete
      * Execute crop image and save the result to output uri.
      */
     private fun cropImage() {
-        if (options.noOutputImage) {
-            setResult(null, null, 1)
-        } else {
-            val outputUri = outputUri
-            cropImageView.saveCroppedImageAsync(outputUri,
-                    options.outputCompressFormat,
-                    options.outputCompressQuality,
-                    options.outputRequestWidth,
-                    options.outputRequestHeight,
-                    options.outputRequestSizeOptions)
+        options?.let { options ->
+            if (options.noOutputImage) {
+                setResult(null, null, 1)
+            } else {
+                val outputUri = outputUri
+                cropImageView.saveCroppedImageAsync(outputUri,
+                        options.outputCompressFormat,
+                        options.outputCompressQuality,
+                        options.outputRequestWidth,
+                        options.outputRequestHeight,
+                        options.outputRequestSizeOptions)
+            }
         }
     }
 

@@ -137,7 +137,7 @@ class UserListSelectorActivity : BaseActivity(),
         when (requestCode) {
             REQUEST_SELECT_USER -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER) ?: return
                     loadUserLists(accountKey!!, user.key)
                 }
             }

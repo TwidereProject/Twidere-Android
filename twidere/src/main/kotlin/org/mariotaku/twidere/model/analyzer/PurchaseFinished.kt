@@ -19,7 +19,7 @@ data class PurchaseFinished(val productName: String) : Analyzer.Event {
         const val NAME_EXTRA_FEATURES = "Enhanced Features"
 
         fun create(data: Intent): PurchaseFinished {
-            val purchaseResult: PurchaseResult = data.getParcelableExtra(EXTRA_PURCHASE_RESULT)
+            val purchaseResult: PurchaseResult = data.getParcelableExtra(EXTRA_PURCHASE_RESULT)!!
             val result = PurchaseFinished(purchaseResult.feature)
             result.price = purchaseResult.price
             result.currency = purchaseResult.currency

@@ -57,7 +57,7 @@ open class BaseWebViewFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
         internalWebView?.destroy()
-        internalWebView = WebView(activity)
+        internalWebView = activity?.let { WebView(it) }
         webViewAvailable = true
         return internalWebView
     }

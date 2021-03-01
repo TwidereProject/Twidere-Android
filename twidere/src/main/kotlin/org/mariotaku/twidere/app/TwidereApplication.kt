@@ -176,7 +176,7 @@ class TwidereApplication : Application(), OnSharedPreferenceChangeListener {
         }, updateImmediately = true)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         applyLanguageSettings()
         super.onConfigurationChanged(newConfig)
     }

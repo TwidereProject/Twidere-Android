@@ -38,15 +38,4 @@ class CrashReportDialogActivity : CrashReportDialog() {
         view.setPadding(padding, padding, padding, padding)
         return view
     }
-
-    override fun getMainView(): View {
-        val text = TextView(this)
-        TextViewCompat.setTextAppearance(text, android.R.style.TextAppearance_DeviceDefault_Medium)
-        val dialogTextId = this.config.resDialogText()
-        if (dialogTextId != 0) {
-            text.text = this.getText(dialogTextId)
-        }
-        return text
-    }
-
 }

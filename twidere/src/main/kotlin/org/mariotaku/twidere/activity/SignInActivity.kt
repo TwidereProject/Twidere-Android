@@ -174,7 +174,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         when (requestCode) {
             REQUEST_EDIT_API -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    apiConfig = data.getParcelableExtra(EXTRA_API_CONFIG)
+                    data.getParcelableExtra<CustomAPIConfig>(EXTRA_API_CONFIG)?.let {
+                        apiConfig = it
+                    }
                     updateSignInType()
                 }
                 setSignInButton()
@@ -193,7 +195,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     val clientId = extras.getString(EXTRA_CLIENT_ID)!!
                     val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)!!
 
-                    finishMastodonBrowserLogin(host, clientId, clientSecret, code)
+                    if (code != null) {
+                        finishMastodonBrowserLogin(host, clientId, clientSecret, code)
+                    }
                 }
             }
         }

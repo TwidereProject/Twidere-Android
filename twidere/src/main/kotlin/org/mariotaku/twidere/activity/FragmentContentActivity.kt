@@ -11,11 +11,14 @@ class FragmentContentActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = intent.getStringExtra(EXTRA_TITLE)
-        val fragment = Fragment.instantiate(this, intent.getStringExtra(EXTRA_FRAGMENT),
+        intent.getStringExtra(EXTRA_FRAGMENT)?.let {
+            Fragment.instantiate(this, it,
                 intent.getBundleExtra(EXTRA_FRAGMENT_ARGUMENTS))
-        val ft = supportFragmentManager.beginTransaction()
-        ft.replace(android.R.id.content, fragment)
-        ft.commit()
+        }?.let { fragment ->
+            val ft = supportFragmentManager.beginTransaction()
+            ft.replace(android.R.id.content, fragment)
+            ft.commit()
+        }
     }
 
     companion object {

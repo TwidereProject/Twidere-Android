@@ -63,12 +63,13 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
         when (requestCode) {
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val userList: ParcelableUserList = data!!.getParcelableExtra(EXTRA_USER_LIST)
-                    viewHolder.display(userList)
-                    viewHolder.itemView.visibility = View.VISIBLE
-                    hintView.visibility = View.GONE
+                    data?.getParcelableExtra<ParcelableUserList>(EXTRA_USER_LIST)?.let { userList ->
+                        viewHolder.display(userList)
+                        viewHolder.itemView.visibility = View.VISIBLE
+                        hintView.visibility = View.GONE
 
-                    this.value = userList
+                        this.value = userList
+                    }
                 }
             }
         }

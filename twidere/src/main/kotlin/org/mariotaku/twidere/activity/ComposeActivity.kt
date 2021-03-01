@@ -124,6 +124,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     // Utility classes
     @Inject
     lateinit var extractor: Extractor
+
     @Inject
     lateinit var locationManager: LocationManager
 
@@ -362,7 +363,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         statusShortenerUsed = !ComponentPickerPreference.isNoneValue(kPreferences[statusShortenerKey])
         if (kPreferences[attachLocationKey]) {
             if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION,
-                    AndroidPermission.ACCESS_FINE_LOCATION)) {
+                            AndroidPermission.ACCESS_FINE_LOCATION)) {
                 try {
                     startLocationUpdateIfEnabled()
                 } catch (e: SecurityException) {
@@ -379,8 +380,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         saveAccountSelection()
         saveVisibility()
         try {
-            if (locationListener != null) {
-                locationManager.removeUpdates(locationListener)
+            locationListener?.let {
+                locationManager.removeUpdates(it)
                 locationListener = null
             }
         } catch (ignore: SecurityException) {
@@ -397,8 +398,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val src = MediaPickerActivity.getMediaUris(data)
                     TaskStarter.execute(AddMediaTask(this, src, null,
-                        copySrc = false,
-                        deleteSrc = false
+                            copySrc = false,
+                            deleteSrc = false
                     ))
                     val extras = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)
                     if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) == true) {
@@ -417,9 +418,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_EXTENSION_COMPOSE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     // The latter two is for compatibility
-                    val text = data.getCharSequenceExtra(Intent.EXTRA_TEXT) ?:
-                            data.getStringExtra(EXTRA_TEXT) ?:
-                            data.getStringExtra(EXTRA_APPEND_TEXT)
+                    val text = data.getCharSequenceExtra(Intent.EXTRA_TEXT)
+                            ?: data.getStringExtra(EXTRA_TEXT)
+                            ?: data.getStringExtra(EXTRA_APPEND_TEXT)
                     val isReplaceMode = data.getBooleanExtra(EXTRA_IS_REPLACE_MODE,
                             data.getStringExtra(EXTRA_APPEND_TEXT) == null)
                     if (text != null) {
@@ -433,12 +434,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         updateTextCount()
                     }
 
-                    val src = MediaPickerActivity.getMediaUris(data)?.takeIf(Array<Uri>::isNotEmpty) ?:
-                            data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)?.let { arrayOf(it) }
+                    val src = MediaPickerActivity.getMediaUris(data)?.takeIf(Array<Uri>::isNotEmpty)
+                            ?: data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)?.let { arrayOf(it) }
                     if (src != null) {
                         TaskStarter.execute(AddMediaTask(this, src, null,
-                            copySrc = false,
-                            deleteSrc = false
+                                copySrc = false,
+                                deleteSrc = false
                         ))
                     }
                 }
@@ -618,7 +619,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 if (isAccountSelectorVisible && !TwidereViewUtils.hitView(ev, accountSelectorButton)) {
-                    val layoutManager = accountSelector.layoutManager ?: return super.dispatchTouchEvent(ev)
+                    val layoutManager = accountSelector.layoutManager
+                            ?: return super.dispatchTouchEvent(ev)
                     val clickedItem = (0 until layoutManager.childCount).any {
                         val child = layoutManager.getChildAt(it)
                         child != null && TwidereViewUtils.hitView(ev, child)
@@ -786,8 +788,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             requestOrUpdateLocation()
         } else if (locationListener != null) {
             try {
-                locationManager.removeUpdates(locationListener)
-                locationListener = null
+                locationListener?.let {
+                    locationManager.removeUpdates(it)
+                    locationListener = null
+                }
             } catch (e: SecurityException) {
                 //Ignore
             }
@@ -1090,20 +1094,20 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (intent == null) return false
         val action = intent.action
         val hasVisibility = intent.hasExtra(EXTRA_VISIBILITY)
-        val hasAccountKeys: Boolean
-        when {
+        val hasAccountKeys: Boolean = when {
             intent.hasExtra(EXTRA_ACCOUNT_KEYS) -> {
                 val accountKeys = intent.getTypedArrayExtra<UserKey>(EXTRA_ACCOUNT_KEYS)
                 accountsAdapter.selectedAccountKeys = accountKeys
-                hasAccountKeys = true
+                true
             }
             intent.hasExtra(EXTRA_ACCOUNT_KEY) -> {
-                val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
-                hasAccountKeys = true
+                intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)?.let {
+                    accountsAdapter.selectedAccountKeys = arrayOf(it)
+                    true
+                } ?: false
             }
             else -> {
-                hasAccountKeys = false
+                false
             }
         }
         when (action) {
@@ -1114,8 +1118,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (stream != null) {
                     val src = stream.toTypedArray()
                     TaskStarter.execute(AddMediaTask(this, src, null,
-                        copySrc = true,
-                        deleteSrc = false
+                            copySrc = true,
+                            deleteSrc = false
                     ))
                 }
             }
@@ -1126,8 +1130,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (data != null) {
                     val src = arrayOf(data)
                     TaskStarter.execute(AddMediaTask(this, src, null,
-                        copySrc = true,
-                        deleteSrc = false
+                            copySrc = true,
+                            deleteSrc = false
                     ))
                 }
             }
@@ -1246,7 +1250,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun handleReplyMultipleIntent(screenNames: Array<String>?, accountKey: UserKey?,
-            inReplyToStatus: ParcelableStatus?): Boolean {
+                                          inReplyToStatus: ParcelableStatus?): Boolean {
         if (screenNames == null || screenNames.isEmpty() || accountKey == null ||
                 inReplyToStatus == null) return false
         val myScreenName = DataStoreUtils.getAccountScreenName(this, accountKey) ?: return false
@@ -1444,8 +1448,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val provider = locationManager.getBestProvider(criteria, true)
         if (provider != null) {
             locationLabel.setText(R.string.getting_location)
-            locationListener = ComposeLocationListener(this)
-            locationManager.requestLocationUpdates(provider, 0, 0f, locationListener)
+            locationListener = ComposeLocationListener(this).also {
+                locationManager.requestLocationUpdates(provider, 0, 0f, it)
+            }
             val location = locationManager.getCachedLocation()
             if (location != null) {
                 locationListener?.onLocationChanged(location)
@@ -1716,7 +1721,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun getTwitterReplyTextAndMentions(text: String = editText.text?.toString().orEmpty(),
-            accounts: Array<AccountDetails> = accountsAdapter.selectedAccounts): ReplyTextAndMentions? {
+                                               accounts: Array<AccountDetails> = accountsAdapter.selectedAccounts): ReplyTextAndMentions? {
         val inReplyTo = inReplyToStatus ?: return null
         if (!ignoreMentions) return null
         val account = accounts.singleOrNull() ?: return null
@@ -1841,8 +1846,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.customSelectionActionModeCallback = this
         editText.imageInputListener = { contentInfo ->
             val task = AddMediaTask(this, arrayOf(contentInfo.contentUri), null,
-                copySrc = true,
-                deleteSrc = false
+                    copySrc = true,
+                    deleteSrc = false
             )
             task.callback = {
                 contentInfo.releasePermission()
@@ -2083,11 +2088,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private class AddMediaTask(activity: ComposeActivity, sources: Array<Uri>, types: IntArray?,
-            copySrc: Boolean, deleteSrc: Boolean) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(
+                               copySrc: Boolean, deleteSrc: Boolean) : AbsAddMediaTask<((List<ParcelableMediaUpdate>?) -> Unit)?>(
             activity, sources, types, copySrc, deleteSrc) {
 
         override fun afterExecute(callback: ((List<ParcelableMediaUpdate>?) -> Unit)?,
-                result: List<ParcelableMediaUpdate>?) {
+                                  result: List<ParcelableMediaUpdate>?) {
             callback?.invoke(result)
             val activity = context as? ComposeActivity ?: return
             activity.setProgressVisible(false)

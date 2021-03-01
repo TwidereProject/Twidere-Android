@@ -196,9 +196,10 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         private set
 
     override fun getSystemWindowInsets(caller: Fragment, insets: Rect): Boolean {
-        if (systemWindowsInsets == null) return false
-        insets.set(systemWindowsInsets)
-        return true
+        return systemWindowsInsets?.let {
+            insets.set(it)
+            true
+        } ?: false
     }
 
     override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {

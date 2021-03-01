@@ -27,8 +27,10 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.os.Build
 import org.acra.ACRA
-import org.acra.ReportingInteractionMode
-import org.acra.config.ConfigurationBuilder
+import org.acra.config.CoreConfigurationBuilder
+import org.acra.config.DialogConfigurationBuilder
+import org.acra.config.MailSenderConfigurationBuilder
+import org.acra.data.StringFormat
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.BuildConfig
@@ -39,6 +41,7 @@ import org.mariotaku.twidere.activity.CrashReportDialogActivity
 import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
 import org.mariotaku.twidere.constant.themeBackgroundOptionKey
 import org.mariotaku.twidere.constant.themeKey
+
 
 /**
  * Created by mariotaku on 2017/5/8.
@@ -56,14 +59,17 @@ class ACRAAnalyzer : Analyzer() {
     }
 
     override fun init(application: Application) {
-        val config = ConfigurationBuilder(application)
-                .setReportingInteractionMode(ReportingInteractionMode.DIALOG)
-                .setResDialogText(R.string.message_app_crashed)
-                .setResDialogTheme(R.style.Theme_Twidere_NoDisplay_DayNight)
+        val builder = CoreConfigurationBuilder(application)
+        builder.setBuildConfigClass(BuildConfig::class.java).setReportFormat(StringFormat.JSON)
+        builder.getPluginConfigurationBuilder(DialogConfigurationBuilder::class.java)
+                .setResText(R.string.message_app_crashed)
+                .setResTheme(R.style.Theme_Twidere_NoDisplay_DayNight)
                 .setReportDialogClass(CrashReportDialogActivity::class.java)
+                .setEnabled(true)
+        builder.getPluginConfigurationBuilder(MailSenderConfigurationBuilder::class.java)
                 .setMailTo(TWIDERE_PROJECT_EMAIL)
-                .build()
-        ACRA.init(application, config)
+                .setEnabled(true)
+        ACRA.init(application, builder)
         val reporter = ACRA.getErrorReporter()
         reporter.putCustomData("debug", BuildConfig.DEBUG.toString())
         reporter.putCustomData("build.brand", Build.BRAND)

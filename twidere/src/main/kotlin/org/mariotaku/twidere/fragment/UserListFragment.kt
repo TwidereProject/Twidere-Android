@@ -113,7 +113,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 val userList = this.userList
                 if (resultCode != Activity.RESULT_OK || !data!!.hasExtra(EXTRA_USER) || userList == null)
                     return
-                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER) ?: return
                 twitter.addUserListMembersAsync(userList.account_key, userList.id, user)
                 return
             }

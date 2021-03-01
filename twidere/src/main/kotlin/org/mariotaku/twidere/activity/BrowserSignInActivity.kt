@@ -70,7 +70,7 @@ class BrowserSignInActivity : BaseActivity() {
             setSupportMultipleWindows(true)
         }
 
-        webView.loadUrl(intent.dataString)
+        intent.dataString?.let { webView.loadUrl(it) }
     }
 
     override fun onDestroy() {

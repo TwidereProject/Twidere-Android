@@ -105,7 +105,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         when (requestCode) {
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode != Activity.RESULT_OK) return
-                val accountKey = data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                val accountKey = data?.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY) ?: return
                 startActivity(IntentUtils.newMessageConversation(accountKey))
             }
             else -> {

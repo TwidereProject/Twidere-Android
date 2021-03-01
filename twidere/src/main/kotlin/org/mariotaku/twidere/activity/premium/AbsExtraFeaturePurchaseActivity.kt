@@ -11,7 +11,7 @@ import org.mariotaku.twidere.model.premium.PurchaseResult
  */
 
 abstract class AbsExtraFeaturePurchaseActivity : BaseActivity() {
-    protected val requestingFeature: String get() = intent.getStringExtra(EXTRA_REQUESTING_FEATURE)
+    protected val requestingFeature: String? get() = intent.getStringExtra(EXTRA_REQUESTING_FEATURE)
 
     protected fun finishWithError(code: Int) {
         setResult(code)
