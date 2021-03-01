@@ -1,6 +1,7 @@
 package org.mariotaku.ktextension
 
 import android.database.Cursor
+import android.database.sqlite.SQLiteBlobTooBigException
 import org.mariotaku.library.objectcursor.ObjectCursor
 import java.util.*
 
@@ -11,6 +12,8 @@ import java.util.*
 fun Cursor.safeMoveToPosition(pos: Int) = try {
     moveToPosition(pos)
 } catch (e: IllegalStateException) {
+    false
+} catch (e: SQLiteBlobTooBigException) {
     false
 }
 
