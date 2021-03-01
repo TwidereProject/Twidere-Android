@@ -124,26 +124,25 @@ class StatusDetailsAdapter(
     }
 
     override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
-        data?.let { data ->
-            when (getItemCountIndex(position, raw)) {
-                ITEM_IDX_CONVERSATION -> {
+        when (getItemCountIndex(position, raw)) {
+            ITEM_IDX_CONVERSATION -> {
+                data?.let { data ->
                     var idx = position - getIndexStart(ITEM_IDX_CONVERSATION)
-                    if (data.getOrNull(idx)?.is_filtered == true) idx++
+                    if (data[idx].is_filtered) idx++
                     return data[idx]
                 }
-                ITEM_IDX_REPLY -> {
+            }
+            ITEM_IDX_REPLY -> {
+                data?.let { data ->
                     var idx = position - getIndexStart(ITEM_IDX_CONVERSATION) -
                             getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) +
                             replyStart
-                    if (data.getOrNull(idx)?.is_filtered == true) idx++
+                    if (data[idx].is_filtered) idx++
                     return data[idx]
                 }
-                ITEM_IDX_STATUS -> {
-                    return status!!
-                }
-                else -> {
-
-                }
+            }
+            ITEM_IDX_STATUS -> {
+                return status!!
             }
         }
         throw IndexOutOfBoundsException("index: $position")
