@@ -71,8 +71,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
 
 
         if (!extraFeaturesService.isSupported()) {
-            activity?.finish()
-            return
+//            activity?.finish()
+//            return
         }
 
         if (savedInstanceState == null) {

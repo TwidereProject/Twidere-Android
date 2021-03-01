@@ -26,4 +26,4 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService.Companion.FEATURE
  * Created by mariotaku on 2017/9/14.
  */
 val ExtraFeaturesService.isAdvancedFiltersEnabled: Boolean
-    get() = isEnabled(FEATURE_ADVANCED_FILTERS) || isEnabled("filters_subscriptions")
+    get() = true//isEnabled(FEATURE_ADVANCED_FILTERS) || isEnabled("filters_subscriptions")
