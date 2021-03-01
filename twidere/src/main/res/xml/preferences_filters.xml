@@ -10,14 +10,15 @@
         android:defaultValue="false"
         android:key="filter_possibility_sensitive_statuses"
         android:title="@string/preference_filter_possibility_sensitive_statuses"/>
-    <org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory android:title="@string/preference_title_filter_subscriptions">
-        <org.mariotaku.twidere.preference.PremiumEntryPreference
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
+        android:title="@string/preference_title_filter_subscriptions">
+        <Preference
             android:key="manage_filter_subscriptions"
             android:title="@string/preference_title_filter_manage_subscriptions">
             <intent
                 android:data="twidere://filters/subscriptions"
                 android:targetClass="org.mariotaku.twidere.activity.LinkHandlerActivity"
                 android:targetPackage="org.mariotaku.twidere"/>
-        </org.mariotaku.twidere.preference.PremiumEntryPreference>
-    </org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory>
+        </Preference>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 </PreferenceScreen>

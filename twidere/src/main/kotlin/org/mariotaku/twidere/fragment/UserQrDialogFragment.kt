@@ -125,13 +125,13 @@ class UserQrDialogFragment : BaseDialogFragment() {
         return task {
             try {
                 return@task requestManager.loadOriginalProfileImage(requireContext(), user, 0)
-                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+                        .submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
             } catch (e: ExecutionException) {
                 // Ignore
             }
             // Return fallback profile image
             return@task requestManager.loadProfileImage(requireContext(), user, 0, size = profileImageSize)
-                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+                    .submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
         }
     }
 

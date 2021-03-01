@@ -27,4 +27,22 @@ import org.mariotaku.sqliteqb.library.Expression
 data class ParameterizedExpression(var expression: Expression, val parameters: Array<String>) {
     val sql: String
         get() = expression.sql
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ParameterizedExpression
+
+        if (expression != other.expression) return false
+        if (!parameters.contentEquals(other.parameters)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = expression.hashCode()
+        result = 31 * result + parameters.contentHashCode()
+        return result
+    }
 }

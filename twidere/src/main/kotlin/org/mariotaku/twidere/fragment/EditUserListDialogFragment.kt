@@ -46,13 +46,13 @@ class EditUserListDialogFragment : BaseDialogFragment() {
         builder.positive(android.R.string.ok, this::onPositiveClick)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
-        dialog.onShow { dialog ->
-            dialog.applyTheme()
-            dialog.editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
+        dialog.onShow { alertDialog ->
+            alertDialog.applyTheme()
+            alertDialog.editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
             if (savedInstanceState == null) {
-                dialog.editName.setText(arguments?.getString(EXTRA_LIST_NAME))
-                dialog.editDescription.setText(arguments?.getString(EXTRA_DESCRIPTION))
-                dialog.isPublic.isChecked = arguments?.getBoolean(EXTRA_IS_PUBLIC, true) ?: true
+                alertDialog.editName.setText(arguments?.getString(EXTRA_LIST_NAME))
+                alertDialog.editDescription.setText(arguments?.getString(EXTRA_DESCRIPTION))
+                alertDialog.isPublic.isChecked = arguments?.getBoolean(EXTRA_IS_PUBLIC, true) ?: true
             }
         }
         return dialog

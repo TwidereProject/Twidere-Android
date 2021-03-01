@@ -72,7 +72,7 @@ class KeyboardShortcutPreference(context: Context, attrs: AttributeSet? = null) 
     override fun displayDialog(fragment: PreferenceFragmentCompat) {
         val df = KeyboardShortcutDialogFragment.newInstance(action)
         df.setTargetFragment(fragment, 0)
-        fragment.fragmentManager?.let { df.show(it, action) }
+        fragment.parentFragmentManager.let { df.show(it, action) }
     }
 
     class KeyboardShortcutDialogFragment : ThemedPreferenceDialogFragmentCompat(), DialogInterface.OnKeyListener {

@@ -26,9 +26,9 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 
-import com.twitter.Extractor;
-import com.twitter.Extractor.Entity;
-import com.twitter.Regex;
+import com.twitter.twittertext.Extractor;
+import com.twitter.twittertext.Extractor.Entity;
+import com.twitter.twittertext.Regex;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.UserKey;

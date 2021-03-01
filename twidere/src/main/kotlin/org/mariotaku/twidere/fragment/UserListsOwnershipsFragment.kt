@@ -68,7 +68,7 @@ class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
                 val args = Bundle()
                 args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
                 f.arguments = args
-                fragmentManager?.let { f.show(it, null) }
+                parentFragmentManager.let { f.show(it, null) }
                 return true
             }
         }

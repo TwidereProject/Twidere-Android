@@ -29,6 +29,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.loader.content.Loader
 import android.widget.Toast
+import androidx.loader.app.LoaderManager
 import com.squareup.otto.Subscribe
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -174,7 +175,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             }
 
             override val shouldAbort: Boolean
-                get() = currentContext == null
+                get() = false
         })
     }
 
@@ -237,7 +238,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             args.putAll(fragmentArgs)
             args.putBoolean(EXTRA_FROM_USER, true)
         }
-        loaderManager.restartLoader(loaderId, args, this)
+        LoaderManager.getInstance(this).restartLoader(loaderId, args, this)
     }
 
     fun replaceStatusStates(result: ParcelableStatus?) {

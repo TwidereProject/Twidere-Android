@@ -19,4 +19,6 @@
 
 package org.mariotaku.twidere.alias
 
-typealias TwitterRegex = com.twitter.Regex
+import com.twitter.twittertext.Regex
+
+typealias TwitterRegex = Regex

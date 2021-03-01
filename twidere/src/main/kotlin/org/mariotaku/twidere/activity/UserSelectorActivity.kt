@@ -153,10 +153,10 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
             this[EXTRA_FROM_CACHE] = fromCache
         }
         if (loaderInitialized) {
-            supportLoaderManager.initLoader(0, args, this)
+            LoaderManager.getInstance(this).initLoader(0, args, this)
             loaderInitialized = true
         } else {
-            supportLoaderManager.restartLoader(0, args, this)
+            LoaderManager.getInstance(this).restartLoader(0, args, this)
         }
     }
 

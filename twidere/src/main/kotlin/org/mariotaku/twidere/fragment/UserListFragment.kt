@@ -28,6 +28,7 @@ import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Bundle
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader
@@ -81,7 +82,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     fun displayUserList(userList: ParcelableUserList?) {
         val activity = activity ?: return
-        loaderManager.destroyLoader(0)
+        LoaderManager.getInstance(this).destroyLoader(0)
         this.userList = userList
 
         if (userList != null) {
@@ -93,7 +94,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     }
 
     fun getUserListInfo(omitIntentExtra: Boolean) {
-        val lm = loaderManager
+        val lm = LoaderManager.getInstance(this)
         lm.destroyLoader(0)
         val args = Bundle(arguments)
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)
@@ -112,7 +113,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 val userList = this.userList
                 if (resultCode != Activity.RESULT_OK || !data!!.hasExtra(EXTRA_USER) || userList == null)
                     return
-                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER) ?: return
                 twitter.addUserListMembersAsync(userList.account_key, userList.id, user)
                 return
             }
@@ -180,7 +181,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
 
     override fun onDestroyView() {
         userList = null
-        loaderManager.destroyLoader(0)
+        LoaderManager.getInstance(this).destroyLoader(0)
         super.onDestroyView()
     }
 
@@ -227,7 +228,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         val twitter = twitterWrapper
         val userList = userList ?: return false
         val activity = activity ?: return false
-        val fragmentManager = fragmentManager ?: return false
+        val fragmentManager = parentFragmentManager
         when (item.itemId) {
             R.id.add -> {
                 if (userList.user_key != userList.account_key) return false

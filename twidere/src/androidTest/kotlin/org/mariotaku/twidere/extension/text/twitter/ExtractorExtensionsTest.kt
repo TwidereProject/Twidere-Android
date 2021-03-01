@@ -21,7 +21,7 @@ package org.mariotaku.twidere.extension.text.twitter
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -28,6 +28,7 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
+import androidx.loader.app.LoaderManager
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
@@ -65,7 +66,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
+            return LoaderManager.getInstance(this).hasRunningLoadersSafe()
         }
         set(value) {
             super.refreshing = value
@@ -102,7 +103,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
                 this)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).initLoader(0, loaderArgs, this)
     }
 
     override fun onStart() {
@@ -164,7 +165,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderArgs.putParcelable(EXTRA_PAGINATION, nextPagination)
-        loaderManager.restartLoader(0, loaderArgs, this)
+        LoaderManager.getInstance(this).restartLoader(0, loaderArgs, this)
     }
 
     override fun onCreateAdapter(context: Context, requestManager: RequestManager): ParcelableUsersAdapter {
@@ -212,7 +213,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         val accountKey = user.account_key ?: return
         if (twitterWrapper.isUpdatingRelationship(accountKey, user.key)) return
         if (user.is_following) {
-            fragmentManager?.let { DestroyFriendshipDialogFragment.show(it, user) }
+            parentFragmentManager.let { DestroyFriendshipDialogFragment.show(it, user) }
         } else {
             twitterWrapper.createFriendshipAsync(accountKey, user.key, user.screen_name)
         }

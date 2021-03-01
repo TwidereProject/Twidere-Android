@@ -33,6 +33,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
+import androidx.loader.app.LoaderManager
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.isNullOrEmpty
@@ -52,7 +53,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
 
         listView.onItemClickListener = this
 
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         showProgress()
     }
 

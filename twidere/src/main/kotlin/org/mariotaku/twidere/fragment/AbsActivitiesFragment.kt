@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import android.view.*
+import androidx.loader.app.LoaderManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
@@ -110,7 +111,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(loaderId, loaderArgs, this)
+        LoaderManager.getInstance(this).initLoader(loaderId, loaderArgs, this)
         showProgress()
     }
 
@@ -531,7 +532,7 @@ abstract class AbsActivitiesFragment protected constructor() :
                         return true
                     }
                     else -> activity?.let {
-                        fragmentManager?.let { fragmentManager ->
+                        parentFragmentManager.let { fragmentManager ->
                             MenuUtils.handleStatusClick(it, this, fragmentManager,
                                     preferences, userColorNameManager, twitterWrapper, status, item)
                         }

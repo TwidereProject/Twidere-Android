@@ -64,7 +64,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         when (requestCode) {
             REQUEST_SELECT_USER -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
-                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER) ?: return
                 executeAfterFragmentResumed { fragment ->
                     AddUserFilterDialogFragment.show(fragment.childFragmentManager, user)
                 }
@@ -92,7 +92,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             }
             REQUEST_EXPORT_MUTES_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
-                val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY) ?: return
                 val userKeys = data.getBundleExtra(EXTRA_EXTRAS)?.getNullableTypedArray<UserKey>(EXTRA_ITEMS) ?: return
                 exportToMutedUsers(accountKey, userKeys)
             }
@@ -115,7 +115,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val isFeaturesSupported = extraFeaturesService.isSupported()
-        menu.setGroupAvailability(R.id.import_export, isFeaturesSupported)
+        menu.setGroupAvailability(R.id.import_export, true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -147,7 +147,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val result = super.onPrepareActionMode(mode, menu)
         val isFeaturesSupported = extraFeaturesService.isSupported()
-        menu.setGroupAvailability(R.id.import_export, isFeaturesSupported)
+        menu.setGroupAvailability(R.id.import_export, true)
         return result && menu.hasVisibleItems()
     }
 

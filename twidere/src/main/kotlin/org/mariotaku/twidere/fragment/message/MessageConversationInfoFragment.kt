@@ -28,20 +28,20 @@ import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
+import android.view.*
+import android.widget.CompoundButton
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.FixedAsyncTaskLoader
 import androidx.loader.content.Loader
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.FixedLinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
-import android.view.*
-import android.widget.CompoundButton
-import android.widget.EditText
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
@@ -72,7 +72,6 @@ import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.annotation.ProfileImageSize
-import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
@@ -182,15 +181,16 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             }
         }
 
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CONVERSATION_ADD_USER -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
-                    performAddParticipant(user)
+                    data.getParcelableExtra<ParcelableUser>(EXTRA_USER)?.let { user ->
+                        performAddParticipant(user)
+                    }
                 }
             }
             REQUEST_PICK_MEDIA -> {
@@ -300,7 +300,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "leave_conversation_progress")
         val weakThis = WeakReference(this)
         val task = DestroyConversationTask(requireContext(), accountKey, conversationId)
-        task.callback = callback@ { succeed ->
+        task.callback = callback@{ succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("leave_conversation_progress") {
                 if (succeed) {
@@ -316,7 +316,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "clear_messages_progress")
         val weakThis = WeakReference(this)
         val task = ClearMessagesTask(requireContext(), accountKey, conversationId)
-        task.callback = callback@ { succeed ->
+        task.callback = callback@{ succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("clear_messages_progress") {
                 if (succeed) {
@@ -331,10 +331,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
         val weakThis = WeakReference(this)
         val task = AddParticipantsTask(requireContext(), accountKey, conversationId, listOf(user))
-        task.callback = callback@ { succeed ->
+        task.callback = callback@ {
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("add_participant_progress") {
-                loaderManager.restartLoader(0, null, this)
+                LoaderManager.getInstance(this).restartLoader(0, null, this)
             }
         }
         TaskStarter.execute(task)
@@ -344,10 +344,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "set_notifications_disabled_progress")
         val weakThis = WeakReference(this)
         val task = SetConversationNotificationDisabledTask(requireContext(), accountKey, conversationId, disabled)
-        task.callback = callback@ { _ ->
+        task.callback = callback@{ _ ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("set_notifications_disabled_progress") {
-                loaderManager.restartLoader(0, null, this)
+                LoaderManager.getInstance(this).restartLoader(0, null, this)
             }
         }
         TaskStarter.execute(task)
@@ -379,7 +379,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetConversationName(name: String) {
         val conversationId = this.conversationId
-        performUpdateInfo("set_name_progress", updateAction = updateAction@ { fragment, account, microBlog ->
+        performUpdateInfo("set_name_progress", updateAction = updateAction@{ fragment, account, microBlog ->
             val context = fragment.context
             when (account.type) {
                 AccountType.TWITTER -> {
@@ -396,7 +396,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private fun performSetConversationAvatar(uri: Uri?) {
         val conversationId = this.conversationId
-        performUpdateInfo("set_avatar_progress", updateAction = updateAction@ { fragment, account, microBlog ->
+        performUpdateInfo("set_avatar_progress", updateAction = updateAction@{ fragment, account, microBlog ->
             val context = fragment.context
             when (account.type) {
                 AccountType.TWITTER -> {
@@ -470,7 +470,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }.alwaysUi {
             val fragment = weakThis.get() ?: return@alwaysUi
             fragment.dismissDialogThen(tag) {
-                loaderManager.restartLoader(0, null, this)
+                LoaderManager.getInstance(this).restartLoader(0, null, this)
             }
         }
     }

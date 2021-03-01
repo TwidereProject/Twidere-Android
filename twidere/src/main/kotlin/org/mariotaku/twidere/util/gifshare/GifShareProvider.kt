@@ -42,7 +42,7 @@ interface GifShareProvider {
         fun newFactory(): Factory = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
 
         private object NullFactory : Factory {
-            override fun newInstance(context: Context) = null
+            override fun newInstance(context: Context): Nothing? = null
 
         }
     }

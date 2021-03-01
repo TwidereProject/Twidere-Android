@@ -29,6 +29,7 @@ import androidx.loader.content.Loader
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import androidx.loader.app.LoaderManager
 import com.bumptech.glide.RequestManager
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
@@ -68,7 +69,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         listView.onItemClickListener = this
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         showProgress()
     }
 
@@ -123,7 +124,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
 
     override fun onStart() {
         super.onStart()
-        loaderManager.restartLoader(0, null, this)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
         bus.register(this)
     }
 

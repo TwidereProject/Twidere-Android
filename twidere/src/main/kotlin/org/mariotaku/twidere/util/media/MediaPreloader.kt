@@ -70,12 +70,12 @@ class MediaPreloader(val context: Context) {
     }
 
     private fun preLoadProfileImage(status: ParcelableStatus) {
-        Glide.with(context).loadProfileImage(context, status, 0).into(Target.SIZE_ORIGINAL,
+        Glide.with(context).loadProfileImage(context, status, 0).submit(Target.SIZE_ORIGINAL,
                 Target.SIZE_ORIGINAL)
     }
 
     private fun preloadPreviewImage(url: String?) {
-        Glide.with(context).load(url).into(Target.SIZE_ORIGINAL,
+        Glide.with(context).load(url).submit(Target.SIZE_ORIGINAL,
                 Target.SIZE_ORIGINAL)
     }
 

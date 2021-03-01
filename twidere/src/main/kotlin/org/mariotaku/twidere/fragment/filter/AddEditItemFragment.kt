@@ -151,7 +151,7 @@ class AddEditItemFragment : BaseDialogFragment() {
                     val df = ExtraFeaturesIntroductionDialogFragment.create(
                             ExtraFeaturesService.FEATURE_ADVANCED_FILTERS)
                     df.setTargetFragment(this@AddEditItemFragment, REQUEST_CHANGE_SCOPE_PURCHASE)
-                    df.show(requireFragmentManager(), ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
+                    df.show(parentFragmentManager, ExtraFeaturesIntroductionDialogFragment.FRAGMENT_TAG)
                 }
             }
 

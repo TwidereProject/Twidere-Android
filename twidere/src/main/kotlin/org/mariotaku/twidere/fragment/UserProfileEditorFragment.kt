@@ -33,7 +33,8 @@ import android.text.TextUtils.isEmpty
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Toast
-import com.twitter.Validator
+import androidx.loader.app.LoaderManager
+import com.twitter.twittertext.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.ui.promiseOnUi
@@ -337,7 +338,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener,
 
     private fun getUserInfo() {
         if (activity == null || isDetached) return
-        val lm = loaderManager
+        val lm = LoaderManager.getInstance(this)
         lm.destroyLoader(LOADER_ID_USER)
         getUserInfoCalled = true
         if (userInfoLoaderInitialized) {

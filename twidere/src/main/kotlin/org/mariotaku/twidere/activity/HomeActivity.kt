@@ -732,7 +732,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             } else {
                 Utils.getDefaultAccountKey(this)
             }
-            IntentUtils.openSearch(this, accountKey, query)
+            if (query != null) {
+                IntentUtils.openSearch(this, accountKey, query)
+            }
             return -1
         }
         val refreshOnStart = preferences.getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)

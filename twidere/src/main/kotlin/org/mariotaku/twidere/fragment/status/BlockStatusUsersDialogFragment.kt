@@ -50,7 +50,7 @@ class BlockStatusUsersDialogFragment : BaseDialogFragment() {
         }.toTypedArray()
         builder.setTitle(R.string.action_status_block_users)
         builder.setItems(displayNames) { _, which ->
-            CreateUserBlockDialogFragment.show(requireFragmentManager(), referencedUsers[which])
+            CreateUserBlockDialogFragment.show(parentFragmentManager, referencedUsers[which])
         }
         val dialog = builder.create()
         dialog.applyOnShow { applyTheme() }

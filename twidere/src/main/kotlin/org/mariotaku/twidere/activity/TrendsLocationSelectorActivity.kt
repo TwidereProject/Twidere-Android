@@ -275,6 +275,24 @@ class TrendsLocationSelectorActivity : BaseActivity() {
                 dest.writeTypedArray(children, flags)
             }
 
+            override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+
+                other as LocationsData
+
+                if (root != other.root) return false
+                if (!children.contentEquals(other.children)) return false
+
+                return true
+            }
+
+            override fun hashCode(): Int {
+                var result = root.hashCode()
+                result = 31 * result + children.contentHashCode()
+                return result
+            }
+
             companion object {
                 @JvmField
                 val CREATOR = object : Parcelable.Creator<LocationsData> {

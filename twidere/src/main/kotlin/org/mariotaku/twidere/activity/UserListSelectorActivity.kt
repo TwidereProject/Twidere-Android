@@ -55,7 +55,7 @@ class UserListSelectorActivity : BaseActivity(),
 
     override var refreshing: Boolean
         get() {
-            return supportLoaderManager.hasRunningLoadersSafe()
+            return LoaderManager.getInstance(this).hasRunningLoadersSafe()
         }
         set(value) {
         }
@@ -137,7 +137,7 @@ class UserListSelectorActivity : BaseActivity(),
         when (requestCode) {
             REQUEST_SELECT_USER -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER) ?: return
                     loadUserLists(accountKey!!, user.key)
                 }
             }
@@ -199,9 +199,9 @@ class UserListSelectorActivity : BaseActivity(),
         }
         if (!loaderInitialized) {
             loaderInitialized = true
-            supportLoaderManager.initLoader(0, args, this)
+            LoaderManager.getInstance(this).initLoader(0, args, this)
         } else {
-            supportLoaderManager.restartLoader(0, args, this)
+            LoaderManager.getInstance(this).restartLoader(0, args, this)
         }
     }
 

@@ -90,7 +90,7 @@ abstract class TimelineSyncManager(val context: Context) {
     }
 
     object DummyFactory : Factory() {
-        override fun create(context: Context) = null
+        override fun create(context: Context): Nothing? = null
     }
 
     companion object {

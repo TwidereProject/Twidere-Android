@@ -71,26 +71,26 @@ fun Activity.toParcelable(accountKey: UserKey, accountType: String, isGap: Boole
         it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
     }
 
-    result.targets = ParcelableActivity.RelatedObject().also {
-        it.statuses = targetStatuses?.mapToArray {
+    result.targets = ParcelableActivity.RelatedObject().also { relatedObject ->
+        relatedObject.statuses = targetStatuses?.mapToArray {
             it.toParcelable(accountKey, accountType, profileImageSize)
         }
-        it.users = targetUsers?.mapToArray {
+        relatedObject.users = targetUsers?.mapToArray {
             it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
         }
-        it.user_lists = targetUserLists?.mapToArray {
+        relatedObject.user_lists = targetUserLists?.mapToArray {
             it.toParcelable(accountKey, profileImageSize = profileImageSize)
         }
     }
 
-    result.target_objects = ParcelableActivity.RelatedObject().also {
-        it.statuses = targetObjectStatuses?.mapToArray {
+    result.target_objects = ParcelableActivity.RelatedObject().also { relatedObject ->
+        relatedObject.statuses = targetObjectStatuses?.mapToArray {
             it.toParcelable(accountKey, accountType, profileImageSize)
         }
-        it.users = targetObjectUsers?.mapToArray {
+        relatedObject.users = targetObjectUsers?.mapToArray {
             it.toParcelable(accountKey, accountType, profileImageSize = profileImageSize)
         }
-        it.user_lists = targetObjectUserLists?.mapToArray {
+        relatedObject.user_lists = targetObjectUserLists?.mapToArray {
             it.toParcelable(accountKey, profileImageSize = profileImageSize)
         }
     }

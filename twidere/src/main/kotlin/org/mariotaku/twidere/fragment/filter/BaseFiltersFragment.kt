@@ -88,7 +88,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             onItemClick(pos)
         }
         listView.setMultiChoiceModeListener(this)
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         refreshEnabled = false
         showProgress()
     }
@@ -235,7 +235,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             this[EXTRA_VALUE] = value
             this[EXTRA_SCOPE] = scope
         }
-        fragmentManager?.let { dialog.show(it, "add_rule") }
+        parentFragmentManager.let { dialog.show(it, "add_rule") }
     }
 
 

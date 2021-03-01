@@ -24,7 +24,7 @@ import android.database.CursorIndexOutOfBoundsException
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.legacy.widget.Space
+import android.widget.Space
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get

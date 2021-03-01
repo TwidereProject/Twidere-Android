@@ -23,7 +23,7 @@ import android.content.Intent
 import android.os.Parcelable
 
 inline fun <reified T : Parcelable> Intent.getTypedArrayExtra(key: String): Array<T> {
-    val extra = getParcelableArrayExtra(key)
+    val extra = getParcelableArrayExtra(key) ?: emptyArray()
     return Array(extra.size) { extra[it] as T }
 }
 

@@ -249,6 +249,13 @@
                 <data android:mimeType="image/*"/>
                 <data android:mimeType="text/plain"/>
             </intent-filter>
+            <intent-filter android:label="@string/title_compose">
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

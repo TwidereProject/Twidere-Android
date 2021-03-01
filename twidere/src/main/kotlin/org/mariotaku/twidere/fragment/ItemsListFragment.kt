@@ -11,6 +11,7 @@ import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.loader.app.LoaderManager
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
@@ -46,7 +47,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         refreshEnabled = false
         showProgress()
     }
@@ -175,7 +176,7 @@ open class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAd
                     startActivity(chooser)
                     return true
                 }
-                return MenuUtils.handleStatusClick(requireActivity(), this, requireFragmentManager(),
+                return MenuUtils.handleStatusClick(requireActivity(), this, parentFragmentManager,
                         preferences, userColorNameManager, twitterWrapper, status, item)
             }
         }

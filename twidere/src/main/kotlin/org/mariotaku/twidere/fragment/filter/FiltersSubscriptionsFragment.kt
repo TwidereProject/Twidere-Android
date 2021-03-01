@@ -67,16 +67,16 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
 
         listContainer.visibility = View.GONE
         progressContainer.visibility = View.VISIBLE
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
 
 
         if (!extraFeaturesService.isSupported()) {
-            activity?.finish()
-            return
+//            activity?.finish()
+//            return
         }
 
         if (savedInstanceState == null) {
-            fragmentManager?.let { fragmentManager ->
+            parentFragmentManager.let { fragmentManager ->
                 when (arguments?.getString(EXTRA_ACTION)) {
                     ACTION_ADD_URL_SUBSCRIPTION -> {
                         if (!extraFeaturesService.isAdvancedFiltersEnabled) {
@@ -131,17 +131,17 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         when (item.itemId) {
             R.id.add -> {
                 val df = AddUrlSubscriptionDialogFragment()
-                fragmentManager?.let { df.show(it, "add_url_subscription") }
+                parentFragmentManager.let { df.show(it, "add_url_subscription") }
                 return true
             }
             R.id.refresh -> {
                 executeAfterFragmentResumed { fragment ->
-                    ProgressDialogFragment.show(fragment.childFragmentManager, FRAGMENT_TAG_RREFRESH_FILTERS)
+                    ProgressDialogFragment.show(fragment.childFragmentManager, FRAGMENT_TAG_REFRESH_FILTERS)
                     val task = RefreshFiltersSubscriptionsTask(fragment.requireContext())
                     val fragmentRef = WeakReference(fragment)
                     task.callback = {
                         fragmentRef.get()?.executeAfterFragmentResumed { fragment ->
-                            fragment.fragmentManager?.dismissDialogFragment(FRAGMENT_TAG_RREFRESH_FILTERS)
+                            fragment.parentFragmentManager.dismissDialogFragment(FRAGMENT_TAG_REFRESH_FILTERS)
                         }
                     }
                     TaskStarter.execute(task)
@@ -255,7 +255,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             this[EXTRA_ADD_SUBSCRIPTION_URL] = arguments?.getString(EXTRA_ADD_SUBSCRIPTION_URL)
             this[EXTRA_ADD_SUBSCRIPTION_NAME] = arguments?.getString(EXTRA_ADD_SUBSCRIPTION_NAME)
         }
-        fragmentManager?.let { df.show(it, "add_url_subscription") }
+        parentFragmentManager.let { df.show(it, "add_url_subscription") }
     }
 
     class FilterSubscriptionsAdapter(context: Context) : SimpleCursorAdapter(context,
@@ -337,7 +337,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         const val EXTRA_ADD_SUBSCRIPTION_URL = "add_subscription.url"
         const val EXTRA_ADD_SUBSCRIPTION_NAME = "add_subscription.name"
         private const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
-        private const val FRAGMENT_TAG_RREFRESH_FILTERS = "refresh_filters"
+        private const val FRAGMENT_TAG_REFRESH_FILTERS = "refresh_filters"
     }
 }
 

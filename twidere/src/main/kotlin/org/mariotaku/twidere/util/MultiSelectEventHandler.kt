@@ -28,7 +28,7 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -158,7 +158,7 @@ class MultiSelectEventHandler(
         if (item.groupId == AccountActionProvider.MENU_GROUP) {
             val intent = item.intent
             if (intent == null || !intent.hasExtra(EXTRA_ACCOUNT)) return false
-            val account: AccountDetails = intent.getParcelableExtra(EXTRA_ACCOUNT)
+            val account: AccountDetails = intent.getParcelableExtra(EXTRA_ACCOUNT) ?: return false
             multiSelectManager.accountKey = account.key
             accountActionProvider?.selectedAccountKeys = arrayOf(account.key)
             mode.invalidate()

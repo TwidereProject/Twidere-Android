@@ -41,6 +41,7 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
+import androidx.loader.app.LoaderManager
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.get
@@ -84,7 +85,7 @@ class DraftsListFragment : AbsContentListViewFragment<DraftsAdapter>(), LoaderCa
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
         refreshEnabled = false
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         showProgress()
     }
 

@@ -45,7 +45,11 @@ public class ActivitySupport {
         }
 
         private static TaskDescription toNativeTaskDescription(TaskDescriptionCompat taskDescription) {
-            return new TaskDescription(taskDescription.getLabel(), taskDescription.getIcon(), taskDescription.getPrimaryColor());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                return new TaskDescription(taskDescription.getLabel(), taskDescription.getPrimaryColor());
+            } else {
+                return new TaskDescription(taskDescription.getLabel(), taskDescription.getIcon(), taskDescription.getPrimaryColor());
+            }
         }
     }
 

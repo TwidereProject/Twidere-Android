@@ -74,7 +74,9 @@ abstract class AbsStatusDialogActivity : BaseActivity() {
                         return
                     }
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-                    showDialogFragment(accountKey, statusId, status)
+                    if (accountKey != null) {
+                        showDialogFragment(accountKey, statusId, status)
+                    }
                     return
                 }
             }

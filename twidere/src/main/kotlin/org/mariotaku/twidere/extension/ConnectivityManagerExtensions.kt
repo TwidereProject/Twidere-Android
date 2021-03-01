@@ -32,7 +32,7 @@ val ConnectivityManager.activateNetworkCompat: Network?
             return activeNetwork
         }
         val activeInfo = activeNetworkInfo ?: return null
-        return allNetworks.firstOrNull { activeInfo.same(getNetworkInfo(it)) }
+        return allNetworks.firstOrNull { getNetworkInfo(it)?.let { it1 -> activeInfo.same(it1) } == true }
     }
 
 private fun NetworkInfo.same(another: NetworkInfo) = type == another.type && subtype == another.subtype

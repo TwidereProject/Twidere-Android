@@ -24,7 +24,7 @@ import android.content.ContentValues
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
-import com.twitter.Extractor
+import com.twitter.twittertext.Extractor
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS

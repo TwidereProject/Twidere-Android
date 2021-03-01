@@ -50,7 +50,7 @@ class MuteStatusUsersDialogFragment : BaseDialogFragment() {
         }.toTypedArray()
         builder.setTitle(R.string.action_status_mute_users)
         builder.setItems(displayNames) { _, which ->
-            CreateUserMuteDialogFragment.show(requireFragmentManager(), referencedUsers[which])
+            CreateUserMuteDialogFragment.show(parentFragmentManager, referencedUsers[which])
         }
         val dialog = builder.create()
         dialog.onShow { it.applyTheme() }

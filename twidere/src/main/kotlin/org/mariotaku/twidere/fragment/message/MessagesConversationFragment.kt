@@ -205,7 +205,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         updateMediaPreview()
 
-        loaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
         showProgress()
     }
 
@@ -413,7 +413,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (activity is LinkHandlerActivity) {
             activity.intent = IntentUtils.messageConversation(accountKey, newConversationId)
         }
-        loaderManager.restartLoader(0, null, this)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     private fun performSendMessage() {
@@ -526,8 +526,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         val stateIcon = if (conversation.notificationDisabled) {
             ContextCompat.getDrawable(context, R.drawable.ic_message_type_speaker_muted)?.apply {
-                mutate()
-                setColorFilter(conversationTitle.currentTextColor, PorterDuff.Mode.SRC_ATOP)
+                mutate().setColorFilter(conversationTitle.currentTextColor, PorterDuff.Mode.SRC_ATOP)
             }
         } else {
             null

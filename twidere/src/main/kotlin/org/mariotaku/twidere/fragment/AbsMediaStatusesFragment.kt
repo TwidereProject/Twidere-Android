@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
+import androidx.loader.app.LoaderManager
 import androidx.loader.app.LoaderManager.LoaderCallbacks
 import androidx.loader.app.hasRunningLoadersSafe
 import androidx.loader.content.Loader
@@ -49,7 +50,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
     final override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
+            return LoaderManager.getInstance(this).hasRunningLoadersSafe()
         }
         set(value) {
             super.refreshing = value
@@ -69,7 +70,7 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         adapter.statusClickListener = this
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(loaderId, loaderArgs, this)
+        LoaderManager.getInstance(this).initLoader(loaderId, loaderArgs, this)
         showProgress()
     }
 

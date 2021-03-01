@@ -33,5 +33,5 @@ data class QrCodeData(private val qrCode: QrCode) : QrData {
 
     override fun getVersion() = qrCode.version
 
-    override fun get(x: Int, y: Int) = qrCode.getModule(x, y) == 1
+    override fun get(x: Int, y: Int) = qrCode.getModule(x, y)
 }

@@ -111,7 +111,7 @@ class KeyboardShortcutPreferenceCompatActivity : BaseActivity(), OnClickListener
         return true
     }
 
-    private val contextTag: String
+    private val contextTag: String?
         get() = intent.getStringExtra(EXTRA_CONTEXT_TAG)
 
     private val keyAction: String?

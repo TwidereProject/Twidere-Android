@@ -174,7 +174,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
         when (requestCode) {
             REQUEST_EDIT_API -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    apiConfig = data.getParcelableExtra(EXTRA_API_CONFIG)
+                    data.getParcelableExtra<CustomAPIConfig>(EXTRA_API_CONFIG)?.let {
+                        apiConfig = it
+                    }
                     updateSignInType()
                 }
                 setSignInButton()
@@ -193,7 +195,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     val clientId = extras.getString(EXTRA_CLIENT_ID)!!
                     val clientSecret = extras.getString(EXTRA_CLIENT_SECRET)!!
 
-                    finishMastodonBrowserLogin(host, clientId, clientSecret, code)
+                    if (code != null) {
+                        finishMastodonBrowserLogin(host, clientId, clientSecret, code)
+                    }
                 }
             }
         }
@@ -583,9 +587,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.dialog_expandable_list)
             val dialog = builder.create()
-            dialog.onShow {
-                it.applyTheme()
-                val listView = it.expandableList
+            dialog.onShow { alertDialog ->
+                alertDialog.applyTheme()
+                val listView = alertDialog.expandableList
                 val adapter = LoginTypeAdapter(requireContext())
                 listView.setAdapter(adapter)
                 listView.setOnGroupClickListener { _, _, groupPosition, _ ->
@@ -613,7 +617,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                     return@setOnChildClickListener true
                 }
 
-                loaderManager.initLoader(0, null, this)
+                LoaderManager.getInstance(this).initLoader(0, null, this)
             }
             return dialog
         }
