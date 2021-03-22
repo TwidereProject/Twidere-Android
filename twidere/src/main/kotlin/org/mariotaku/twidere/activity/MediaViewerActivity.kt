@@ -624,8 +624,12 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                 intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
             }
             activity.processShareIntent(intent)
-            activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.action_share)),
-                    REQUEST_SHARE_MEDIA)
+            val shareIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Intent.createChooser(intent, activity.getString(R.string.action_share))
+            } else {
+                Intent.createChooser(intent, activity.getString(R.string.action_share))
+            }
+            activity.startActivityForResult(shareIntent, REQUEST_SHARE_MEDIA)
         }
 
         override fun onFileSaveFailed() {
