@@ -703,6 +703,7 @@
         <provider
             android:name=".provider.ShareProvider"
             android:authorities="twidere.share"
+            android:grantUriPermissions="true"
             android:exported="true"
             tools:ignore="ExportedContentProvider"/>
         <provider
