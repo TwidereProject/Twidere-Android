@@ -128,7 +128,7 @@ class StatusDetailsAdapter(
             ITEM_IDX_CONVERSATION -> {
                 data?.let { data ->
                     var idx = position - getIndexStart(ITEM_IDX_CONVERSATION)
-                    if (idx !in data.indices) {
+                    if (idx in data.indices) {
                         if (data[idx].is_filtered) {
                             idx++
                         }
@@ -141,7 +141,7 @@ class StatusDetailsAdapter(
                     var idx = position - getIndexStart(ITEM_IDX_CONVERSATION) -
                             getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) +
                             replyStart
-                    if (idx !in data.indices) {
+                    if (idx in data.indices) {
                         if (data[idx].is_filtered) {
                             idx++
                         }
