@@ -213,7 +213,9 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         val density = resources.displayMetrics.density
         val progressCircleDiameter = swipeLayout.progressCircleDiameter
         val controlBarOffsetPixels =
-            (activity.controlBarHeight * (1 - activity.controlBarOffset)).roundToInt()
+            ((activity.controlBarHeight * (1 - activity.controlBarOffset)).takeIf { !it.isNaN() }
+                ?: 0f)
+                .roundToInt()
         val swipeStart = systemWindowsInsets.top - controlBarOffsetPixels - progressCircleDiameter
         // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
         val swipeDistance = (64 * density).roundToInt()
