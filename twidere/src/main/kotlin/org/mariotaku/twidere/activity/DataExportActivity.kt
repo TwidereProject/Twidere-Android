@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.DialogFragment
@@ -17,7 +18,6 @@ import org.mariotaku.twidere.fragment.DataExportImportTypeSelectorDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.util.DataImportExportUtils
 import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,12 +67,7 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             return
         }
         if (task == null || task!!.status != AsyncTask.Status.RUNNING) {
-            val folder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                DocumentFile.fromTreeUri(this, path)
-            } else {
-                DocumentFile.fromFile(File(path.path))
-            }
-            task = ExportSettingsTask(this, folder, flags)
+            task = ExportSettingsTask(this, path, flags)
             task!!.execute()
         }
     }
@@ -85,30 +80,53 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val intent = Intent(this, FileSelectorActivity::class.java)
-            intent.action = IntentConstants.INTENT_ACTION_PICK_DIRECTORY
+            val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val i = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                        or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                i
+            } else {
+                val i = Intent(this, FileSelectorActivity::class.java)
+                i.action = IntentConstants.INTENT_ACTION_PICK_DIRECTORY
+                i
+            }
             startActivityForResult(intent, REQUEST_PICK_DIRECTORY)
         }
     }
 
     internal class ExportSettingsTask(
             private val activity: DataExportActivity,
-            private val folder: DocumentFile?,
+            private val folderUri: Uri?,
             private val flags: Int
     ) : AsyncTask<Any, Any, Boolean>() {
 
         override fun doInBackground(vararg params: Any): Boolean? {
-            if (folder == null || !folder.isDirectory) return false
+            if (folderUri == null) return false
             val sdf = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US)
             val fileName = String.format("Twidere_Settings_%s.zip", sdf.format(Date()))
-            val file = folder.findFile(fileName) ?: folder.createFile("application/zip", fileName)
-            ?: return false
 //            val file = File(folder, fileName)
 //            file.delete()
             return try {
-                DataImportExportUtils.exportData(activity, file, flags)
+                val createdDocumentUri = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val docId = DocumentsContract.getTreeDocumentId(folderUri)
+                    val dirUri = DocumentsContract.buildDocumentUriUsingTree(folderUri, docId)
+                    DocumentsContract.createDocument(
+                            activity.contentResolver,
+                            dirUri,
+                            "application/zip",
+                            fileName)
+                } else {
+                    val folder = DocumentFile.fromFile(File(folderUri.path!!))
+                    val file = folder.findFile(fileName)
+                            ?: folder.createFile("application/zip", fileName) ?: return false
+                    file.uri
+                })
+                        ?: return false
+
+                DataImportExportUtils.exportData(activity, createdDocumentUri, flags)
                 true
-            } catch (e: IOException) {
+            } catch (e: Throwable) {
                 Log.w(LOGTAG, e)
                 false
             }

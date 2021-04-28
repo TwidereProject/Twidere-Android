@@ -76,12 +76,7 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
             return
         }
         if (importSettingsTask == null || importSettingsTask!!.status != AsyncTask.Status.RUNNING) {
-            val file = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                DocumentFile.fromSingleUri(this, path)
-            } else {
-                DocumentFile.fromFile(File(path.path))
-            }
-            importSettingsTask = ImportSettingsTask(this, file, flags)
+            importSettingsTask = ImportSettingsTask(this, path, flags)
             importSettingsTask!!.execute()
         }
     }
@@ -94,25 +89,28 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val intent = Intent(this, FileSelectorActivity::class.java)
-            intent.action = INTENT_ACTION_PICK_FILE
+            val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val i = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                i.type = "*/*"
+                i
+            } else {
+                val i = Intent(this, FileSelectorActivity::class.java)
+                i.action = INTENT_ACTION_PICK_FILE
+                i
+            }
             startActivityForResult(intent, REQUEST_PICK_FILE)
         }
     }
 
     internal class ImportSettingsTask(
             private val activity: DataImportActivity,
-            private val file: DocumentFile?,
+            private val uri: Uri?,
             private val flags: Int
     ) : AsyncTask<Any, Any, Boolean>() {
 
         override fun doInBackground(vararg params: Any): Boolean? {
-            if (file == null) {
-                return false
-            }
-            if (!file.isFile) return false
             return try {
-                DataImportExportUtils.importData(activity, file, flags)
+                DataImportExportUtils.importData(activity, uri, flags)
                 true
             } catch (e: IOException) {
                 Log.w(LOGTAG, e)
