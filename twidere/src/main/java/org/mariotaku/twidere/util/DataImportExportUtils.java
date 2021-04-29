@@ -84,8 +84,8 @@ public class DataImportExportUtils implements Constants {
             | FLAG_HOST_MAPPING | FLAG_KEYBOARD_SHORTCUTS | FLAG_FILTERS | FLAG_TABS;
 
     @WorkerThread
-    public static void exportData(final Context context, @NonNull final DocumentFile dst, final int flags) throws IOException {
-        try (OutputStream fos = context.getContentResolver().openOutputStream(dst.getUri());
+    public static void exportData(final Context context, @NonNull final Uri dst, final int flags) throws IOException {
+        try (OutputStream fos = context.getContentResolver().openOutputStream(dst);
              ZipOutputStream zos = new ZipOutputStream(fos)) {
             if (hasFlag(flags, FLAG_PREFERENCES)) {
                 exportSharedPreferencesData(zos, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES,
@@ -199,9 +199,9 @@ public class DataImportExportUtils implements Constants {
         }
     }
 
-    public static void importData(final Context context, final DocumentFile src, final int flags) throws IOException {
+    public static void importData(final Context context, final Uri src, final int flags) throws IOException {
         if (src == null) throw new FileNotFoundException();
-        try (InputStream inputStream = context.getContentResolver().openInputStream(src.getUri());
+        try (InputStream inputStream = context.getContentResolver().openInputStream(src);
              ZipInputStream zipInputStream = new ZipInputStream(inputStream)
         ) {
             ZipEntry entry;
