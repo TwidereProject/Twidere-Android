@@ -5,6 +5,7 @@ import android.content.res.Configuration
 
 /**
  * Created by mariotaku on 2017/1/7.
+ * Edited by 0x416c6578 on 2021/8/3
  */
 
 object TwilightManagerAccessor {
