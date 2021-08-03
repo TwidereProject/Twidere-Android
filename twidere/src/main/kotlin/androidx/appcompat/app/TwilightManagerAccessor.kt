@@ -8,7 +8,13 @@ import android.content.Context
 
 object TwilightManagerAccessor {
     fun isNight(context: Context): Boolean {
-        return TwilightManager.getInstance(context).isNight
+        //From https://developer.android.com/guide/topics/ui/look-and-feel/darktheme#kotlin
+        val currentNightMode: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> { return false }
+            Configuration.UI_MODE_NIGHT_YES -> { return true }
+        }
+        return false;
     }
 
     fun getNightState(context: Context): Int {
