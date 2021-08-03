@@ -1,6 +1,7 @@
 package androidx.appcompat.app
 
 import android.content.Context
+import android.content.res.Configuration
 
 /**
  * Created by mariotaku on 2017/1/7.
