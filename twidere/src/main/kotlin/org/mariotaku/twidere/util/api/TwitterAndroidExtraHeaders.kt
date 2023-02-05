@@ -32,9 +32,9 @@ import java.util.*
 object TwitterAndroidExtraHeaders : ExtraHeaders {
 
     const val clientName = "TwitterAndroid"
-    const val versionName = "6.41.0"
+    const val versionName = "8.50.0-release.02"
     const val apiVersion = "5"
-    const val internalVersionName = "7160062-r-930"
+    const val internalVersionName = "18500002-r-2"
 
     override fun get(headers: MultiValueMap<String>): List<Pair<String, String>> {
         val result = ArrayList<Pair<String, String>>()
